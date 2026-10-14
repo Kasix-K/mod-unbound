@@ -7,7 +7,7 @@ INSERT INTO `spell_dbc` (`ID`, `Category`, `DispelType`, `Mechanic`, `Attributes
 DELETE FROM `spell_script_names` WHERE `spell_id` IN (200200);
 INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
 (200200, 'spell_unbound_transmogrify');
-DELETE FROM `item_dbc` WHERE `ID` IN (910001, 910002, 910100, 910101, 910102, 910103, 910104, 910105, 910106, 910107, 910108, 910109, 910110, 910111, 910112, 910113, 910114, 910115, 910116, 910117, 910118, 910119, 910120, 910121);
+DELETE FROM `item_dbc` WHERE `ID` IN (910001, 910002, 910100, 910101, 910102, 910103, 910104, 910105, 910106, 910107, 910108, 910109, 910110, 910111, 910112, 910113, 910114, 910115, 910116, 910117, 910118, 910119, 910120, 910121, 911000, 911001, 911002, 911003, 911004, 911005);
 INSERT INTO `item_dbc` (`ID`, `ClassID`, `SubclassID`, `Sound_Override_Subclassid`, `Material`, `DisplayInfoID`, `InventoryType`, `SheatheType`) VALUES
 (910001,15,2,-1,8,8442,0,0),
 (910002,15,2,-1,8,41425,0,0),
@@ -32,7 +32,13 @@ INSERT INTO `item_dbc` (`ID`, `ClassID`, `SubclassID`, `Sound_Override_Subclassi
 (910118,4,2,-1,8,9123,5,0),
 (910119,4,2,-1,8,27947,7,0),
 (910120,4,1,-1,7,22998,16,0),
-(910121,2,7,-1,1,7311,13,3);
+(910121,2,7,-1,1,7311,13,3),
+(911000,2,5,-1,2,19664,17,1),
+(911001,2,10,-1,2,30870,17,2),
+(911002,4,4,-1,6,35278,7,0),
+(911003,4,2,-1,8,31142,3,0),
+(911004,4,1,-1,7,35369,3,0),
+(911005,4,3,-1,5,36436,5,0);
 DELETE FROM `itemset_dbc` WHERE `ID` IN (950);
 INSERT INTO `itemset_dbc` (`ID`, `Name_Lang_enUS`, `Name_Lang_enGB`, `Name_Lang_koKR`, `Name_Lang_frFR`, `Name_Lang_deDE`, `Name_Lang_enCN`, `Name_Lang_zhCN`, `Name_Lang_enTW`, `Name_Lang_zhTW`, `Name_Lang_esES`, `Name_Lang_esMX`, `Name_Lang_ruRU`, `Name_Lang_ptPT`, `Name_Lang_ptBR`, `Name_Lang_itIT`, `Name_Lang_Unk`, `Name_Lang_Mask`, `ItemID_1`, `ItemID_2`, `ItemID_3`, `ItemID_4`, `ItemID_5`, `ItemID_6`, `ItemID_7`, `ItemID_8`, `ItemID_9`, `ItemID_10`, `ItemID_11`, `ItemID_12`, `ItemID_13`, `ItemID_14`, `ItemID_15`, `ItemID_16`, `ItemID_17`, `SetSpellID_1`, `SetSpellID_2`, `SetSpellID_3`, `SetSpellID_4`, `SetSpellID_5`, `SetSpellID_6`, `SetSpellID_7`, `SetSpellID_8`, `SetThreshold_1`, `SetThreshold_2`, `SetThreshold_3`, `SetThreshold_4`, `SetThreshold_5`, `SetThreshold_6`, `SetThreshold_7`, `SetThreshold_8`, `RequiredSkill`, `RequiredSkillRank`) VALUES
 (950,'Blackened Defias Garb','','','','','','','','','','','','','','','',16712190,910112,910115,910118,910119,0,0,0,0,0,0,0,0,0,0,0,0,0,9102,9336,0,0,0,0,0,0,2,4,0,0,0,0,0,0,0,0);

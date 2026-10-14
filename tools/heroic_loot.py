@@ -187,15 +187,16 @@ def item_sql(item):
     else:
         weapon = '`dmg_min1` = 0, `dmg_max1` = 0'
         sell = 25000
+    sell = item.get('sell', sell)
     return '\n'.join([
-        f"-- {item['name']} (heroic, item level {item['ilvl']})",
+        f"-- {item['name']} ({item.get('label', 'heroic')}, item level {item['ilvl']})",
         'DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;',
         f"CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `entry` = {item['base']};",
         f"UPDATE `unbound_hl_tmp` SET `entry` = {item['id']}, `name` = {sql_str(item['name'])}, "
-        f"`description` = 'Heroic', `class` = {item['cls']}, `subclass` = {item['sub']}, "
+        f"`description` = {sql_str(item.get('desc', 'Heroic'))}, `class` = {item['cls']}, `subclass` = {item['sub']}, "
         f"`displayid` = {item['display']}, `InventoryType` = {item['inv']}, `Material` = {item['mat']}, "
         f"`sheath` = {item['sheath']},",
-        f"    `Quality` = 3, `ItemLevel` = {item['ilvl']}, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, "
+        f"    `Quality` = {item.get('quality', 3)}, `ItemLevel` = {item['ilvl']}, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, "
         "`FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,",
         f"    `BuyPrice` = {sell * 4}, `SellPrice` = {sell}, `armor` = {item.get('armor', 0)}, "
         f"`block` = {item.get('block', 0)}, `itemset` = {item.get('set', 0)},",

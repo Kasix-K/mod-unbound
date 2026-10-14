@@ -35,6 +35,15 @@ Custom features for the WoW 3.3.5a Unbound server.
   sets and loot are defined once in `heroic_loot.py`; after a change run `python tools/heroic_loot.py`,
   `python tools/classic_heroics.py` and `python tools/custom_dbc.py` (rebuilds the client patch), then
   restart the worldserver. Never delete an item that has dropped: take it out of `LOOT` instead.
+- **World bosses** (`tools/world_bosses.py`): open-world bosses with a SmartAI fight (no C++), yells
+  every player online hears, and their own loot. So far: **Hrimthar the Frostbound** (creature 190110),
+  a level 63 frost giant on the ice of Lake Kel'Theril in Winterspring, tuned for about 10 players
+  (one player plus bots), about 283k health, 3-day respawn. Neutral like Azuregos, so he only fights
+  those who attack him. Frostbolt Volley, Frost Breath (frontal cone) and Frost Nova; at 50% he
+  summons four Frostbound Shards (190111), at 20% he enrages. Drops one of six level 60 epics (items
+  911000-911005, item level 66-68), 5-8 gold, and a 3% chance at the Reins of the Winterspring
+  Frostsaber. After a change run `python tools/world_bosses.py` and `python tools/custom_dbc.py`, then
+  restart the worldserver.
 - **Unbound addon** (`addon/Unbound`, copy to the client's `Interface/AddOns`): shows Dungeon/Raid
   Difficulty in the portrait menu from level 60 (the client's own limit is 65) and adds `/heroic` and
   `/normal`.
@@ -148,5 +157,6 @@ powershell -ExecutionPolicy Bypass -File server-setup\apply-unbound-settings.ps1
 - New features go in their own `src/unbound_<feature>.cpp`, registered in `src/unbound_loader.cpp`, and get
   a line under Features above.
 - Custom IDs are shared, so pick new ones next to the existing ones and say so in the commit: spells
-  2002xx, items 9100xx (heroic loot 910100-910999), item sets 950-999, creatures 1901xx,
+  2002xx, items 9100xx (heroic loot 910100-910999, world boss loot 911000-911999), item sets 950-999,
+  creatures 1901xx (world bosses 190110-190199, spawn guids 9190110-9190199),
   SkillLineAbility 9000xx.

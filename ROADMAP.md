@@ -17,6 +17,7 @@ Guiding idea: inspired by Peloria, not a copy. Stats stay in normal WoW ranges (
 - [x] Heroic The Deadmines and Ragefire Chasm
 - [x] Heroic loot for The Deadmines: one item per boss from a tank/healer/damage pool, Blackened
       Defias Garb set, level 60 gold (`tools/heroic_loot.py`)
+- [x] World boss: Hrimthar the Frostbound at Lake Kel'Theril, Winterspring (`tools/world_bosses.py`)
 - [x] Expansion content lock (classic only; TBC and Wrath released later), Death Knights GM-only
 
 ## Next up
@@ -37,6 +38,9 @@ Guiding idea: inspired by Peloria, not a copy. Stats stay in normal WoW ranges (
       server hook.
 
 ## Endgame and rewards
+
+- [ ] **More world bosses** (moderate, mostly data): one per continent and level range, added to
+      `tools/world_bosses.py`. Later a weekly rotation (boss of the week) with a first-kill bonus.
 
 - [ ] **Mythic+** (large): player-chosen +1, +2, ... levels on top of Heroic, through mod-autobalance's
       multiplier hook. Still to decide: scaling per level (about +10% suggested), the cap, and how a

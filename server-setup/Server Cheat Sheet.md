@@ -34,8 +34,12 @@
 | Arcane Loot Scanner companion | 190102 (size 0.08) | 910002 | 200202 |
 | Heroic Deadmines loot | (heroic bosses: entry + 1000000) | 910100-910121 | (none) |
 | Blackened Defias Garb set (item set 950) | (none) | 910112, 910115, 910118, 910119 | 9102, 9336 (set bonuses) |
+| World boss Hrimthar the Frostbound (spawn guid 9190110) | 190110, adds 190111 | 911000-911005 | (none) |
 
 Preview a heroic item on a GM account with `.additem <item id>` (for example `.additem 910118`).
+
+World boss Hrimthar the Frostbound is on Lake Kel'Theril in Winterspring. GM shortcuts: `.go creature id 190110`
+goes to him; `.respawn` next to his corpse brings him back early (for testing).
 
 ## In-game features
 

@@ -21,6 +21,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from classic_heroics import HEROIC_DUNGEONS, HEROIC_LEVEL, map_difficulty_id  # noqa: E402
 import heroic_loot  # noqa: E402
+import world_bosses  # noqa: E402
 MODULE = os.path.dirname(HERE)
 ACORE = os.path.dirname(os.path.dirname(MODULE))
 ROOT = os.path.dirname(ACORE)
@@ -85,6 +86,7 @@ ITEMS = [
     (910002, 15, 2, -1, 8, 41425, 0, 0),  # Arcane Loot Scanner (companion item, Khorium power core icon)
 ]
 ITEMS += heroic_loot.item_dbc_rows()  # heroic dungeon loot (tools/heroic_loot.py)
+ITEMS += world_bosses.item_dbc_rows()  # world boss loot (tools/world_bosses.py)
 
 # ItemSet.dbc rows (client) / itemset_dbc rows (server): heroic dungeon sets (tools/heroic_loot.py)
 ITEM_SETS = heroic_loot.item_set_rows()
