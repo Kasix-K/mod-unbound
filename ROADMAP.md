@@ -14,14 +14,20 @@ Guiding idea: inspired by Peloria, not a copy. Stats stay in normal WoW ranges (
 - [x] Solo dungeon scaling (mod-autobalance, floor 0.4) and solo dungeon finder (mod-solo-lfg)
 - [x] No raid-group requirement, no instances-per-hour limit, Reset all instances resets raids too
 - [x] Classic Heroic dungeons: pilot with Stormwind Stockades (level 60, 1.5x health and damage)
+- [x] Heroic The Deadmines and Ragefire Chasm
+- [x] Heroic loot for The Deadmines: one item per boss from a tank/healer/damage pool, Blackened
+      Defias Garb set, level 60 gold (`tools/heroic_loot.py`)
 - [x] Expansion content lock (classic only; TBC and Wrath released later), Death Knights GM-only
 
 ## Next up
 
-- [ ] **Remaining classic Heroic dungeons** (moderate): about 19 more, added in batches by level range.
+- [ ] **Remaining classic Heroic dungeons** (moderate): 16 more (Stockades, Deadmines and Ragefire Chasm
+      are done), added in batches by level range.
       Each is one line in `tools/classic_heroics.py`. Also give heroic versions to creatures that boss
       scripts summon (Blackrock Depths' Ring of Law, the Zul'Farrak stairs, Razorfen Downs' gong,
       Stratholme's Baron run, Arugal's adds, Gnomeregan). Blackrock Spire keeps its larger group size.
+- [ ] **Heroic loot for the other heroics** (moderate): same approach as The Deadmines, one dungeon at a
+      time in `tools/heroic_loot.py`.
 - [ ] **Heroic currency and vendor** (moderate): a token (e.g. "Heroic Badge") from Heroic bosses,
       spent on companions, mounts, transmog or gear. Becomes the Loot Goblin's currency.
 - [ ] **Heroic classic raids** (moderate): Molten Core, Blackwing Lair, Zul'Gurub, Ruins and Temple of

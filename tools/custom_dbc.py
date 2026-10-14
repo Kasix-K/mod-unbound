@@ -1,8 +1,8 @@
 """
 Generate mod-unbound's custom DBC rows for both sides from one definition:
 
-  server: data/sql/db-world/unbound_custom_dbc.sql   (spell_dbc, spell_script_names, item_dbc, mapdifficulty_dbc)
-  client: <client>/Data/patch-Z.MPQ                  (DBFilesClient\\Spell.dbc, Item.dbc, SkillLineAbility.dbc,
+  server: data/sql/db-world/unbound_custom_dbc.sql   (spell_dbc, spell_script_names, item_dbc, itemset_dbc, mapdifficulty_dbc)
+  client: <client>/Data/patch-Z.MPQ                  (DBFilesClient\\Spell.dbc, Item.dbc, ItemSet.dbc, SkillLineAbility.dbc,
                                                       MapDifficulty.dbc)
 
 The client DBCs are built from the server's extracted DBCs, which are identical to the 3.3.5a
@@ -20,6 +20,7 @@ import zlib
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from classic_heroics import HEROIC_DUNGEONS, HEROIC_LEVEL, map_difficulty_id  # noqa: E402
+import heroic_loot  # noqa: E402
 MODULE = os.path.dirname(HERE)
 ACORE = os.path.dirname(os.path.dirname(MODULE))
 ROOT = os.path.dirname(ACORE)
@@ -83,6 +84,16 @@ ITEMS = [
     (910001, 15, 2, -1, 8, 8442, 0, 0),  # Loot Goblin (companion item, loot-bag icon)
     (910002, 15, 2, -1, 8, 41425, 0, 0),  # Arcane Loot Scanner (companion item, Khorium power core icon)
 ]
+ITEMS += heroic_loot.item_dbc_rows()  # heroic dungeon loot (tools/heroic_loot.py)
+
+# ItemSet.dbc rows (client) / itemset_dbc rows (server): heroic dungeon sets (tools/heroic_loot.py)
+ITEM_SETS = heroic_loot.item_set_rows()
+ITEM_SET_COLUMNS = (['ID'] + [f'Name_Lang_{loc}' for loc in ('enUS', 'enGB', 'koKR', 'frFR', 'deDE', 'enCN',
+                                                           'zhCN', 'enTW', 'zhTW', 'esES', 'esMX', 'ruRU',
+                                                           'ptPT', 'ptBR', 'itIT', 'Unk')]
+                    + ['Name_Lang_Mask'] + [f'ItemID_{k}' for k in range(1, 18)]
+                    + [f'SetSpellID_{k}' for k in range(1, 9)] + [f'SetThreshold_{k}' for k in range(1, 9)]
+                    + ['RequiredSkill', 'RequiredSkillRank'])
 
 # SkillLineAbility.dbc rows, client only: they put companion spells in the Companions tab.
 SKILL_LINE_ABILITIES = [
@@ -272,6 +283,10 @@ def write_sql(cols, rows, path):
         lines.append('INSERT INTO `item_dbc` (`ID`, `ClassID`, `SubclassID`, `Sound_Override_Subclassid`, '
                      '`Material`, `DisplayInfoID`, `InventoryType`, `SheatheType`) VALUES')
         lines.append(',\n'.join('(' + ','.join(str(v) for v in i) + ')' for i in ITEMS) + ';')
+    if ITEM_SETS:
+        lines.append(f"DELETE FROM `itemset_dbc` WHERE `ID` IN ({', '.join(str(r[0]) for r in ITEM_SETS)});")
+        lines.append('INSERT INTO `itemset_dbc` (' + ', '.join('`' + c + '`' for c in ITEM_SET_COLUMNS) + ') VALUES')
+        lines.append(',\n'.join('(' + ','.join(sql_literal(v) for v in r) + ')' for r in ITEM_SETS) + ';')
     if MAP_DIFFICULTIES:
         ids = ', '.join(str(m['ID']) for m in MAP_DIFFICULTIES)
         lines.append(f'DELETE FROM `mapdifficulty_dbc` WHERE `ID` IN ({ids});')
@@ -394,12 +409,14 @@ def main():
     if SKILL_LINE_ABILITIES:
         files['DBFilesClient\\SkillLineAbility.dbc'] = append_int_rows(
             os.path.join(args.dbc, 'SkillLineAbility.dbc'), SKILL_LINE_ABILITIES)
+    if ITEM_SETS:
+        files['DBFilesClient\\ItemSet.dbc'] = append_rows_with_strings(os.path.join(args.dbc, 'ItemSet.dbc'), ITEM_SETS)
     if MAP_DIFFICULTIES:
         files['DBFilesClient\\MapDifficulty.dbc'] = append_rows_with_strings(
             os.path.join(args.dbc, 'MapDifficulty.dbc'), [map_difficulty_row(m) for m in MAP_DIFFICULTIES])
     mpq_path = os.path.join(args.client, 'Data', 'patch-Z.MPQ')
     write_mpq(mpq_path, files)
-    print('wrote', mpq_path, f'({len(SPELLS)} spells, {len(ITEMS)} items, '
+    print('wrote', mpq_path, f'({len(SPELLS)} spells, {len(ITEMS)} items, {len(ITEM_SETS)} item sets, '
                              f'{len(SKILL_LINE_ABILITIES)} skill line abilities, '
                              f'{len(MAP_DIFFICULTIES)} map difficulties)')
 

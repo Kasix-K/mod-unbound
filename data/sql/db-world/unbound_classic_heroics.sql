@@ -53,6 +53,8 @@ CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `t`.* FROM `creature_template_res
 UPDATE `unbound_hc_tmp` SET `CreatureID` = `CreatureID` + @OFFSET;
 INSERT INTO `creature_template_resistance` SELECT * FROM `unbound_hc_tmp`;
 
+
+
 -- spawn everything in heroic too (spawnMask bit 1 = normal, bit 2 = heroic)
 UPDATE `creature` SET `spawnMask` = `spawnMask` | 2 WHERE `map` = @MAP;
 UPDATE `gameobject` SET `spawnMask` = `spawnMask` | 2 WHERE `map` = @MAP;
@@ -60,5 +62,132 @@ UPDATE `gameobject` SET `spawnMask` = `spawnMask` | 2 WHERE `map` = @MAP;
 DELETE FROM `dungeon_access_template` WHERE `map_id` = @MAP AND `difficulty` = 1;
 INSERT INTO `dungeon_access_template` (`id`, `map_id`, `difficulty`, `min_level`, `max_level`, `min_avg_item_level`, `comment`) VALUES
 (200, @MAP, 1, @LEVEL, 0, 0, 'Stormwind Stockades (Heroic)');
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_base`;
+
+-- Deadmines (map 36)
+SET @MAP := 36;
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_base`;
+CREATE TEMPORARY TABLE `unbound_hc_base` SELECT DISTINCT `id` AS `entry` FROM `creature` WHERE `map` = @MAP;
+-- leave creatures that already have a heroic version of their own alone
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`
+    WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);
+-- and creatures also spawned on other maps: their heroic copy would show up in those maps' heroics too
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;
+SET @MINL := (SELECT MIN(`ct`.`minlevel`) FROM `creature_template` `ct` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `ct`.`entry`);
+SET @SPAN := GREATEST((SELECT MAX(`ct`.`maxlevel`) FROM `creature_template` `ct` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `ct`.`entry`) - @MINL, 1);
+
+DELETE FROM `creature_template` WHERE `entry` IN (SELECT `entry` + @OFFSET FROM `unbound_hc_base`);
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `ct`.* FROM `creature_template` `ct` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `ct`.`entry`;
+UPDATE `unbound_hc_tmp` SET `entry` = `entry` + @OFFSET,
+    `difficulty_entry_1` = 0, `difficulty_entry_2` = 0, `difficulty_entry_3` = 0, `AIName` = '', `ScriptName` = '',
+    `minlevel` = @LEVEL + ROUND((`minlevel` - @MINL) * @SPREAD / @SPAN),
+    `maxlevel` = @LEVEL + ROUND((`maxlevel` - @MINL) * @SPREAD / @SPAN),
+    `HealthModifier` = `HealthModifier` * @HEALTH, `DamageModifier` = `DamageModifier` * @DAMAGE, `VerifiedBuild` = 0;
+INSERT INTO `creature_template` SELECT * FROM `unbound_hc_tmp`;
+UPDATE `creature_template` `ct` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `ct`.`entry` SET `ct`.`difficulty_entry_1` = `b`.`entry` + @OFFSET;
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (SELECT `entry` + @OFFSET FROM `unbound_hc_base`);
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `t`.* FROM `creature_template_model` `t` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `t`.`CreatureID`;
+UPDATE `unbound_hc_tmp` SET `CreatureID` = `CreatureID` + @OFFSET;
+INSERT INTO `creature_template_model` SELECT * FROM `unbound_hc_tmp`;
+DELETE FROM `creature_template_addon` WHERE `entry` IN (SELECT `entry` + @OFFSET FROM `unbound_hc_base`);
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `t`.* FROM `creature_template_addon` `t` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `t`.`entry`;
+UPDATE `unbound_hc_tmp` SET `entry` = `entry` + @OFFSET;
+INSERT INTO `creature_template_addon` SELECT * FROM `unbound_hc_tmp`;
+DELETE FROM `creature_template_spell` WHERE `CreatureID` IN (SELECT `entry` + @OFFSET FROM `unbound_hc_base`);
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `t`.* FROM `creature_template_spell` `t` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `t`.`CreatureID`;
+UPDATE `unbound_hc_tmp` SET `CreatureID` = `CreatureID` + @OFFSET;
+INSERT INTO `creature_template_spell` SELECT * FROM `unbound_hc_tmp`;
+DELETE FROM `creature_template_movement` WHERE `CreatureId` IN (SELECT `entry` + @OFFSET FROM `unbound_hc_base`);
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `t`.* FROM `creature_template_movement` `t` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `t`.`CreatureId`;
+UPDATE `unbound_hc_tmp` SET `CreatureId` = `CreatureId` + @OFFSET;
+INSERT INTO `creature_template_movement` SELECT * FROM `unbound_hc_tmp`;
+DELETE FROM `creature_template_resistance` WHERE `CreatureID` IN (SELECT `entry` + @OFFSET FROM `unbound_hc_base`);
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `t`.* FROM `creature_template_resistance` `t` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `t`.`CreatureID`;
+UPDATE `unbound_hc_tmp` SET `CreatureID` = `CreatureID` + @OFFSET;
+INSERT INTO `creature_template_resistance` SELECT * FROM `unbound_hc_tmp`;
+
+-- heroic bosses use their own loot tables (tools/heroic_loot.py)
+UPDATE `creature_template` SET `lootid` = 1000644, `mingold` = 2000, `maxgold` = 4000 WHERE `entry` = 1000644;  -- Rhahk'Zor (Heroic)
+UPDATE `creature_template` SET `lootid` = 1000642, `mingold` = 2000, `maxgold` = 4000 WHERE `entry` = 1000642;  -- Sneed's Shredder (Heroic)
+UPDATE `creature_template` SET `lootid` = 1001763, `mingold` = 2000, `maxgold` = 4000 WHERE `entry` = 1001763;  -- Gilnid (Heroic)
+UPDATE `creature_template` SET `lootid` = 1000646, `mingold` = 2000, `maxgold` = 4000 WHERE `entry` = 1000646;  -- Mr. Smite (Heroic)
+UPDATE `creature_template` SET `lootid` = 1000647, `mingold` = 2000, `maxgold` = 4000 WHERE `entry` = 1000647;  -- Captain Greenskin (Heroic)
+UPDATE `creature_template` SET `lootid` = 1000645, `mingold` = 2000, `maxgold` = 4000 WHERE `entry` = 1000645;  -- Cookie (Heroic)
+UPDATE `creature_template` SET `lootid` = 1000639, `mingold` = 5000, `maxgold` = 10000 WHERE `entry` = 1000639;  -- Edwin VanCleef (Heroic)
+
+-- spawn everything in heroic too (spawnMask bit 1 = normal, bit 2 = heroic)
+UPDATE `creature` SET `spawnMask` = `spawnMask` | 2 WHERE `map` = @MAP;
+UPDATE `gameobject` SET `spawnMask` = `spawnMask` | 2 WHERE `map` = @MAP;
+
+DELETE FROM `dungeon_access_template` WHERE `map_id` = @MAP AND `difficulty` = 1;
+INSERT INTO `dungeon_access_template` (`id`, `map_id`, `difficulty`, `min_level`, `max_level`, `min_avg_item_level`, `comment`) VALUES
+(201, @MAP, 1, @LEVEL, 0, 0, 'Deadmines (Heroic)');
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_base`;
+
+-- Ragefire Chasm (map 389)
+SET @MAP := 389;
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_base`;
+CREATE TEMPORARY TABLE `unbound_hc_base` SELECT DISTINCT `id` AS `entry` FROM `creature` WHERE `map` = @MAP;
+-- leave creatures that already have a heroic version of their own alone
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`
+    WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);
+-- and creatures also spawned on other maps: their heroic copy would show up in those maps' heroics too
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;
+SET @MINL := (SELECT MIN(`ct`.`minlevel`) FROM `creature_template` `ct` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `ct`.`entry`);
+SET @SPAN := GREATEST((SELECT MAX(`ct`.`maxlevel`) FROM `creature_template` `ct` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `ct`.`entry`) - @MINL, 1);
+
+DELETE FROM `creature_template` WHERE `entry` IN (SELECT `entry` + @OFFSET FROM `unbound_hc_base`);
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `ct`.* FROM `creature_template` `ct` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `ct`.`entry`;
+UPDATE `unbound_hc_tmp` SET `entry` = `entry` + @OFFSET,
+    `difficulty_entry_1` = 0, `difficulty_entry_2` = 0, `difficulty_entry_3` = 0, `AIName` = '', `ScriptName` = '',
+    `minlevel` = @LEVEL + ROUND((`minlevel` - @MINL) * @SPREAD / @SPAN),
+    `maxlevel` = @LEVEL + ROUND((`maxlevel` - @MINL) * @SPREAD / @SPAN),
+    `HealthModifier` = `HealthModifier` * @HEALTH, `DamageModifier` = `DamageModifier` * @DAMAGE, `VerifiedBuild` = 0;
+INSERT INTO `creature_template` SELECT * FROM `unbound_hc_tmp`;
+UPDATE `creature_template` `ct` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `ct`.`entry` SET `ct`.`difficulty_entry_1` = `b`.`entry` + @OFFSET;
+DELETE FROM `creature_template_model` WHERE `CreatureID` IN (SELECT `entry` + @OFFSET FROM `unbound_hc_base`);
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `t`.* FROM `creature_template_model` `t` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `t`.`CreatureID`;
+UPDATE `unbound_hc_tmp` SET `CreatureID` = `CreatureID` + @OFFSET;
+INSERT INTO `creature_template_model` SELECT * FROM `unbound_hc_tmp`;
+DELETE FROM `creature_template_addon` WHERE `entry` IN (SELECT `entry` + @OFFSET FROM `unbound_hc_base`);
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `t`.* FROM `creature_template_addon` `t` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `t`.`entry`;
+UPDATE `unbound_hc_tmp` SET `entry` = `entry` + @OFFSET;
+INSERT INTO `creature_template_addon` SELECT * FROM `unbound_hc_tmp`;
+DELETE FROM `creature_template_spell` WHERE `CreatureID` IN (SELECT `entry` + @OFFSET FROM `unbound_hc_base`);
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `t`.* FROM `creature_template_spell` `t` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `t`.`CreatureID`;
+UPDATE `unbound_hc_tmp` SET `CreatureID` = `CreatureID` + @OFFSET;
+INSERT INTO `creature_template_spell` SELECT * FROM `unbound_hc_tmp`;
+DELETE FROM `creature_template_movement` WHERE `CreatureId` IN (SELECT `entry` + @OFFSET FROM `unbound_hc_base`);
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `t`.* FROM `creature_template_movement` `t` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `t`.`CreatureId`;
+UPDATE `unbound_hc_tmp` SET `CreatureId` = `CreatureId` + @OFFSET;
+INSERT INTO `creature_template_movement` SELECT * FROM `unbound_hc_tmp`;
+DELETE FROM `creature_template_resistance` WHERE `CreatureID` IN (SELECT `entry` + @OFFSET FROM `unbound_hc_base`);
+DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
+CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `t`.* FROM `creature_template_resistance` `t` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `t`.`CreatureID`;
+UPDATE `unbound_hc_tmp` SET `CreatureID` = `CreatureID` + @OFFSET;
+INSERT INTO `creature_template_resistance` SELECT * FROM `unbound_hc_tmp`;
+
+
+
+-- spawn everything in heroic too (spawnMask bit 1 = normal, bit 2 = heroic)
+UPDATE `creature` SET `spawnMask` = `spawnMask` | 2 WHERE `map` = @MAP;
+UPDATE `gameobject` SET `spawnMask` = `spawnMask` | 2 WHERE `map` = @MAP;
+
+DELETE FROM `dungeon_access_template` WHERE `map_id` = @MAP AND `difficulty` = 1;
+INSERT INTO `dungeon_access_template` (`id`, `map_id`, `difficulty`, `min_level`, `max_level`, `min_avg_item_level`, `comment`) VALUES
+(202, @MAP, 1, @LEVEL, 0, 0, 'Ragefire Chasm (Heroic)');
 DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;
 DROP TEMPORARY TABLE IF EXISTS `unbound_hc_base`;

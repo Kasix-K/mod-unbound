@@ -22,9 +22,19 @@ Custom features for the WoW 3.3.5a Unbound server.
   difficulty is set to. In a group only the leader can, and it resets the group's instances; an
   instance with players still inside isn't reset.
 - **Classic heroic dungeons**: `tools/classic_heroics.py` lists the classic dungeons with a heroic mode
-  (so far: Stormwind Stockades). Heroic needs level 60; creatures are heroic copies (entry + 1000000)
-  at level 60-62 with 1.5x health and damage and normal loot. Add a dungeon to `HEROIC_DUNGEONS`, then
-  run `python tools/classic_heroics.py` and `python tools/custom_dbc.py`.
+  (so far: Stormwind Stockades, The Deadmines, Ragefire Chasm). Heroic needs level 60; creatures are
+  heroic copies (entry + 1000000) at level 60-62 with 1.5x health and damage. Loot is the normal loot
+  unless the dungeon has heroic loot (below). Add a dungeon to `HEROIC_DUNGEONS`, then run
+  `python tools/classic_heroics.py` and `python tools/custom_dbc.py`.
+- **Heroic loot** (`tools/heroic_loot.py`): heroic bosses get their own loot tables and level 60 gold
+  (20-40 silver, final boss 50 silver-1 gold). So far: The Deadmines. Every boss drops one item from a
+  pool of three (tank, healer/caster, damage), and Edwin VanCleef drops two: level 60 blue remakes of the
+  classic drops plus new pieces (items 910100-910121, item level 61-63, "Heroic" in the tooltip). The
+  leather pieces form the **Blackened Defias Garb** set (item set 950: 2 pieces +12 Agility, 4 pieces
+  +30 Attack Power), and Captain Greenskin has a 1% chance to drop the Hyacinth Macaw companion. Items,
+  sets and loot are defined once in `heroic_loot.py`; after a change run `python tools/heroic_loot.py`,
+  `python tools/classic_heroics.py` and `python tools/custom_dbc.py` (rebuilds the client patch), then
+  restart the worldserver. Never delete an item that has dropped: take it out of `LOOT` instead.
 - **Unbound addon** (`addon/Unbound`, copy to the client's `Interface/AddOns`): shows Dungeon/Raid
   Difficulty in the portrait menu from level 60 (the client's own limit is 65) and adds `/heroic` and
   `/normal`.
@@ -138,4 +148,5 @@ powershell -ExecutionPolicy Bypass -File server-setup\apply-unbound-settings.ps1
 - New features go in their own `src/unbound_<feature>.cpp`, registered in `src/unbound_loader.cpp`, and get
   a line under Features above.
 - Custom IDs are shared, so pick new ones next to the existing ones and say so in the commit: spells
-  2002xx, items 9100xx, creatures 1901xx, SkillLineAbility 9000xx.
+  2002xx, items 9100xx (heroic loot 910100-910999), item sets 950-999, creatures 1901xx,
+  SkillLineAbility 9000xx.

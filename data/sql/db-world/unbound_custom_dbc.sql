@@ -7,10 +7,37 @@ INSERT INTO `spell_dbc` (`ID`, `Category`, `DispelType`, `Mechanic`, `Attributes
 DELETE FROM `spell_script_names` WHERE `spell_id` IN (200200);
 INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
 (200200, 'spell_unbound_transmogrify');
-DELETE FROM `item_dbc` WHERE `ID` IN (910001, 910002);
+DELETE FROM `item_dbc` WHERE `ID` IN (910001, 910002, 910100, 910101, 910102, 910103, 910104, 910105, 910106, 910107, 910108, 910109, 910110, 910111, 910112, 910113, 910114, 910115, 910116, 910117, 910118, 910119, 910120, 910121);
 INSERT INTO `item_dbc` (`ID`, `ClassID`, `SubclassID`, `Sound_Override_Subclassid`, `Material`, `DisplayInfoID`, `InventoryType`, `SheatheType`) VALUES
 (910001,15,2,-1,8,8442,0,0),
-(910002,15,2,-1,8,41425,0,0);
-DELETE FROM `mapdifficulty_dbc` WHERE `ID` IN (10034);
+(910002,15,2,-1,8,41425,0,0),
+(910100,4,4,-1,6,23628,6,0),
+(910101,4,1,-1,7,21796,6,0),
+(910102,2,5,-1,2,8600,17,1),
+(910103,4,6,-1,1,27179,14,4),
+(910104,4,1,-1,7,16966,10,0),
+(910105,2,15,-1,1,20347,13,3),
+(910106,4,2,-1,8,1978,7,0),
+(910107,4,0,-1,1,9839,11,0),
+(910108,2,7,-1,1,20030,13,3),
+(910109,4,4,-1,6,23704,3,0),
+(910110,4,1,-1,7,12803,5,0),
+(910111,2,5,-1,2,19610,17,1),
+(910112,4,2,-1,8,14389,6,0),
+(910113,2,10,-1,2,20340,17,2),
+(910114,2,6,-1,1,5949,17,2),
+(910115,4,2,-1,8,27946,10,0),
+(910116,2,19,-1,2,21011,26,0),
+(910117,2,4,-1,2,20953,13,7),
+(910118,4,2,-1,8,9123,5,0),
+(910119,4,2,-1,8,27947,7,0),
+(910120,4,1,-1,7,22998,16,0),
+(910121,2,7,-1,1,7311,13,3);
+DELETE FROM `itemset_dbc` WHERE `ID` IN (950);
+INSERT INTO `itemset_dbc` (`ID`, `Name_Lang_enUS`, `Name_Lang_enGB`, `Name_Lang_koKR`, `Name_Lang_frFR`, `Name_Lang_deDE`, `Name_Lang_enCN`, `Name_Lang_zhCN`, `Name_Lang_enTW`, `Name_Lang_zhTW`, `Name_Lang_esES`, `Name_Lang_esMX`, `Name_Lang_ruRU`, `Name_Lang_ptPT`, `Name_Lang_ptBR`, `Name_Lang_itIT`, `Name_Lang_Unk`, `Name_Lang_Mask`, `ItemID_1`, `ItemID_2`, `ItemID_3`, `ItemID_4`, `ItemID_5`, `ItemID_6`, `ItemID_7`, `ItemID_8`, `ItemID_9`, `ItemID_10`, `ItemID_11`, `ItemID_12`, `ItemID_13`, `ItemID_14`, `ItemID_15`, `ItemID_16`, `ItemID_17`, `SetSpellID_1`, `SetSpellID_2`, `SetSpellID_3`, `SetSpellID_4`, `SetSpellID_5`, `SetSpellID_6`, `SetSpellID_7`, `SetSpellID_8`, `SetThreshold_1`, `SetThreshold_2`, `SetThreshold_3`, `SetThreshold_4`, `SetThreshold_5`, `SetThreshold_6`, `SetThreshold_7`, `SetThreshold_8`, `RequiredSkill`, `RequiredSkillRank`) VALUES
+(950,'Blackened Defias Garb','','','','','','','','','','','','','','','',16712190,910112,910115,910118,910119,0,0,0,0,0,0,0,0,0,0,0,0,0,9102,9336,0,0,0,0,0,0,2,4,0,0,0,0,0,0,0,0);
+DELETE FROM `mapdifficulty_dbc` WHERE `ID` IN (10034, 10036, 10389);
 INSERT INTO `mapdifficulty_dbc` (`ID`, `MapID`, `Difficulty`, `Message_Lang_enUS`, `Message_Lang_enGB`, `Message_Lang_koKR`, `Message_Lang_frFR`, `Message_Lang_deDE`, `Message_Lang_enCN`, `Message_Lang_zhCN`, `Message_Lang_enTW`, `Message_Lang_zhTW`, `Message_Lang_esES`, `Message_Lang_esMX`, `Message_Lang_ruRU`, `Message_Lang_ptPT`, `Message_Lang_ptBR`, `Message_Lang_itIT`, `Message_Lang_Unk`, `Message_Lang_Mask`, `RaidDuration`, `MaxPlayers`, `Difficultystring`) VALUES
-(10034,34,1,'Heroic Difficulty requires you to be level 60.','','','','','','','','','','','','','','','',16712190,86400,5,'DUNGEON_DIFFICULTY_5PLAYER_HEROIC');
+(10034,34,1,'Heroic Difficulty requires you to be level 60.','','','','','','','','','','','','','','','',16712190,86400,5,'DUNGEON_DIFFICULTY_5PLAYER_HEROIC'),
+(10036,36,1,'Heroic Difficulty requires you to be level 60.','','','','','','','','','','','','','','','',16712190,86400,5,'DUNGEON_DIFFICULTY_5PLAYER_HEROIC'),
+(10389,389,1,'Heroic Difficulty requires you to be level 60.','','','','','','','','','','','','','','','',16712190,86400,5,'DUNGEON_DIFFICULTY_5PLAYER_HEROIC');

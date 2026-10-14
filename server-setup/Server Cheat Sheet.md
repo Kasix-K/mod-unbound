@@ -32,6 +32,10 @@
 | Transmogrify spell | (none) | (none) | 200200 |
 | Loot Goblin companion | 190100 | 910001 | 200201 |
 | Arcane Loot Scanner companion | 190102 (size 0.08) | 910002 | 200202 |
+| Heroic Deadmines loot | (heroic bosses: entry + 1000000) | 910100-910121 | (none) |
+| Blackened Defias Garb set (item set 950) | (none) | 910112, 910115, 910118, 910119 | 9102, 9336 (set bonuses) |
+
+Preview a heroic item on a GM account with `.additem <item id>` (for example `.additem 910118`).
 
 ## In-game features
 
@@ -41,7 +45,8 @@
 - **Reset lockouts:** right-click your portrait, then **Reset all instances**. This resets raids and
   heroic and normal dungeons. You must be outside the instance, with no bots inside.
 - **Classic heroics:** right-click your portrait, then Dungeon Difficulty > Heroic (or type `/heroic`;
-  `/normal` switches back), and enter the dungeon (level 60+). Available so far: Stormwind Stockades.
+  `/normal` switches back), and enter the dungeon (level 60+). Available so far: Stormwind Stockades,
+  The Deadmines, Ragefire Chasm. Heroic Deadmines bosses drop level 60 loot (see Custom IDs).
   Needs the **Unbound** addon, which shows the menu from level 60 instead of 65.
 - **Solo dungeon finder:** queue alone or with bots, and you go straight in.
 
