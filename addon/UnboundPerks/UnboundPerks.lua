@@ -1,36 +1,57 @@
 -- Unbound Perks: the Character Perks window (/perks).
--- UI only for now: toggles and loadouts are saved per character in UnboundPerksDB. The server side
--- (perks actually doing something) is added later and will read the same perk ids.
+-- Toggles go to the server (src/unbound_perks.cpp), which keeps them; loadouts are saved per character
+-- in UnboundPerksDB. The window uses the game's own (Blizzard) frame art: dialog border and header,
+-- red panel buttons, check boxes and quest-log highlights.
 
 local P = UnboundPerks
 
--- ------------------------------------------------------------------ colours (navy + gold theme)
+-- ------------------------------------------------------------------ colours (Blizzard style)
 local C = {
-    bg        = { 0.035, 0.045, 0.075, 0.97 },
-    panel     = { 0.055, 0.070, 0.110, 0.96 },
-    border    = { 0.20, 0.30, 0.46, 1 },
-    borderHi  = { 0.42, 0.58, 0.85, 1 },
-    gold      = { 1.00, 0.82, 0.30 },
-    text      = { 0.90, 0.92, 0.96 },
-    muted     = { 0.52, 0.58, 0.68 },
-    rowHover  = { 0.11, 0.15, 0.23, 0.85 },
-    rowSel    = { 0.15, 0.23, 0.37, 0.95 },
-    btn       = { 0.09, 0.13, 0.21, 1 },
-    btnHover  = { 0.14, 0.21, 0.34, 1 },
-    on        = { 1.00, 0.82, 0.30 },
-    off       = { 0.22, 0.25, 0.31 },
-    active    = { 0.35, 0.85, 0.45 },
+    panel     = { 0, 0, 0, 0.55 },          -- inner panels (tinted tooltip background)
+    border    = { 0.60, 0.60, 0.60, 1 },    -- inner panel borders (tooltip border, grey)
+    gold      = { 1.00, 0.82, 0.00 },       -- NORMAL_FONT_COLOR
+    text      = { 1.00, 1.00, 1.00 },
+    muted     = { 0.60, 0.60, 0.60 },
+    selected  = { 1.00, 0.82, 0.00, 0.45 }, -- selected row highlight (gold)
+    active    = { 0.10, 1.00, 0.10 },       -- GREEN_FONT_COLOR
 }
 
 local WHITE = "Interface\\Buttons\\WHITE8X8"
-local ROW_H, CAT_H = 22, 26
+local ROW_H, CAT_H = 24, 26
 local FRAME_W, FRAME_H = 880, 620
 local DETAIL_W = 300
+local PANELS_TOP, PANELS_BOTTOM = -96, 34  -- the three panels, relative to the window
+local HIGHLIGHT = "Interface\\QuestFrame\\UI-QuestTitleHighlight"
+local SELECTED = "Interface\\QuestFrame\\UI-QuestLogTitleHighlight"
 
+-- The game's dialog window: parchment-dark background with the stone border.
+local function dialogBackdrop(f)
+    f:SetBackdrop({
+        bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background", tile = true, tileSize = 32,
+        edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border", edgeSize = 32,
+        insets = { left = 11, right = 12, top = 12, bottom = 11 },
+    })
+end
+
+-- Inner panels: the tooltip border on a darkened background.
 local function backdrop(f, bg, border)
-    f:SetBackdrop({ bgFile = WHITE, edgeFile = WHITE, edgeSize = 1, insets = { left = 1, right = 1, top = 1, bottom = 1 } })
+    f:SetBackdrop({
+        bgFile = "Interface\\Tooltips\\UI-Tooltip-Background", edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        tile = true, tileSize = 16, edgeSize = 16, insets = { left = 4, right = 4, top = 4, bottom = 4 },
+    })
     f:SetBackdropColor(unpack(bg))
     f:SetBackdropBorderColor(unpack(border or C.border))
+end
+
+-- A row's selected highlight (under the hover highlight).
+local function selectedTexture(row)
+    local t = row:CreateTexture(nil, "BACKGROUND")
+    t:SetTexture(SELECTED)
+    t:SetBlendMode("ADD")
+    t:SetVertexColor(unpack(C.selected))
+    t:SetAllPoints()
+    t:Hide()
+    return t
 end
 
 local function text(parent, font, r, g, b)
@@ -167,37 +188,31 @@ local function newLoadout()
 end
 
 -- ------------------------------------------------------------------ widgets
+-- The game's templates name their parts after the frame ("$parentText"), so every frame built from one
+-- gets a unique name.
+local frameCount = 0
+local function uniqueName(kind)
+    frameCount = frameCount + 1
+    return "UnboundPerks" .. kind .. frameCount
+end
+
+-- The game's red panel button (UIPanelButtonTemplate).
 local function makeButton(parent, label, width, onClick)
-    local b = CreateFrame("Button", nil, parent)
+    local b = CreateFrame("Button", uniqueName("Button"), parent, "UIPanelButtonTemplate")
     b:SetSize(width, 22)
-    backdrop(b, C.btn)
-    b.label = text(b, "GameFontNormalSmall")
-    b.label:SetPoint("CENTER")
-    b.label:SetText(label)
-    b.label:SetTextColor(unpack(C.gold))
-    b:SetScript("OnEnter", function(self)
-        self:SetBackdropColor(unpack(C.btnHover)); self:SetBackdropBorderColor(unpack(C.borderHi))
-    end)
-    b:SetScript("OnLeave", function(self)
-        self:SetBackdropColor(unpack(C.btn)); self:SetBackdropBorderColor(unpack(C.border))
-    end)
-    b:SetScript("OnMouseDown", function(self) self.label:SetPoint("CENTER", 1, -1) end)
-    b:SetScript("OnMouseUp", function(self) self.label:SetPoint("CENTER", 0, 0) end)
+    b:SetText(label)
     b:SetScript("OnClick", function() PlaySound("igMainMenuOptionCheckBoxOn"); onClick() end)
     return b
 end
 
-local function makeEditBox(parent, width)
-    local e = CreateFrame("EditBox", nil, parent)
-    e:SetSize(width, 22)
+-- The game's text box (InputBoxTemplate; it needs a frame name for its border textures).
+local function makeEditBox(parent, name, width)
+    local e = CreateFrame("EditBox", name, parent, "InputBoxTemplate")
+    e:SetSize(width, 20)
     e:SetAutoFocus(false)
-    e:SetFontObject(ChatFontSmall)
-    e:SetTextInsets(6, 6, 0, 0)
+    e:SetFontObject(ChatFontNormal)
     e:SetTextColor(unpack(C.text))
-    backdrop(e, { 0.02, 0.03, 0.05, 1 })
     e:SetScript("OnEscapePressed", function(self) self:ClearFocus() end)
-    e:SetScript("OnEditFocusGained", function(self) self:SetBackdropBorderColor(unpack(C.borderHi)) end)
-    e:SetScript("OnEditFocusLost", function(self) self:SetBackdropBorderColor(unpack(C.border)) end)
     return e
 end
 
@@ -283,16 +298,10 @@ local function updateCategories()
         local c = categories[i]
         if c then
             row.cat = c
-            row.bar:SetVertexColor(unpack(c.color))
             row.name:SetText(c.name)
+            row.name:SetTextColor(unpack(c.color))
             row.count:SetText(activeCount(c.key) .. "/" .. (c.limit or #perksByCat[c.key]))
-            if c.key == selectedCat then
-                row:SetBackdropColor(unpack(C.rowSel))
-                row.name:SetTextColor(1, 1, 1)
-            else
-                row:SetBackdropColor(0, 0, 0, 0)
-                row.name:SetTextColor(unpack(C.text))
-            end
+            setShown(row.sel, c.key == selectedCat)
             row:Show()
         else
             row:Hide()
@@ -307,13 +316,15 @@ local function updatePerkList()
         if perk then
             row.perk = perk
             row.name:SetText(perk.name)
-            row.box:SetVertexColor(unpack(isOn(perk) and C.on or C.off))
+            row.icon:SetTexture(perk.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
+            row.box:SetChecked(isOn(perk))
+            if perk.permanent then row.box:Disable() else row.box:Enable() end
+            row.icon:SetDesaturated(not isOn(perk))
+            setShown(row.sel, perk == selectedPerk)
             if perk == selectedPerk then
-                row:SetBackdropColor(unpack(C.rowSel))
                 row.name:SetTextColor(1, 1, 1)
             else
-                row:SetBackdropColor(0, 0, 0, 0)
-                row.name:SetTextColor(unpack(isOn(perk) and C.text or C.muted))
+                row.name:SetTextColor(unpack(isOn(perk) and C.gold or C.muted))
             end
             row:Show()
         else
@@ -337,16 +348,16 @@ local function updateDetails()
     d.name:SetText(perk.name)
     d.cat:SetText((perk.permanent and "Permanent" or c.name) .. " Perk")
     d.cat:SetTextColor(unpack(c.color))
-    d.accent:SetVertexColor(unpack(c.color))
+    d.icon:SetDesaturated(not isOn(perk))
     if perk.permanent then
         d.state:SetText("Always Active"); d.state:SetTextColor(unpack(C.active)); d.check:Show()
         d.toggle:Hide()
     elseif isOn(perk) then
         d.state:SetText("Active"); d.state:SetTextColor(unpack(C.active)); d.check:Show()
-        d.toggle.label:SetText("Turn Off"); d.toggle:Show()
+        d.toggle:SetText("Turn Off"); d.toggle:Show()
     else
         d.state:SetText("Inactive"); d.state:SetTextColor(unpack(C.muted)); d.check:Hide()
-        d.toggle.label:SetText("Turn On"); d.toggle:Show()
+        d.toggle:SetText("Turn On"); d.toggle:Show()
     end
     local body = perk.desc or ""
     if perk.live then
@@ -354,7 +365,7 @@ local function updateDetails()
         if ok and line then body = body .. (perk.liveInline and "\n" or "\n\n") .. line end
     end
     if perk.pets then
-        body = body .. "\n\n|cff8a94a8This perk also works for your pets.|r"
+        body = body .. "\n\n|cff999999This perk also works for your pets.|r"
     end
     if not perk.works and not perk.permanent then
         body = body .. "\n\n|cffff9933Not active on the server yet.|r"
@@ -401,49 +412,35 @@ local function build()
     frame:RegisterForDrag("LeftButton")
     frame:SetScript("OnDragStart", frame.StartMoving)
     frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
-    backdrop(frame, C.bg, C.borderHi)
+    dialogBackdrop(frame)
     frame:Hide()
     tinsert(UISpecialFrames, "UnboundPerksFrame") -- Escape closes it
 
-    -- header glow
-    local glow = frame:CreateTexture(nil, "BORDER")
-    glow:SetTexture(WHITE)
-    glow:SetPoint("TOPLEFT", 1, -1); glow:SetPoint("TOPRIGHT", -1, -1); glow:SetHeight(56)
-    glow:SetGradientAlpha("VERTICAL", 0.10, 0.16, 0.28, 0, 0.16, 0.24, 0.42, 0.55)
-
-    local icon = frame:CreateTexture(nil, "ARTWORK")
-    icon:SetSize(36, 36)
-    icon:SetPoint("TOPLEFT", 14, -12)
-    icon:SetTexture("Interface\\Icons\\Achievement_General")
-    icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-    local iconBorder = CreateFrame("Frame", nil, frame)
-    iconBorder:SetPoint("TOPLEFT", icon, -1, 1); iconBorder:SetPoint("BOTTOMRIGHT", icon, 1, -1)
-    iconBorder:SetBackdrop({ edgeFile = WHITE, edgeSize = 1 })
-    iconBorder:SetBackdropBorderColor(unpack(C.gold))
-
-    local title = text(frame, "GameFontNormalLarge")
-    title:SetPoint("TOPLEFT", icon, "TOPRIGHT", 10, -2)
+    -- title banner (the game's dialog header)
+    local header = frame:CreateTexture(nil, "ARTWORK")
+    header:SetTexture("Interface\\DialogFrame\\UI-DialogBox-Header")
+    header:SetSize(340, 64)
+    header:SetPoint("TOP", 0, 12)
+    local title = text(frame, "GameFontNormal")
+    title:SetPoint("TOP", header, "TOP", 0, -14)
     title:SetText("Character Perks")
-    title:SetTextColor(unpack(C.gold))
     local sub = text(frame, "GameFontHighlightSmall")
-    sub:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -3)
+    sub:SetPoint("TOP", 0, -26)
     sub:SetText("Toggle perks on to gain their power")
     sub:SetTextColor(unpack(C.muted))
 
-    local close = makeButton(frame, "X", 22, function() frame:Hide() end)
-    close:SetPoint("TOPRIGHT", -10, -10)
-    close.label:SetTextColor(1, 0.35, 0.3)
-
-    separator(frame, -58, 1, 1)
+    local close = CreateFrame("Button", "UnboundPerksCloseButton", frame, "UIPanelCloseButton")
+    close:SetPoint("TOPRIGHT", -6, -6)
 
     -- loadout bar
-    local bar = makePanel(frame)
-    bar:SetPoint("TOPLEFT", 12, -66); bar:SetPoint("TOPRIGHT", -12, -66); bar:SetHeight(36)
-    local lbl = text(bar, "GameFontNormalSmall")
-    lbl:SetPoint("LEFT", 10, 0); lbl:SetText("LOADOUT"); lbl:SetTextColor(unpack(C.gold))
+    local bar = CreateFrame("Frame", nil, frame)
+    bar:SetPoint("TOPLEFT", 18, -46); bar:SetPoint("TOPRIGHT", -18, -46); bar:SetHeight(40)
+    backdrop(bar, C.panel)
+    local lbl = text(bar, "GameFontNormal")
+    lbl:SetPoint("LEFT", 12, 0); lbl:SetText("Loadout:")
 
     ui.drop = CreateFrame("Frame", "UnboundPerksLoadoutDropDown", bar, "UIDropDownMenuTemplate")
-    ui.drop:SetPoint("LEFT", lbl, "RIGHT", -8, -2)
+    ui.drop:SetPoint("LEFT", lbl, "RIGHT", -10, -2)
     UIDropDownMenu_SetWidth(ui.drop, 130)
     UIDropDownMenu_Initialize(ui.drop, function()
         for i, lo in ipairs(db.loadouts) do
@@ -460,55 +457,45 @@ local function build()
         UIDropDownMenu_AddButton(info)
     end)
 
-    ui.nameBox = makeEditBox(bar, 150)
-    ui.nameBox:SetPoint("LEFT", ui.drop, "RIGHT", -6, 2)
+    ui.nameBox = makeEditBox(bar, "UnboundPerksLoadoutName", 150)
+    ui.nameBox:SetPoint("LEFT", ui.drop, "RIGHT", -4, 2)
     ui.nameBox:SetScript("OnEnterPressed", doRename)
 
-    local apply = makeButton(bar, "Apply", 72, doApply)
+    local apply = makeButton(bar, "Apply", 76, doApply)
     apply:SetPoint("LEFT", ui.nameBox, "RIGHT", 10, 0)
-    local save = makeButton(bar, "Save", 72, doSave)
-    save:SetPoint("LEFT", apply, "RIGHT", 6, 0)
-    local rename = makeButton(bar, "Rename", 72, doRename)
-    rename:SetPoint("LEFT", save, "RIGHT", 6, 0)
-    local delete = makeButton(bar, "Delete", 72, doDelete)
-    delete:SetPoint("LEFT", rename, "RIGHT", 6, 0)
+    local save = makeButton(bar, "Save", 76, doSave)
+    save:SetPoint("LEFT", apply, "RIGHT", 4, 0)
+    local rename = makeButton(bar, "Rename", 76, doRename)
+    rename:SetPoint("LEFT", save, "RIGHT", 4, 0)
+    local delete = makeButton(bar, "Delete", 76, doDelete)
+    delete:SetPoint("LEFT", rename, "RIGHT", 4, 0)
 
     ui.status = text(bar, "GameFontHighlightSmall")
-    ui.status:SetPoint("RIGHT", -10, 0)
+    ui.status:SetPoint("RIGHT", -12, 0)
     ui.status:SetTextColor(unpack(C.muted))
 
     -- three panels
-    local top, bottom = -110, 28
     local left = makePanel(frame)
-    left:SetPoint("TOPLEFT", 12, top); left:SetPoint("BOTTOMLEFT", 12, bottom); left:SetWidth(176)
+    left:SetPoint("TOPLEFT", 18, PANELS_TOP); left:SetPoint("BOTTOMLEFT", 18, PANELS_BOTTOM); left:SetWidth(176)
     local right = makePanel(frame)
-    right:SetPoint("TOPRIGHT", -12, top); right:SetPoint("BOTTOMRIGHT", -12, bottom); right:SetWidth(DETAIL_W)
+    right:SetPoint("TOPRIGHT", -18, PANELS_TOP); right:SetPoint("BOTTOMRIGHT", -18, PANELS_BOTTOM)
+    right:SetWidth(DETAIL_W)
     local mid = makePanel(frame)
-    mid:SetPoint("TOPLEFT", left, "TOPRIGHT", 10, 0); mid:SetPoint("BOTTOMRIGHT", right, "BOTTOMLEFT", -10, 0)
+    mid:SetPoint("TOPLEFT", left, "TOPRIGHT", 6, 0); mid:SetPoint("BOTTOMRIGHT", right, "BOTTOMLEFT", -6, 0)
 
     -- categories
-    local ch = text(left, "GameFontNormalSmall")
-    ch:SetPoint("TOPLEFT", 10, -10); ch:SetText("CATEGORIES"); ch:SetTextColor(unpack(C.gold))
-    separator(left, -26)
+    local ch = text(left, "GameFontNormal")
+    ch:SetPoint("TOPLEFT", 12, -12); ch:SetText("Categories")
+    separator(left, -30)
     for i = 1, #P.CATEGORIES do
         local row = CreateFrame("Button", nil, left)
         row:SetHeight(CAT_H)
-        row:SetPoint("TOPLEFT", 4, -32 - (i - 1) * (CAT_H + 2))
-        row:SetPoint("TOPRIGHT", -4, -32 - (i - 1) * (CAT_H + 2))
-        row:SetBackdrop({ bgFile = WHITE })
-        row:SetBackdropColor(0, 0, 0, 0)
-        row.bar = row:CreateTexture(nil, "ARTWORK")
-        row.bar:SetTexture(WHITE); row.bar:SetWidth(3)
-        row.bar:SetPoint("TOPLEFT"); row.bar:SetPoint("BOTTOMLEFT")
-        row.name = text(row, "GameFontHighlightSmall"); row.name:SetPoint("LEFT", 12, 0)
-        row.count = text(row, "GameFontNormalSmall"); row.count:SetPoint("RIGHT", -8, 0)
-        row.count:SetTextColor(unpack(C.gold))
-        row:SetScript("OnEnter", function(self)
-            if self.cat and self.cat.key ~= selectedCat then self:SetBackdropColor(unpack(C.rowHover)) end
-        end)
-        row:SetScript("OnLeave", function(self)
-            if self.cat and self.cat.key ~= selectedCat then self:SetBackdropColor(0, 0, 0, 0) end
-        end)
+        row:SetPoint("TOPLEFT", 6, -36 - (i - 1) * (CAT_H + 2))
+        row:SetPoint("TOPRIGHT", -6, -36 - (i - 1) * (CAT_H + 2))
+        row:SetHighlightTexture(HIGHLIGHT, "ADD")
+        row.sel = selectedTexture(row)
+        row.name = text(row, "GameFontNormal"); row.name:SetPoint("LEFT", 10, 0)
+        row.count = text(row, "GameFontHighlightSmall"); row.count:SetPoint("RIGHT", -8, 0)
         row:SetScript("OnClick", function(self)
             PlaySound("igMainMenuOptionCheckBoxOn")
             selectCategory(self.cat.key)
@@ -517,10 +504,10 @@ local function build()
     end
 
     -- search
-    ui.search = makeEditBox(mid, 10)
-    ui.search:SetPoint("TOPLEFT", 10, -10); ui.search:SetPoint("TOPRIGHT", -10, -10)
+    ui.search = makeEditBox(mid, "UnboundPerksSearch", 10)
+    ui.search:SetPoint("TOPLEFT", 16, -12); ui.search:SetPoint("TOPRIGHT", -12, -12)
     local hint = text(ui.search, "GameFontDisableSmall")
-    hint:SetPoint("LEFT", 8, 0); hint:SetText("Search all perks...")
+    hint:SetPoint("LEFT", 2, 0); hint:SetText("Search all perks...")
     ui.search:SetScript("OnTextChanged", function(self)
         setShown(hint, self:GetText() == "" and not self:HasFocus())
         FauxScrollFrame_SetOffset(ui.scroll, 0); ui.scroll:SetVerticalScroll(0)
@@ -536,26 +523,22 @@ local function build()
     ui.scroll:SetScript("OnVerticalScroll", function(self, offset)
         FauxScrollFrame_OnVerticalScroll(self, offset, ROW_H, updatePerkList)
     end)
-    local visible = math.floor((FRAME_H - 110 - 28 - 40 - 8) / ROW_H)
+    local visible = math.floor((FRAME_H + PANELS_TOP - PANELS_BOTTOM + listTop - 8) / ROW_H)
     for i = 1, visible do
         local row = CreateFrame("Button", nil, mid)
         row:SetHeight(ROW_H)
         row:SetPoint("TOPLEFT", 6, listTop - (i - 1) * ROW_H)
         row:SetPoint("TOPRIGHT", -30, listTop - (i - 1) * ROW_H)
-        row:SetBackdrop({ bgFile = WHITE })
-        row:SetBackdropColor(0, 0, 0, 0)
-        row.boxBtn = CreateFrame("Button", nil, row)
-        row.boxBtn:SetSize(16, 16); row.boxBtn:SetPoint("LEFT", 4, 0)
-        row.box = row.boxBtn:CreateTexture(nil, "ARTWORK")
-        row.box:SetTexture(WHITE); row.box:SetSize(9, 9); row.box:SetPoint("CENTER")
-        row.boxBtn:SetScript("OnClick", function() togglePerk(row.perk) end)
-        row.name = text(row, "GameFontHighlightSmall"); row.name:SetPoint("LEFT", 24, 0)
-        row:SetScript("OnEnter", function(self)
-            if self.perk ~= selectedPerk then self:SetBackdropColor(unpack(C.rowHover)) end
-        end)
-        row:SetScript("OnLeave", function(self)
-            if self.perk ~= selectedPerk then self:SetBackdropColor(0, 0, 0, 0) end
-        end)
+        row:SetHighlightTexture(HIGHLIGHT, "ADD")
+        row.sel = selectedTexture(row)
+        -- the game's check box: clicking it toggles the perk; the server's answer sets it back if refused
+        row.box = CreateFrame("CheckButton", uniqueName("Check"), row, "UICheckButtonTemplate")
+        row.box:SetSize(22, 22); row.box:SetPoint("LEFT", 0, 0)
+        row.box:SetScript("OnClick", function() togglePerk(row.perk); refresh() end)
+        row.icon = row:CreateTexture(nil, "ARTWORK")
+        row.icon:SetSize(18, 18); row.icon:SetPoint("LEFT", 24, 0)
+        row.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+        row.name = text(row, "GameFontNormalSmall"); row.name:SetPoint("LEFT", row.icon, "RIGHT", 6, 0)
         row:SetScript("OnClick", function(self) selectedPerk = self.perk; refresh() end)
         row:SetScript("OnDoubleClick", function(self) togglePerk(self.perk) end)
         perkRows[i] = row
@@ -572,16 +555,15 @@ local function build()
     d.content = CreateFrame("Frame", nil, right)
     d.content:SetAllPoints()
     local cnt = d.content
-    d.accent = cnt:CreateTexture(nil, "ARTWORK")
-    d.accent:SetTexture(WHITE); d.accent:SetWidth(3)
-    d.accent:SetPoint("TOPLEFT", 10, -10); d.accent:SetHeight(48)
     d.icon = cnt:CreateTexture(nil, "ARTWORK")
-    d.icon:SetSize(40, 40); d.icon:SetPoint("TOPLEFT", 20, -14)
-    d.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-    d.name = text(cnt, "GameFontNormal")
-    d.name:SetPoint("TOPLEFT", d.icon, "TOPRIGHT", 10, -1); d.name:SetWidth(DETAIL_W - 70)
+    d.icon:SetSize(40, 40); d.icon:SetPoint("TOPLEFT", 18, -16)
+    -- the action button frame around the icon
+    local iconFrame = cnt:CreateTexture(nil, "OVERLAY")
+    iconFrame:SetTexture("Interface\\Buttons\\UI-Quickslot2")
+    iconFrame:SetSize(70, 70); iconFrame:SetPoint("CENTER", d.icon, "CENTER", 0, 0)
+    d.name = text(cnt, "GameFontNormalLarge")
+    d.name:SetPoint("TOPLEFT", d.icon, "TOPRIGHT", 12, -1); d.name:SetWidth(DETAIL_W - 76)
     d.name:SetJustifyH("LEFT")
-    d.name:SetTextColor(unpack(C.gold))
     d.cat = text(cnt, "GameFontHighlightSmall")
     d.cat:SetPoint("TOPLEFT", d.name, "BOTTOMLEFT", 0, -3)
     d.check = cnt:CreateTexture(nil, "ARTWORK")
@@ -591,24 +573,25 @@ local function build()
     d.state:SetPoint("TOPLEFT", d.cat, "BOTTOMLEFT", 14, -3)
 
     separator(cnt, -72)
-    local eh = text(cnt, "GameFontNormalSmall")
-    eh:SetPoint("TOPLEFT", 12, -84); eh:SetText("EFFECT"); eh:SetTextColor(unpack(C.gold))
+    local eh = text(cnt, "GameFontNormal")
+    eh:SetPoint("TOPLEFT", 14, -82); eh:SetText("Effect")
     d.desc = text(cnt, "GameFontHighlightSmall")
     -- 3.3.5 font strings only wrap with an explicit width (two side anchors keep them on one line)
-    d.desc:SetPoint("TOPLEFT", eh, "BOTTOMLEFT", 0, -6); d.desc:SetWidth(DETAIL_W - 24)
+    d.desc:SetPoint("TOPLEFT", eh, "BOTTOMLEFT", 0, -6); d.desc:SetWidth(DETAIL_W - 28)
     d.desc:SetJustifyH("LEFT"); d.desc:SetJustifyV("TOP")
     d.desc:SetTextColor(unpack(C.text))
     d.note = text(cnt, "GameFontHighlightSmall")
-    d.note:SetPoint("TOPLEFT", d.desc, "BOTTOMLEFT", 0, -6); d.note:SetWidth(DETAIL_W - 24)
+    d.note:SetPoint("TOPLEFT", d.desc, "BOTTOMLEFT", 0, -6); d.note:SetWidth(DETAIL_W - 28)
     d.note:SetJustifyH("LEFT")
     d.note:SetTextColor(unpack(C.muted))
-    d.toggle = makeButton(cnt, "Turn On", 120, function() if selectedPerk then togglePerk(selectedPerk) end end)
+    d.toggle = makeButton(cnt, "Turn On", 130, function() if selectedPerk then togglePerk(selectedPerk) end end)
+    d.toggle:SetHeight(24)
     d.toggle:SetPoint("BOTTOM", 0, 14)
 
     -- footer
     local foot = text(frame, "GameFontDisableSmall")
-    foot:SetPoint("BOTTOMLEFT", 14, 9)
-    foot:SetText("Up to 5 Offensive perks at a time.  Perks can't be changed in combat.  Click a square or double-click a perk to toggle it.")
+    foot:SetPoint("BOTTOMLEFT", 22, 16)
+    foot:SetText("Up to 5 Offensive perks at a time.  Perks can't be changed in combat.  Tick a box or double-click a perk to toggle it.")
 
     frame:SetScript("OnShow", function() PlaySound("igCharacterInfoOpen"); refresh() end)
     frame:SetScript("OnHide", function() PlaySound("igCharacterInfoClose") end)
