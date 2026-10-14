@@ -58,6 +58,20 @@ goes to him; `.respawn` next to his corpse brings him back early (for testing).
   mana per second). Switch on up to 5 Offensive perks (about +10% each) and your class perk (so far: Paladin
   Retribution). Perks can't be changed in combat; save favourite sets as loadouts.
 
+## Perk ranks (planned, not built yet)
+
+No perk has ranks yet, Permanent ones included: each has one fixed value (for example Masteries +10%,
+Rapid Recovery 8% per second after 4 seconds, which can be changed in `mod_unbound.conf`). The plan:
+
+1. **Add rank support first** (a few hours): a rank saved per perk for each character, a value per rank
+   for every perk, "Rank 1 / 1" in the perk window and tooltips, and a GM command to set a rank for
+   testing. Every perk starts at Rank 1 with today's numbers, so nothing changes in game.
+2. **Later, give each perk its real ranks**, for example Masteries: Rank 1 +4%, Rank 2 +6%, Rank 3 +8%,
+   Rank 4 +10%. Decide then how ranks are earned (levels, Heroic currency, quests, ...).
+
+No Daze and No Resurrection Sickness stay on/off (no ranks). Only one person should add the rank
+support, while the other holds off on perk changes (both edit the same files).
+
 ## Expansion lock (classic only for now)
 
 The Burning Crusade and Wrath of the Lich King are locked: level cap 60, no Outland or Northrend, no
