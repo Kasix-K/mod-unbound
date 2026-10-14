@@ -57,26 +57,70 @@ After changing one, run `python tools/custom_dbc.py`, restart the worldserver, a
 This repository is private; the owner invites collaborators under Settings > Collaborators. Each person
 runs their own server and database; Git shares only this module's code.
 
-### First-time setup
+### First-time setup (a new PC)
 
-1. Have an AzerothCore (mod-playerbots fork) server with mod-transmog-plus and mod-aoe-loot, laid out
-   like the original: `<server root>\azerothcore\` with the extracted DBCs in `<server root>\data\dbc\`.
-2. Clone this repository into the modules folder, keeping the folder name `mod-unbound`:
+`server-setup/setup-wow-server.ps1` installs a complete copy of the Unbound server: the build tools,
+MySQL, AzerothCore and every module at the same versions as the original, your own databases, the
+original's server settings, the start/stop/rebuild scripts and the cheat sheet. Your characters and
+accounts are your own; all the custom game data (heroics, companions, vendors) builds itself.
+
+**You need:**
+
+- Windows 10/11, about 60 GB free for the server, plus room for the game client.
+- [Git for Windows](https://git-scm.com/download/win), [Python 3](https://www.python.org/downloads/)
+  (tick "Add python.exe to PATH" when installing), and
+  [Visual Studio Build Tools 2022](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (the script
+  adds the C++ part itself).
+- Access to this repository (the owner invites you under Settings > Collaborators).
+- A copy of the **Unbound game client** from the owner (it is far too big for GitHub, around 40 GB, and
+  includes the visual patch packs). Copy it anywhere, e.g. `D:\WoW 3.3.5a Unbound`. The owner can leave
+  out its `WTF` and `Cache` folders (personal settings and saved account name).
+
+**Steps:**
+
+1. Download this repository: on GitHub, **Code > Download ZIP**, and unzip it anywhere (e.g. Downloads).
+   This copy is only used to start the setup; the script clones its own copy into the server.
+2. Open PowerShell and run the setup script, with `-Root` set to the folder for the server:
 
    ```bash
-   git clone https://github.com/Kasix-K/mod-unbound.git azerothcore/modules/mod-unbound
+   powershell -ExecutionPolicy Bypass -File "$HOME\Downloads\mod-unbound-main\server-setup\setup-wow-server.ps1" -Root "D:\WoW Solo Server"
    ```
 
-3. Re-run CMake and rebuild the worldserver (the module's C++ is compiled into it).
-4. Start the worldserver; it applies `data/sql/db-world` automatically.
-5. Build the client patch into your own 3.3.5a client (the default `--client` path is the original PC's):
+   It asks a few questions (a MySQL password to choose, a GitHub sign-in for this repository, the client
+   folder at the end). The build takes 30-90 minutes. If anything stops it, fix that and run it again;
+   finished steps are skipped.
+3. Check the client points at your own PC: `Data\enUS\realmlist.wtf` in the client folder should say
+   `set realmlist 127.0.0.1` (the owner's copy already does).
+4. Double-click `Start Server.bat` in the server folder. The first start fills the databases and takes
+   several minutes.
+5. In the worldserver window, make your account and make it a GM:
 
-   ```bash
-   python tools/custom_dbc.py --client "C:\path\to\your\WoW 3.3.5a client"
+   ```
+   account create <name> <password>
+   account set gmlevel <name> 3 -1
    ```
 
-   Add `--dbc "<folder>"` if your server DBCs aren't in `<server root>\data\dbc`. The client also needs
-   mod-transmog-plus's `Transmog` addon in `Interface\AddOns`.
+6. Log in. `Server Cheat Sheet.md` in the server folder has everything else (NPCs to place, commands).
+
+**Setting up the client by hand** (if you skipped the script's last step): copy `addon\Unbound` from this
+repository and `addon\Transmog` from `azerothcore\modules\mod-transmog-plus` into the client's
+`Interface\AddOns`, then build the client patch (with the game closed):
+
+```bash
+python tools/custom_dbc.py --client "D:\WoW 3.3.5a Unbound" --dbc "D:\WoW Solo Server\data\dbc"
+```
+
+**Server settings:** `server-setup/apply-unbound-settings.ps1` holds every setting the Unbound server
+changes from the defaults (level 60 cap, cross-faction, faster XP, solo scaling floor 0.4, transmog,
+playerbots, ...). The setup script applies it to new config files; run it again (servers stopped) after
+pulling a settings change:
+
+```bash
+powershell -ExecutionPolicy Bypass -File server-setup\apply-unbound-settings.ps1 -ConfigDir "D:\WoW Solo Server\server\configs"
+```
+
+**Module versions:** the AzerothCore and module versions are pinned in `server-setup/setup-wow-server.ps1`
+(`$CoreCommit`, `$Modules`). When the original server updates one, update it there too.
 
 ### Day to day
 
@@ -86,8 +130,11 @@ runs their own server and database; Git shares only this module's code.
 - After pulling someone else's changes:
   - C++ changed (`src/`): rebuild the worldserver.
   - SQL changed (`data/sql/`): restart the worldserver.
-  - `tools/custom_dbc.py` changed: run it again (with your `--client`), restart the worldserver and the
-    client.
+  - `tools/custom_dbc.py` or `tools/classic_heroics.py` changed: run it again (custom_dbc.py with your
+    `--client`), restart the worldserver and the client.
+  - `server-setup/apply-unbound-settings.ps1` changed: run it on your configs, restart the worldserver.
+  - `addon/` changed: copy the addon into your client's `Interface\AddOns` again.
+- Keep `server-setup/Server Cheat Sheet.md` and `ROADMAP.md` up to date with your changes.
 - New features go in their own `src/unbound_<feature>.cpp`, registered in `src/unbound_loader.cpp`, and get
   a line under Features above.
 - Custom IDs are shared, so pick new ones next to the existing ones and say so in the commit: spells
