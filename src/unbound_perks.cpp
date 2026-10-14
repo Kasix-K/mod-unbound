@@ -4,8 +4,10 @@
  * Permanent perks (always on for every player):
  *   No Resurrection Sickness   worldserver.conf: Death.SicknessLevel = 255 (apply-unbound-settings.ps1)
  *   No Daze                    worldserver.conf: Daze.Enabled = 0          (apply-unbound-settings.ps1)
- *   Rapid Recovery             below: after 3 seconds out of combat, restore 15% of maximum health and
- *                              mana every second until full.
+ *   Rapid Recovery             below: after 4 seconds out of combat, restore 8% of maximum health and
+ *                              mana every second until full (mod_unbound.conf).
+ *
+ * Numbers are kept in normal WoW ranges (no Peloria-sized scaling): one perk is worth about +10%.
  *
  * Toggled perks: the addon whispers the player's own character with prefix "UBPERK"
  *   SYNC                       send me my perks
@@ -14,53 +16,54 @@
  * and the server answers with "STATE:<id>,<id>,..." (the active perks it knows) or "ERR:<text>".
  * Perks can't be changed in combat. Active perks are saved in characters.character_unbound_perks.
  * At most MAX_ACTIVE_OFFENSIVE (5) Offensive perks (ids 101-199) can be active at once; the addon uses
- * the same limit (CATEGORIES in addon/UnboundPerks/PerkData.lua).
+ * the same limit (CATEGORIES in addon/UnboundPerks/PerkData.lua). Class perks (ids 1001+) only work for
+ * their class (CLASS_PERKS); the server refuses them for any other class.
  *
  * Working toggled perks (ids match addon/UnboundPerks/PerkData.lua; all also work for pets):
- *   101 Cyclic Power           damage done cycles between -50% and +100% over 25 seconds
- *   102 Critical Understanding every 300% crit chance above 100% = +1% crit damage, up to +200%
- *   103 Defensive Sacrifice    take 30% more damage; +10% of current attack power and spell power
- *   104 Desperate Power        -75% of your magic resistances (Fire, Nature, Frost, Shadow, Arcane);
- *                              +50% damage dealt
- *   105 Block Capping          block chance is capped at 60%; every 200% above the cap = +1% damage
- *   106 Dodge Capping          the same for dodge         (all three up to +200%; the caps apply to
+ *   101 Cyclic Power           damage done cycles between -10% and +20% over 25 seconds
+ *   102 Critical Understanding every 1% crit chance above 25% = +1% crit damage, up to +20%
+ *   103 Defensive Sacrifice    take 10% more damage; +10% of current attack power and spell power
+ *   104 Desperate Power        -50% of your magic resistances (Fire, Nature, Frost, Shadow, Arcane);
+ *                              +10% damage dealt
+ *   105 Block Capping          block chance is capped at 20%; every 1% above the cap = +1% damage
+ *   106 Dodge Capping          the same for dodge         (each up to +10%; the caps apply to
  *   107 Parry Capping          the same for parry          melee attacks against you)
- *   108 Haste Capping          every 200% haste above 60% = +1% damage, up to +200%; take 10% more damage
- *   109 Pet Encouragement      your pets, guardians and totems deal 40% more damage
- *   110 Rolling Momentum       +2% damage per second in combat, up to +50%; out of combat it drops 2% per second
- *   111 Tunnel Vision          single-target damage +40%, area damage -30%
- *   112 Collateral Damage      area damage +40%, single-target damage -30%
+ *   108 Haste Capping          every 1% haste above 5% = +1% damage, up to +10%; take 5% more damage
+ *   109 Pet Encouragement      your pets, guardians and totems deal 15% more damage
+ *   110 Rolling Momentum       +1% damage per second in combat, up to +10%; out of combat it drops 1% per second
+ *   111 Tunnel Vision          single-target damage +10%, area damage -10%
+ *   112 Collateral Damage      area damage +10%, single-target damage -10%
  *                              (area = a spell that hits an area or chains to more targets; everything else,
  *                              melee and auto attacks included, is single-target)
- *   113 Giant Slayer           +25% damage to bosses (world bosses and dungeon/raid bosses)
- *   114 Merciless              damage-over-time ticks +50%
- *   115 Pressure               each hit on the same target +8% damage, up to 10 stacks (+80%); switching
+ *   113 Giant Slayer           +10% damage to bosses (world bosses and dungeon/raid bosses)
+ *   114 Merciless              damage-over-time ticks +15%
+ *   115 Pressure               each hit on the same target +1% damage, up to 10 stacks (+10%); switching
  *                              targets resets it (tracked per attacker, so a pet keeps its own stacks;
  *                              direct hits add a stack, damage-over-time ticks use the current stacks)
  *   116 Chaos                  each damaging ability (a spell or a weapon strike, not auto attacks or
- *                              damage-over-time ticks) has a 10% chance to deal double damage
- *   117 Power Conversion       every 30000 of your highest base stat = +0.5% damage, up to +200%
- *   118 Healing Powah          healing done +25% (direct heals and heal-over-time ticks)
- *   119 Shadow Mastery         Shadow spell damage +30%
- *   120 Holy Mastery           Holy spell damage +30%
- *   121 Arcane Mastery         Arcane spell damage +30%
- *   122 Nature Mastery         Nature spell damage +30%
- *   123 Fire Mastery           Fire spell damage +30%
- *   124 Frost Mastery          Frost spell damage +30%
- *   125 Physical Mastery       Physical damage +30% (melee and auto attacks, weapon strikes, Physical
+ *                              damage-over-time ticks) has a 10% chance to deal 50% more damage
+ *   117 Power Conversion       every 100 of your highest base stat = +1% damage, up to +10%
+ *   118 Healing Powah          healing done +10% (direct heals and heal-over-time ticks)
+ *   119 Shadow Mastery         Shadow spell damage +10%
+ *   120 Holy Mastery           Holy spell damage +10%
+ *   121 Arcane Mastery         Arcane spell damage +10%
+ *   122 Nature Mastery         Nature spell damage +10%
+ *   123 Fire Mastery           Fire spell damage +10%
+ *   124 Frost Mastery          Frost spell damage +10%
+ *   125 Physical Mastery       Physical damage +10% (melee and auto attacks, weapon strikes, Physical
  *                              spells and bleeds)
  *                              (a spell counts for a school if that school is part of it, e.g. Shadowfrost)
  *
  * Class perks (ids 1001+):
- *  1001 Retribution (Paladin)  Improved Divine Storm: Divine Storm has no target cap, and every enemy it hits
- *                              also takes a Crusader Strike.
- *                              All Will Be Judged!: a Judgement spreads to every enemy within 10 yards of the
- *                              target, and every enemy a Judgement hits takes a free Exorcism (no cooldown).
- *                              Exorcist: Exorcism scales with 60% of attack power and 60% of spell power
+ *  1001 Retribution (Paladin)  Improved Divine Storm: Divine Storm hits up to 6 enemies (normally 4), and every
+ *                              enemy it hits also takes a Crusader Strike.
+ *                              All Will Be Judged!: a Judgement spreads to up to 4 more enemies within 10 yards
+ *                              of the target, and every enemy a Judgement hits takes a free Exorcism (no cooldown).
+ *                              Exorcist: Exorcism scales with 30% of attack power and 30% of spell power
  *                              (instead of 15% / 15%).
  *                              Righteous Explosion: an enemy dying with your Righteous Vengeance damage-over-
- *                              time deals the damage left on it to up to 20 enemies within 8 yards.
- *                              By Sword & Light: Holy damage x59 (+5800%), Physical damage x27 (+2600%).
+ *                              time deals the damage left on it to up to 5 enemies within 8 yards.
+ *                              By Sword & Light: Holy damage +15%, Physical damage +10%.
  *                              The extra Crusader Strikes, Judgements and Exorcisms are free triggered casts.
  *
  * Settings (mod_unbound.conf): Unbound.Perks.RapidRecovery (on/off), .Delay (ms), .Percent.
@@ -98,8 +101,8 @@ namespace
 {
     // ------------------------------------------------------------------ Rapid Recovery settings
     bool sRapidRecovery = true;
-    uint32 sRecoveryDelayMs = 3000;
-    uint32 sRecoveryPercent = 15;
+    uint32 sRecoveryDelayMs = 4000;
+    uint32 sRecoveryPercent = 8;
     constexpr uint32 RECOVERY_TICK_MS = 1000;
 
     // ------------------------------------------------------------------ toggled perks
@@ -143,21 +146,35 @@ namespace
         PERK_NATURE_MASTERY, PERK_FIRE_MASTERY, PERK_FROST_MASTERY, PERK_PHYSICAL_MASTERY,
         PERK_RETRIBUTION };
 
+    // Class perks: the class each one belongs to. The server refuses a class perk for any other class.
+    std::unordered_map<uint32, uint8> const CLASS_PERKS = {
+        { PERK_RETRIBUTION, CLASS_PALADIN },
+    };
+
     // Retribution
     constexpr uint32 SPELL_CRUSADER_STRIKE = 35395;
     constexpr uint32 SPELL_EXORCISM_RANK_1 = 879;
     constexpr uint32 SPELL_RIGHTEOUS_VENGEANCE_DOT = 61840;
+    constexpr int32 DIVINE_STORM_MAX_TARGETS = 6;     // normally 4
     constexpr float JUDGEMENT_SPREAD_RANGE = 10.0f;
+    constexpr uint32 JUDGEMENT_SPREAD_TARGETS = 4;    // extra enemies besides the target
     constexpr float EXPLOSION_RANGE = 8.0f;
-    constexpr uint32 EXPLOSION_MAX_TARGETS = 20;
-    constexpr float EXORCIST_EXTRA_SCALING = 0.45f;   // 60% wanted, Exorcism already has 15% (spell_bonus_data)
-    constexpr float SWORD_LIGHT_HOLY = 59.0f;         // +5800%
-    constexpr float SWORD_LIGHT_PHYSICAL = 27.0f;     // +2600%
+    constexpr uint32 EXPLOSION_MAX_TARGETS = 5;
+    constexpr float EXORCIST_EXTRA_SCALING = 0.15f;   // 30% wanted, Exorcism already has 15% (spell_bonus_data)
+    constexpr float SWORD_LIGHT_HOLY = 1.15f;         // +15%
+    constexpr float SWORD_LIGHT_PHYSICAL = 1.10f;     // +10%
 
     constexpr char const* PREFIX = "UBPERK";
     constexpr uint32 MAX_ACTIVE_OFFENSIVE = 5;
 
     bool IsOffensive(uint32 perk) { return perk >= 101 && perk <= 199; }
+
+    // False for a class perk of another class.
+    bool CanUsePerk(Player const* player, uint32 perk)
+    {
+        auto itr = CLASS_PERKS.find(perk);
+        return itr == CLASS_PERKS.end() || player->getClass() == itr->second;
+    }
 
     uint32 CountOffensive(std::set<uint32> const& perks)
     {
@@ -166,29 +183,35 @@ namespace
     constexpr uint32 STAT_REFRESH_MS = 2000;
 
     constexpr uint32 CYCLE_MS = 25000;               // Cyclic Power period
-    constexpr float SACRIFICE_DAMAGE_TAKEN = 1.30f;  // Defensive Sacrifice
+    constexpr float CYCLE_CENTER = 1.05f;            // Cyclic Power: 0.90 .. 1.20 (-10% .. +20%)
+    constexpr float CYCLE_AMPLITUDE = 0.15f;
+    constexpr float SACRIFICE_DAMAGE_TAKEN = 1.10f;  // Defensive Sacrifice
     constexpr float SACRIFICE_STAT_PCT = 0.10f;
     constexpr uint32 SPELL_CRIT_DAMAGE_AURA = 58670; // "Prey on the Weak": one aura, +X% crit damage, all schools
-    constexpr float DESPERATE_DAMAGE_DONE = 1.50f;   // Desperate Power
-    constexpr float DESPERATE_RESIST_PCT = 0.75f;
-    constexpr float AVOIDANCE_CAP = 60.0f;           // Block/Dodge/Parry Capping: cap (%)
-    constexpr float AVOIDANCE_STEP = 200.0f;         // ... +1% damage per this much above the cap
-    constexpr int32 AVOIDANCE_MAX_BONUS = 200;       // ... up to +200%
-    constexpr float HASTE_DAMAGE_TAKEN = 1.10f;      // Haste Capping
-    constexpr float PET_DAMAGE_DONE = 1.40f;         // Pet Encouragement
-    constexpr int32 MOMENTUM_STEP = 2;               // Rolling Momentum: % per second
-    constexpr int32 MOMENTUM_MAX = 50;
-    constexpr float FOCUS_BONUS = 1.40f;             // Tunnel Vision / Collateral Damage
-    constexpr float FOCUS_PENALTY = 0.70f;
-    constexpr float GIANT_SLAYER_BONUS = 1.25f;
-    constexpr float MERCILESS_DOT_BONUS = 1.50f;
-    constexpr float HEALING_POWAH_BONUS = 1.25f;
-    constexpr float SCHOOL_MASTERY_BONUS = 1.30f;
-    constexpr int32 PRESSURE_STEP = 8;               // % per stack
+    constexpr float CRIT_UNDERSTANDING_FLOOR = 25.0f;  // Critical Understanding: +1% crit damage per 1% crit above this
+    constexpr int32 CRIT_UNDERSTANDING_MAX = 20;
+    constexpr float DESPERATE_DAMAGE_DONE = 1.10f;   // Desperate Power
+    constexpr float DESPERATE_RESIST_PCT = 0.50f;
+    constexpr float AVOIDANCE_CAP = 20.0f;           // Block/Dodge/Parry Capping: cap (%)
+    constexpr float AVOIDANCE_STEP = 1.0f;           // ... +1% damage per this much above the cap
+    constexpr int32 AVOIDANCE_MAX_BONUS = 10;        // ... up to +10% each
+    constexpr float HASTE_CAP = 5.0f;                // Haste Capping: +1% damage per 1% haste above this
+    constexpr float HASTE_DAMAGE_TAKEN = 1.05f;
+    constexpr float PET_DAMAGE_DONE = 1.15f;         // Pet Encouragement
+    constexpr int32 MOMENTUM_STEP = 1;               // Rolling Momentum: % per second
+    constexpr int32 MOMENTUM_MAX = 10;
+    constexpr float FOCUS_BONUS = 1.10f;             // Tunnel Vision / Collateral Damage
+    constexpr float FOCUS_PENALTY = 0.90f;
+    constexpr float GIANT_SLAYER_BONUS = 1.10f;
+    constexpr float MERCILESS_DOT_BONUS = 1.15f;
+    constexpr float HEALING_POWAH_BONUS = 1.10f;
+    constexpr float SCHOOL_MASTERY_BONUS = 1.10f;
+    constexpr int32 PRESSURE_STEP = 1;               // % per stack
     constexpr uint32 PRESSURE_MAX_STACKS = 10;
     constexpr float CHAOS_CHANCE = 10.0f;            // %
-    constexpr float POWER_CONVERSION_STAT = 30000.0f;   // +0.5% per this much of the highest base stat
-    constexpr float POWER_CONVERSION_MAX = 200.0f;
+    constexpr float CHAOS_MULTIPLIER = 1.50f;
+    constexpr float POWER_CONVERSION_STAT = 100.0f;  // +1% per this much of the highest base stat
+    constexpr float POWER_CONVERSION_MAX = 10.0f;
 
     enum class HitKind { Melee, Spell, Periodic };
 
@@ -247,9 +270,9 @@ namespace
     // ------------------------------------------------------------------ damage multipliers
     float CyclicMultiplier(PerkState const* state)
     {
-        // 0.5 .. 2.0 (-50% .. +100%), a smooth wave over CYCLE_MS starting at +25%
+        // 0.9 .. 1.2 (-10% .. +20%), a smooth wave over CYCLE_MS starting at +5%
         uint32 t = (getMSTime() - state->cycleStartMs) % CYCLE_MS;
-        return 1.25f + 0.75f * std::sin(2.0f * float(M_PI) * float(t) / float(CYCLE_MS));
+        return CYCLE_CENTER + CYCLE_AMPLITUDE * std::sin(2.0f * float(M_PI) * float(t) / float(CYCLE_MS));
     }
 
     bool IsAreaDamage(SpellInfo const* spellInfo)
@@ -434,7 +457,7 @@ namespace
             mult *= MERCILESS_DOT_BONUS;
 
         if (kind == HitKind::Spell && Has(state, PERK_CHAOS) && roll_chance_f(CHAOS_CHANCE))
-            mult *= 2.0f;
+            mult *= CHAOS_MULTIPLIER;
 
         if (state->powerConversion > 0.0f)
             mult *= 1.0f + state->powerConversion / 100.0f;
@@ -539,15 +562,15 @@ namespace
         state.desperateResist[school] = amount;
     }
 
-    // Block/Dodge/Parry Capping: +1% damage per AVOIDANCE_STEP above the cap, up to AVOIDANCE_MAX_BONUS
-    int32 OverCapBonus(float chance)
+    // Block/Dodge/Parry/Haste Capping: +1% damage per AVOIDANCE_STEP above the cap, up to AVOIDANCE_MAX_BONUS
+    int32 OverCapBonus(float chance, float cap = AVOIDANCE_CAP)
     {
-        return std::min(AVOIDANCE_MAX_BONUS, int32(std::max(0.0f, chance - AVOIDANCE_CAP) / AVOIDANCE_STEP));
+        return std::min(AVOIDANCE_MAX_BONUS, int32(std::max(0.0f, chance - cap) / AVOIDANCE_STEP));
     }
 
     void RefreshStatPerks(Player* player, PerkState& state)
     {
-        // Desperate Power: remove 75% of each magic resistance (not counting what it already removed)
+        // Desperate Power: remove 50% of each magic resistance (not counting what it already removed)
         for (uint8 school : MAGIC_SCHOOLS)
         {
             int32 amount = 0;
@@ -568,7 +591,7 @@ namespace
         {
             float haste = std::max({ player->GetRatingBonusValue(CR_HASTE_MELEE), player->GetRatingBonusValue(CR_HASTE_RANGED),
                                      player->GetRatingBonusValue(CR_HASTE_SPELL) });
-            capping += OverCapBonus(haste);
+            capping += OverCapBonus(haste, HASTE_CAP);
         }
         state.cappingBonus = capping;
 
@@ -579,7 +602,7 @@ namespace
             float highest = 0.0f;
             for (uint8 stat = STAT_STRENGTH; stat < MAX_STATS; ++stat)
                 highest = std::max(highest, player->GetStat(Stats(stat)));
-            state.powerConversion = std::min(POWER_CONVERSION_MAX, std::floor(highest / POWER_CONVERSION_STAT) * 0.5f);
+            state.powerConversion = std::min(POWER_CONVERSION_MAX, std::floor(highest / POWER_CONVERSION_STAT));
         }
         if (!Has(&state, PERK_PRESSURE))
             state.pressure.clear();
@@ -587,7 +610,7 @@ namespace
         // Critical Understanding
         int32 crit = 0;
         if (Has(&state, PERK_CRITICAL_UNDERSTANDING))
-            crit = std::min(200, int32(std::max(0.0f, HighestCritChance(player) - 100.0f) / 300.0f));
+            crit = std::min(CRIT_UNDERSTANDING_MAX, int32(std::max(0.0f, HighestCritChance(player) - CRIT_UNDERSTANDING_FLOOR)));
         SetCritBonus(player, state, crit);
 
         // Defensive Sacrifice: 10% of current attack power and spell power, not counting its own bonus
@@ -633,7 +656,7 @@ namespace
 
     void SetPerk(Player* player, PerkState& state, uint32 perk, bool on)
     {
-        if (!IMPLEMENTED.count(perk) || on == bool(state.active.count(perk)))
+        if (!IMPLEMENTED.count(perk) || on == bool(state.active.count(perk)) || (on && !CanUsePerk(player, perk)))
             return;
         if (on)
         {
@@ -675,7 +698,9 @@ namespace
                 if (Optional<uint32> perk = Acore::StringTo<uint32>(parts[1]))
                 {
                     bool on = parts[2] == "1";
-                    if (on && IsOffensive(*perk) && !state.active.count(*perk) &&
+                    if (on && !CanUsePerk(player, *perk))
+                        SendAddon(player, "ERR:That perk belongs to another class.");
+                    else if (on && IsOffensive(*perk) && !state.active.count(*perk) &&
                         CountOffensive(state.active) >= MAX_ACTIVE_OFFENSIVE)
                         SendAddon(player, "ERR:You can only have " + std::to_string(MAX_ACTIVE_OFFENSIVE) +
                             " Offensive perks active. Turn one off first.");
@@ -692,7 +717,7 @@ namespace
             std::string_view list = std::string_view(text).substr(5);
             for (std::string_view id : Acore::Tokenize(list, ',', false))
                 if (Optional<uint32> perk = Acore::StringTo<uint32>(id))
-                    if (IMPLEMENTED.count(*perk) && !wanted.count(*perk))
+                    if (IMPLEMENTED.count(*perk) && CanUsePerk(player, *perk) && !wanted.count(*perk))
                     {
                         if (IsOffensive(*perk) && ++offensive > MAX_ACTIVE_OFFENSIVE)
                         {
@@ -791,8 +816,8 @@ public:
     void OnAfterConfigLoad(bool /*reload*/) override
     {
         sRapidRecovery = sConfigMgr->GetOption<bool>("Unbound.Perks.RapidRecovery", true);
-        sRecoveryDelayMs = sConfigMgr->GetOption<uint32>("Unbound.Perks.RapidRecovery.Delay", 3000);
-        sRecoveryPercent = std::clamp<uint32>(sConfigMgr->GetOption<uint32>("Unbound.Perks.RapidRecovery.Percent", 15), 1, 100);
+        sRecoveryDelayMs = sConfigMgr->GetOption<uint32>("Unbound.Perks.RapidRecovery.Delay", 4000);
+        sRecoveryPercent = std::clamp<uint32>(sConfigMgr->GetOption<uint32>("Unbound.Perks.RapidRecovery.Percent", 8), 1, 100);
     }
 };
 
@@ -819,8 +844,12 @@ public:
             do
             {
                 uint32 perk = (*result)[0].Get<uint32>();
-                if (IMPLEMENTED.count(perk))
+                if (!IMPLEMENTED.count(perk))
+                    continue;
+                if (CanUsePerk(player, perk))
                     state.active.insert(perk);
+                else
+                    SavePerk(player, perk, false); // another class's perk: switch it off for good
             } while (result->NextRow());
         }
         // saved before the Offensive limit existed: keep the lowest ids, switch the rest off
@@ -946,15 +975,15 @@ public:
     }
 };
 
-// 53385 - Divine Storm (Retribution perk: no target cap, a Crusader Strike on every enemy hit)
+// 53385 - Divine Storm (Retribution perk: up to 6 targets, a Crusader Strike on every enemy hit)
 class spell_unbound_ret_divine_storm : public SpellScript
 {
     PrepareSpellScript(spell_unbound_ret_divine_storm);
 
-    void RemoveTargetCap()
+    void RaiseTargetCap()
     {
         if (HasRetribution(GetCaster()))
-            GetSpell()->SetSpellValue(SPELLVALUE_MAX_TARGETS, 0);
+            GetSpell()->SetSpellValue(SPELLVALUE_MAX_TARGETS, DIVINE_STORM_MAX_TARGETS);
     }
 
     void CrusaderStrike()
@@ -967,12 +996,13 @@ class spell_unbound_ret_divine_storm : public SpellScript
 
     void Register() override
     {
-        BeforeCast += SpellCastFn(spell_unbound_ret_divine_storm::RemoveTargetCap);
+        BeforeCast += SpellCastFn(spell_unbound_ret_divine_storm::RaiseTargetCap);
         AfterHit += SpellHitFn(spell_unbound_ret_divine_storm::CrusaderStrike);
     }
 };
 
-// 20271, 53407, 53408 - Judgements (Retribution perk: spread within 10 yards, a free Exorcism on each enemy)
+// 20271, 53407, 53408 - Judgements (Retribution perk: spread to 4 more enemies within 10 yards, a free Exorcism
+// on each enemy)
 class spell_unbound_ret_judgement : public SpellScript
 {
     PrepareSpellScript(spell_unbound_ret_judgement);
@@ -989,9 +1019,16 @@ class spell_unbound_ret_judgement : public SpellScript
 
         if (GetSpell()->IsTriggered()) // the spread Judgements don't spread again
             return;
-        for (Unit* enemy : EnemiesNear(target, caster, JUDGEMENT_SPREAD_RANGE))
-            if (enemy != target)
-                caster->CastSpell(enemy, GetSpellInfo()->Id, TRIGGERED_FULL_MASK);
+        std::list<Unit*> enemies = EnemiesNear(target, caster, JUDGEMENT_SPREAD_RANGE);
+        enemies.remove(target);
+        enemies.sort(Acore::ObjectDistanceOrderPred(target));
+        uint32 spread = 0;
+        for (Unit* enemy : enemies)
+        {
+            if (++spread > JUDGEMENT_SPREAD_TARGETS)
+                break;
+            caster->CastSpell(enemy, GetSpellInfo()->Id, TRIGGERED_FULL_MASK);
+        }
     }
 
     void Register() override

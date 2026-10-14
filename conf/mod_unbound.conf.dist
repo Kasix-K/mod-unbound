@@ -23,12 +23,12 @@ Unbound.ExpansionUnlocked = 0
 #
 #    Unbound.Perks.RapidRecovery.Delay
 #        Description: Milliseconds out of combat before the recovery starts.
-#        Default:     3000
+#        Default:     4000
 #
 #    Unbound.Perks.RapidRecovery.Percent
 #        Description: Percent of maximum health and mana restored each second.
-#        Default:     15
+#        Default:     8
 
 Unbound.Perks.RapidRecovery = 1
-Unbound.Perks.RapidRecovery.Delay = 3000
-Unbound.Perks.RapidRecovery.Percent = 15
+Unbound.Perks.RapidRecovery.Delay = 4000
+Unbound.Perks.RapidRecovery.Percent = 8

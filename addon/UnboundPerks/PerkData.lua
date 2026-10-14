@@ -1,6 +1,6 @@
 -- Unbound Perks: perk definitions.
--- Permanent and Offensive perks are the real designs. Defensive, Utility and the class perk are still
--- placeholders. Perks don't do anything yet: the server side comes later and uses the same ids.
+-- The numbers here must match src/unbound_perks.cpp (the server applies the effects; this file only
+-- describes them). Numbers stay in normal WoW ranges: one perk is worth about +10%.
 --
 -- Fields:
 --   id         unique number, never reuse one (saved loadouts store ids)
@@ -64,13 +64,13 @@ local function highestPrimaryStat()
     return best
 end
 
--- "every <step>% above <floor>% grants +1%, up to +200%"
-local function overCap(value, floor, step)
-    return math.min(200, math.floor(math.max(0, value - floor) / step))
+-- "every 1% above <floor>% grants +1%, up to +<max>%"
+local function overCap(value, floor, max)
+    return math.min(max, math.floor(math.max(0, value - floor)))
 end
 
-local function capLine(label, value)
-    return string.format("You have %d%% %s -> %s damage.", math.floor(value), label, G("+" .. overCap(value, 60, 200) .. "%"))
+local function capLine(label, value, floor)
+    return string.format("You have %d%% %s -> %s damage.", math.floor(value), label, G("+" .. overCap(value, floor, 10) .. "%"))
 end
 
 local PETS_TOO = true
@@ -89,25 +89,25 @@ UnboundPerks.PERKS = {
       note = ALWAYS },
     { id = 3, name = "Rapid Recovery", category = "PERMANENT", permanent = true,
       icon = "Interface\\Icons\\Spell_Nature_Rejuvenation",
-      desc = "After leaving combat for " .. G("3 seconds") .. ", you rapidly regenerate " ..
-             G("15% of your maximum health and mana every second") .. " until full.",
+      desc = "After leaving combat for " .. G("4 seconds") .. ", you rapidly regenerate " ..
+             G("8% of your maximum health and mana every second") .. " until full.",
       note = ALWAYS },
 
     -- Offensive -------------------------------------------------------------------------------------
     { id = 101, name = "Cyclic Power", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Nature_TimeStop",
-      desc = "Your damage output continuously cycles between " .. B("-50%") .. " and " .. G("+100%") .. " over 25 seconds." },
+      desc = "Your damage output continuously cycles between " .. B("-10%") .. " and " .. G("+20%") .. " over 25 seconds." },
     { id = 102, name = "Critical Understanding", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_CriticalStrike",
-      desc = "Every 300% critical strike chance above 100% grants " .. G("+1%") ..
-             " critical strike damage, up to " .. G("+200%") .. ".",
+      desc = "Every 1% critical strike chance above 25% grants " .. G("+1%") ..
+             " critical strike damage, up to " .. G("+20%") .. ".",
       live = function()
           local crit = critChance()
-          return string.format("You have %d%% crit -> %s critical strike damage.", math.floor(crit), G("+" .. overCap(crit, 100, 300) .. "%"))
+          return string.format("You have %d%% crit -> %s critical strike damage.", math.floor(crit), G("+" .. overCap(crit, 25, 20) .. "%"))
       end },
     { id = 103, name = "Defensive Sacrifice", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Warrior_BattleShout",
-      desc = "Take " .. B("30% more damage") .. " in exchange for:",
+      desc = "Take " .. B("10% more damage") .. " in exchange for:",
       live = function()
           return string.format(" %s attack power  |cffaaaaaa(10%% of current)|r\n %s spell power  |cffaaaaaa(10%% of current)|r",
               G("+" .. math.floor(attackPower() * 0.1)), G("+" .. math.floor(spellPower() * 0.1)))
@@ -115,87 +115,87 @@ UnboundPerks.PERKS = {
       liveInline = true },
     { id = 104, name = "Desperate Power", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Shadow_UnholyFrenzy",
-      desc = "Sacrifice " .. B("75%") .. " of your magic resistances for " .. G("+50%") .. " damage dealt." },
+      desc = "Sacrifice " .. B("50%") .. " of your magic resistances for " .. G("+10%") .. " damage dealt." },
     { id = 105, name = "Block Capping", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\INV_Shield_05",
-      desc = "Your Block caps at 60%; every 200% of Block above the cap grants " .. G("+1%") ..
-             " damage dealt, up to " .. G("+200%") .. ".",
-      live = function() return capLine("Block", GetBlockChance() or 0) end },
+      desc = "Your Block caps at " .. B("20%") .. "; every 1% of Block above the cap grants " .. G("+1%") ..
+             " damage dealt, up to " .. G("+10%") .. ".",
+      live = function() return capLine("Block", GetBlockChance() or 0, 20) end },
     { id = 106, name = "Dodge Capping", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Rogue_Feint",
-      desc = "Your Dodge caps at 60%; every 200% of Dodge above the cap grants " .. G("+1%") ..
-             " damage dealt, up to " .. G("+200%") .. ".",
-      live = function() return capLine("Dodge", GetDodgeChance() or 0) end },
+      desc = "Your Dodge caps at " .. B("20%") .. "; every 1% of Dodge above the cap grants " .. G("+1%") ..
+             " damage dealt, up to " .. G("+10%") .. ".",
+      live = function() return capLine("Dodge", GetDodgeChance() or 0, 20) end },
     { id = 107, name = "Parry Capping", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Parry",
-      desc = "Your Parry caps at 60%; every 200% of Parry above the cap grants " .. G("+1%") ..
-             " damage dealt, up to " .. G("+200%") .. ".",
-      live = function() return capLine("Parry", GetParryChance() or 0) end },
+      desc = "Your Parry caps at " .. B("20%") .. "; every 1% of Parry above the cap grants " .. G("+1%") ..
+             " damage dealt, up to " .. G("+10%") .. ".",
+      live = function() return capLine("Parry", GetParryChance() or 0, 20) end },
     { id = 108, name = "Haste Capping", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Nature_Bloodlust",
-      desc = "Every 200% Haste above 60% grants " .. G("+1%") .. " damage dealt, up to " .. G("+200%") ..
-             ". Your Haste is not capped; instead you take " .. B("10% more damage") .. ".",
-      live = function() return capLine("Haste", hastePercent()) end },
+      desc = "Every 1% Haste above 5% grants " .. G("+1%") .. " damage dealt, up to " .. G("+10%") ..
+             ". Your Haste is not capped; instead you take " .. B("5% more damage") .. ".",
+      live = function() return capLine("Haste", hastePercent(), 5) end },
     { id = 109, name = "Pet Encouragement", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Hunter_BeastWithin",
-      desc = "Your controlled units deal " .. G("40%") .. " increased damage." },
+      desc = "Your controlled units deal " .. G("15%") .. " increased damage." },
     { id = 110, name = "Rolling Momentum", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Warrior_Charge",
-      desc = "For every second you spend in combat you deal " .. G("+2%") .. " damage, stacking up to " .. G("+50%") ..
-             ". While out of combat the bonus bleeds away at " .. B("-2%") .. " per second." },
+      desc = "For every second you spend in combat you deal " .. G("+1%") .. " damage, stacking up to " .. G("+10%") ..
+             ". While out of combat the bonus bleeds away at " .. B("-1%") .. " per second." },
     { id = 111, name = "Tunnel Vision", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Hunter_SniperShot",
-      desc = "Your single-target damage is increased by " .. G("40%") ..
-             ", but your area-of-effect damage is reduced by " .. B("30%") .. "." },
+      desc = "Your single-target damage is increased by " .. G("10%") ..
+             ", but your area-of-effect damage is reduced by " .. B("10%") .. "." },
     { id = 112, name = "Collateral Damage", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Fire_SelfDestruct",
-      desc = "Your area-of-effect damage is increased by " .. G("40%") ..
-             ", but your single-target damage is reduced by " .. B("30%") .. "." },
+      desc = "Your area-of-effect damage is increased by " .. G("10%") ..
+             ", but your single-target damage is reduced by " .. B("10%") .. "." },
     { id = 113, name = "Giant Slayer", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Warrior_Decisivestrike",
-      desc = "Deal " .. G("25%") .. " increased damage to " .. B("bosses") .. "." },
+      desc = "Deal " .. G("10%") .. " increased damage to " .. B("bosses") .. "." },
     { id = 114, name = "Merciless", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Shadow_CurseOfSargeras",
-      desc = "Your damage-over-time effects deal " .. G("50%") .. " more damage." },
+      desc = "Your damage-over-time effects deal " .. G("15%") .. " more damage." },
     { id = 115, name = "Pressure", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Warrior_Sunder",
-      desc = "Each hit on the same target grants " .. G("+8%") .. " damage, stacking up to " .. G("10") ..
-             " times (" .. G("+80%") .. "). Resets when you switch targets." },
+      desc = "Each hit on the same target grants " .. G("+1%") .. " damage, stacking up to " .. G("10") ..
+             " times (" .. G("+10%") .. "). Resets when you switch targets." },
     { id = 116, name = "Chaos", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Shadow_ChillTouch",
-      desc = "Every damaging ability has a " .. G("10%") .. " chance to deal " .. G("double") .. " damage." },
+      desc = "Every damaging ability has a " .. G("10%") .. " chance to deal " .. G("50% more") .. " damage." },
     { id = 117, name = "Power Conversion", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Arcane_ArcanePotency",
-      desc = "Every 30000 of your highest primary stat grants " .. G("+0.5%") .. " damage, up to " .. G("+200%") .. ".",
+      desc = "Every 100 of your highest primary stat grants " .. G("+1%") .. " damage, up to " .. G("+10%") .. ".",
       live = function()
           local stat = highestPrimaryStat()
-          local bonus = math.min(200, math.floor(stat / 30000) * 0.5)
-          return string.format("Highest stat %d  ->  %s damage.", math.floor(stat), G(string.format("+%.1f%%", bonus)))
+          local bonus = math.min(10, math.floor(stat / 100))
+          return string.format("Highest stat %d  ->  %s damage.", math.floor(stat), G(string.format("+%d%%", bonus)))
       end },
     { id = 118, name = "Healing Powah", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Holy_FlashHeal",
-      desc = "Increases your healing done by " .. G("25%") .. "." },
+      desc = "Increases your healing done by " .. G("10%") .. "." },
     { id = 119, name = "Shadow Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Shadow_ShadowBolt",
-      desc = "Increases all |cff8c8cffShadow|r damage you deal by " .. G("30%") .. "." },
+      desc = "Increases all |cff8c8cffShadow|r damage you deal by " .. G("10%") .. "." },
     { id = 120, name = "Holy Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Holy_HolyBolt",
-      desc = "Increases all |cffffe680Holy|r damage you deal by " .. G("30%") .. "." },
+      desc = "Increases all |cffffe680Holy|r damage you deal by " .. G("10%") .. "." },
     { id = 121, name = "Arcane Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Nature_StarFall",
-      desc = "Increases all |cffff80ffArcane|r damage you deal by " .. G("30%") .. "." },
+      desc = "Increases all |cffff80ffArcane|r damage you deal by " .. G("10%") .. "." },
     { id = 122, name = "Nature Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Nature_Lightning",
-      desc = "Increases all |cff4dff4dNature|r damage you deal by " .. G("30%") .. "." },
+      desc = "Increases all |cff4dff4dNature|r damage you deal by " .. G("10%") .. "." },
     { id = 123, name = "Fire Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Fire_FlameBolt",
-      desc = "Increases all |cffff8040Fire|r damage you deal by " .. G("30%") .. "." },
+      desc = "Increases all |cffff8040Fire|r damage you deal by " .. G("10%") .. "." },
     { id = 124, name = "Frost Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Frost_FrostBolt02",
-      desc = "Increases all |cff80ffffFrost|r damage you deal by " .. G("30%") .. "." },
+      desc = "Increases all |cff80ffffFrost|r damage you deal by " .. G("10%") .. "." },
     { id = 125, name = "Physical Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_MeleeDamage",
-      desc = "Increases all Physical damage you deal by " .. G("30%") .. ".\nYour pet gains this too." },
+      desc = "Increases all Physical damage you deal by " .. G("10%") .. ".\nYour pet gains this too." },
 
     -- Defensive (placeholders) -----------------------------------------------------------------------
     { id = 201, name = "Thick Skin", category = "DEFENSIVE", icon = "Interface\\Icons\\INV_Misc_LeatherScrap_08",
@@ -216,19 +216,19 @@ UnboundPerks.PERKS = {
       icon = "Interface\\Icons\\Spell_Holy_AuraOfLight",
       desc = "|cffff9933Retribution|r paladin mastery. While active:\n\n" ..
              H("Improved Divine Storm") .. "\n" ..
-             " -  " .. S("Divine Storm") .. " hits every nearby enemy (no target cap)\n" ..
+             " -  " .. S("Divine Storm") .. " hits up to 6 enemies (normally 4)\n" ..
              " -  Every enemy it hits also takes a " .. S("Crusader Strike") .. "\n\n" ..
              H("All Will Be Judged!") .. "\n" ..
-             " -  Your " .. S("Judgement") .. " spreads to every enemy within 10 yards of the target\n" ..
+             " -  Your " .. S("Judgement") .. " spreads to up to 4 more enemies within 10 yards of the target\n" ..
              " -  Every enemy it hits is also struck by a free " .. S("Exorcism") .. ", which does not put Exorcism on cooldown\n\n" ..
              H("Exorcist") .. "\n" ..
-             " -  " .. S("Exorcism") .. " deals 60% of your attack power + 60% of your spell power\n\n" ..
+             " -  " .. S("Exorcism") .. " deals 30% of your attack power + 30% of your spell power\n\n" ..
              H("Righteous Explosion") .. "\n" ..
              B("Requires the ") .. S("Righteous Vengeance") .. B(" talent.") .. "\n" ..
-             " -  An enemy dying with your " .. S("Righteous Vengeance") .. " explodes for all it had left, on every enemy within 8 yards (up to 20)\n\n" ..
+             " -  An enemy dying with your " .. S("Righteous Vengeance") .. " explodes for all it had left, on up to 5 enemies within 8 yards\n\n" ..
              H("By Sword & Light") .. "\n" ..
-             " -  All Holy damage you deal is increased by 5800%\n" ..
-             " -  All Physical damage you deal is increased by 2600%\n" ..
+             " -  All Holy damage you deal is increased by 15%\n" ..
+             " -  All Physical damage you deal is increased by 10%\n" ..
              " -  Covers your weapon swings, " .. S("Divine Storm") .. " and " .. S("Crusader Strike") ..
              " as well as " .. S("Judgement") .. " and " .. S("Exorcism") },
 }

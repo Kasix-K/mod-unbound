@@ -19,8 +19,19 @@ Guiding idea: inspired by Peloria, not a copy. Stats stay in normal WoW ranges (
       Defias Garb set, level 60 gold (`tools/heroic_loot.py`)
 - [x] World boss: Hrimthar the Frostbound at Lake Kel'Theril, Winterspring (`tools/world_bosses.py`)
 - [x] Expansion content lock (classic only; TBC and Wrath released later), Death Knights GM-only
+- [x] Unbound Perks: `/perks` window, 3 Permanent perks, all 25 Offensive perks (5 active at once),
+      Paladin Retribution class perk; numbers scaled to normal WoW ranges (about +10% per perk)
 
 ## Next up
+
+- [ ] **Perk ranks** (moderate): ranks like spell ranks for perks with a number (Rapid Recovery,
+      Masteries, Pressure, ...). Add the rank support soon (a rank column, per-rank values, "Rank 1 / 1" in
+      the window, a GM command to set ranks) so new perks are written with ranks from the start; the rank
+      values and how ranks are earned (levels, Heroic currency, quests) can come later.
+- [ ] **Defensive and Utility perks** (moderate): Thick Skin, Second Wind, Steadfast, Fleet Foot,
+      Treasure Sense are listed in the window but do nothing yet.
+- [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, at the same
+      scale (about +10-15%, not Peloria's x27/x59).
 
 - [ ] **Remaining classic Heroic dungeons** (moderate): 16 more (Stockades, Deadmines and Ragefire Chasm
       are done), added in batches by level range.

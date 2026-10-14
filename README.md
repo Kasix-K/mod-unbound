@@ -47,18 +47,24 @@ Custom features for the WoW 3.3.5a Unbound server.
 - **Unbound Perks** (`addon/UnboundPerks`, copy to `Interface/AddOns`, open with `/perks`): the Character
   Perks window with categories, search and saved loadouts. The three Permanent perks work for everyone:
   No Resurrection Sickness (`Death.SicknessLevel = 255`), No Daze (`Daze.Enabled = 0`), both set by
-  `apply-unbound-settings.ps1`, and Rapid Recovery (`src/unbound_perks.cpp`: 3 seconds after leaving
-  combat, 15% of maximum health and mana every second until full; `Unbound.Perks.RapidRecovery*` in
+  `apply-unbound-settings.ps1`, and Rapid Recovery (`src/unbound_perks.cpp`: 4 seconds after leaving
+  combat, 8% of maximum health and mana every second until full; `Unbound.Perks.RapidRecovery*` in
   `mod_unbound.conf`). Toggled perks are kept by the server (whispered addon messages, prefix `UBPERK`;
   saved in `characters.character_unbound_perks`; no changes in combat; at most 5 Offensive perks
-  active at once). Working so far: Cyclic Power,
+  active at once; class perks only for their own class, checked by the server). Working so far: Cyclic Power,
   Critical Understanding, Defensive Sacrifice, Desperate Power, Block/Dodge/Parry/Haste
   Capping, Pet Encouragement, Rolling Momentum, Tunnel Vision, Collateral Damage, Giant Slayer, Merciless,
   Pressure, Chaos, Power Conversion, Healing Powah, and the seven school Masteries
   (Physical, Holy, Fire, Nature, Frost, Shadow, Arcane): all 25 Offensive perks.
-  Class perks: Paladin **Retribution** (uncapped Divine Storm with Crusader Strikes, spreading Judgements
-  with free Exorcisms, Exorcism at 60% AP/SP, Righteous Vengeance explosions, Holy x59 and Physical x27
-  damage; spell scripts in `data/sql/db-world/unbound_perks_spells.sql`). The other perks are listed but have no effect yet.
+  Class perks: Paladin **Retribution** (Divine Storm hits up to 6 enemies, each also taking a Crusader
+  Strike; Judgements spread to up to 4 more enemies with free Exorcisms; Exorcism at 30% AP/SP; Righteous
+  Vengeance explosions on up to 5 enemies; Holy damage +15% and Physical +10%; spell scripts in
+  `data/sql/db-world/unbound_perks_spells.sql`). The other perks are listed but have no effect yet.
+  **Perk numbers stay in normal WoW ranges** (no Peloria-sized scaling): one perk is worth about +10%
+  (Masteries, Giant Slayer, Tunnel Vision, Healing Powah +10%, Merciless +15%, Pet Encouragement +15%,
+  stat-based perks up to +10% with level-60 stats), so five Offensive perks together add roughly +50-60%.
+  The numbers are constants at the top of `src/unbound_perks.cpp` and must match the descriptions in
+  `addon/UnboundPerks/PerkData.lua`.
 - **Unbound addon** (`addon/Unbound`, copy to the client's `Interface/AddOns`): shows Dungeon/Raid
   Difficulty in the portrait menu from level 60 (the client's own limit is 65) and adds `/heroic` and
   `/normal`.
@@ -136,8 +142,8 @@ accounts are your own; all the custom game data (heroics, companions, vendors) b
 
 6. Log in. `Server Cheat Sheet.md` in the server folder has everything else (NPCs to place, commands).
 
-**Setting up the client by hand** (if you skipped the script's last step): copy `addon\Unbound` from this
-repository and `addon\Transmog` from `azerothcore\modules\mod-transmog-plus` into the client's
+**Setting up the client by hand** (if you skipped the script's last step): copy `addon\Unbound` and
+`addon\UnboundPerks` from this repository and `addon\Transmog` from `azerothcore\modules\mod-transmog-plus` into the client's
 `Interface\AddOns`, then build the client patch (with the game closed):
 
 ```bash
