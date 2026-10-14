@@ -141,15 +141,15 @@ UnboundPerks.PERKS = {
       icon = "Interface\\Icons\\Ability_Warrior_Charge",
       desc = "For every second you spend in combat you deal " .. G("+2%") .. " damage, stacking up to " .. G("+50%") ..
              ". While out of combat the bonus bleeds away at " .. B("-2%") .. " per second." },
-    { id = 111, name = "Tunnel Vision", category = "OFFENSIVE", pets = PETS_TOO,
+    { id = 111, name = "Tunnel Vision", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Hunter_SniperShot",
       desc = "Your single-target damage is increased by " .. G("40%") ..
              ", but your area-of-effect damage is reduced by " .. B("30%") .. "." },
-    { id = 112, name = "Collateral Damage", category = "OFFENSIVE", pets = PETS_TOO,
+    { id = 112, name = "Collateral Damage", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Fire_SelfDestruct",
       desc = "Your area-of-effect damage is increased by " .. G("40%") ..
              ", but your single-target damage is reduced by " .. B("30%") .. "." },
-    { id = 113, name = "Giant Slayer", category = "OFFENSIVE", pets = PETS_TOO,
+    { id = 113, name = "Giant Slayer", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Warrior_Decisivestrike",
       desc = "Deal " .. G("25%") .. " increased damage to " .. B("bosses") .. "." },
     { id = 114, name = "Merciless", category = "OFFENSIVE", pets = PETS_TOO,

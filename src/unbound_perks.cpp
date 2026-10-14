@@ -26,16 +26,23 @@
  *   108 Haste Capping          every 200% haste above 60% = +1% damage, up to +200%; take 10% more damage
  *   109 Pet Encouragement      your pets, guardians and totems deal 40% more damage
  *   110 Rolling Momentum       +2% damage per second in combat, up to +50%; out of combat it drops 2% per second
+ *   111 Tunnel Vision          single-target damage +40%, area damage -30%
+ *   112 Collateral Damage      area damage +40%, single-target damage -30%
+ *                              (area = a spell that hits an area or chains to more targets; everything else,
+ *                              melee and auto attacks included, is single-target)
+ *   113 Giant Slayer           +25% damage to bosses (world bosses and dungeon/raid bosses)
  *
  * Settings (mod_unbound.conf): Unbound.Perks.RapidRecovery (on/off), .Delay (ms), .Percent.
  */
 
 #include "Chat.h"
 #include "Config.h"
+#include "Creature.h"
 #include "DatabaseEnv.h"
 #include "Player.h"
 #include "ScriptMgr.h"
 #include "SpellAuras.h"
+#include "SpellInfo.h"
 #include "StringConvert.h"
 #include "Tokenize.h"
 #include "WorldPacket.h"
@@ -66,12 +73,16 @@ namespace
         PERK_HASTE_CAPPING          = 108,
         PERK_PET_ENCOURAGEMENT      = 109,
         PERK_ROLLING_MOMENTUM       = 110,
+        PERK_TUNNEL_VISION          = 111,
+        PERK_COLLATERAL_DAMAGE      = 112,
+        PERK_GIANT_SLAYER           = 113,
     };
 
     std::set<uint32> const IMPLEMENTED = {
         PERK_CYCLIC_POWER, PERK_CRITICAL_UNDERSTANDING, PERK_DEFENSIVE_SACRIFICE,
         PERK_DESPERATE_POWER, PERK_BLOCK_CAPPING, PERK_DODGE_CAPPING, PERK_PARRY_CAPPING,
-        PERK_HASTE_CAPPING, PERK_PET_ENCOURAGEMENT, PERK_ROLLING_MOMENTUM };
+        PERK_HASTE_CAPPING, PERK_PET_ENCOURAGEMENT, PERK_ROLLING_MOMENTUM,
+        PERK_TUNNEL_VISION, PERK_COLLATERAL_DAMAGE, PERK_GIANT_SLAYER };
 
     constexpr char const* PREFIX = "UBPERK";
     constexpr uint32 STAT_REFRESH_MS = 2000;
@@ -89,6 +100,9 @@ namespace
     constexpr float PET_DAMAGE_DONE = 1.40f;         // Pet Encouragement
     constexpr int32 MOMENTUM_STEP = 2;               // Rolling Momentum: % per second
     constexpr int32 MOMENTUM_MAX = 50;
+    constexpr float FOCUS_BONUS = 1.40f;             // Tunnel Vision / Collateral Damage
+    constexpr float FOCUS_PENALTY = 0.70f;
+    constexpr float GIANT_SLAYER_BONUS = 1.25f;
     constexpr uint8 MAGIC_SCHOOLS[] = { SPELL_SCHOOL_FIRE, SPELL_SCHOOL_NATURE, SPELL_SCHOOL_FROST,
                                         SPELL_SCHOOL_SHADOW, SPELL_SCHOOL_ARCANE };
 
@@ -142,7 +156,25 @@ namespace
         return 1.25f + 0.75f * std::sin(2.0f * float(M_PI) * float(t) / float(CYCLE_MS));
     }
 
-    float DamageDoneMultiplier(Unit const* attacker)
+    bool IsAreaDamage(SpellInfo const* spellInfo)
+    {
+        if (!spellInfo)
+            return false; // melee swings
+        if (spellInfo->IsAffectingArea())
+            return true;
+        for (SpellEffectInfo const& effect : spellInfo->GetEffects())
+            if (effect.IsEffect() && effect.ChainTarget > 1)
+                return true;
+        return false;
+    }
+
+    bool IsBoss(Unit const* unit)
+    {
+        Creature const* creature = unit ? unit->ToCreature() : nullptr;
+        return creature && (creature->isWorldBoss() || creature->IsDungeonBoss());
+    }
+
+    float DamageDoneMultiplier(Unit const* attacker, Unit const* victim, SpellInfo const* spellInfo)
     {
         PerkState const* state = PerkOwnerState(attacker);
         if (!state)
@@ -158,6 +190,16 @@ namespace
             mult *= 1.0f + state->momentum / 100.0f;
         if (Has(state, PERK_PET_ENCOURAGEMENT) && !attacker->IsPlayer())  // pets, guardians, totems
             mult *= PET_DAMAGE_DONE;
+        if (Has(state, PERK_TUNNEL_VISION) || Has(state, PERK_COLLATERAL_DAMAGE))
+        {
+            bool area = IsAreaDamage(spellInfo);
+            if (Has(state, PERK_TUNNEL_VISION))
+                mult *= area ? FOCUS_PENALTY : FOCUS_BONUS;
+            if (Has(state, PERK_COLLATERAL_DAMAGE))
+                mult *= area ? FOCUS_BONUS : FOCUS_PENALTY;
+        }
+        if (Has(state, PERK_GIANT_SLAYER) && IsBoss(victim))
+            mult *= GIANT_SLAYER_BONUS;
         return mult;
     }
 
@@ -175,11 +217,11 @@ namespace
     }
 
     template <typename T>
-    void ApplyMultipliers(Unit* victim, Unit* attacker, T& damage)
+    void ApplyMultipliers(Unit* victim, Unit* attacker, T& damage, SpellInfo const* spellInfo)
     {
         if (damage <= 0 || attacker == victim)
             return;
-        float mult = DamageDoneMultiplier(attacker) * DamageTakenMultiplier(victim);
+        float mult = DamageDoneMultiplier(attacker, victim, spellInfo) * DamageTakenMultiplier(victim);
         if (mult != 1.0f)
             damage = T(std::max(0.0f, std::round(float(damage) * mult)));
     }
@@ -582,20 +624,20 @@ public:
 
     void ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage) override
     {
-        ApplyMultipliers(target, attacker, damage);
+        ApplyMultipliers(target, attacker, damage, nullptr);
     }
 
-    void ModifySpellDamageTaken(Unit* target, Unit* attacker, int32& damage, SpellInfo const* /*spellInfo*/) override
+    void ModifySpellDamageTaken(Unit* target, Unit* attacker, int32& damage, SpellInfo const* spellInfo) override
     {
-        ApplyMultipliers(target, attacker, damage);
+        ApplyMultipliers(target, attacker, damage, spellInfo);
     }
 
     // Also called for heal-over-time ticks: only scale ticks on hostile targets.
-    void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& damage, SpellInfo const* /*spellInfo*/) override
+    void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& damage, SpellInfo const* spellInfo) override
     {
         if (target && attacker && target->IsFriendlyTo(attacker))
             return;
-        ApplyMultipliers(target, attacker, damage);
+        ApplyMultipliers(target, attacker, damage, spellInfo);
     }
 };
 
