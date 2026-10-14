@@ -14,6 +14,10 @@ Custom features for the WoW 3.3.5a Unbound server.
   the bags, stay on the corpse), and AoE looting (mod-aoe-loot) is on for corpses opened by hand.
   Without the goblin, both are off. Price/currency:
   `data/sql/db-world/unbound_loot_goblin.sql`.
+- **Reset all instances resets everything**: the portrait menu's Reset all instances resets all of the
+  player's raid saves (any difficulty) and heroic and normal dungeon saves, whatever the dungeon
+  difficulty is set to. In a group only the leader can, and it resets the group's instances; an
+  instance with players still inside isn't reset.
 
 ## Custom spells, items and companions
 
@@ -21,7 +25,48 @@ Spells, item DBC rows and Companions-tab entries are defined once in `tools/cust
 generates both sides:
 
 - server: `data/sql/db-world/unbound_custom_dbc.sql` (applied automatically when the worldserver starts)
-- client: `E:\WoW 3.3.5a Unbound\Data\patch-Z.MPQ`
+- client: `<client>\Data\patch-Z.MPQ` (`--client`, default `E:\WoW 3.3.5a Unbound`)
 
 After changing one, run `python tools/custom_dbc.py`, restart the worldserver, and restart the client
 (delete the client's `Cache` folder if the old tooltip still shows).
+
+## Working together
+
+This repository is private; the owner invites collaborators under Settings > Collaborators. Each person
+runs their own server and database; Git shares only this module's code.
+
+### First-time setup
+
+1. Have an AzerothCore (mod-playerbots fork) server with mod-transmog-plus and mod-aoe-loot, laid out
+   like the original: `<server root>\azerothcore\` with the extracted DBCs in `<server root>\data\dbc\`.
+2. Clone this repository into the modules folder, keeping the folder name `mod-unbound`:
+
+   ```bash
+   git clone https://github.com/Kasix-K/mod-unbound.git azerothcore/modules/mod-unbound
+   ```
+
+3. Re-run CMake and rebuild the worldserver (the module's C++ is compiled into it).
+4. Start the worldserver; it applies `data/sql/db-world` automatically.
+5. Build the client patch into your own 3.3.5a client (the default `--client` path is the original PC's):
+
+   ```bash
+   python tools/custom_dbc.py --client "C:\path\to\your\WoW 3.3.5a client"
+   ```
+
+   Add `--dbc "<folder>"` if your server DBCs aren't in `<server root>\data\dbc`. The client also needs
+   mod-transmog-plus's `Transmog` addon in `Interface\AddOns`.
+
+### Day to day
+
+- Before starting: `git pull`.
+- When done: `git add -A`, `git commit -m "what changed"`, `git push`. If the push is rejected, `git pull`
+  first, fix any conflicts, then push again.
+- After pulling someone else's changes:
+  - C++ changed (`src/`): rebuild the worldserver.
+  - SQL changed (`data/sql/`): restart the worldserver.
+  - `tools/custom_dbc.py` changed: run it again (with your `--client`), restart the worldserver and the
+    client.
+- New features go in their own `src/unbound_<feature>.cpp`, registered in `src/unbound_loader.cpp`, and get
+  a line under Features above.
+- Custom IDs are shared, so pick new ones next to the existing ones and say so in the commit: spells
+  2002xx, items 9100xx, creatures 1901xx, SkillLineAbility 9000xx.
