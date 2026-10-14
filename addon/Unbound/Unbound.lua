@@ -31,3 +31,17 @@ SLASH_UNBOUNDNORMAL1 = "/normal"
 SlashCmdList["UNBOUNDNORMAL"] = function()
     SetDungeonDifficulty(1)
 end
+
+-- While the UI loads (login, /reload), the chat code can ask which side of the screen a chat window is on
+-- before that window has a position, which errors in FloatingChatFrame.lua ("attempt to perform
+-- arithmetic on a nil value" in FCF_UpdateButtonSide; seen with ElvUI's chat). Skip it for a window
+-- without a position; the game runs it again once the window is placed.
+if FCF_UpdateButtonSide then
+    local updateButtonSide = FCF_UpdateButtonSide
+    FCF_UpdateButtonSide = function(chatFrame, ...)
+        if not chatFrame or not chatFrame:GetLeft() or not chatFrame:GetRight() then
+            return
+        end
+        return updateButtonSide(chatFrame, ...)
+    end
+end
