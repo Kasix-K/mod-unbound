@@ -1,8 +1,9 @@
 """
 Generate mod-unbound's custom DBC rows for both sides from one definition:
 
-  server: data/sql/db-world/unbound_custom_dbc.sql   (spell_dbc, spell_script_names, item_dbc)
-  client: <client>/Data/patch-Z.MPQ                  (DBFilesClient\\Spell.dbc, Item.dbc, SkillLineAbility.dbc)
+  server: data/sql/db-world/unbound_custom_dbc.sql   (spell_dbc, spell_script_names, item_dbc, mapdifficulty_dbc)
+  client: <client>/Data/patch-Z.MPQ                  (DBFilesClient\\Spell.dbc, Item.dbc, SkillLineAbility.dbc,
+                                                      MapDifficulty.dbc)
 
 The client DBCs are built from the server's extracted DBCs, which are identical to the 3.3.5a
 (12340) client's. Run after changing the tables below, then restart the worldserver and the client:
@@ -13,9 +14,12 @@ import argparse
 import os
 import re
 import struct
+import sys
 import zlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+from classic_heroics import HEROIC_DUNGEONS, HEROIC_LEVEL, map_difficulty_id  # noqa: E402
 MODULE = os.path.dirname(HERE)
 ACORE = os.path.dirname(os.path.dirname(MODULE))
 ROOT = os.path.dirname(ACORE)
@@ -62,12 +66,22 @@ SPELLS = [
         'Description_Lang_enUS': 'Summons a Loot Goblin. While it is out, looting a corpse also loots '
                                  'every corpse nearby.',
     },
+    {
+        'ID': 200202,  # Arcane Loot Scanner companion, keep in sync with src/unbound_loot_goblin.cpp
+        '_base': 4055,              # Mechanical Squirrel's summon spell
+        'EffectMiscValue_1': 190102,
+        'SpellIconID': 2303,        # INV_Gizmo_KhoriumPowerCore
+        'Name_Lang_enUS': 'Arcane Loot Scanner',
+        'Description_Lang_enUS': 'Summons an Arcane Loot Scanner. While it is out, looting a corpse also '
+                                 'loots every corpse nearby.',
+    },
 ]
 
 # Item.dbc rows (client) / item_dbc rows (server). item_template holds the rest of the item.
 ITEMS = [
     # ID, Class, SubClass, SoundOverrideSubclass, Material, DisplayInfoID, InventoryType, SheathType
     (910001, 15, 2, -1, 8, 8442, 0, 0),  # Loot Goblin (companion item, loot-bag icon)
+    (910002, 15, 2, -1, 8, 41425, 0, 0),  # Arcane Loot Scanner (companion item, Khorium power core icon)
 ]
 
 # SkillLineAbility.dbc rows, client only: they put companion spells in the Companions tab.
@@ -75,7 +89,37 @@ SKILL_LINE_ABILITIES = [
     # ID, SkillLine, Spell, RaceMask, ClassMask, ExcludeRace, ExcludeClass, MinSkillLineRank,
     # SupercededBySpell, AcquireMethod, TrivialHigh, TrivialLow, CharacterPoints x2
     (900001, SKILL_COMPANIONS, 200201, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
+    (900002, SKILL_COMPANIONS, 200202, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
 ]
+
+
+# MapDifficulty.dbc rows (client) / mapdifficulty_dbc rows (server): the heroic mode of each classic
+# dungeon in tools/classic_heroics.py, modelled on Utgarde Keep's heroic row (5 players, daily reset).
+MAP_DIFFICULTIES = [
+    {
+        'ID': map_difficulty_id(map_id),
+        'MapID': map_id,
+        'Difficulty': 1,
+        'Message_Lang_enUS': f'Heroic Difficulty requires you to be level {HEROIC_LEVEL}.',
+        'RaidDuration': 86400,
+        'MaxPlayers': 5,
+        'Difficultystring': 'DUNGEON_DIFFICULTY_5PLAYER_HEROIC',
+    }
+    for map_id, _ in HEROIC_DUNGEONS
+]
+MAP_DIFFICULTY_COLUMNS = (['ID', 'MapID', 'Difficulty']
+                          + [f'Message_Lang_{loc}' for loc in ('enUS', 'enGB', 'koKR', 'frFR', 'deDE', 'enCN',
+                                                               'zhCN', 'enTW', 'zhTW', 'esES', 'esMX', 'ruRU',
+                                                               'ptPT', 'ptBR', 'itIT', 'Unk')]
+                          + ['Message_Lang_Mask', 'RaidDuration', 'MaxPlayers', 'Difficultystring'])
+
+
+def map_difficulty_row(entry):
+    def default(col):
+        if col.endswith('_Mask'):
+            return LANG_MASK
+        return '' if col.startswith('Message') or col == 'Difficultystring' else 0
+    return [entry.get(col, default(col)) for col in MAP_DIFFICULTY_COLUMNS]
 
 
 # ---------------------------------------------------------------- DBC helpers
@@ -106,6 +150,26 @@ def append_int_rows(base_path, rows):
         assert len(row) == nfields, f'{os.path.basename(base_path)} rows need {nfields} fields'
         assert row[0] not in existing, f'{row[0]} already exists in {os.path.basename(base_path)}'
         new += b''.join(pack_int(v) for v in row)
+    return write_dbc(nfields, recsize, records + new, count + len(rows), strings)
+
+
+def append_rows_with_strings(base_path, rows):
+    """Append rows whose values are ints or strs (strs go into the string block), refusing existing IDs."""
+    count, nfields, recsize, records, strings = read_dbc(base_path)
+    existing = {struct.unpack_from('<I', records, i * recsize)[0] for i in range(count)}
+    new = bytearray()
+    for row in rows:
+        assert len(row) == nfields, f'{os.path.basename(base_path)} rows need {nfields} fields'
+        assert row[0] not in existing, f'{row[0]} already exists in {os.path.basename(base_path)}'
+        for v in row:
+            if isinstance(v, str):
+                off = 0
+                if v:
+                    off = len(strings)
+                    strings += v.encode('utf8') + b'\0'
+                new += struct.pack('<I', off)
+            else:
+                new += pack_int(v)
     return write_dbc(nfields, recsize, records + new, count + len(rows), strings)
 
 
@@ -208,6 +272,13 @@ def write_sql(cols, rows, path):
         lines.append('INSERT INTO `item_dbc` (`ID`, `ClassID`, `SubclassID`, `Sound_Override_Subclassid`, '
                      '`Material`, `DisplayInfoID`, `InventoryType`, `SheatheType`) VALUES')
         lines.append(',\n'.join('(' + ','.join(str(v) for v in i) + ')' for i in ITEMS) + ';')
+    if MAP_DIFFICULTIES:
+        ids = ', '.join(str(m['ID']) for m in MAP_DIFFICULTIES)
+        lines.append(f'DELETE FROM `mapdifficulty_dbc` WHERE `ID` IN ({ids});')
+        lines.append('INSERT INTO `mapdifficulty_dbc` (' + ', '.join('`' + c + '`' for c in MAP_DIFFICULTY_COLUMNS)
+                     + ') VALUES')
+        lines.append(',\n'.join('(' + ','.join(sql_literal(v) for v in map_difficulty_row(m)) + ')'
+                                for m in MAP_DIFFICULTIES) + ';')
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, 'w', encoding='utf8', newline='\n') as f:
         f.write('\n'.join(lines) + '\n')
@@ -290,9 +361,16 @@ def write_mpq(path, files):
     bpos = hpos + len(hraw)
     total = bpos + len(braw)
     header = struct.pack('<4sIIHHIIII', b'MPQ\x1a', 32, total, 0, 3, hpos, bpos, hsize, len(blocks))
-    with open(path, 'wb') as f:
+    # Write next to the target and swap it in, so a locked or failed write never leaves a broken patch.
+    tmp = path + '.tmp'
+    with open(tmp, 'wb') as f:
         f.write(header + body + mpq_encrypt(hraw, mpq_hash('(hash table)', 3))
                 + mpq_encrypt(braw, mpq_hash('(block table)', 3)))
+    try:
+        os.replace(tmp, path)
+    except PermissionError:
+        os.remove(tmp)
+        raise SystemExit(f'{path} is in use - close the game client and run this again.')
 
 
 def main():
@@ -316,10 +394,14 @@ def main():
     if SKILL_LINE_ABILITIES:
         files['DBFilesClient\\SkillLineAbility.dbc'] = append_int_rows(
             os.path.join(args.dbc, 'SkillLineAbility.dbc'), SKILL_LINE_ABILITIES)
+    if MAP_DIFFICULTIES:
+        files['DBFilesClient\\MapDifficulty.dbc'] = append_rows_with_strings(
+            os.path.join(args.dbc, 'MapDifficulty.dbc'), [map_difficulty_row(m) for m in MAP_DIFFICULTIES])
     mpq_path = os.path.join(args.client, 'Data', 'patch-Z.MPQ')
     write_mpq(mpq_path, files)
     print('wrote', mpq_path, f'({len(SPELLS)} spells, {len(ITEMS)} items, '
-                             f'{len(SKILL_LINE_ABILITIES)} skill line abilities)')
+                             f'{len(SKILL_LINE_ABILITIES)} skill line abilities, '
+                             f'{len(MAP_DIFFICULTIES)} map difficulties)')
 
 
 if __name__ == '__main__':

@@ -1,0 +1,6 @@
+## Interface: 30300
+## Title: Unbound
+## Notes: Client tweaks for the Unbound server.
+## Author: mod-unbound
+## Version: 1.0
+Unbound.lua

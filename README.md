@@ -14,10 +14,32 @@ Custom features for the WoW 3.3.5a Unbound server.
   the bags, stay on the corpse), and AoE looting (mod-aoe-loot) is on for corpses opened by hand.
   Without the goblin, both are off. Price/currency:
   `data/sql/db-world/unbound_loot_goblin.sql`.
+- **Arcane Loot Scanner companion (item 910002, spell 200202, creature 190102)**: the Arcane Protector
+  (16504) shrunk to companion size, also sold by Grizzle for 10 gold, with the same loot powers as the
+  Loot Goblin.
 - **Reset all instances resets everything**: the portrait menu's Reset all instances resets all of the
   player's raid saves (any difficulty) and heroic and normal dungeon saves, whatever the dungeon
   difficulty is set to. In a group only the leader can, and it resets the group's instances; an
   instance with players still inside isn't reset.
+- **Classic heroic dungeons**: `tools/classic_heroics.py` lists the classic dungeons with a heroic mode
+  (so far: Stormwind Stockades). Heroic needs level 60; creatures are heroic copies (entry + 1000000)
+  at level 60-62 with 1.5x health and damage and normal loot. Add a dungeon to `HEROIC_DUNGEONS`, then
+  run `python tools/classic_heroics.py` and `python tools/custom_dbc.py`.
+- **Unbound addon** (`addon/Unbound`, copy to the client's `Interface/AddOns`): shows Dungeon/Raid
+  Difficulty in the portrait menu from level 60 (the client's own limit is 65) and adds `/heroic` and
+  `/normal`.
+- **Expansion content lock** (`Unbound.ExpansionUnlocked` in `mod_unbound.conf`, 0/1/2): locked expansions'
+  dungeons, raids, dungeon finder entries and zones (Northrend, the Outland zones of map 530) are
+  blocked; players there are sent to their hearthstone (or race start if that is locked too, or else
+  their faction's capital). Blood Elf and Draenei starting zones stay open, and so does Ebon Hold for
+  Death Knights; battlegrounds/arenas and GMs are exempt. While Wrath is locked, only GM accounts can
+  create Death Knights (`CharacterCreating.Disabled.ClassMask = 32` in `worldserver.conf`). Releasing an
+  expansion: raise `Unbound.ExpansionUnlocked`, `MaxPlayerLevel` (70/80) and, for Wrath, clear the class
+  mask.
+
+## Roadmap
+
+Planned and possible features are tracked in [ROADMAP.md](ROADMAP.md).
 
 ## Custom spells, items and companions
 

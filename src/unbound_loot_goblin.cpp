@@ -1,13 +1,13 @@
 /*
- * mod-unbound: Loot Goblin companion.
+ * mod-unbound: loot companions (Loot Goblin, Arcane Loot Scanner).
  *
- * While a character's Loot Goblin (190100) is summoned:
+ * While a character's loot companion is summoned:
  *  - mod-aoe-loot is on for them, so opening one corpse also loots the corpses around it;
  *  - once a second the goblin loots every corpse within the AoE loot range (AOELoot.Range) that the
  *    character may loot, straight into their bags. It follows the normal loot rules: gold is shared
  *    with the group, items that need a group roll (or the master looter) stay on the corpse, and
  *    whatever doesn't fit in the bags stays too.
- * When the goblin leaves the world (dismissed, replaced by another companion, zoning, logout) both
+ * When the companion leaves the world (dismissed, replaced by another companion, zoning, logout) both
  * stop. The companion's spell, item and vendor are defined in tools/custom_dbc.py and
  * data/sql/db-world/unbound_loot_goblin.sql.
  */
@@ -32,10 +32,17 @@
 #include "aoe_loot.h"
 #undef AddSC_AoeLoot
 
-enum UnboundLootGoblin
+enum UnboundLootCompanions
 {
-    NPC_LOOT_GOBLIN = 190100, // keep in sync with data/sql/db-world/unbound_loot_goblin.sql
+    // keep in sync with data/sql/db-world/unbound_loot_goblin.sql
+    NPC_LOOT_GOBLIN         = 190100,
+    NPC_ARCANE_LOOT_SCANNER = 190102,
 };
+
+static bool IsLootCompanion(uint32 entry)
+{
+    return entry == NPC_LOOT_GOBLIN || entry == NPC_ARCANE_LOOT_SCANNER;
+}
 
 static constexpr uint32 AUTO_LOOT_INTERVAL_MS = 1000;
 static constexpr uint32 BAGS_FULL_WARNING_MS = 30000;
@@ -57,21 +64,21 @@ static void SetAoeLoot(ObjectGuid playerGuid, bool enabled)
 
 static ObjectGuid GetLootGoblinOwner(Creature* creature)
 {
-    if (creature->GetEntry() != NPC_LOOT_GOBLIN)
+    if (!IsLootCompanion(creature->GetEntry()))
         return ObjectGuid::Empty;
 
     TempSummon* summon = creature->ToTempSummon();
     return summon ? summon->GetSummonerGUID() : ObjectGuid::Empty;
 }
 
-static bool HasLootGoblinOut(Player* player)
+static bool HasLootCompanionOut(Player* player)
 {
     ObjectGuid critterGuid = player->GetCritterGUID();
     if (!critterGuid)
         return false;
 
     Creature* critter = ObjectAccessor::GetCreature(*player, critterGuid);
-    return critter && critter->GetEntry() == NPC_LOOT_GOBLIN;
+    return critter && IsLootCompanion(critter->GetEntry());
 }
 
 // Same split as WorldSession::HandleLootMoneyOpcode: shared with group members in reward range.
@@ -215,7 +222,7 @@ static void AutoLootNearby(Player* player, LootGoblinState& state)
 
     if (!allFit && !state.bagsFullCooldown)
     {
-        ChatHandler(player->GetSession()).SendSysMessage("Your Loot Goblin can't fit any more loot in your bags.");
+        ChatHandler(player->GetSession()).SendSysMessage("Your loot companion can't fit any more loot in your bags.");
         state.bagsFullCooldown = BAGS_FULL_WARNING_MS;
     }
 }
@@ -232,7 +239,17 @@ public:
 
     void OnCreatureRemoveWorld(Creature* creature) override
     {
-        SetAoeLoot(GetLootGoblinOwner(creature), false);
+        ObjectGuid ownerGuid = GetLootGoblinOwner(creature);
+        if (!ownerGuid)
+            return;
+
+        // Swapping companions removes the old one after the new one is already out: keep AoE loot on
+        // if the owner's current companion is a different loot companion.
+        if (Player* owner = ObjectAccessor::FindConnectedPlayer(ownerGuid))
+            if (owner->GetCritterGUID() != creature->GetGUID() && HasLootCompanionOut(owner))
+                return;
+
+        SetAoeLoot(ownerGuid, false);
     }
 };
 
@@ -268,7 +285,7 @@ public:
             return;
 
         state.lootTimer = 0;
-        if (HasLootGoblinOut(player))
+        if (HasLootCompanionOut(player))
             AutoLootNearby(player, state);
     }
 };

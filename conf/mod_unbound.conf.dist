@@ -1,0 +1,16 @@
+[worldserver]
+
+###################################################################################################
+# mod-unbound
+#
+#    Unbound.ExpansionUnlocked
+#        Description: Which expansions' content is released. Locked expansions' dungeons, raids and
+#                     zones (Outland, Northrend) can't be entered; the Blood Elf and Draenei starting
+#                     zones stay open. When releasing an expansion, also raise MaxPlayerLevel in
+#                     worldserver.conf (70 for The Burning Crusade, 80 for Wrath of the Lich King) and,
+#                     for Wrath, allow Death Knights again (CharacterCreating.Disabled.ClassMask).
+#        Default:     0 - Classic only
+#                     1 - Classic + The Burning Crusade
+#                     2 - Classic + The Burning Crusade + Wrath of the Lich King
+
+Unbound.ExpansionUnlocked = 0
