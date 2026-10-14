@@ -53,7 +53,7 @@ goes to him; `.respawn` next to his corpse brings him back early (for testing).
   The Deadmines, Ragefire Chasm. Heroic Deadmines bosses drop level 60 loot (see Custom IDs).
   Needs the **Unbound** addon, which shows the menu from level 60 instead of 65.
 - **Solo dungeon finder:** queue alone or with bots, and you go straight in.
-- **Perks:** type `/perks` to open the Character Perks window (needs the **UnboundPerks** addon). Always on
+- **Perks:** type `/perks` or click the **Perks** tab at the bottom of the character sheet (C) to open the Character Perks window (needs the **UnboundPerks** addon). Always on
   for everyone: No Resurrection Sickness, No Daze, and Rapid Recovery (4 seconds after combat, 8% health and
   mana per second). Switch on up to 5 Offensive perks (about +10% each) and your class perk (so far: Paladin
   Retribution). Perks can't be changed in combat; save favourite sets as loadouts.

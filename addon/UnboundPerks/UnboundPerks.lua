@@ -687,6 +687,67 @@ local function build()
     frame:SetScript("OnHide", function() PlaySound("igCharacterInfoClose") end)
 end
 
+-- ------------------------------------------------------------------ character sheet tab
+-- A "Perks" tab after the character sheet's own tabs (Character, Pet, Reputation, Skills, Currency),
+-- built from the same template. It opens the perk window beside the character sheet instead of
+-- switching the sheet's page. With ElvUI's character skin on, ElvUI skins it like the other tabs.
+local function elvSkins()
+    if not ElvUI then return nil end
+    local ok, E = pcall(function() return unpack(ElvUI) end)
+    if not ok or not E or not E.private or not E.private.skins then return nil end
+    local blizzard = E.private.skins.blizzard
+    if not (blizzard and blizzard.enable and blizzard.character) then return nil end
+    return E:GetModule("Skins", true)
+end
+
+local function addCharacterTab()
+    if not CharacterFrame or _G["UnboundPerksCharacterTab"] then return end
+    local tab = CreateFrame("Button", "UnboundPerksCharacterTab", CharacterFrame, "CharacterFrameTabButtonTemplate")
+    tab:SetText("Perks")
+    PanelTemplates_TabResize(tab, 0)
+    PanelTemplates_DeselectTab(tab)
+
+    local skins = elvSkins()
+    if skins and skins.HandleTab then pcall(skins.HandleTab, skins, tab) end
+    local gap = skins and -15 or -16   -- ElvUI spaces its tabs one pixel closer
+
+    -- follow the right-most visible tab (the Pet and Currency tabs come and go)
+    local function anchor()
+        local last
+        for i = 1, 5 do
+            local t = _G["CharacterFrameTab" .. i]
+            if t and t:IsShown() then last = t end
+        end
+        tab:ClearAllPoints()
+        if last then tab:SetPoint("LEFT", last, "RIGHT", gap, 0) end
+    end
+    for i = 1, 5 do
+        local t = _G["CharacterFrameTab" .. i]
+        if t then t:HookScript("OnShow", anchor); t:HookScript("OnHide", anchor) end
+    end
+    CharacterFrame:HookScript("OnShow", anchor)
+    anchor()
+
+    tab:SetScript("OnClick", function()
+        PlaySound("igCharacterInfoTab")
+        if frame:IsShown() then
+            frame:Hide()
+        else
+            -- open next to the character sheet
+            frame:ClearAllPoints()
+            frame:SetPoint("TOPLEFT", CharacterFrame, "TOPRIGHT", -28, -10)
+            frame:Show()
+        end
+    end)
+    tab:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText("Character Perks", 1, 1, 1)
+        GameTooltip:AddLine("Open or close your perks (/perks).", 1, 0.82, 0)
+        GameTooltip:Show()
+    end)
+    tab:SetScript("OnLeave", function() GameTooltip:Hide() end)
+end
+
 -- ------------------------------------------------------------------ startup
 -- Keep the live stat lines current while the window is open.
 local statWatch = CreateFrame("Frame")
@@ -712,6 +773,7 @@ loader:SetScript("OnEvent", function()
     buildPerkLists()
     build()
     selectCategory(categories[1] and categories[1].key)
+    addCharacterTab()
     sendServer("SYNC")
 end)
 

@@ -44,7 +44,7 @@ Custom features for the WoW 3.3.5a Unbound server.
   911000-911005, item level 66-68), 5-8 gold, and a 3% chance at the Reins of the Winterspring
   Frostsaber. After a change run `python tools/world_bosses.py` and `python tools/custom_dbc.py`, then
   restart the worldserver.
-- **Unbound Perks** (`addon/UnboundPerks`, copy to `Interface/AddOns`, open with `/perks`): the Character
+- **Unbound Perks** (`addon/UnboundPerks`, copy to `Interface/AddOns`, open with `/perks` or the **Perks** tab on the character sheet, which ElvUI skins like its other tabs): the Character
   Perks window (drawn with the game's own Blizzard frame art: dialog border and title banner, red buttons,
   a talent-tree grid of perk icons with 0/1 and 1/1 rank badges, a gold glow on active perks and greyed icons when a category is full; right-click or double-click toggles) with categories, search and saved loadouts. The three Permanent perks work for everyone:
   No Resurrection Sickness (`Death.SicknessLevel = 255`), No Daze (`Daze.Enabled = 0`), both set by
