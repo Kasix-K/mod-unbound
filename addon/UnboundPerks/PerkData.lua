@@ -25,6 +25,8 @@ UnboundPerks.CATEGORIES = {
 
 local function G(s) return "|cff33ff33" .. s .. "|r" end  -- good (green)
 local function B(s) return "|cffff4040" .. s .. "|r" end  -- bad (red)
+local function H(s) return "|cffffd200" .. s .. "|r" end  -- section heading (gold)
+local function S(s) return "|cff4dc3ff" .. s .. "|r" end  -- spell name (blue)
 
 -- ------------------------------------------------------------------ current stats (for the live lines)
 local function maxSpellCrit()
@@ -209,8 +211,24 @@ UnboundPerks.PERKS = {
     { id = 302, name = "Treasure Sense", category = "UTILITY", icon = "Interface\\Icons\\INV_Misc_Coin_02",
       desc = "Placeholder: creatures drop 10% more gold." },
 
-    -- Class (placeholder until the real Paladin perks are added) --------------------------------------
-    { id = 1001, name = "Paladin Perk (coming soon)", category = "CLASS", class = "PALADIN",
-      icon = "Interface\\Icons\\Spell_Holy_HolyBolt",
-      desc = "Placeholder: the real Paladin perks will be listed here." },
+    -- Class: Paladin ----------------------------------------------------------------------------------
+    { id = 1001, name = "Retribution", category = "CLASS", class = "PALADIN", works = true,
+      icon = "Interface\\Icons\\Spell_Holy_AuraOfLight",
+      desc = "|cffff9933Retribution|r paladin mastery. While active:\n\n" ..
+             H("Improved Divine Storm") .. "\n" ..
+             " -  " .. S("Divine Storm") .. " hits every nearby enemy (no target cap)\n" ..
+             " -  Every enemy it hits also takes a " .. S("Crusader Strike") .. "\n\n" ..
+             H("All Will Be Judged!") .. "\n" ..
+             " -  Your " .. S("Judgement") .. " spreads to every enemy within 10 yards of the target\n" ..
+             " -  Every enemy it hits is also struck by a free " .. S("Exorcism") .. ", which does not put Exorcism on cooldown\n\n" ..
+             H("Exorcist") .. "\n" ..
+             " -  " .. S("Exorcism") .. " deals 60% of your attack power + 60% of your spell power\n\n" ..
+             H("Righteous Explosion") .. "\n" ..
+             B("Requires the ") .. S("Righteous Vengeance") .. B(" talent.") .. "\n" ..
+             " -  An enemy dying with your " .. S("Righteous Vengeance") .. " explodes for all it had left, on every enemy within 8 yards (up to 20)\n\n" ..
+             H("By Sword & Light") .. "\n" ..
+             " -  All Holy damage you deal is increased by 5800%\n" ..
+             " -  All Physical damage you deal is increased by 2600%\n" ..
+             " -  Covers your weapon swings, " .. S("Divine Storm") .. " and " .. S("Crusader Strike") ..
+             " as well as " .. S("Judgement") .. " and " .. S("Exorcism") },
 }

@@ -51,24 +51,45 @@
  *                              spells and bleeds)
  *                              (a spell counts for a school if that school is part of it, e.g. Shadowfrost)
  *
+ * Class perks (ids 1001+):
+ *  1001 Retribution (Paladin)  Improved Divine Storm: Divine Storm has no target cap, and every enemy it hits
+ *                              also takes a Crusader Strike.
+ *                              All Will Be Judged!: a Judgement spreads to every enemy within 10 yards of the
+ *                              target, and every enemy a Judgement hits takes a free Exorcism (no cooldown).
+ *                              Exorcist: Exorcism scales with 60% of attack power and 60% of spell power
+ *                              (instead of 15% / 15%).
+ *                              Righteous Explosion: an enemy dying with your Righteous Vengeance damage-over-
+ *                              time deals the damage left on it to up to 20 enemies within 8 yards.
+ *                              By Sword & Light: Holy damage x59 (+5800%), Physical damage x27 (+2600%).
+ *                              The extra Crusader Strikes, Judgements and Exorcisms are free triggered casts.
+ *
  * Settings (mod_unbound.conf): Unbound.Perks.RapidRecovery (on/off), .Delay (ms), .Percent.
  */
 
 #include "Chat.h"
 #include "Config.h"
+#include "CellImpl.h"
 #include "Creature.h"
 #include "DatabaseEnv.h"
+#include "GridNotifiers.h"
+#include "GridNotifiersImpl.h"
+#include "ObjectAccessor.h"
 #include "Player.h"
 #include "Random.h"
 #include "ScriptMgr.h"
+#include "SpellAuraEffects.h"
 #include "SpellAuras.h"
 #include "SpellInfo.h"
+#include "SpellMgr.h"
+#include "SpellScript.h"
+#include "SpellScriptLoader.h"
 #include "StringConvert.h"
 #include "Tokenize.h"
 #include "WorldPacket.h"
 
 #include <algorithm>
 #include <cmath>
+#include <list>
 #include <set>
 #include <unordered_map>
 #include <utility>
@@ -109,6 +130,7 @@ namespace
         PERK_FIRE_MASTERY           = 123,
         PERK_FROST_MASTERY          = 124,
         PERK_PHYSICAL_MASTERY       = 125,
+        PERK_RETRIBUTION            = 1001,  // Paladin
     };
 
     std::set<uint32> const IMPLEMENTED = {
@@ -118,7 +140,19 @@ namespace
         PERK_TUNNEL_VISION, PERK_COLLATERAL_DAMAGE, PERK_GIANT_SLAYER,
         PERK_MERCILESS, PERK_PRESSURE, PERK_CHAOS, PERK_POWER_CONVERSION,
         PERK_HEALING_POWAH, PERK_SHADOW_MASTERY, PERK_HOLY_MASTERY, PERK_ARCANE_MASTERY,
-        PERK_NATURE_MASTERY, PERK_FIRE_MASTERY, PERK_FROST_MASTERY, PERK_PHYSICAL_MASTERY };
+        PERK_NATURE_MASTERY, PERK_FIRE_MASTERY, PERK_FROST_MASTERY, PERK_PHYSICAL_MASTERY,
+        PERK_RETRIBUTION };
+
+    // Retribution
+    constexpr uint32 SPELL_CRUSADER_STRIKE = 35395;
+    constexpr uint32 SPELL_EXORCISM_RANK_1 = 879;
+    constexpr uint32 SPELL_RIGHTEOUS_VENGEANCE_DOT = 61840;
+    constexpr float JUDGEMENT_SPREAD_RANGE = 10.0f;
+    constexpr float EXPLOSION_RANGE = 8.0f;
+    constexpr uint32 EXPLOSION_MAX_TARGETS = 20;
+    constexpr float EXORCIST_EXTRA_SCALING = 0.45f;   // 60% wanted, Exorcism already has 15% (spell_bonus_data)
+    constexpr float SWORD_LIGHT_HOLY = 59.0f;         // +5800%
+    constexpr float SWORD_LIGHT_PHYSICAL = 27.0f;     // +2600%
 
     constexpr char const* PREFIX = "UBPERK";
     constexpr uint32 MAX_ACTIVE_OFFENSIVE = 5;
@@ -273,7 +307,86 @@ namespace
         for (auto const& [perk, mask] : MASTERIES)
             if ((schools & mask) && Has(state, perk))
                 mult *= SCHOOL_MASTERY_BONUS;
+
+        // Retribution - By Sword & Light (the Paladin's own damage)
+        if (Has(state, PERK_RETRIBUTION) && attacker->IsPlayer())
+        {
+            if (schools & SPELL_SCHOOL_MASK_HOLY)
+                mult *= SWORD_LIGHT_HOLY;
+            else if (schools & SPELL_SCHOOL_MASK_NORMAL)
+                mult *= SWORD_LIGHT_PHYSICAL;
+        }
         return mult;
+    }
+
+    // ------------------------------------------------------------------ Retribution helpers
+    bool HasRetribution(Unit const* unit)
+    {
+        return unit && unit->IsPlayer() && Has(StateOf(unit->ToPlayer()), PERK_RETRIBUTION);
+    }
+
+    bool IsExorcism(SpellInfo const* spellInfo)
+    {
+        return spellInfo && sSpellMgr->GetFirstSpellInChain(spellInfo->Id) == SPELL_EXORCISM_RANK_1;
+    }
+
+    // The highest Exorcism rank the player's level allows.
+    uint32 ExorcismFor(Player const* player)
+    {
+        uint32 best = 0;
+        for (uint32 id = SPELL_EXORCISM_RANK_1; id; id = sSpellMgr->GetNextSpellInChain(id))
+            if (SpellInfo const* info = sSpellMgr->GetSpellInfo(id))
+                if (info->SpellLevel <= player->GetLevel())
+                    best = id;
+        return best;
+    }
+
+    std::list<Unit*> EnemiesNear(WorldObject* center, Unit* caster, float range)
+    {
+        std::list<Unit*> units;
+        Acore::AnyUnfriendlyUnitInObjectRangeCheck check(center, caster, range);
+        Acore::UnitListSearcher<Acore::AnyUnfriendlyUnitInObjectRangeCheck> searcher(center, units, check);
+        Cell::VisitObjects(center, searcher, range);
+        units.remove_if([caster](Unit* u) { return !caster->IsValidAttackTarget(u); });
+        return units;
+    }
+
+    // Righteous Explosion: deal what is left of the dying enemy's Righteous Vengeance around it.
+    void ScheduleRighteousExplosion(Unit* victim)
+    {
+        for (AuraEffect const* eff : victim->GetAuraEffectsByType(SPELL_AURA_PERIODIC_DAMAGE))
+        {
+            if (eff->GetId() != SPELL_RIGHTEOUS_VENGEANCE_DOT)
+                continue;
+            Unit* caster = eff->GetCaster();
+            if (!HasRetribution(caster))
+                continue;
+            int32 ticksLeft = eff->GetTotalTicks() - int32(eff->GetTickNumber());
+            uint32 remaining = uint32(std::max(0, eff->GetAmount()) * std::max(0, ticksLeft));
+            if (!remaining)
+                continue;
+            ObjectGuid victimGuid = victim->GetGUID();
+            // after the killing blow has been dealt, never inside it
+            caster->m_Events.AddEventAtOffset([caster, victimGuid, remaining]()
+            {
+                Unit* corpse = ObjectAccessor::GetUnit(*caster, victimGuid);
+                SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(SPELL_RIGHTEOUS_VENGEANCE_DOT);
+                if (!corpse || !spellInfo || !caster->IsInWorld() || corpse->GetMap() != caster->GetMap())
+                    return;
+                std::list<Unit*> enemies = EnemiesNear(corpse, caster, EXPLOSION_RANGE);
+                enemies.sort(Acore::ObjectDistanceOrderPred(corpse));
+                uint32 hits = 0;
+                for (Unit* enemy : enemies)
+                {
+                    if (enemy == corpse || ++hits > EXPLOSION_MAX_TARGETS)
+                        continue;
+                    SpellNonMeleeDamage damageInfo(caster, enemy, spellInfo, SPELL_SCHOOL_MASK_HOLY);
+                    damageInfo.damage = remaining;
+                    caster->SendSpellNonMeleeDamageLog(&damageInfo);
+                    caster->DealSpellDamage(&damageInfo, true);
+                }
+            }, 1ms);
+        }
     }
 
     // ------------------------------------------------------------------ healing
@@ -807,7 +920,20 @@ public:
 
     void ModifySpellDamageTaken(Unit* target, Unit* attacker, int32& damage, SpellInfo const* spellInfo) override
     {
+        // Retribution - Exorcist: Exorcism gets 60% of attack power and spell power
+        if (damage > 0 && IsExorcism(spellInfo) && HasRetribution(attacker))
+            damage += int32(EXORCIST_EXTRA_SCALING * (attacker->GetTotalAttackPowerValue(BASE_ATTACK) +
+                                                      attacker->SpellBaseDamageBonusDone(SPELL_SCHOOL_MASK_HOLY)));
         ApplyMultipliers(target, attacker, damage, spellInfo, HitKind::Spell);
+    }
+
+    // Retribution - Righteous Explosion: notice the killing blow while the dying enemy still has its auras.
+    uint32 DealDamage(Unit* /*attacker*/, Unit* victim, uint32 damage, DamageEffectType /*damagetype*/) override
+    {
+        if (victim && damage && victim->IsAlive() && damage >= victim->GetHealth() &&
+            victim->HasAura(SPELL_RIGHTEOUS_VENGEANCE_DOT))
+            ScheduleRighteousExplosion(victim);
+        return damage;
     }
 
     // Also called for heal-over-time ticks: only scale ticks on hostile targets.
@@ -820,9 +946,65 @@ public:
     }
 };
 
+// 53385 - Divine Storm (Retribution perk: no target cap, a Crusader Strike on every enemy hit)
+class spell_unbound_ret_divine_storm : public SpellScript
+{
+    PrepareSpellScript(spell_unbound_ret_divine_storm);
+
+    void RemoveTargetCap()
+    {
+        if (HasRetribution(GetCaster()))
+            GetSpell()->SetSpellValue(SPELLVALUE_MAX_TARGETS, 0);
+    }
+
+    void CrusaderStrike()
+    {
+        Unit* caster = GetCaster();
+        Unit* target = GetHitUnit();
+        if (target && target != caster && HasRetribution(caster) && caster->IsValidAttackTarget(target))
+            caster->CastSpell(target, SPELL_CRUSADER_STRIKE, TRIGGERED_FULL_MASK);
+    }
+
+    void Register() override
+    {
+        BeforeCast += SpellCastFn(spell_unbound_ret_divine_storm::RemoveTargetCap);
+        AfterHit += SpellHitFn(spell_unbound_ret_divine_storm::CrusaderStrike);
+    }
+};
+
+// 20271, 53407, 53408 - Judgements (Retribution perk: spread within 10 yards, a free Exorcism on each enemy)
+class spell_unbound_ret_judgement : public SpellScript
+{
+    PrepareSpellScript(spell_unbound_ret_judgement);
+
+    void JudgeAll()
+    {
+        Unit* caster = GetCaster();
+        Unit* target = GetHitUnit();
+        if (!target || !HasRetribution(caster) || !caster->IsValidAttackTarget(target))
+            return;
+
+        if (uint32 exorcism = ExorcismFor(caster->ToPlayer()))
+            caster->CastSpell(target, exorcism, TRIGGERED_FULL_MASK);
+
+        if (GetSpell()->IsTriggered()) // the spread Judgements don't spread again
+            return;
+        for (Unit* enemy : EnemiesNear(target, caster, JUDGEMENT_SPREAD_RANGE))
+            if (enemy != target)
+                caster->CastSpell(enemy, GetSpellInfo()->Id, TRIGGERED_FULL_MASK);
+    }
+
+    void Register() override
+    {
+        AfterHit += SpellHitFn(spell_unbound_ret_judgement::JudgeAll);
+    }
+};
+
 void AddSC_unbound_perks()
 {
     new unbound_perks_world();
     new unbound_perks_player();
     new unbound_perks_unit();
+    RegisterSpellScript(spell_unbound_ret_divine_storm);
+    RegisterSpellScript(spell_unbound_ret_judgement);
 }

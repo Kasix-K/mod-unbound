@@ -55,7 +55,10 @@ Custom features for the WoW 3.3.5a Unbound server.
   Critical Understanding, Defensive Sacrifice, Desperate Power, Block/Dodge/Parry/Haste
   Capping, Pet Encouragement, Rolling Momentum, Tunnel Vision, Collateral Damage, Giant Slayer, Merciless,
   Pressure, Chaos, Power Conversion, Healing Powah, and the seven school Masteries
-  (Physical, Holy, Fire, Nature, Frost, Shadow, Arcane): all 25 Offensive perks. The other perks are listed but have no effect yet.
+  (Physical, Holy, Fire, Nature, Frost, Shadow, Arcane): all 25 Offensive perks.
+  Class perks: Paladin **Retribution** (uncapped Divine Storm with Crusader Strikes, spreading Judgements
+  with free Exorcisms, Exorcism at 60% AP/SP, Righteous Vengeance explosions, Holy x59 and Physical x27
+  damage; spell scripts in `data/sql/db-world/unbound_perks_spells.sql`). The other perks are listed but have no effect yet.
 - **Unbound addon** (`addon/Unbound`, copy to the client's `Interface/AddOns`): shows Dungeon/Raid
   Difficulty in the portrait menu from level 60 (the client's own limit is 65) and adds `/heroic` and
   `/normal`.
