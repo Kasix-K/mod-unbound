@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.MPQ
+*.dbc
+.vs/
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+Desktop.ini
