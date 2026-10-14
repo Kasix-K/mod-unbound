@@ -31,6 +31,23 @@
  *                              (area = a spell that hits an area or chains to more targets; everything else,
  *                              melee and auto attacks included, is single-target)
  *   113 Giant Slayer           +25% damage to bosses (world bosses and dungeon/raid bosses)
+ *   114 Merciless              damage-over-time ticks +50%
+ *   115 Pressure               each hit on the same target +8% damage, up to 10 stacks (+80%); switching
+ *                              targets resets it (tracked per attacker, so a pet keeps its own stacks;
+ *                              direct hits add a stack, damage-over-time ticks use the current stacks)
+ *   116 Chaos                  each damaging ability (a spell or a weapon strike, not auto attacks or
+ *                              damage-over-time ticks) has a 10% chance to deal double damage
+ *   117 Power Conversion       every 30000 of your highest base stat = +0.5% damage, up to +200%
+ *   118 Healing Powah          healing done +25% (direct heals and heal-over-time ticks)
+ *   119 Shadow Mastery         Shadow spell damage +30%
+ *   120 Holy Mastery           Holy spell damage +30%
+ *   121 Arcane Mastery         Arcane spell damage +30%
+ *   122 Nature Mastery         Nature spell damage +30%
+ *   123 Fire Mastery           Fire spell damage +30%
+ *   124 Frost Mastery          Frost spell damage +30%
+ *   125 Physical Mastery       Physical damage +30% (melee and auto attacks, weapon strikes, Physical
+ *                              spells and bleeds)
+ *                              (a spell counts for a school if that school is part of it, e.g. Shadowfrost)
  *
  * Settings (mod_unbound.conf): Unbound.Perks.RapidRecovery (on/off), .Delay (ms), .Percent.
  */
@@ -40,6 +57,7 @@
 #include "Creature.h"
 #include "DatabaseEnv.h"
 #include "Player.h"
+#include "Random.h"
 #include "ScriptMgr.h"
 #include "SpellAuras.h"
 #include "SpellInfo.h"
@@ -51,6 +69,7 @@
 #include <cmath>
 #include <set>
 #include <unordered_map>
+#include <utility>
 
 namespace
 {
@@ -76,13 +95,28 @@ namespace
         PERK_TUNNEL_VISION          = 111,
         PERK_COLLATERAL_DAMAGE      = 112,
         PERK_GIANT_SLAYER           = 113,
+        PERK_MERCILESS              = 114,
+        PERK_PRESSURE               = 115,
+        PERK_CHAOS                  = 116,
+        PERK_POWER_CONVERSION       = 117,
+        PERK_HEALING_POWAH          = 118,
+        PERK_SHADOW_MASTERY         = 119,
+        PERK_HOLY_MASTERY           = 120,
+        PERK_ARCANE_MASTERY         = 121,
+        PERK_NATURE_MASTERY         = 122,
+        PERK_FIRE_MASTERY           = 123,
+        PERK_FROST_MASTERY          = 124,
+        PERK_PHYSICAL_MASTERY       = 125,
     };
 
     std::set<uint32> const IMPLEMENTED = {
         PERK_CYCLIC_POWER, PERK_CRITICAL_UNDERSTANDING, PERK_DEFENSIVE_SACRIFICE,
         PERK_DESPERATE_POWER, PERK_BLOCK_CAPPING, PERK_DODGE_CAPPING, PERK_PARRY_CAPPING,
         PERK_HASTE_CAPPING, PERK_PET_ENCOURAGEMENT, PERK_ROLLING_MOMENTUM,
-        PERK_TUNNEL_VISION, PERK_COLLATERAL_DAMAGE, PERK_GIANT_SLAYER };
+        PERK_TUNNEL_VISION, PERK_COLLATERAL_DAMAGE, PERK_GIANT_SLAYER,
+        PERK_MERCILESS, PERK_PRESSURE, PERK_CHAOS, PERK_POWER_CONVERSION,
+        PERK_HEALING_POWAH, PERK_SHADOW_MASTERY, PERK_HOLY_MASTERY, PERK_ARCANE_MASTERY,
+        PERK_NATURE_MASTERY, PERK_FIRE_MASTERY, PERK_FROST_MASTERY, PERK_PHYSICAL_MASTERY };
 
     constexpr char const* PREFIX = "UBPERK";
     constexpr uint32 STAT_REFRESH_MS = 2000;
@@ -103,6 +137,22 @@ namespace
     constexpr float FOCUS_BONUS = 1.40f;             // Tunnel Vision / Collateral Damage
     constexpr float FOCUS_PENALTY = 0.70f;
     constexpr float GIANT_SLAYER_BONUS = 1.25f;
+    constexpr float MERCILESS_DOT_BONUS = 1.50f;
+    constexpr float HEALING_POWAH_BONUS = 1.25f;
+    constexpr float SCHOOL_MASTERY_BONUS = 1.30f;
+    constexpr int32 PRESSURE_STEP = 8;               // % per stack
+    constexpr uint32 PRESSURE_MAX_STACKS = 10;
+    constexpr float CHAOS_CHANCE = 10.0f;            // %
+    constexpr float POWER_CONVERSION_STAT = 30000.0f;   // +0.5% per this much of the highest base stat
+    constexpr float POWER_CONVERSION_MAX = 200.0f;
+
+    enum class HitKind { Melee, Spell, Periodic };
+
+    struct PressureTrack
+    {
+        ObjectGuid target;
+        uint32 stacks = 0;
+    };
     constexpr uint8 MAGIC_SCHOOLS[] = { SPELL_SCHOOL_FIRE, SPELL_SCHOOL_NATURE, SPELL_SCHOOL_FROST,
                                         SPELL_SCHOOL_SHADOW, SPELL_SCHOOL_ARCANE };
 
@@ -122,6 +172,8 @@ namespace
         int32 critBonus = 0;        // Critical Understanding bonus currently applied (%)
         int32 desperateResist[MAX_SPELL_SCHOOL] = {};  // resistance currently removed by Desperate Power
         int32 cappingBonus = 0;     // Block/Dodge/Parry/Haste Capping damage bonus (%), summed
+        float powerConversion = 0;  // Power Conversion bonus (%)
+        std::unordered_map<ObjectGuid, PressureTrack> pressure; // Pressure: per attacking unit (player, pets)
         int32 momentum = 0;         // Rolling Momentum bonus (%)
         uint32 momentumTimer = 0;
     };
@@ -135,7 +187,7 @@ namespace
     }
 
     // The player whose perks apply to this unit: the player or the owner of a pet, guardian or totem.
-    PerkState const* PerkOwnerState(Unit const* unit)
+    PerkState* PerkOwnerState(Unit const* unit)
     {
         if (!unit)
             return nullptr;
@@ -200,7 +252,38 @@ namespace
         }
         if (Has(state, PERK_GIANT_SLAYER) && IsBoss(victim))
             mult *= GIANT_SLAYER_BONUS;
+        // School masteries; melee swings (no spell) are Physical.
+        static constexpr std::pair<uint32, uint32> MASTERIES[] = {
+            { PERK_PHYSICAL_MASTERY, SPELL_SCHOOL_MASK_NORMAL }, { PERK_HOLY_MASTERY,   SPELL_SCHOOL_MASK_HOLY   },
+            { PERK_FIRE_MASTERY,     SPELL_SCHOOL_MASK_FIRE   }, { PERK_NATURE_MASTERY, SPELL_SCHOOL_MASK_NATURE },
+            { PERK_FROST_MASTERY,    SPELL_SCHOOL_MASK_FROST  }, { PERK_SHADOW_MASTERY, SPELL_SCHOOL_MASK_SHADOW },
+            { PERK_ARCANE_MASTERY,   SPELL_SCHOOL_MASK_ARCANE },
+        };
+        uint32 schools = spellInfo ? uint32(spellInfo->GetSchoolMask()) : uint32(SPELL_SCHOOL_MASK_NORMAL);
+        for (auto const& [perk, mask] : MASTERIES)
+            if ((schools & mask) && Has(state, perk))
+                mult *= SCHOOL_MASTERY_BONUS;
         return mult;
+    }
+
+    // ------------------------------------------------------------------ healing
+    // The core calls ModifyHealReceived with (target, healer) for heal-over-time ticks but with
+    // (healer, target) for direct heals (Unit::HealBySpell). A heal tick always calls
+    // ModifyPeriodicDamageAurasTick first with the same heal value, so that call is remembered here
+    // to tell the two apart.
+    struct PendingHealTick
+    {
+        uint32 const* amount = nullptr;
+        Unit const* target = nullptr;
+        SpellInfo const* spellInfo = nullptr;
+    };
+    PendingHealTick sPendingHealTick;
+
+    void ApplyHealingBonus(Unit const* healer, uint32& heal)
+    {
+        PerkState const* state = PerkOwnerState(healer);
+        if (heal && Has(state, PERK_HEALING_POWAH))
+            heal = uint32(std::round(float(heal) * HEALING_POWAH_BONUS));
     }
 
     float DamageTakenMultiplier(Unit const* victim)
@@ -216,12 +299,45 @@ namespace
         return mult;
     }
 
-    template <typename T>
-    void ApplyMultipliers(Unit* victim, Unit* attacker, T& damage, SpellInfo const* spellInfo)
+    // Perks that depend on the kind of hit or change state with every hit.
+    float HitMultiplier(Unit const* attacker, Unit const* victim, HitKind kind)
     {
-        if (damage <= 0 || attacker == victim)
+        PerkState* state = PerkOwnerState(attacker);
+        if (!state || state->active.empty())
+            return 1.0f;
+        float mult = 1.0f;
+
+        if (kind == HitKind::Periodic && Has(state, PERK_MERCILESS))
+            mult *= MERCILESS_DOT_BONUS;
+
+        if (kind == HitKind::Spell && Has(state, PERK_CHAOS) && roll_chance_f(CHAOS_CHANCE))
+            mult *= 2.0f;
+
+        if (state->powerConversion > 0.0f)
+            mult *= 1.0f + state->powerConversion / 100.0f;
+
+        if (Has(state, PERK_PRESSURE))
+        {
+            PressureTrack& track = state->pressure[attacker->GetGUID()];
+            if (track.target != victim->GetGUID())
+            {
+                track.target = victim->GetGUID();
+                track.stacks = 0;
+            }
+            mult *= 1.0f + (PRESSURE_STEP * track.stacks) / 100.0f;
+            if (kind != HitKind::Periodic)
+                track.stacks = std::min(PRESSURE_MAX_STACKS, track.stacks + 1);
+        }
+        return mult;
+    }
+
+    template <typename T>
+    void ApplyMultipliers(Unit* victim, Unit* attacker, T& damage, SpellInfo const* spellInfo, HitKind kind)
+    {
+        if (damage <= 0 || !attacker || !victim || attacker == victim)
             return;
-        float mult = DamageDoneMultiplier(attacker, victim, spellInfo) * DamageTakenMultiplier(victim);
+        float mult = DamageDoneMultiplier(attacker, victim, spellInfo) * HitMultiplier(attacker, victim, kind) *
+                     DamageTakenMultiplier(victim);
         if (mult != 1.0f)
             damage = T(std::max(0.0f, std::round(float(damage) * mult)));
     }
@@ -332,6 +448,18 @@ namespace
             capping += OverCapBonus(haste);
         }
         state.cappingBonus = capping;
+
+        // Power Conversion
+        state.powerConversion = 0.0f;
+        if (Has(&state, PERK_POWER_CONVERSION))
+        {
+            float highest = 0.0f;
+            for (uint8 stat = STAT_STRENGTH; stat < MAX_STATS; ++stat)
+                highest = std::max(highest, player->GetStat(Stats(stat)));
+            state.powerConversion = std::min(POWER_CONVERSION_MAX, std::floor(highest / POWER_CONVERSION_STAT) * 0.5f);
+        }
+        if (!Has(&state, PERK_PRESSURE))
+            state.pressure.clear();
 
         // Critical Understanding
         int32 crit = 0;
@@ -601,8 +729,19 @@ public:
         UNITHOOK_MODIFY_MELEE_DAMAGE,
         UNITHOOK_MODIFY_SPELL_DAMAGE_TAKEN,
         UNITHOOK_MODIFY_PERIODIC_DAMAGE_AURAS_TICK,
+        UNITHOOK_MODIFY_HEAL_RECEIVED,
         UNITHOOK_ON_BEFORE_ROLL_MELEE_OUTCOME_AGAINST
     }) { }
+
+    // Healing Powah (see PendingHealTick for the argument order).
+    void ModifyHealReceived(Unit* first, Unit* second, uint32& heal, SpellInfo const* spellInfo) override
+    {
+        PendingHealTick tick = sPendingHealTick;
+        sPendingHealTick = PendingHealTick();
+        bool isTick = tick.amount == &heal && tick.target == first && tick.spellInfo == spellInfo;
+        Unit* healer = isTick ? second : first;
+        ApplyHealingBonus(healer, heal);
+    }
 
     // Block/Dodge/Parry Capping: melee attacks against a capped player use at most 60% (chances are x100).
     void OnBeforeRollMeleeOutcomeAgainst(Unit const* /*attacker*/, Unit const* victim, WeaponAttackType /*attType*/,
@@ -624,20 +763,21 @@ public:
 
     void ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage) override
     {
-        ApplyMultipliers(target, attacker, damage, nullptr);
+        ApplyMultipliers(target, attacker, damage, nullptr, HitKind::Melee);
     }
 
     void ModifySpellDamageTaken(Unit* target, Unit* attacker, int32& damage, SpellInfo const* spellInfo) override
     {
-        ApplyMultipliers(target, attacker, damage, spellInfo);
+        ApplyMultipliers(target, attacker, damage, spellInfo, HitKind::Spell);
     }
 
     // Also called for heal-over-time ticks: only scale ticks on hostile targets.
     void ModifyPeriodicDamageAurasTick(Unit* target, Unit* attacker, uint32& damage, SpellInfo const* spellInfo) override
     {
+        sPendingHealTick = { &damage, target, spellInfo };  // a heal tick calls ModifyHealReceived next
         if (target && attacker && target->IsFriendlyTo(attacker))
             return;
-        ApplyMultipliers(target, attacker, damage, spellInfo);
+        ApplyMultipliers(target, attacker, damage, spellInfo, HitKind::Periodic);
     }
 };
 

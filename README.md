@@ -52,7 +52,9 @@ Custom features for the WoW 3.3.5a Unbound server.
   `mod_unbound.conf`). Toggled perks are kept by the server (whispered addon messages, prefix `UBPERK`;
   saved in `characters.character_unbound_perks`; no changes in combat). Working so far: Cyclic Power,
   Critical Understanding, Defensive Sacrifice, Desperate Power, Block/Dodge/Parry/Haste
-  Capping, Pet Encouragement, Rolling Momentum, Tunnel Vision, Collateral Damage, Giant Slayer. The other perks are listed but have no effect yet.
+  Capping, Pet Encouragement, Rolling Momentum, Tunnel Vision, Collateral Damage, Giant Slayer, Merciless,
+  Pressure, Chaos, Power Conversion, Healing Powah, and the seven school Masteries
+  (Physical, Holy, Fire, Nature, Frost, Shadow, Arcane): all 25 Offensive perks. The other perks are listed but have no effect yet.
 - **Unbound addon** (`addon/Unbound`, copy to the client's `Interface/AddOns`): shows Dungeon/Raid
   Difficulty in the portrait menu from level 60 (the client's own limit is 65) and adds `/heroic` and
   `/normal`.
