@@ -151,24 +151,20 @@ accounts are your own; all the custom game data (heroics, companions, vendors) b
 python tools/custom_dbc.py --client "D:\WoW 3.3.5a Unbound" --dbc "D:\WoW Solo Server\data\dbc"
 ```
 
-**ElvUI error fix (Synastria ElvUI build):** the Unbound client's ElvUI is the Synastria build, whose
-attunement feature calls `ItemLocIsLoaded`, a function only Synastria's own client has. With ElvUI's
-character skin on, opening the character sheet errors (`Interface\AddOns\ElvUI\Core\Attune.lua:91:
-attempt to call global 'ItemLocIsLoaded' (a nil value)`), and after that, when ElvUI's own bags are
-off, `Attune.lua:217: attempt to index field 'db' (a nil value)`. Fix, both in the client's
-`Interface\AddOns\ElvUI\Core\Attune.lua`, then `/reload`:
+**ElvUI: use the official 6.09.** The Unbound client first came with Synastria's build of ElvUI, which
+changes 36 files (attunement icons that call Synastria-only client functions, plus changes to movers,
+config, media, bars and skins). On this server it errors, e.g. with the character skin on:
+`Interface\AddOns\ElvUI\Core\Attune.lua:91: attempt to call global 'ItemLocIsLoaded' (a nil value)`.
+The fix is to replace `ElvUI` and `ElvUI_OptionsUI` in the client's `Interface\AddOns` with the official
+ElvUI 6.09 for 3.3.5a (the version the Synastria build is based on), with the game closed:
 
-1. Add this line right after `local colorCache = {}` (near the top):
+```bash
+git clone --depth 1 --branch 6.09 https://github.com/ElvUI-WotLK/ElvUI.git ElvUI-6.09
+```
 
-   ```lua
-   local ItemLocIsLoaded = _G.ItemLocIsLoaded or function() return false end
-   ```
-
-2. Replace every `B.db.` with `E.db.bags.` (six places, in `Attune:UpdateItemLevelText`): the Bags module
-   only sets `B.db` when ElvUI's bags are on; `E.db.bags` is the same settings table and always exists.
-
-ElvUI then skips the attune icons (they mean nothing on this server); item levels on gear still show.
-Updating or reinstalling ElvUI undoes the fix, so apply it again afterwards.
+Then copy its `ElvUI` and `ElvUI_OptionsUI` folders over the client's (delete the old ones first). Keep
+`ElvUI_AddOnSkins` (it has no Synastria code). ElvUI settings carry over (same save files). A client with
+`Interface\AddOns\ElvUI\Core\Attune.lua` still has the Synastria build.
 
 **Server settings:** `server-setup/apply-unbound-settings.ps1` holds every setting the Unbound server
 changes from the defaults (level 60 cap, cross-faction, faster XP, solo scaling floor 0.4, transmog,

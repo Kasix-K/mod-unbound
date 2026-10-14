@@ -6,13 +6,11 @@
   `.modify scale <number>` on a GM account (for example `.modify scale 0.08`). The change only lasts
   until the creature despawns or is dismissed. When you find the size you like, ask Claude to make it
   permanent. Permanent size changes need a server restart.
-- **ElvUI errors on the character sheet** (`Attune.lua:91: attempt to call global 'ItemLocIsLoaded'` and
-  `Attune.lua:217: attempt to index field 'db'`, only with ElvUI's character skin on): the client's ElvUI is
-  Synastria's build. In `Interface\AddOns\ElvUI\Core\Attune.lua`: add `local ItemLocIsLoaded =
-  _G.ItemLocIsLoaded or function() return false end` right after `local colorCache = {}`, and replace every
-  `B.db.` with `E.db.bags.` (six places); then `/reload`. See the README for details. Already done on the original PC
-  (backup of the original file: `E:\WoW Solo Server\Error Logs\Attune.lua.original-backup`). Updating or
-  reinstalling ElvUI undoes it; apply it again afterwards.
+- **ElvUI:** use the official ElvUI 6.09 for 3.3.5a (github.com/ElvUI-WotLK/ElvUI, tag 6.09), not
+  Synastria's build (errors like `Attune.lua:91: attempt to call global 'ItemLocIsLoaded'`). If
+  `Interface\AddOns\ElvUI\Core\Attune.lua` exists, it's still Synastria's build: see the README to swap it.
+  Done on the original PC on 2026-10-14; the Synastria build and all ElvUI settings files are backed up in
+  `E:\WoW Solo Server\Backups\ElvUI-Synastria-20261014-165615` (copy them back to undo).
 
 ## Starting and stopping
 
