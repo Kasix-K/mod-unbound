@@ -46,7 +46,7 @@ Custom features for the WoW 3.3.5a Unbound server.
   restart the worldserver.
 - **Unbound Perks** (`addon/UnboundPerks`, copy to `Interface/AddOns`, open with `/perks`): the Character
   Perks window (drawn with the game's own Blizzard frame art: dialog border and title banner, red buttons,
-  check boxes) with categories, search and saved loadouts. The three Permanent perks work for everyone:
+  a talent-tree grid of perk icons with 0/1 and 1/1 rank badges, a gold glow on active perks and greyed icons when a category is full; right-click or double-click toggles) with categories, search and saved loadouts. The three Permanent perks work for everyone:
   No Resurrection Sickness (`Death.SicknessLevel = 255`), No Daze (`Daze.Enabled = 0`), both set by
   `apply-unbound-settings.ps1`, and Rapid Recovery (`src/unbound_perks.cpp`: 4 seconds after leaving
   combat, 8% of maximum health and mana every second until full; `Unbound.Perks.RapidRecovery*` in

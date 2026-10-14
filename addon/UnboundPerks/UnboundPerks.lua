@@ -17,7 +17,10 @@ local C = {
 }
 
 local WHITE = "Interface\\Buttons\\WHITE8X8"
-local ROW_H, CAT_H = 24, 26
+local CAT_H = 26
+-- talent-tree grid: perk icons in rows of GRID_COLS
+local GRID_COLS, ICON, ROW_PITCH = 5, 40, 64
+local GRID_W = 318         -- inside the middle panel, left of its scroll bar
 local FRAME_W, FRAME_H = 880, 620
 local DETAIL_W = 300
 local PANELS_TOP, PANELS_BOTTOM = -96, 34  -- the three panels, relative to the window
@@ -71,8 +74,8 @@ local frame              -- main window
 local perksByCat = {}    -- category key -> { perk, ... } visible to this character
 local categories = {}    -- visible categories in order
 local selectedCat, selectedPerk
-local filtered = {}      -- perks shown in the middle list
-local catRows, perkRows = {}, {}
+local filtered = {}      -- perks shown in the middle grid
+local catRows, perkButtons = {}, {}
 local ui = {}
 
 local function playerClass()
@@ -309,30 +312,128 @@ local function updateCategories()
     end
 end
 
-local function updatePerkList()
-    local offset = FauxScrollFrame_GetOffset(ui.scroll)
-    for i, row in ipairs(perkRows) do
-        local perk = filtered[i + offset]
-        if perk then
-            row.perk = perk
-            row.name:SetText(perk.name)
-            row.icon:SetTexture(perk.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
-            row.box:SetChecked(isOn(perk))
-            if perk.permanent then row.box:Disable() else row.box:Enable() end
-            row.icon:SetDesaturated(not isOn(perk))
-            setShown(row.sel, perk == selectedPerk)
-            if perk == selectedPerk then
-                row.name:SetTextColor(1, 1, 1)
-            else
-                row.name:SetTextColor(unpack(isOn(perk) and C.gold or C.muted))
-            end
-            row:Show()
-        else
-            row:Hide()
-        end
+-- ------------------------------------------------------------------ talent-tree grid
+-- A perk can be turned on now: not on yet, implemented, and its category isn't full.
+local function canTurnOn(perk)
+    if isOn(perk) or perk.permanent or not perk.works then return false end
+    local cat = categoryOf(perk)
+    return not (cat and cat.limit and activeCount(cat.key) >= cat.limit)
+end
+
+local function showPerkTooltip(button)
+    local perk = button.perk
+    if not perk then return end
+    local cat = categoryOf(perk) or { name = "", color = C.gold }
+    GameTooltip:SetOwner(button, "ANCHOR_RIGHT")
+    GameTooltip:AddLine(perk.name, 1, 1, 1)
+    GameTooltip:AddLine((perk.permanent and "Permanent" or cat.name) .. " Perk", unpack(cat.color))
+    if perk.permanent then
+        GameTooltip:AddLine("Always active", unpack(C.active))
+    elseif isOn(perk) then
+        GameTooltip:AddLine("Active", unpack(C.active))
     end
-    FauxScrollFrame_Update(ui.scroll, #filtered, #perkRows, ROW_H)
+    GameTooltip:AddLine(perk.desc or "", 1, 0.82, 0, true)
+    if not perk.works and not perk.permanent then
+        GameTooltip:AddLine("Not active on the server yet.", 1, 0.6, 0.2, true)
+    elseif not perk.permanent then
+        GameTooltip:AddLine(isOn(perk) and "Right-click to turn off." or "Right-click to turn on.", 0.1, 1, 0.1)
+    end
+    GameTooltip:Show()
+end
+
+-- One perk icon in the grid: the action-button frame, a talent-style rank badge (0/1, 1/1), a gold
+-- glow while active.
+local function makePerkButton(parent)
+    local b = CreateFrame("Button", uniqueName("Perk"), parent)
+    b:SetSize(ICON, ICON)
+    b:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    b.icon = b:CreateTexture(nil, "BORDER")
+    b.icon:SetAllPoints()
+    b.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+    b.frame = b:CreateTexture(nil, "ARTWORK")
+    b.frame:SetTexture("Interface\\Buttons\\UI-Quickslot2")
+    b.frame:SetSize(ICON * 1.75, ICON * 1.75); b.frame:SetPoint("CENTER", 0, -1)
+    b.glow = b:CreateTexture(nil, "OVERLAY")
+    b.glow:SetTexture("Interface\\Buttons\\UI-ActionButton-Border")
+    b.glow:SetBlendMode("ADD")
+    b.glow:SetSize(ICON * 1.8, ICON * 1.8); b.glow:SetPoint("CENTER")
+    b.sel = b:CreateTexture(nil, "OVERLAY")
+    b.sel:SetTexture("Interface\\Buttons\\CheckButtonHilight")
+    b.sel:SetBlendMode("ADD")
+    b.sel:SetAllPoints()
+    b:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
+    b.rankBorder = b:CreateTexture(nil, "OVERLAY")
+    b.rankBorder:SetTexture("Interface\\TalentFrame\\TalentFrame-RankBorder")
+    b.rankBorder:SetSize(32, 32); b.rankBorder:SetPoint("CENTER", b, "BOTTOMRIGHT", 0, 0)
+    b.rank = b:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    b.rank:SetPoint("CENTER", b.rankBorder, "CENTER", 0, 0)
+    b:SetScript("OnClick", function(self, button)
+        if button == "RightButton" then
+            togglePerk(self.perk)
+        else
+            PlaySound("igMainMenuOptionCheckBoxOn")
+            selectedPerk = self.perk
+        end
+        refresh()
+        showPerkTooltip(self)
+    end)
+    b:SetScript("OnDoubleClick", function(self) togglePerk(self.perk); refresh(); showPerkTooltip(self) end)
+    b:SetScript("OnEnter", showPerkTooltip)
+    b:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    return b
+end
+
+local function updateGrid()
+    local colGap = (GRID_W - GRID_COLS * ICON) / (GRID_COLS + 1)
+    for i, perk in ipairs(filtered) do
+        local b = perkButtons[i]
+        if not b then
+            b = makePerkButton(ui.gridChild)
+            perkButtons[i] = b
+        end
+        local col, row = (i - 1) % GRID_COLS, math.floor((i - 1) / GRID_COLS)
+        b:ClearAllPoints()
+        b:SetPoint("TOPLEFT", colGap + col * (ICON + colGap), -(14 + row * ROW_PITCH))
+        b.perk = perk
+        b.icon:SetTexture(perk.icon or "Interface\\Icons\\INV_Misc_QuestionMark")
+        local on, available = isOn(perk), canTurnOn(perk)
+        b.icon:SetDesaturated(not on and not available)
+        b.icon:SetVertexColor(1, 1, 1)
+        if not on and not available then b.icon:SetVertexColor(0.6, 0.6, 0.6) end
+        setShown(b.glow, on)
+        setShown(b.sel, perk == selectedPerk)
+        b.rank:SetText(on and "1/1" or "0/1")
+        if on then
+            b.rank:SetTextColor(unpack(C.gold))          -- learned (talent: yellow)
+        elseif available then
+            b.rank:SetTextColor(unpack(C.active))        -- can be turned on (talent: green)
+        else
+            b.rank:SetTextColor(unpack(C.muted))         -- locked (talent: grey)
+        end
+        b:Show()
+    end
+    for i = #filtered + 1, #perkButtons do perkButtons[i]:Hide() end
+    local rows = math.max(1, math.ceil(#filtered / GRID_COLS))
+    local height = 14 + rows * ROW_PITCH
+    ui.gridChild:SetHeight(height)
+    ui.scroll:UpdateScrollChildRect()
+    -- only show the scroll bar when the tree is taller than the panel
+    if ui.scrollBar then setShown(ui.scrollBar, height > ui.scroll:GetHeight() + 1) end
     setShown(ui.empty, #filtered == 0)
+
+    -- tree header: the category (or search) and how many of its perks are on
+    local q = strtrim(ui.search:GetText() or "")
+    local cat = categoryOf({ category = selectedCat })
+    if q ~= "" then
+        ui.treeTitle:SetText("Search results"); ui.treeTitle:SetTextColor(unpack(C.gold))
+        ui.treeCount:SetText(#filtered .. (#filtered == 1 and " perk" or " perks"))
+        ui.treeTint:SetGradientAlpha("VERTICAL", 1, 0.82, 0, 0, 1, 0.82, 0, 0.12)
+    elseif cat then
+        ui.treeTitle:SetText(cat.name .. " Perks"); ui.treeTitle:SetTextColor(unpack(cat.color))
+        ui.treeCount:SetText("Active: " .. activeCount(cat.key) .. "/" .. (cat.limit or #perksByCat[cat.key]))
+        local r, g, b = unpack(cat.color)
+        ui.treeTint:SetGradientAlpha("VERTICAL", r, g, b, 0, r, g, b, 0.18)
+    end
 end
 
 local function updateDetails()
@@ -384,7 +485,7 @@ refresh = function()
     if not frame then return end
     updateFilter()
     updateCategories()
-    updatePerkList()
+    updateGrid()
     updateDetails()
     updateLoadoutBar()
     loadoutStatus()
@@ -393,7 +494,6 @@ end
 local function selectCategory(key)
     selectedCat = key
     ui.search:SetText("")
-    FauxScrollFrame_SetOffset(ui.scroll, 0)
     ui.scroll:SetVerticalScroll(0)
     selectedPerk = perksByCat[key] and perksByCat[key][1]
     refresh()
@@ -510,41 +610,31 @@ local function build()
     hint:SetPoint("LEFT", 2, 0); hint:SetText("Search all perks...")
     ui.search:SetScript("OnTextChanged", function(self)
         setShown(hint, self:GetText() == "" and not self:HasFocus())
-        FauxScrollFrame_SetOffset(ui.scroll, 0); ui.scroll:SetVerticalScroll(0)
+        ui.scroll:SetVerticalScroll(0)
         if frame:IsShown() then refresh() end
     end)
     ui.search:HookScript("OnEditFocusGained", function() hint:Hide() end)
     ui.search:HookScript("OnEditFocusLost", function(self) setShown(hint, self:GetText() == "") end)
 
-    -- perk list
-    local listTop = -40
-    ui.scroll = CreateFrame("ScrollFrame", "UnboundPerksScroll", mid, "FauxScrollFrameTemplate")
-    ui.scroll:SetPoint("TOPLEFT", 6, listTop); ui.scroll:SetPoint("BOTTOMRIGHT", -30, 8)
-    ui.scroll:SetScript("OnVerticalScroll", function(self, offset)
-        FauxScrollFrame_OnVerticalScroll(self, offset, ROW_H, updatePerkList)
-    end)
-    local visible = math.floor((FRAME_H + PANELS_TOP - PANELS_BOTTOM + listTop - 8) / ROW_H)
-    for i = 1, visible do
-        local row = CreateFrame("Button", nil, mid)
-        row:SetHeight(ROW_H)
-        row:SetPoint("TOPLEFT", 6, listTop - (i - 1) * ROW_H)
-        row:SetPoint("TOPRIGHT", -30, listTop - (i - 1) * ROW_H)
-        row:SetHighlightTexture(HIGHLIGHT, "ADD")
-        row.sel = selectedTexture(row)
-        -- the game's check box: clicking it toggles the perk; the server's answer sets it back if refused
-        row.box = CreateFrame("CheckButton", uniqueName("Check"), row, "UICheckButtonTemplate")
-        row.box:SetSize(22, 22); row.box:SetPoint("LEFT", 0, 0)
-        row.box:SetScript("OnClick", function() togglePerk(row.perk); refresh() end)
-        row.icon = row:CreateTexture(nil, "ARTWORK")
-        row.icon:SetSize(18, 18); row.icon:SetPoint("LEFT", 24, 0)
-        row.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
-        row.name = text(row, "GameFontNormalSmall"); row.name:SetPoint("LEFT", row.icon, "RIGHT", 6, 0)
-        row:SetScript("OnClick", function(self) selectedPerk = self.perk; refresh() end)
-        row:SetScript("OnDoubleClick", function(self) togglePerk(self.perk) end)
-        perkRows[i] = row
-    end
+    -- talent tree: a header (category, active count), a tint in the category's colour, the icon grid
+    ui.treeTitle = text(mid, "GameFontNormal")
+    ui.treeTitle:SetPoint("TOPLEFT", 14, -40)
+    ui.treeCount = text(mid, "GameFontHighlightSmall")
+    ui.treeCount:SetPoint("TOPRIGHT", -14, -42)
+    separator(mid, -56)
+    ui.treeTint = mid:CreateTexture(nil, "BACKGROUND")
+    ui.treeTint:SetTexture(WHITE)
+    ui.treeTint:SetPoint("TOPLEFT", 4, -58); ui.treeTint:SetPoint("BOTTOMRIGHT", -4, 4)
+
+    local gridTop = -62
+    ui.scroll = CreateFrame("ScrollFrame", "UnboundPerksGrid", mid, "UIPanelScrollFrameTemplate")
+    ui.scroll:SetPoint("TOPLEFT", 8, gridTop); ui.scroll:SetPoint("BOTTOMRIGHT", -30, 8)
+    ui.scrollBar = _G["UnboundPerksGridScrollBar"]
+    ui.gridChild = CreateFrame("Frame", nil, ui.scroll)
+    ui.gridChild:SetSize(GRID_W, 10)
+    ui.scroll:SetScrollChild(ui.gridChild)
     ui.empty = text(mid, "GameFontDisableSmall")
-    ui.empty:SetPoint("TOP", 0, listTop - 20)
+    ui.empty:SetPoint("TOP", 0, gridTop - 20)
     ui.empty:SetText("No perks match your search.")
 
     -- details
@@ -591,7 +681,7 @@ local function build()
     -- footer
     local foot = text(frame, "GameFontDisableSmall")
     foot:SetPoint("BOTTOMLEFT", 22, 16)
-    foot:SetText("Up to 5 Offensive perks at a time.  Perks can't be changed in combat.  Tick a box or double-click a perk to toggle it.")
+    foot:SetText("Up to 5 Offensive perks at a time.  Perks can't be changed in combat.  Click a perk for details; right-click or double-click to toggle it.")
 
     frame:SetScript("OnShow", function() PlaySound("igCharacterInfoOpen"); refresh() end)
     frame:SetScript("OnHide", function() PlaySound("igCharacterInfoClose") end)
