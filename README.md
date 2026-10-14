@@ -50,7 +50,8 @@ Custom features for the WoW 3.3.5a Unbound server.
   `apply-unbound-settings.ps1`, and Rapid Recovery (`src/unbound_perks.cpp`: 3 seconds after leaving
   combat, 15% of maximum health and mana every second until full; `Unbound.Perks.RapidRecovery*` in
   `mod_unbound.conf`). Toggled perks are kept by the server (whispered addon messages, prefix `UBPERK`;
-  saved in `characters.character_unbound_perks`; no changes in combat). Working so far: Cyclic Power,
+  saved in `characters.character_unbound_perks`; no changes in combat; at most 5 Offensive perks
+  active at once). Working so far: Cyclic Power,
   Critical Understanding, Defensive Sacrifice, Desperate Power, Block/Dodge/Parry/Haste
   Capping, Pet Encouragement, Rolling Momentum, Tunnel Vision, Collateral Damage, Giant Slayer, Merciless,
   Pressure, Chaos, Power Conversion, Healing Powah, and the seven school Masteries

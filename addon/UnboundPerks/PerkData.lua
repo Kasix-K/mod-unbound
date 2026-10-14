@@ -17,7 +17,7 @@ UnboundPerks = UnboundPerks or {}
 
 UnboundPerks.CATEGORIES = {
     { key = "PERMANENT", name = "Permanent", color = { 1.00, 0.82, 0.30 } },
-    { key = "OFFENSIVE", name = "Offensive", color = { 0.92, 0.38, 0.32 } },
+    { key = "OFFENSIVE", name = "Offensive", color = { 0.92, 0.38, 0.32 }, limit = 5 },  -- same limit as the server
     { key = "DEFENSIVE", name = "Defensive", color = { 0.38, 0.62, 0.98 } },
     { key = "UTILITY",   name = "Utility",   color = { 0.72, 0.52, 0.98 } },
     { key = "CLASS",     name = nil,         color = nil },  -- name and colour come from the player's class

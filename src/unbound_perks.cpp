@@ -13,6 +13,8 @@
  *   LOAD:<id>,<id>,...         exactly these perks on (a loadout)
  * and the server answers with "STATE:<id>,<id>,..." (the active perks it knows) or "ERR:<text>".
  * Perks can't be changed in combat. Active perks are saved in characters.character_unbound_perks.
+ * At most MAX_ACTIVE_OFFENSIVE (5) Offensive perks (ids 101-199) can be active at once; the addon uses
+ * the same limit (CATEGORIES in addon/UnboundPerks/PerkData.lua).
  *
  * Working toggled perks (ids match addon/UnboundPerks/PerkData.lua; all also work for pets):
  *   101 Cyclic Power           damage done cycles between -50% and +100% over 25 seconds
@@ -119,6 +121,14 @@ namespace
         PERK_NATURE_MASTERY, PERK_FIRE_MASTERY, PERK_FROST_MASTERY, PERK_PHYSICAL_MASTERY };
 
     constexpr char const* PREFIX = "UBPERK";
+    constexpr uint32 MAX_ACTIVE_OFFENSIVE = 5;
+
+    bool IsOffensive(uint32 perk) { return perk >= 101 && perk <= 199; }
+
+    uint32 CountOffensive(std::set<uint32> const& perks)
+    {
+        return uint32(std::count_if(perks.begin(), perks.end(), IsOffensive));
+    }
     constexpr uint32 STAT_REFRESH_MS = 2000;
 
     constexpr uint32 CYCLE_MS = 25000;               // Cyclic Power period
@@ -550,18 +560,39 @@ namespace
             std::vector<std::string_view> parts = Acore::Tokenize(text, ':', false);
             if (parts.size() == 3)
                 if (Optional<uint32> perk = Acore::StringTo<uint32>(parts[1]))
-                    SetPerk(player, state, *perk, parts[2] == "1");
+                {
+                    bool on = parts[2] == "1";
+                    if (on && IsOffensive(*perk) && !state.active.count(*perk) &&
+                        CountOffensive(state.active) >= MAX_ACTIVE_OFFENSIVE)
+                        SendAddon(player, "ERR:You can only have " + std::to_string(MAX_ACTIVE_OFFENSIVE) +
+                            " Offensive perks active. Turn one off first.");
+                    else
+                        SetPerk(player, state, *perk, on);
+                }
         }
         else
         {
+            // a loadout: keep the first MAX_ACTIVE_OFFENSIVE Offensive perks in the order sent
             std::set<uint32> wanted;
+            uint32 offensive = 0;
+            bool trimmed = false;
             std::string_view list = std::string_view(text).substr(5);
             for (std::string_view id : Acore::Tokenize(list, ',', false))
                 if (Optional<uint32> perk = Acore::StringTo<uint32>(id))
-                    if (IMPLEMENTED.count(*perk))
+                    if (IMPLEMENTED.count(*perk) && !wanted.count(*perk))
+                    {
+                        if (IsOffensive(*perk) && ++offensive > MAX_ACTIVE_OFFENSIVE)
+                        {
+                            trimmed = true;
+                            continue;
+                        }
                         wanted.insert(*perk);
+                    }
             for (uint32 perk : IMPLEMENTED)
                 SetPerk(player, state, perk, wanted.count(perk) > 0);
+            if (trimmed)
+                SendAddon(player, "ERR:Only the first " + std::to_string(MAX_ACTIVE_OFFENSIVE) +
+                    " Offensive perks of that loadout were turned on.");
         }
 
         RefreshStatPerks(player, state);
@@ -678,6 +709,14 @@ public:
                 if (IMPLEMENTED.count(perk))
                     state.active.insert(perk);
             } while (result->NextRow());
+        }
+        // saved before the Offensive limit existed: keep the lowest ids, switch the rest off
+        while (CountOffensive(state.active) > MAX_ACTIVE_OFFENSIVE)
+        {
+            auto last = std::find_if(state.active.rbegin(), state.active.rend(), IsOffensive);
+            uint32 perk = *last;
+            state.active.erase(perk);
+            SavePerk(player, perk, false);
         }
         RefreshStatPerks(player, state);
     }

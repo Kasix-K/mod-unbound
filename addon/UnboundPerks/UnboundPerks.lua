@@ -82,7 +82,7 @@ local function buildPerkLists()
     end
     for _, cat in ipairs(P.CATEGORIES) do
         if perksByCat[cat.key] then
-            local c = { key = cat.key, name = cat.name, color = cat.color }
+            local c = { key = cat.key, name = cat.name, color = cat.color, limit = cat.limit }
             if cat.key == "CLASS" then
                 local localized, token = UnitClass("player")
                 local cc = RAID_CLASS_COLORS[token]
@@ -246,6 +246,16 @@ end
 
 local function togglePerk(perk)
     if perk.permanent then return end
+    if not db.active[perk.id] then
+        local cat = categoryOf(perk)
+        if cat and cat.limit and activeCount(cat.key) >= cat.limit then
+            local msg = "You can only have " .. cat.limit .. " " .. cat.name .. " perks active. Turn one off first."
+            UIErrorsFrame:AddMessage(msg, 1, 0.3, 0.3)
+            setStatus(msg)
+            PlaySound("igQuestFailed")
+            return
+        end
+    end
     db.active[perk.id] = not db.active[perk.id] or nil
     PlaySound(db.active[perk.id] and "igMainMenuOptionCheckBoxOn" or "igMainMenuOptionCheckBoxOff")
     if perk.works then sendServer("SET:" .. perk.id .. ":" .. (db.active[perk.id] and "1" or "0")) end
@@ -275,7 +285,7 @@ local function updateCategories()
             row.cat = c
             row.bar:SetVertexColor(unpack(c.color))
             row.name:SetText(c.name)
-            row.count:SetText(activeCount(c.key) .. "/" .. #perksByCat[c.key])
+            row.count:SetText(activeCount(c.key) .. "/" .. (c.limit or #perksByCat[c.key]))
             if c.key == selectedCat then
                 row:SetBackdropColor(unpack(C.rowSel))
                 row.name:SetTextColor(1, 1, 1)
@@ -598,7 +608,7 @@ local function build()
     -- footer
     local foot = text(frame, "GameFontDisableSmall")
     foot:SetPoint("BOTTOMLEFT", 14, 9)
-    foot:SetText("Perks can't be changed in combat.  Click a square or double-click a perk to toggle it.")
+    foot:SetText("Up to 5 Offensive perks at a time.  Perks can't be changed in combat.  Click a square or double-click a perk to toggle it.")
 
     frame:SetScript("OnShow", function() PlaySound("igCharacterInfoOpen"); refresh() end)
     frame:SetScript("OnHide", function() PlaySound("igCharacterInfoClose") end)
