@@ -151,6 +151,20 @@ accounts are your own; all the custom game data (heroics, companions, vendors) b
 python tools/custom_dbc.py --client "D:\WoW 3.3.5a Unbound" --dbc "D:\WoW Solo Server\data\dbc"
 ```
 
+**ElvUI error fix (Synastria ElvUI build):** the Unbound client's ElvUI is the Synastria build, whose
+attunement feature calls `ItemLocIsLoaded`, a function only Synastria's own client has. With ElvUI's
+character skin on, opening the character sheet errors (`Interface\AddOns\ElvUI\Core\Attune.lua:91:
+attempt to call global 'ItemLocIsLoaded' (a nil value)`). Fix: in the client's
+`Interface\AddOns\ElvUI\Core\Attune.lua`, add this line right after `local colorCache = {}` (near the
+top), then `/reload`:
+
+```lua
+local ItemLocIsLoaded = _G.ItemLocIsLoaded or function() return false end
+```
+
+ElvUI then skips the attune icons (they mean nothing on this server); item levels on gear still show.
+Updating or reinstalling ElvUI undoes the fix, so apply it again afterwards.
+
 **Server settings:** `server-setup/apply-unbound-settings.ps1` holds every setting the Unbound server
 changes from the defaults (level 60 cap, cross-faction, faster XP, solo scaling floor 0.4, transmog,
 playerbots, ...). The setup script applies it to new config files; run it again (servers stopped) after

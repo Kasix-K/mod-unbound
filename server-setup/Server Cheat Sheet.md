@@ -6,6 +6,12 @@
   `.modify scale <number>` on a GM account (for example `.modify scale 0.08`). The change only lasts
   until the creature despawns or is dismissed. When you find the size you like, ask Claude to make it
   permanent. Permanent size changes need a server restart.
+- **ElvUI error on the character sheet** (`Attune.lua:91: attempt to call global 'ItemLocIsLoaded'`, only
+  with ElvUI's character skin on): the client's ElvUI is Synastria's build. In
+  `Interface\AddOns\ElvUI\Core\Attune.lua`, add `local ItemLocIsLoaded = _G.ItemLocIsLoaded or function()
+  return false end` right after `local colorCache = {}`, then `/reload`. Already done on the original PC
+  (backup of the original file: `E:\WoW Solo Server\Error Logs\Attune.lua.original-backup`). Updating or
+  reinstalling ElvUI undoes it; apply it again afterwards.
 
 ## Starting and stopping
 
