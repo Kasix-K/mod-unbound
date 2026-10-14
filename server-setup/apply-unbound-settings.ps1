@@ -37,6 +37,9 @@ $Settings = [ordered]@{
         'AllowTwoSide.Interaction.Guild'       = '1'
         'AllowTwoSide.Interaction.Arena'       = '1'
         'AllowTwoSide.Interaction.Auction'     = '1'
+        # Permanent perks: No Resurrection Sickness, No Daze (Rapid Recovery is in src/unbound_perks.cpp)
+        'Death.SicknessLevel'                  = '255'
+        'Daze.Enabled'                         = '0'
     }
     'modules\AutoBalance.conf' = [ordered]@{
         # Solo scaling never goes below 40% of the normal strength

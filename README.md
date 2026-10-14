@@ -44,6 +44,15 @@ Custom features for the WoW 3.3.5a Unbound server.
   911000-911005, item level 66-68), 5-8 gold, and a 3% chance at the Reins of the Winterspring
   Frostsaber. After a change run `python tools/world_bosses.py` and `python tools/custom_dbc.py`, then
   restart the worldserver.
+- **Unbound Perks** (`addon/UnboundPerks`, copy to `Interface/AddOns`, open with `/perks`): the Character
+  Perks window with categories, search and saved loadouts. The three Permanent perks work for everyone:
+  No Resurrection Sickness (`Death.SicknessLevel = 255`), No Daze (`Daze.Enabled = 0`), both set by
+  `apply-unbound-settings.ps1`, and Rapid Recovery (`src/unbound_perks.cpp`: 3 seconds after leaving
+  combat, 15% of maximum health and mana every second until full; `Unbound.Perks.RapidRecovery*` in
+  `mod_unbound.conf`). Toggled perks are kept by the server (whispered addon messages, prefix `UBPERK`;
+  saved in `characters.character_unbound_perks`; no changes in combat). Working so far: Cyclic Power,
+  Critical Understanding, Defensive Sacrifice, Desperate Power, Block/Dodge/Parry/Haste
+  Capping, Pet Encouragement, Rolling Momentum. The other perks are listed but have no effect yet.
 - **Unbound addon** (`addon/Unbound`, copy to the client's `Interface/AddOns`): shows Dungeon/Raid
   Difficulty in the portrait menu from level 60 (the client's own limit is 65) and adds `/heroic` and
   `/normal`.

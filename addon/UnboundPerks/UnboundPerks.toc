@@ -1,0 +1,8 @@
+## Interface: 30300
+## Title: Unbound Perks
+## Notes: Character Perks window for the Unbound server. Open with /perks.
+## Author: mod-unbound
+## Version: 0.1
+## SavedVariablesPerCharacter: UnboundPerksDB
+PerkData.lua
+UnboundPerks.lua
