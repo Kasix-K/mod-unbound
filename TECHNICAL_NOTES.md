@@ -111,8 +111,12 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   Razorgore's eggs (177807) get `go_unbound_solo_razorgore_egg`: while the instance's egg event is in progress
   (Razorgore engaged), a player within 2.5 yards or clicking breaks an egg the way `spell_egg_event` does
   (`SetData(DATA_EGG_EVENT, SPECIAL)`); the instance counts it and starts phase two after the last one. The
-  BWL instance constants it uses are copied from `blackwing_lair.h`. Settings: `Unbound.SoloRaid.Enable` and
-  one per boss.
+  BWL instance constants it uses are copied from `blackwing_lair.h`. Viscidus (`unbound_solo_viscidus_unit`,
+  a UnitScript): his core script counts frost hits (`SpellHit`) and, frozen, melee hits (`DamageTaken` with
+  `DIRECT_DAMAGE`) against fixed thresholds; solo, `ModifyMeleeDamage` and `ModifySpellDamageTaken` call those
+  AI functions `ViscidusHitMultiplier - 1` more times (with no damage), so the thresholds, emotes and phases of
+  his own script do the rest. Swings count before the hit roll, so misses count too. Settings:
+  `Unbound.SoloRaid.Enable`, one per boss and `Unbound.SoloRaid.ViscidusHitMultiplier`.
 - **Classic Onyxia's Lair:** `data/sql/db-world/unbound_classic_onyxia.sql` (entry level, creature stats from
   `creature_classlevelstats`, loot with references 9100100-9100101, team conditions on the heads, quest givers)
   and `src/unbound_classic_onyxia.cpp`. 3.3.5 kept the classic spell ids and raised their damage, so

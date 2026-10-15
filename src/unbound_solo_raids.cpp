@@ -21,6 +21,29 @@
  *                          Brood Afflictions) fails.
  *   Nefarian               Lord Victor Nefarius' Shadow Command (22667, a mind control) fails.
  *
+ * Molten Core:
+ *   Lucifron               His Flamewaker Protectors' Dominate Mind (20604) fails.
+ *
+ * Zul'Gurub:
+ *   Jin'do the Hexxer      Brain Wash Totem (24262, the totem mind controls a player) and Banish (24466,
+ *                          teleports the only player away into the pit) fail.
+ *   Hakkar                 Cause Insanity (24327, a mind control) fails. Blood Siphon (24324) fails: it
+ *                          heals him from every player without Poisonous Blood, which the raid gets
+ *                          from killing his Sons.
+ *
+ * Ruins of Ahn'Qiraj:
+ *   Ayamiss the Hunter     Paralyze (25725) fails, and so does the Hive'Zara Larva's Feed (25721) on the
+ *                          paralyzed player, which a stunned solo player can't stop.
+ *
+ * Temple of Ahn'Qiraj:
+ *   The Prophet Skeram     True Fulfillment (785, a mind control) fails.
+ *   Twin Emperors          Heal Brother (7393) fails: it heals each emperor whenever they're close, and
+ *                          keeping them apart takes two groups.
+ *   Viscidus               Every hit counts several times (Unbound.SoloRaid.ViscidusHitMultiplier) towards
+ *                          freezing him (200 frost hits) and shattering him (150 hits within 15 seconds
+ *                          of freezing), which one player can't reach.
+ *   Qiraji Mindslayer      Cause Insanity (26079, a mind control) fails.
+ *
  * The spells are bound to spell_unbound_solo_raid_block in data/sql/db-world/unbound_solo_raids.sql
  * and only fail when cast by the creature listed below, so the same spells used elsewhere are unchanged.
  * Each boss has an on/off setting in mod_unbound.conf (Unbound.SoloRaid.*).
@@ -33,6 +56,7 @@
 #include "GameObjectAI.h"
 #include "GameObjectScript.h"
 #include "InstanceScript.h"
+#include "ItemTemplate.h"
 #include "Map.h"
 #include "ObjectAccessor.h"
 #include "Player.h"
@@ -40,7 +64,9 @@
 #include "SpellInfo.h"
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
+#include "UnitScript.h"
 
+#include <algorithm>
 #include <array>
 
 namespace
@@ -52,17 +78,27 @@ namespace
         FIX_EBONROC,
         FIX_CHROMAGGUS,
         FIX_NEFARIAN,
+        FIX_LUCIFRON,
+        FIX_JINDO,
+        FIX_HAKKAR,
+        FIX_AYAMISS,
+        FIX_SKERAM,
+        FIX_TWIN_EMPERORS,
+        FIX_VISCIDUS,
+        FIX_QIRAJI_MINDSLAYER,
         MAX_SOLO_RAID_FIX
     };
 
     // Config key suffix per fix (Unbound.SoloRaid.<key>)
     constexpr std::array<char const*, MAX_SOLO_RAID_FIX> FIX_KEYS =
     {
-        "Razorgore", "Vaelastrasz", "Ebonroc", "Chromaggus", "Nefarian"
+        "Razorgore", "Vaelastrasz", "Ebonroc", "Chromaggus", "Nefarian",
+        "Lucifron", "Jindo", "Hakkar", "Ayamiss", "Skeram", "TwinEmperors", "Viscidus", "QirajiMindslayer"
     };
 
     bool sEnabled = true;
     std::array<bool, MAX_SOLO_RAID_FIX> sFixEnabled = { };
+    uint32 sViscidusHitMultiplier = 10;
 
     struct BlockedSpell
     {
@@ -72,15 +108,28 @@ namespace
     };
 
     // Keep in sync with data/sql/db-world/unbound_solo_raids.sql
-    constexpr std::array<BlockedSpell, 6> BLOCKED_SPELLS =
+    constexpr std::array<BlockedSpell, 17> BLOCKED_SPELLS =
     {{
-        { 14515, 12557, FIX_RAZORGORE   },  // Dominate Mind, Grethok the Controller
-        { 18173, 13020, FIX_VAELASTRASZ },  // Burning Adrenaline, Vaelastrasz the Corrupt
-        { 23340, 14601, FIX_EBONROC     },  // Shadow of Ebonroc, Ebonroc
-        { 23310, 14020, FIX_CHROMAGGUS  },  // Time Lapse, Chromaggus
-        { 23174, 14020, FIX_CHROMAGGUS  },  // Chromatic Mutation, Chromaggus
-        { 22667, 10162, FIX_NEFARIAN    },  // Shadow Command, Lord Victor Nefarius
+        { 14515, 12557, FIX_RAZORGORE         },  // Dominate Mind, Grethok the Controller
+        { 18173, 13020, FIX_VAELASTRASZ       },  // Burning Adrenaline, Vaelastrasz the Corrupt
+        { 23340, 14601, FIX_EBONROC           },  // Shadow of Ebonroc, Ebonroc
+        { 23310, 14020, FIX_CHROMAGGUS        },  // Time Lapse, Chromaggus
+        { 23174, 14020, FIX_CHROMAGGUS        },  // Chromatic Mutation, Chromaggus
+        { 22667, 10162, FIX_NEFARIAN          },  // Shadow Command, Lord Victor Nefarius
+        { 20604, 12119, FIX_LUCIFRON          },  // Dominate Mind, Flamewaker Protector
+        { 24262, 11380, FIX_JINDO             },  // Brain Wash Totem, Jin'do the Hexxer
+        { 24466, 11380, FIX_JINDO             },  // Banish, Jin'do the Hexxer
+        { 24327, 14834, FIX_HAKKAR            },  // Cause Insanity, Hakkar
+        { 24324, 14834, FIX_HAKKAR            },  // Blood Siphon, Hakkar
+        { 25725, 15369, FIX_AYAMISS           },  // Paralyze, Ayamiss the Hunter
+        { 25721, 15555, FIX_AYAMISS           },  // Feed, Hive'Zara Larva
+        { 785,   15263, FIX_SKERAM            },  // True Fulfillment, The Prophet Skeram (and his images)
+        { 7393,  15275, FIX_TWIN_EMPERORS     },  // Heal Brother, Emperor Vek'nilash
+        { 7393,  15276, FIX_TWIN_EMPERORS     },  // Heal Brother, Emperor Vek'lor
+        { 26079, 15246, FIX_QIRAJI_MINDSLAYER },  // Cause Insanity, Qiraji Mindslayer
     }};
+
+    constexpr uint32 NPC_VISCIDUS = 15299;
 
     // Razorgore's egg event (scripts/EasternKingdoms/BlackrockMountain/BlackwingLair/blackwing_lair.h)
     constexpr uint32 BWL_DATA_RAZORGORE = 0;          // DATA_RAZORGORE_THE_UNTAMED (GUID data)
@@ -185,6 +234,63 @@ private:
     uint32 _checkTimer;
 };
 
+// Viscidus (Temple of Ahn'Qiraj): his script counts frost hits to freeze him (200) and, once frozen,
+// melee hits to shatter him (150 within 15 seconds). Solo, every hit counts sViscidusHitMultiplier times:
+// the extra counts go through his own script (SpellHit and DamageTaken), so its thresholds, emotes and
+// phases work unchanged.
+class unbound_solo_viscidus_unit : public UnitScript
+{
+public:
+    unbound_solo_viscidus_unit() : UnitScript("unbound_solo_viscidus_unit", true, {
+        UNITHOOK_MODIFY_MELEE_DAMAGE,
+        UNITHOOK_MODIFY_SPELL_DAMAGE_TAKEN
+    }) { }
+
+    // A melee swing at him (his script only counts these while he's frozen)
+    void ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& /*damage*/) override
+    {
+        Creature* viscidus = SoloViscidus(target);
+        if (!viscidus || !attacker)
+            return;
+
+        for (uint32 i = 1; i < sViscidusHitMultiplier && viscidus->IsAlive() && viscidus->IsAIEnabled; ++i)
+        {
+            uint32 noDamage = 0;
+            viscidus->AI()->DamageTaken(attacker, noDamage, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL);
+        }
+    }
+
+    // A damaging spell on him (his script counts frost spells before he's frozen)
+    void ModifySpellDamageTaken(Unit* target, Unit* attacker, int32& /*damage*/, SpellInfo const* spellInfo) override
+    {
+        Creature* viscidus = SoloViscidus(target);
+        if (!viscidus || !attacker || !spellInfo)
+            return;
+
+        // his script reads a wand's damage type from the caster's wand, which only players have
+        bool const wand = spellInfo->EquippedItemClass == ITEM_CLASS_WEAPON &&
+            (spellInfo->EquippedItemSubClassMask & (1 << ITEM_SUBCLASS_WEAPON_WAND));
+        if (wand && !attacker->IsPlayer())
+            return;
+
+        for (uint32 i = 1; i < sViscidusHitMultiplier && viscidus->IsAlive() && viscidus->IsAIEnabled; ++i)
+            viscidus->AI()->SpellHit(attacker, spellInfo);
+    }
+
+private:
+    static Creature* SoloViscidus(Unit* target)
+    {
+        if (!target || !target->IsCreature() || target->GetEntry() != NPC_VISCIDUS)
+            return nullptr;
+
+        if (!IsFixActive(FIX_VISCIDUS) || !IsSoloRaid(target->GetMap()))
+            return nullptr;
+
+        Creature* viscidus = target->ToCreature();
+        return viscidus->IsAIEnabled ? viscidus : nullptr;
+    }
+};
+
 class unbound_solo_raids_world : public WorldScript
 {
 public:
@@ -197,6 +303,7 @@ public:
         sEnabled = sConfigMgr->GetOption<bool>("Unbound.SoloRaid.Enable", true);
         for (uint8 fix = 0; fix < MAX_SOLO_RAID_FIX; ++fix)
             sFixEnabled[fix] = sConfigMgr->GetOption<bool>(std::string("Unbound.SoloRaid.") + FIX_KEYS[fix], true);
+        sViscidusHitMultiplier = std::max<uint32>(1, sConfigMgr->GetOption<uint32>("Unbound.SoloRaid.ViscidusHitMultiplier", 10));
     }
 };
 
@@ -204,5 +311,6 @@ void AddSC_unbound_solo_raids()
 {
     RegisterSpellScript(spell_unbound_solo_raid_block);
     RegisterGameObjectAI(go_unbound_solo_razorgore_egg);
+    new unbound_solo_viscidus_unit();
     new unbound_solo_raids_world();
 }

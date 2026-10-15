@@ -9,7 +9,17 @@ INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
 (23340, 'spell_unbound_solo_raid_block'),  -- Shadow of Ebonroc (Ebonroc)
 (23310, 'spell_unbound_solo_raid_block'),  -- Time Lapse (Chromaggus)
 (23174, 'spell_unbound_solo_raid_block'),  -- Chromatic Mutation (Chromaggus)
-(22667, 'spell_unbound_solo_raid_block');  -- Shadow Command (Lord Victor Nefarius)
+(22667, 'spell_unbound_solo_raid_block'),  -- Shadow Command (Lord Victor Nefarius)
+(20604, 'spell_unbound_solo_raid_block'),  -- Dominate Mind (Flamewaker Protector, Molten Core)
+(24262, 'spell_unbound_solo_raid_block'),  -- Brain Wash Totem (Jin'do the Hexxer, Zul'Gurub)
+(24466, 'spell_unbound_solo_raid_block'),  -- Banish (Jin'do the Hexxer)
+(24327, 'spell_unbound_solo_raid_block'),  -- Cause Insanity (Hakkar)
+(24324, 'spell_unbound_solo_raid_block'),  -- Blood Siphon (Hakkar)
+(25725, 'spell_unbound_solo_raid_block'),  -- Paralyze (Ayamiss the Hunter, Ruins of Ahn'Qiraj)
+(25721, 'spell_unbound_solo_raid_block'),  -- Feed (Hive'Zara Larva, Ayamiss)
+(785, 'spell_unbound_solo_raid_block'),    -- True Fulfillment (The Prophet Skeram, Temple of Ahn'Qiraj)
+(7393, 'spell_unbound_solo_raid_block'),   -- Heal Brother (Twin Emperors)
+(26079, 'spell_unbound_solo_raid_block');  -- Cause Insanity (Qiraji Mindslayer)
 
 -- Black Dragon Egg in Razorgore's room: solo players break eggs by walking over or clicking them.
 -- (It had no script before; groups get the game's normal handling.)

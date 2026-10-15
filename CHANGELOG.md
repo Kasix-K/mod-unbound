@@ -10,6 +10,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 |---|---|---|---|
 | Classic Naxxramas (40 players, level 60) in the Eastern Plaguelands, from mod-individual-progression | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Onyxia's Lair as a classic level 60 raid (classic stats, spell damage, loot, Head of Onyxia quests) | 2026-10-15 | 2026-10-15 | Kasix-K |
+| Soloable raid mechanics: Molten Core, Zul'Gurub, Ruins and Temple of Ahn'Qiraj | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Soloable raid mechanics: Blackwing Lair (Razorgore, Vaelastrasz, Ebonroc, Chromaggus, Nefarian) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Ranks 4-5 for Defensive and Utility perks (GM-only for now) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Offensive perk ranks (5 ranks: 1-3 by level, 4-5 endgame, GM-only for now) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
@@ -62,6 +63,13 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Added
+- **Soloable raid mechanics, Molten Core, Zul'Gurub and Ahn'Qiraj** (`src/unbound_solo_raids.cpp`), like Blackwing
+  Lair: only while the raid has at most one player in it. Molten Core: Lucifron's Flamewaker Protectors'
+  Dominate Mind fails. Zul'Gurub: Jin'do's Brain Wash Totem and Banish fail; Hakkar's Cause Insanity and Blood
+  Siphon fail. Ruins of Ahn'Qiraj: Ayamiss' Paralyze and the larva's Feed fail. Temple of Ahn'Qiraj: Skeram's
+  True Fulfillment, the Twin Emperors' Heal Brother and the Qiraji Mindslayers' Cause Insanity fail, and every
+  hit on Viscidus counts 10 times towards freezing (200 frost hits) and shattering (150 melee hits) him
+  (`Unbound.SoloRaid.ViscidusHitMultiplier`). Each boss can be switched off in `mod_unbound.conf`.
 - **Classic Naxxramas** (40 players, level 60), taken from mod-individual-progression (ZhengPeiRu21; Naxx 40
   scripts and data by Sogladev; MIT license), only its Naxxramas parts (`src/naxx40`,
   `data/sql/db-world/unbound_naxx40*.sql`). The floating Necropolis is back above Plaguewood in the Eastern

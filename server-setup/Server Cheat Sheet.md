@@ -79,10 +79,12 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
   Dosantos at Light's Hope (cheaper with more Argent Dawn reputation). Your group within 30 yards comes along.
   Tier 3 quests are at Light's Hope; there are no exit portals inside (use your hearthstone).
 - **Solo raids:** alone in a raid (no other players or bots; pets are fine), mechanics no single player can
-  handle are changed. Blackwing Lair so far: in Razorgore's room, walk over (or click) the eggs to break
-  them once Razorgore is pulled, and don't kill him before the last egg; Grethok, Vaelastrasz, Ebonroc,
-  Chromaggus and Nefarius skip their solo-killing spells. Switch them off in `mod_unbound.conf`
-  (`Unbound.SoloRaid.*`).
+  handle are changed. Blackwing Lair: in Razorgore's room, walk over (or click) the eggs to break them once
+  Razorgore is pulled, and don't kill him before the last egg; Grethok, Vaelastrasz, Ebonroc, Chromaggus and
+  Nefarius skip their solo-killing spells. Molten Core, Zul'Gurub and Ahn'Qiraj: no mind controls (Lucifron's
+  adds, Jin'do's totem, Hakkar, Skeram, Qiraji Mindslayers), no Jin'do Banish, Hakkar Blood Siphon, Ayamiss
+  Paralyze or Twin Emperors Heal Brother; each hit on Viscidus counts 10 times towards freezing (frost) and
+  shattering (melee) him. Switch them off in `mod_unbound.conf` (`Unbound.SoloRaid.*`).
 - **Perks:** type `/perks` or click the **Perks** tab at the bottom of the character sheet (C) to open the Character Perks window (needs the **UnboundPerks** addon). Always on
   for everyone: No Resurrection Sickness, No Daze, and Rapid Recovery (ranked by level: up to 8% health
   and mana per second, 4 seconds after combat). Switch on up to 5 Offensive perks (about +10% each) and your class perk (so far: Paladin

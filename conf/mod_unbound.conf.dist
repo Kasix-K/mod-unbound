@@ -388,6 +388,49 @@ Unbound.Attunement.SacrificeOwnGearMultiplier = 2
 #        Description: Blackwing Lair, Nefarian: Lord Victor Nefarius' Shadow Command (mind control)
 #                     fails.
 #        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.Lucifron
+#        Description: Molten Core, Lucifron: his Flamewaker Protectors' Dominate Mind fails.
+#        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.Jindo
+#        Description: Zul'Gurub, Jin'do the Hexxer: Brain Wash Totem (mind controls a player) and Banish
+#                     (teleports the player into the pit) fail.
+#        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.Hakkar
+#        Description: Zul'Gurub, Hakkar: Cause Insanity (mind control) and Blood Siphon (heals him from
+#                     every player without Poisonous Blood) fail.
+#        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.Ayamiss
+#        Description: Ruins of Ahn'Qiraj, Ayamiss the Hunter: Paralyze and the larva's Feed on the
+#                     paralyzed player fail.
+#        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.Skeram
+#        Description: Temple of Ahn'Qiraj, The Prophet Skeram: True Fulfillment (mind control) fails.
+#        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.TwinEmperors
+#        Description: Temple of Ahn'Qiraj, Twin Emperors: Heal Brother (heals each emperor while they
+#                     are close together) fails.
+#        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.Viscidus
+#        Description: Temple of Ahn'Qiraj, Viscidus: every hit counts Unbound.SoloRaid.ViscidusHitMultiplier
+#                     times towards freezing (200 frost hits) and shattering him (150 hits within 15
+#                     seconds of freezing).
+#        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.ViscidusHitMultiplier
+#        Description: How many times each hit counts on Viscidus solo (10: 20 frost hits freeze him,
+#                     15 melee hits shatter him).
+#        Default:     10
+#
+#    Unbound.SoloRaid.QirajiMindslayer
+#        Description: Temple of Ahn'Qiraj, Qiraji Mindslayer: Cause Insanity (mind control) fails.
+#        Default:     1 - Enabled
 
 Unbound.SoloRaid.Enable = 1
 Unbound.SoloRaid.Razorgore = 1
@@ -395,6 +438,15 @@ Unbound.SoloRaid.Vaelastrasz = 1
 Unbound.SoloRaid.Ebonroc = 1
 Unbound.SoloRaid.Chromaggus = 1
 Unbound.SoloRaid.Nefarian = 1
+Unbound.SoloRaid.Lucifron = 1
+Unbound.SoloRaid.Jindo = 1
+Unbound.SoloRaid.Hakkar = 1
+Unbound.SoloRaid.Ayamiss = 1
+Unbound.SoloRaid.Skeram = 1
+Unbound.SoloRaid.TwinEmperors = 1
+Unbound.SoloRaid.Viscidus = 1
+Unbound.SoloRaid.ViscidusHitMultiplier = 10
+Unbound.SoloRaid.QirajiMindslayer = 1
 
 #    Unbound.Naxx40.Doable.FourHorsemen
 #    Unbound.Naxx40.Doable.Gluth

@@ -218,12 +218,11 @@ changes, raid by raid (see Next up).
   - [x] Blackwing Lair (2026-10-15): Razorgore (Grethok's Dominate Mind, eggs broken by walking over them),
         Vaelastrasz (Burning Adrenaline), Ebonroc (Shadow of Ebonroc), Chromaggus (Time Lapse, Chromatic
         Mutation), Nefarian (Shadow Command)
-  - [ ] Molten Core: Lucifron's Flamewaker Protectors (Dominate Mind)
-  - [ ] Zul'Gurub: Jin'do (Brain Wash Totem, Banish), Hakkar (Cause Insanity, Blood Siphon without
-        Poisonous Blood)
-  - [ ] Ruins of Ahn'Qiraj: Ayamiss (Paralyze + larva Feed)
-  - [ ] Temple of Ahn'Qiraj: Viscidus (frost/shatter hit counts), Twin Emperors (Heal Brother), Skeram
-        (True Fulfillment with a pet out), Qiraji Mindslayer (Cause Insanity)
+  - [x] Molten Core (2026-10-15): Lucifron's Flamewaker Protectors (Dominate Mind)
+  - [x] Zul'Gurub (2026-10-15): Jin'do (Brain Wash Totem, Banish), Hakkar (Cause Insanity, Blood Siphon)
+  - [x] Ruins of Ahn'Qiraj (2026-10-15): Ayamiss (Paralyze, larva Feed)
+  - [x] Temple of Ahn'Qiraj (2026-10-15): Viscidus (each hit counts 10 times towards freeze and shatter),
+        Twin Emperors (Heal Brother), Skeram (True Fulfillment), Qiraji Mindslayer (Cause Insanity)
   - [ ] Naxxramas (classic): to look at like the others (e.g. Razuvious needs priests to control his
         students, the Four Horsemen several tanks, Thaddius' polarity shift); `Unbound.Naxx40.Doable.*`
         already makes four bosses easier
