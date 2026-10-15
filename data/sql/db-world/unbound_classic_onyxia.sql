@@ -53,7 +53,7 @@ INSERT INTO `reference_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `
 
 DELETE FROM `creature_loot_template` WHERE `Entry` = 10184;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
-(10184, @T2_HELMS, @T2_HELMS, 100, 0, 1, 0, 1, 2, 'Onyxia - (ReferenceTable) two Tier 2 helms'),
+(10184, @T2_HELMS, @T2_HELMS, 100, 0, 1, 0, 2, 2, 'Onyxia - (ReferenceTable) two Tier 2 helms'),
 (10184, @ONYXIA_EPICS, @ONYXIA_EPICS, 100, 0, 1, 0, 1, 1, 'Onyxia - (ReferenceTable) one epic'),
 (10184, 17068, 0, 8, 0, 1, 1, 1, 1, 'Onyxia - Deathbringer'),
 (10184, 17075, 0, 8, 0, 1, 1, 1, 1, 'Onyxia - Vis\'kag the Bloodletter'),
