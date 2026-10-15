@@ -4,27 +4,56 @@ Work-on list for the Unbound server. Tick a box (`- [x]`) when a feature is done
 [CHANGELOG.md](CHANGELOG.md) under that day's date. Effort is a rough guess: **easy** (a config or ready-made
 module), **moderate** (custom code or data), **large** (several parts, client changes).
 
-Guiding idea: inspired by Peloria, not a copy. Stats stay in normal WoW ranges (no huge numbers).
+Guiding idea: inspired by Peloria, not a copy. No Peloria-sized numbers (billions): a fully progressed
+player is at most several times a normal level 60, and every number stays far below the 32-bit limits.
 
 ## Power budget
 
-The endgame goal: **one player can solo a full Mythic raid** (the player count will be low). This is
-reached by scaling raids down to one player and keeping player power in normal WoW ranges, not by
-Peloria-sized numbers. Design every power system (perks, perk ranks, attunement/sacrifice, Mythic levels,
-gear) against these targets, and change these numbers here first if testing says so.
+The endgame goal: **one player can solo a full Mythic raid** (the player count will be low). Raids are
+scaled down to one player, and **gear attunement is the main lever** that lets a player climb Mythic
+levels; perks and perk ranks add on top. Design every power system against these targets, and change the
+numbers here first if testing says so. Every number below is meant to be a config setting.
 
-| Side | Lever | Target |
-|---|---|---|
-| Content | Classic raids solo (mod-autobalance) | A solo player faces **about 3 players' worth** of a raid; a full raid is unchanged. 20-player raids: `AutoBalance.InflectionPointRaid20M.CurveFloor = 0.1` (2.9 players' worth); 40-player raids: `AutoBalance.InflectionPointRaid40M.CurveFloor = 0.03` (2.8). Set 2026-10-14. |
-| Content | Heroic / Mythic raids | Each step raises the raid from there; Mythic +1, +2, ... about **+10% per level** |
-| Player | Gear | Normal level 60 gear: the baseline (1x) |
-| Player | Perks | About **+50-60%** with five Offensive perks (about +10% per perk) |
-| Player | Absorbed gear (attunement / sacrifice) | About **+30-50%** when fully collected: 10% of each item's stats, each item counted once, green or better, best few items per slot |
-| Player | Perk ranks | The long-term climb: higher ranks push the total further |
-| **Total** | Fully progressed player | About **2.5-3x** a normal level 60 player: enough to solo a raid at its base solo scaling; each Mythic level then pushes the raid back up until the player runs out of power |
+### Content
+
+| Lever | Target |
+|---|---|
+| Classic raids solo (mod-autobalance) | A solo player faces **about 3 players' worth** of a raid; a full raid is unchanged. 20-player raids: `AutoBalance.InflectionPointRaid20M.CurveFloor = 0.1` (2.9 players' worth); 40-player raids: `AutoBalance.InflectionPointRaid40M.CurveFloor = 0.03` (2.8). Set 2026-10-14. |
+| Mythic scaling | **+10% per level, added** (not multiplied): Mythic +10 = 2x, +20 = 3x the solo raid |
+| Mythic capstone | **Mythic +10** is the first goal for a fully attuned player |
+| Mythic maximum | Configurable, start at **Mythic +30** (the long climb past the capstone); raise it as players progress |
+| Safety clamp | No creature health or damage above **2 billion**, whatever the settings (the 3.3.5 client shows numbers above about 2.1 billion wrongly). With added scaling this is never reached in practice: the biggest classic boss (Vaelastrasz, 3.3 million health) would pass it only around Mythic +90,000 solo |
+
+### Player power needed
+
+| Raid | Player power needed (x a normal level 60) |
+|---|---|
+| Base solo raid | about 2.8x |
+| Mythic +5 | about 4.2x |
+| Mythic +10 (capstone) | about 5.6x |
+| Mythic +20 | about 8.4x |
+
+### Player
+
+| Lever | Target |
+|---|---|
+| Gear | Normal level 60 gear: the baseline (1x) |
+| Perks | About **x1.55** with five Offensive perks (about +10% per perk) |
+| Perk ranks | Up to about **x1.3** more on top of perks (together about x2) |
+| Gear attunement / sacrifice | About **+200% of gear stats** when well collected (about x3), the main lever: |
+| - per item | **20%** of the item's fixed stats (tune 15-25% in testing); fixed stats only (no procs, set bonuses, weapon damage) |
+| - which items count | **Every unique item** counts once (a second copy adds nothing); **green or better** |
+| - minimum item level | Only items whose **required level is within 10 of the level cap** count (level 50+ while the cap is 60; it moves up with each expansion), so every attuned item matters and nobody grinds low-level items |
+| - diminishing returns | Full value up to **+100%** of gear stats, half value up to **+200%**, a quarter beyond: early collecting feels strong, the long tail is the endgame grind (no hard cap) |
+| - the grind | About **170 level 60 blue/epic items** for +200% (about 220 blues or 130 epics; raid epics are the fast track) |
+| **Total** | About **6x** a normal level 60 when fully progressed: Mythic +10. Each further Mythic level needs more collected gear and higher perk ranks |
+
+Numbers check: a 6x character has a few thousand of a primary stat and tens of thousands of health, well
+above normal WoW but nowhere near Peloria's billions.
 
 Mechanics are a separate problem: some bosses need more than one player whatever the numbers
-(Razorgore's orb, the Twin Emperors' teleport tank swap, C'Thun's stomach phase). They need small script changes, raid by raid (see Next up).
+(Razorgore's orb, the Twin Emperors' teleport tank swap, C'Thun's stomach phase). They need small script
+changes, raid by raid (see Next up).
 
 ## Done
 
@@ -46,8 +75,9 @@ Mechanics are a separate problem: some bosses need more than one player whatever
 
 - [ ] **Gear attunement and sacrifice** (large): absorb stats from acquired gear, either by attuning it
       (equip it and kill creatures until 100%, Synastria-style) or by sacrificing it (destroy it for its
-      stats at once, Peloria-style). Fixed stats only (no procs, set bonuses or weapon damage). Numbers per
-      the Power budget. Still to decide: one style or both, per character or account-wide.
+      stats at once, Peloria-style). The main lever for soloing Mythic raids: numbers, item rules and
+      minimum item level per the Power budget. Still to decide: one style or both, per character or
+      account-wide.
 - [ ] **Soloable raid mechanics** (moderate, per raid): script changes for bosses that need several
       players (Razorgore, Twin Emperors, C'Thun, ...).
 - [ ] **Perk ranks** (moderate): ranks like spell ranks for perks with a number (Rapid Recovery,

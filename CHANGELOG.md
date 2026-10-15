@@ -69,7 +69,10 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 - **Chat window guard** in the Unbound addon: stops a load-time chat error
   (`FloatingChatFrame.lua:1281`, seen with ElvUI's chat).
 - **Power budget** in the roadmap: the endgame goal (one player solos a full Mythic raid) and the power
-  targets every system is designed against (fully progressed player about 2.5-3x a normal level 60).
+  targets every system is designed against. Gear attunement is the main lever: 20% of each unique item's
+  stats, green or better, required level within 10 of the cap, diminishing returns past +100% and +200%;
+  about 170 level 60 blue/epic items for about +200%. Mythic +10% per level (added), capstone Mythic +10,
+  configurable maximum (start +30), 2 billion safety clamp. Fully progressed player about 6x a normal level 60.
 
 ### Changed
 - **Classic raids soloable:** solo scaling for 20-player raids (Zul'Gurub, Ruins of Ahn'Qiraj) and
