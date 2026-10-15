@@ -38,6 +38,7 @@ Unbound.Perks.RapidRecovery = 1
 Unbound.Perks.RapidRecovery.Delay = "6000, 5000, 4000"
 Unbound.Perks.RapidRecovery.Percent = "4, 6, 8"
 Unbound.Perks.RapidRecovery.RankLevels = "1, 30, 60"
+<<<<<<< Updated upstream
 
 #    Unbound.Perks.IronWill.Percent
 #        Description: Iron Will utility perk: how much shorter enemy crowd control (stun, fear, root,
@@ -101,3 +102,5 @@ Unbound.Attunement.HalfValueUntil = 200
 Unbound.Attunement.Kills = "50, 100, 200, 400"
 Unbound.Attunement.EliteKills = 2
 Unbound.Attunement.BossKills = 10
+=======
+>>>>>>> Stashed changes

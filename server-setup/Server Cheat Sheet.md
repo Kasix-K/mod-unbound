@@ -63,6 +63,7 @@ goes to him; `.respawn` next to his corpse brings him back early (for testing).
   and mana per second, 4 seconds after combat). Switch on up to 5 Offensive perks (about +10% each) and your class perk (so far: Paladin
   Retribution). Perks can't be changed in combat; save favourite sets as loadouts.
 
+<<<<<<< Updated upstream
 ## Gear attunement (GM commands for testing)
 
 Attuned items permanently give the character 20% of their stats, even after the item is gone. **Attuning:**
@@ -99,6 +100,19 @@ Iron Will is a Utility perk (turn it on in `/perks`). It shortens enemy stuns, f
 sleeps, polymorphs, charms, disorients and saps on you and your pets, on top of racials, talents and
 diminishing returns.
 
+=======
+## Perk ranks
+
+Rank support is built; so far only **Rapid Recovery** (perk 3) has ranks. A character's rank comes from
+its level, values in `mod_unbound.conf`:
+
+| Rank | Level | Delay after combat | Health and mana per second |
+|---|---|---|---|
+| 1 | 1 | 6 seconds | 4% |
+| 2 | 30 | 5 seconds | 6% |
+| 3 | 60 | 4 seconds | 8% |
+
+>>>>>>> Stashed changes
 GM testing: target a player (or nobody, for yourself) and type `.perk rank 3 2` for Rank 2;
 `.perk rank 3` goes back to the rank the level gives. The perk window shows the rank as "2/3".
 Next: give other perks ranks (for example Masteries: Rank 1 +4% ... Rank 4 +10%) and decide how ranks

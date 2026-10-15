@@ -82,7 +82,11 @@
  *                              The extra Crusader Strikes, Judgements and Exorcisms are free triggered casts.
  *
  * Settings (mod_unbound.conf): Unbound.Perks.RapidRecovery (on/off), .Delay (ms per rank), .Percent (per rank),
+<<<<<<< Updated upstream
  * .RankLevels (level per rank); Unbound.Perks.IronWill.Percent (per rank), .RankLevels (level per rank).
+=======
+ * .RankLevels (level per rank).
+>>>>>>> Stashed changes
  */
 
 #include "Chat.h"
@@ -130,6 +134,7 @@ namespace
     constexpr uint32 RECOVERY_TICK_MS = 1000;
     constexpr uint32 PERK_ID_RAPID_RECOVERY = 3;
 
+<<<<<<< Updated upstream
     // ------------------------------------------------------------------ Iron Will settings
     struct IronWillRank
     {
@@ -138,6 +143,8 @@ namespace
     };
     std::vector<IronWillRank> sIronWillRanks = { { 10, 1 }, { 20, 30 }, { 30, 60 } };
 
+=======
+>>>>>>> Stashed changes
     // "6000, 5000, 4000" -> { 6000, 5000, 4000 }
     std::vector<uint32> ParseList(std::string const& text)
     {
@@ -700,6 +707,7 @@ namespace
     // Ranked perks and their number of ranks (more perks get ranks later).
     std::map<uint32, uint8> RankedPerks()
     {
+<<<<<<< Updated upstream
         return { { PERK_ID_RAPID_RECOVERY, uint8(sRecoveryRanks.size()) },
                  { PERK_IRON_WILL, uint8(sIronWillRanks.size()) } };
     }
@@ -713,6 +721,9 @@ namespace
             if (player->GetLevel() >= ranks[i].level)
                 rank = i + 1;
         return rank;
+=======
+        return { { PERK_ID_RAPID_RECOVERY, uint8(sRecoveryRanks.size()) } };
+>>>>>>> Stashed changes
     }
 
     uint8 MaxRank(uint32 perk)
@@ -730,9 +741,19 @@ namespace
         if (set != state.rankOverride.end())
             return std::clamp<uint8>(set->second, 1, maxRank);
         if (perk == PERK_ID_RAPID_RECOVERY)
+<<<<<<< Updated upstream
             return RankForLevel(player, sRecoveryRanks);
         if (perk == PERK_IRON_WILL)
             return RankForLevel(player, sIronWillRanks);
+=======
+        {
+            uint8 rank = 1;
+            for (uint8 i = 0; i < sRecoveryRanks.size(); ++i)
+                if (player->GetLevel() >= sRecoveryRanks[i].level)
+                    rank = i + 1;
+            return rank;
+        }
+>>>>>>> Stashed changes
         return 1;
     }
 
@@ -750,9 +771,12 @@ namespace
                 for (RecoveryRank const& r : sRecoveryRanks)
                     values += (values.empty() ? "" : ";") + std::to_string(r.delayMs) + "," +
                               std::to_string(r.percent) + "," + std::to_string(r.level);
+<<<<<<< Updated upstream
             else if (perk == PERK_IRON_WILL)
                 for (IronWillRank const& r : sIronWillRanks)
                     values += (values.empty() ? "" : ";") + std::to_string(r.percent) + "," + std::to_string(r.level);
+=======
+>>>>>>> Stashed changes
             SendAddon(player, "RANK:" + std::to_string(perk) + ":" + std::to_string(PerkRank(player, state, perk)) +
                 ":" + std::to_string(maxRank) + ":" + values);
         }
@@ -918,6 +942,7 @@ namespace
 
         state.tickMs = 0;
         RestoreTick(player, rank.percent);
+<<<<<<< Updated upstream
     }
 
     // ------------------------------------------------------------------ Iron Will
@@ -958,6 +983,8 @@ namespace
         Player* owner = target->GetCharmerOrOwnerPlayerOrPlayerItself();
         uint32 percent = sIronWillRanks[PerkRank(owner, *state, PERK_IRON_WILL) - 1].percent;
         maxDuration = std::max<int32>(1, maxDuration - int32(int64(maxDuration) * percent / 100));
+=======
+>>>>>>> Stashed changes
     }
 }
 
@@ -986,6 +1013,7 @@ public:
         for (size_t i = 0; i < count; ++i)
             sRecoveryRanks.push_back({ delays[i], std::clamp<uint32>(percents[i], 1, 100),
                                        i < levels.size() ? levels[i] : (i == 0 ? 1 : 255) });
+<<<<<<< Updated upstream
 
         std::vector<uint32> willPercents = ParseList(sConfigMgr->GetOption<std::string>("Unbound.Perks.IronWill.Percent", "10, 20, 30"));
         std::vector<uint32> willLevels = ParseList(sConfigMgr->GetOption<std::string>("Unbound.Perks.IronWill.RankLevels", "1, 30, 60"));
@@ -1008,6 +1036,8 @@ public:
     void OnCalcMaxDuration(Aura const* aura, int32& maxDuration) override
     {
         ApplyIronWill(aura, maxDuration);
+=======
+>>>>>>> Stashed changes
     }
 };
 
@@ -1273,7 +1303,11 @@ public:
         uint8 maxRank = MaxRank(perk);
         if (!RankedPerks().count(perk))
         {
+<<<<<<< Updated upstream
             handler->PSendSysMessage("Perk {} has no ranks. Ranked perks: 3 (Rapid Recovery), 303 (Iron Will).", perk);
+=======
+            handler->PSendSysMessage("Perk {} has no ranks. Ranked perks: 3 (Rapid Recovery).", perk);
+>>>>>>> Stashed changes
             return true;
         }
         uint32 guid = target->GetGUID().GetCounter();

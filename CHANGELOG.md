@@ -8,11 +8,15 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+<<<<<<< Updated upstream
 | Iron Will utility perk (shorter crowd control, 3 ranks by level) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Perk ranks (first: Rapid Recovery, 3 ranks by level; `.perk rank`) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Gear attunement, stage 2: attuning by kills (`.attune progress`) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 1: collection and stats (GM commands) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Item expansion tags (attunement counts released expansions only) | 2026-10-14 | 2026-10-14 | Kasix-K |
+=======
+| Perk ranks (first: Rapid Recovery, 3 ranks by level; `.perk rank`) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
+>>>>>>> Stashed changes
 | Classic raids soloable (raid scaling to about 3 players' worth) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Power budget (endgame design targets, in the roadmap) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Perks tab on the character sheet (ElvUI skinned) | 2026-10-14 | 2026-10-14 | Kasix-K |
@@ -47,6 +51,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-14
 
 ### Added
+<<<<<<< Updated upstream
 - **Gear attunement, stage 2 of 4: attuning.** Equipped items that count progress with every kill of a creature
   that would give experience (1 kill, elites 2, bosses 10; group members in range get it too) and are attuned
   for good at 50 kills (green), 100 (blue), 200 (epic) or 400 (legendary). Progress is kept per item
@@ -58,11 +63,14 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   sleep, polymorph, charm, disorient, sap) lasts 10% shorter at Rank 1 (level 1), 20% at Rank 2 (level 30)
   and 30% at Rank 3 (level 60). Stacks with racials, talents and diminishing returns. Values and rank levels
   are in `mod_unbound.conf` (`Unbound.Perks.IronWill.*`); GMs can test ranks with `.perk rank 303 <rank>`.
+=======
+>>>>>>> Stashed changes
 - **Perk ranks**, starting with Rapid Recovery: Rank 1 (6 seconds after combat, 4% health and mana per
   second) from level 1, Rank 2 (5 s, 6%) from level 30, Rank 3 (4 s, 8%) from level 60. Values and rank
   levels are in `mod_unbound.conf`. GMs set a rank with `.perk rank <perk id> <rank>` (saved per
   character; `.perk rank <perk id>` goes back to the level's rank). The perk window shows "2/3" badges and
   every rank in the tooltip.
+<<<<<<< Updated upstream
 - **Gear attunement, stage 1 of 4** (the collection and its stats): each character has a collection of
   attuned items that permanently give 20% of their fixed stats (applied like gear stats, shown on the
   character sheet), with diminishing returns (full value until 100% of a full set of gear, half until 200%,
@@ -71,6 +79,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   attuning by kills, the sacrifice altar and the tooltips/collection window follow.
 - **Item expansion tags** (`tools/item_expansions.py`): 20,286 gear items tagged with the expansion they come
   from (8,612 classic, 4,870 TBC, 6,804 WotLK), so TBC and Wrath items can't count until those are released.
+=======
+>>>>>>> Stashed changes
 - **Perks tab on the character sheet.** A "Perks" tab after Character, Pet, Reputation, Skills and
   Currency, built from the game's own tab template. It opens the perk window beside the character sheet.
   With ElvUI's character skin on, ElvUI skins it like its other tabs.
@@ -112,9 +122,12 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   (spawned automatically), a Keystone window (tier picker with -/+, slider, +1, +5, Max and Last; run preview;
   best and last run; activate before the first pull; Missing Attunements for the instance), and rewards per
   level of faster attunement plus more gold.
+<<<<<<< Updated upstream
 - **Attunement kill rules** in the roadmap: 50/100/200 kills for green/blue/epic (elite 2, boss 10), only
   creatures that would give experience; only items from released expansions count (tagged per item, following
   `Unbound.ExpansionUnlocked`).
+=======
+>>>>>>> Stashed changes
 
 ### Changed
 - **Classic raids soloable:** solo scaling for 20-player raids (Zul'Gurub, Ruins of Ahn'Qiraj) and
