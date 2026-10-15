@@ -80,7 +80,14 @@ its full 20% whichever way it was collected. Time versus cost is the whole trade
 - **Sacrifice at an altar NPC:** an altar in the capital cities (players of both factions can use any,
   as everything else is cross-faction). Talking to it opens the sacrifice window: pick an item from the bags,
   see its stats and the price, confirm.
-- Still to decide: the exact prices.
+- **Sacrifice prices** (gold, scaled by quality; config settings, Heroic Badges later):
+
+  | Quality | Price | Gear the character could attune (double) |
+  |---|---|---|
+  | Green (uncommon) | 2 gold | 4 gold |
+  | Blue (rare) | 10 gold | 20 gold |
+  | Purple (epic) | 50 gold | 100 gold |
+  | Orange (legendary) | 250 gold | 500 gold |
 
 Mechanics are a separate problem: some bosses need more than one player whatever the numbers
 (Razorgore's orb, the Twin Emperors' teleport tank swap, C'Thun's stomach phase). They need small script
@@ -108,7 +115,8 @@ changes, raid by raid (see Next up).
       (equip it and kill creatures until 100%, Synastria-style) or by sacrificing it (destroy it for its
       stats at once, Peloria-style). Both styles, one shared collection. The main lever for soloing
       Mythic raids: numbers, item rules, minimum item level and the attune/sacrifice rules per the Power
-      budget. Per character; sacrifice at an altar NPC in the capitals. Still to decide: prices.
+      budget. Per character; sacrifice at an altar NPC in the capitals, gold prices by quality. Ready to
+      build (in stages: collection and stats, attuning, the altar, tooltips and collection window).
 - [ ] **Soloable raid mechanics** (moderate, per raid): script changes for bosses that need several
       players (Razorgore, Twin Emperors, C'Thun, ...).
 - [ ] **Perk ranks** (moderate): ranks like spell ranks for perks with a number (Rapid Recovery,

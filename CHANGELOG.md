@@ -78,6 +78,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   Badges later) scaled by quality, double for gear the character could attune. Collected stats are permanent
   (kept after unequipping, selling or deleting the item); attunement progress is saved per item; stats only
   arrive at 100%. Per character, with sacrifice at an altar NPC in the capital cities.
+  Sacrifice prices: 2/10/50/250 gold for green/blue/epic/legendary, double for gear the character could attune.
 
 ### Changed
 - **Classic raids soloable:** solo scaling for 20-player raids (Zul'Gurub, Ruins of Ahn'Qiraj) and
