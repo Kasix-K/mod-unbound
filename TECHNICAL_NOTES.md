@@ -33,7 +33,7 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   in `mod_unbound.conf`. Retribution's spell scripts: `data/sql/db-world/unbound_perks_spells.sql`. Perk
   numbers stay in normal WoW ranges (about +10% per perk); they are constants at the top of
   `unbound_perks.cpp` and must match `PerkData.lua`. The perk code assumes `MapUpdate.Threads = 1`.
-- **Gear attunement** (stages 1-2 of 4: the collection, its stats, attuning by kills): `src/unbound_attunement.cpp`. Each
+- **Gear attunement** (stages 1-3 of 4: the collection, its stats, attuning by kills, the sacrifice altar): `src/unbound_attunement.cpp`. Each
   character's collection is `characters.character_unbound_attunement` (item, progress, attuned). Attuned
   items give `Unbound.Attunement.Percent` (20%) of their fixed stats, applied like equipped-item stats
   (`Player::_ApplyItemBonuses`), with diminishing returns against `ReferenceSetStats` (600 stat points =
@@ -52,7 +52,12 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   not yet attuned item gains them; `Kills` by quality (50/100/200/400). Progress is saved with the
   character (`OnPlayerSave`, one transaction); completing an item saves at once. Messages at 25/50/75%
   and on completion (achievement sound). GM commands: `.attune add|remove|check <item>`, `.attune info`,
-  `.attune reset` (on the selected player, else yourself); players: `.attune progress`.
+  `.attune reset` (on the selected player, else yourself); players: `.attune progress`. Sacrifice: the Altar
+  of Sacrifice (creature 190103, `npc_unbound_attunement_altar`, `data/sql/db-world/unbound_attunement_altar.sql`)
+  lists the bag items that count and aren't attuned (28 per page); each gossip option carries the item entry
+  (sender) and bag/slot (action) and uses the game's money confirmation box; on select the server checks the
+  item, position and gold again, then takes the gold, destroys the item and attunes it. Prices:
+  `SacrificeGold` by quality (2/10/50/250), times `SacrificeOwnGearMultiplier` (2) if `Player::CanUseItem`.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Players in a

@@ -29,6 +29,7 @@
 |---|---|
 | Warpweaver (transmogrifier) | `.npc add 190010` |
 | Grizzle Lootsnatch (companion vendor) | `.npc add 190101` |
+| Altar of Sacrifice (attunement; one per capital city) | `.npc add 190103` |
 
 ## Custom IDs
 
@@ -70,7 +71,9 @@ Attuned items permanently give the character 20% of their stats, even after the 
 wear the item and kill creatures that give experience (not grey ones): 50 kills for a green, 100 for a blue,
 200 for an epic (an elite counts as 2, a boss as 10). Every equipped item that counts progresses at once, and
 chat shows 25%, 50%, 75% and "fully attuned". **Any player** can type `.attune progress` to see their
-equipped items' progress. The sacrifice altar and tooltips come next. GM commands (they act on the selected
+equipped items' progress. **Sacrificing:** talk to the **Altar of Sacrifice** to pick an item from your bags; it is destroyed and
+attuned at once for 2 / 10 / 50 / 250 gold (green / blue / epic / legendary), double for gear you could attune
+by wearing it. Tooltips and a collection window come next. GM commands (they act on the selected
 player, else yourself):
 
 | Command | What it does |

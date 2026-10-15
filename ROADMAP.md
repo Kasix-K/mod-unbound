@@ -123,8 +123,8 @@ changes, raid by raid (see Next up).
 
 ## Next up
 
-- [ ] **Gear attunement and sacrifice** (large; stages 1-2 of 4 done 2026-10-14: the collection, its stats, item
-      expansion tags, `.attune` commands, attuning by kills; next: the altar, tooltips and window): absorb stats from acquired gear, either by attuning it
+- [ ] **Gear attunement and sacrifice** (large; stages 1-3 of 4 done 2026-10-14: the collection, its stats, item
+      expansion tags, `.attune` commands, attuning by kills, the Altar of Sacrifice; next: tooltips and window): absorb stats from acquired gear, either by attuning it
       (equip it and kill creatures until 100%, Synastria-style) or by sacrificing it (destroy it for its
       stats at once, Peloria-style). Both styles, one shared collection. The main lever for soloing
       Mythic raids: numbers, item rules, minimum item level and the attune/sacrifice rules per the Power

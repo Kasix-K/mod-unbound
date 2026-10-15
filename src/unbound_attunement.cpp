@@ -24,10 +24,16 @@
  * Progress is kept per item (unequipping pauses it) and saved with the character; completing an item saves
  * at once. Players see their equipped items' progress with .attune progress.
  *
- * Stage 3 (sacrifice at an altar) and stage 4 (tooltips, collection window) come next. See ROADMAP.md (Power
- * budget, Attunement and sacrifice rules).
+ * Stage 3, sacrifice: the Altar of Sacrifice (creature 190103, placed with .npc add 190103) lists the items in
+ * the player's bags that count and aren't attuned yet; choosing one shows the game's confirmation box with the
+ * gold price (Unbound.Attunement.SacrificeGold by quality: 2 green, 10 blue, 50 epic, 250 legendary; times
+ * SacrificeOwnGearMultiplier (2) for gear the player could attune by wearing it). The server checks the item, its
+ * position and the gold again, then takes the gold, destroys the item and attunes it at once, at full value.
+ *
+ * Stage 4 (tooltips, collection window) comes next. See ROADMAP.md (Power budget, Attunement and sacrifice rules).
  */
 
+#include "Bag.h"
 #include "Chat.h"
 #include "CommandScript.h"
 #include "Config.h"
@@ -38,6 +44,7 @@
 #include "ObjectMgr.h"
 #include "Player.h"
 #include "ScriptMgr.h"
+#include "ScriptedGossip.h"
 #include "StringConvert.h"
 #include "StringFormat.h"
 #include "Tokenize.h"
@@ -66,6 +73,8 @@ namespace
     uint32 sEliteKills = 2;                // an elite counts as this many kills
     uint32 sBossKills = 10;                // a boss counts as this many kills
     uint32 constexpr SOUND_ATTUNED = 12891; // the achievement sound
+    std::vector<uint32> sSacrificeGold = { 2, 10, 50, 250 }; // sacrifice price: green, blue, epic, legendary
+    uint32 sOwnGearMultiplier = 2;         // price multiplier for gear the player could attune by wearing it
 
     std::unordered_map<uint32, uint8> sItemExpansion;   // world.unbound_item_expansion
 
@@ -441,7 +450,7 @@ namespace
     }
 
     // Attune an item for good: the collection, the database, the stats, a message.
-    void CompleteAttunement(Player* player, AttunementState* state, ItemTemplate const* proto)
+    void CompleteAttunement(Player* player, AttunementState* state, ItemTemplate const* proto, bool sacrificed = false)
     {
         state->progress.erase(proto->ItemId);
         state->unsaved.erase(proto->ItemId);
@@ -449,8 +458,10 @@ namespace
         CharacterDatabase.Execute("REPLACE INTO `character_unbound_attunement` (`guid`, `item`, `progress`, `attuned`) "
             "VALUES ({}, {}, 0, 1)", player->GetGUID().GetCounter(), proto->ItemId);
         Recalculate(player);
-        ChatHandler(player->GetSession()).PSendSysMessage("{}{} is fully attuned! Its stats are yours for good, even "
-            "without the item ({} items attuned).", PREFIX, ItemLink(proto), state->attuned.size());
+        ChatHandler(player->GetSession()).PSendSysMessage(sacrificed ?
+            "{}{} was sacrificed and is fully attuned! Its stats are yours for good ({} items attuned)." :
+            "{}{} is fully attuned! Its stats are yours for good, even without the item ({} items attuned).",
+            PREFIX, ItemLink(proto), state->attuned.size());
         player->PlayDirectSound(SOUND_ATTUNED, player);
     }
 
@@ -479,6 +490,20 @@ namespace
                 ChatHandler(player->GetSession()).PSendSysMessage("{}{} {}% ({}/{} kills).", PREFIX, ItemLink(proto),
                     progress * 100 / needed, progress, needed);
         }
+    }
+
+    // ------------------------------------------------------------------ sacrifice (stage 3)
+    // Gold price to sacrifice an item: by quality, times sOwnGearMultiplier if the player could attune it by
+    // wearing it (attuning stays the main route for one's own gear).
+    uint32 SacrificePrice(Player const* player, ItemTemplate const* proto)
+    {
+        if (sSacrificeGold.empty())
+            return 0;
+        uint32 index = proto->Quality > ITEM_QUALITY_UNCOMMON ? proto->Quality - ITEM_QUALITY_UNCOMMON : 0;
+        uint32 gold = sSacrificeGold[std::min<size_t>(index, sSacrificeGold.size() - 1)];
+        if (player->CanUseItem(proto) == EQUIP_ERR_OK)
+            gold *= sOwnGearMultiplier;
+        return gold * GOLD;
     }
 
     // Save the progress that changed since the last save (with the character's own save).
@@ -534,6 +559,22 @@ public:
             sKillsByQuality = { 50, 100, 200, 400 };
         sEliteKills = sConfigMgr->GetOption<uint32>("Unbound.Attunement.EliteKills", 2);
         sBossKills = sConfigMgr->GetOption<uint32>("Unbound.Attunement.BossKills", 10);
+
+        // "2, 10, 50, 250" -> sacrifice price in gold for green, blue, epic, legendary
+        sSacrificeGold.clear();
+        std::string const prices = sConfigMgr->GetOption<std::string>("Unbound.Attunement.SacrificeGold", "2, 10, 50, 250");
+        for (std::string_view part : Acore::Tokenize(prices, ',', false))
+        {
+            while (!part.empty() && part.front() == ' ')
+                part.remove_prefix(1);
+            while (!part.empty() && part.back() == ' ')
+                part.remove_suffix(1);
+            if (Optional<uint32> value = Acore::StringTo<uint32>(part))
+                sSacrificeGold.push_back(*value);
+        }
+        if (sSacrificeGold.empty())
+            sSacrificeGold = { 2, 10, 50, 250 };
+        sOwnGearMultiplier = sConfigMgr->GetOption<uint32>("Unbound.Attunement.SacrificeOwnGearMultiplier", 2);
     }
 
     void OnStartup() override
@@ -728,8 +769,127 @@ public:
     }
 };
 
+// 190103 - Altar of Sacrifice: lists the items in the player's bags that can be sacrificed; choosing one shows the
+// game's confirmation box with the gold price; the server checks everything again before destroying the item.
+class npc_unbound_attunement_altar : public CreatureScript
+{
+public:
+    npc_unbound_attunement_altar() : CreatureScript("npc_unbound_attunement_altar") { }
+
+    static constexpr uint32 NPC_TEXT_ALTAR = 190103;
+    static constexpr uint32 ITEMS_PER_PAGE = 28;      // the menu holds 32 lines; the rest are page buttons
+    static constexpr uint32 SENDER_PAGE = 0;          // sender 0: a page button (action = page)
+
+    struct Offer
+    {
+        uint8 bag;
+        uint8 slot;
+        ItemTemplate const* proto;
+    };
+
+    // The items in the bags that can be sacrificed: counting, not attuned yet, each entry once.
+    static std::vector<Offer> Offers(Player* player)
+    {
+        AttunementState* state = StateOf(player);
+        std::vector<Offer> offers;
+        std::unordered_set<uint32> seen;
+        auto consider = [&](uint8 bag, uint8 slot)
+        {
+            Item* item = player->GetItemByPos(bag, slot);
+            ItemTemplate const* proto = item ? item->GetTemplate() : nullptr;
+            if (!proto || state->attuned.count(proto->ItemId) || seen.count(proto->ItemId) ||
+                CheckItem(proto) != ItemCheck::Counts)
+                return;
+            seen.insert(proto->ItemId);
+            offers.push_back({ bag, slot, proto });
+        };
+        for (uint8 slot = INVENTORY_SLOT_ITEM_START; slot < INVENTORY_SLOT_ITEM_END; ++slot)
+            consider(INVENTORY_SLOT_BAG_0, slot);
+        for (uint8 bag = INVENTORY_SLOT_BAG_START; bag < INVENTORY_SLOT_BAG_END; ++bag)
+            if (Bag* container = player->GetBagByPos(bag))
+                for (uint8 slot = 0; slot < container->GetBagSize(); ++slot)
+                    consider(bag, slot);
+        return offers;
+    }
+
+    static void ShowPage(Player* player, Creature* creature, uint32 page)
+    {
+        ClearGossipMenuFor(player);
+        if (!sEnabled)
+        {
+            SendGossipMenuFor(player, NPC_TEXT_ALTAR, creature);
+            return;
+        }
+        AttunementState* state = StateOf(player);
+        std::vector<Offer> offers = Offers(player);
+        uint32 pages = std::max<uint32>(1, (offers.size() + ITEMS_PER_PAGE - 1) / ITEMS_PER_PAGE);
+        page = std::min(page, pages - 1);
+        for (uint32 i = page * ITEMS_PER_PAGE; i < std::min<uint32>(offers.size(), (page + 1) * ITEMS_PER_PAGE); ++i)
+        {
+            Offer const& offer = offers[i];
+            uint32 price = SacrificePrice(player, offer.proto);
+            std::string text = Acore::StringFormat("|c{:08x}{}|r", ItemQualityColors[offer.proto->Quality], offer.proto->Name1);
+            auto progress = state->progress.find(offer.proto->ItemId);
+            if (progress != state->progress.end() && progress->second)
+                text += Acore::StringFormat(" ({}% attuned)", progress->second * 100 / KillsNeeded(offer.proto));
+            if (player->CanUseItem(offer.proto) == EQUIP_ERR_OK)
+                text += " - you could attune it by wearing it";
+            std::string confirm = Acore::StringFormat("Sacrifice {}? It is destroyed, and {:.0f}% of its stats are yours "
+                "for good.", offer.proto->Name1, sPercent);
+            AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, text, offer.proto->ItemId,
+                (uint32(offer.bag) << 8) | offer.slot, confirm, price, false);
+        }
+        if (page + 1 < pages)
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, Acore::StringFormat("Next page ({}/{})", page + 2, pages),
+                SENDER_PAGE, page + 1);
+        if (page > 0)
+            AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Previous page", SENDER_PAGE, page - 1);
+        if (offers.empty())
+            ChatHandler(player->GetSession()).PSendSysMessage("{}Nothing in your bags can be sacrificed: only gear "
+                "that counts for attunement and isn't attuned yet.", PREFIX);
+        SendGossipMenuFor(player, NPC_TEXT_ALTAR, creature);
+    }
+
+    bool OnGossipHello(Player* player, Creature* creature) override
+    {
+        ShowPage(player, creature, 0);
+        return true;
+    }
+
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 sender, uint32 action) override
+    {
+        if (sender == SENDER_PAGE)
+        {
+            ShowPage(player, creature, action);
+            return true;
+        }
+
+        // sender = item entry, action = bag << 8 | slot; everything is checked again before anything happens
+        uint8 bag = uint8(action >> 8);
+        uint8 slot = uint8(action & 0xFF);
+        Item* item = player->GetItemByPos(bag, slot);
+        ItemTemplate const* proto = item ? item->GetTemplate() : nullptr;
+        AttunementState* state = StateOf(player);
+        ChatHandler chat(player->GetSession());
+        if (!sEnabled || !proto || proto->ItemId != sender || !Player::IsInventoryPos(bag, slot) ||
+            state->attuned.count(proto->ItemId) || CheckItem(proto) != ItemCheck::Counts)
+            chat.PSendSysMessage("{}That item is no longer in your bags or can't be sacrificed.", PREFIX);
+        else if (uint32 price = SacrificePrice(player, proto); !player->HasEnoughMoney(price))
+            chat.PSendSysMessage("{}You need {} gold to sacrifice {}.", PREFIX, price / GOLD, ItemLink(proto));
+        else
+        {
+            player->ModifyMoney(-int32(price));
+            player->DestroyItem(bag, slot, true);
+            CompleteAttunement(player, state, proto, true);
+        }
+        ShowPage(player, creature, 0);
+        return true;
+    }
+};
+
 void AddSC_unbound_attunement()
 {
+    new npc_unbound_attunement_altar();
     new unbound_attunement_world();
     new unbound_attunement_player();
     new unbound_attunement_commands();
