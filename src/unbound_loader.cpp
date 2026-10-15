@@ -11,6 +11,7 @@ void AddSC_unbound_attunement();
 void AddSC_unbound_world_bosses();
 void AddSC_unbound_solo_raids();
 void AddSC_unbound_classic_onyxia();
+void AddSC_unbound_naxx40();
 
 void Addmod_unboundScripts()
 {
@@ -23,4 +24,5 @@ void Addmod_unboundScripts()
     AddSC_unbound_world_bosses();
     AddSC_unbound_solo_raids();
     AddSC_unbound_classic_onyxia();
+    AddSC_unbound_naxx40();
 }

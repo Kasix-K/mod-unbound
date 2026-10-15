@@ -199,6 +199,10 @@ changes, raid by raid (see Next up).
       placeholders (Thick Skin, Second Wind, Steadfast, Fleet Foot, Treasure Sense) were removed; their ids
       201-203 and 301-302 are not reused.
 
+- [x] Classic Naxxramas (2026-10-15): the 40-player level 60 raid from mod-individual-progression (Naxxramas
+      parts only), entrance runestone under the Necropolis in the Eastern Plaguelands, classic attunement,
+      Tier 3 quests at Light's Hope
+
 - [x] Onyxia's Lair as a classic level 60 raid (2026-10-15): classic Onyxia, Whelps and Warders, classic
       spell damage, no Lair Guards, classic loot and Head of Onyxia quests, solo scaling
 
@@ -220,6 +224,9 @@ changes, raid by raid (see Next up).
   - [ ] Ruins of Ahn'Qiraj: Ayamiss (Paralyze + larva Feed)
   - [ ] Temple of Ahn'Qiraj: Viscidus (frost/shatter hit counts), Twin Emperors (Heal Brother), Skeram
         (True Fulfillment with a pet out), Qiraji Mindslayer (Cause Insanity)
+  - [ ] Naxxramas (classic): to look at like the others (e.g. Razuvious needs priests to control his
+        students, the Four Horsemen several tanks, Thaddius' polarity shift); `Unbound.Naxx40.Doable.*`
+        already makes four bosses easier
   - [ ] Then, after testing, the risky ones: Core Hounds, Ragnaros' Magma Blast, Firemaw's Flame Buffet,
         Nefarian's Bone Constructs, Mandokir, Thekal, Ossirian, C'Thun, Anubisath Sentinels
   - Shadowflame (Firemaw, Ebonroc, Flamegor, Nefarian) still needs an Onyxia Scale Cloak, which can't be
@@ -234,7 +241,7 @@ changes, raid by raid (see Next up).
 - [ ] **Heroic currency and vendor** (moderate): a token (e.g. "Heroic Badge") from Heroic bosses,
       spent on companions, mounts, transmog or gear. Becomes the Loot Goblin's currency.
 - [ ] **Heroic classic raids** (moderate): Molten Core, Blackwing Lair, Zul'Gurub, Ruins and Temple of
-      Ahn'Qiraj, Onyxia's Lair. (In 3.3.5, Naxxramas only exists as its level-80 version.)
+      Ahn'Qiraj, Onyxia's Lair, Naxxramas.
 - [ ] **Raid Finder** (moderate to large): raids in the dungeon finder in level brackets. Still to
       decide: strict brackets or every raid up to the player's level; an addon window plus a
       server hook.

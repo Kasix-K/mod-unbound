@@ -395,3 +395,26 @@ Unbound.SoloRaid.Vaelastrasz = 1
 Unbound.SoloRaid.Ebonroc = 1
 Unbound.SoloRaid.Chromaggus = 1
 Unbound.SoloRaid.Nefarian = 1
+
+#    Unbound.Naxx40.Doable.FourHorsemen
+#    Unbound.Naxx40.Doable.Gluth
+#    Unbound.Naxx40.Doable.Patchwerk
+#    Unbound.Naxx40.Doable.Razuvious
+#        Description: Classic Naxxramas (src/naxx40): easier versions of four bosses, for everyone in the
+#                     raid (not only solo). Four Horsemen: much lower ability damage and no Void Zones, so
+#                     they can be fought together. Gluth: looks for a zombie to eat every 12 seconds
+#                     instead of 3. Patchwerk: Hateful Strike does 80% of its damage. Razuvious: Disrupting
+#                     Shout instead of Mana Burn.
+#        Default:     0 - Classic
+#                     1 - Easier
+#
+#    Unbound.Naxx40.BotAccountRegex
+#        Description: Accounts whose name matches this (case-insensitive) are playerbots: the Naxxramas
+#                     runestone takes them in with their group without the attunement quest. Empty = none.
+#        Default:     "^RNDBOT.*"
+
+Unbound.Naxx40.Doable.FourHorsemen = 0
+Unbound.Naxx40.Doable.Gluth = 0
+Unbound.Naxx40.Doable.Patchwerk = 0
+Unbound.Naxx40.Doable.Razuvious = 0
+Unbound.Naxx40.BotAccountRegex = "^RNDBOT.*"

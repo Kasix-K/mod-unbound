@@ -9,7 +9,7 @@ Sources, worked out from the world database and the server's DBC files:
   - creature loot, skinning and pickpocketing (including reference loot, nested): the map the creature is
     spawned on (its expansion in Map.dbc); also each creature's difficulty versions (heroic copies).
     Creatures that are never spawned (summoned by scripts) use their stat expansion
-    (creature_template.exp).
+    (creature_template.exp). Classic Naxxramas' creatures and chest are classic although map 533 is Wrath.
   - gameobject loot (chests, fishing holes): the map the gameobject is spawned on
   - containers (item_loot_template): the container item's expansion
   - disenchanting (disenchant_loot_template): the disenchanted item's expansion (e.g. Dream Dust, a
@@ -62,6 +62,11 @@ ITEM_LEVEL_LIMITS = {0: 79, 1: 125}
 SPELL_REAGENTS, SPELL_REAGENT_COUNTS, SPELL_EFFECTS, SPELL_EFFECT_ITEMS = 52, 60, 71, 107
 SPELL_EFFECT_CREATE_ITEM = 24
 MAP_EXPANSION = 63  # Map.dbc
+
+# Classic Naxxramas (src/naxx40, data/sql/db-world/unbound_naxx40*.sql) is the 40-player difficulty of the Wrath
+# map 533: its creatures (entries 351000-351099, own loot tables) and the Four Horsemen chest count as classic.
+NAXX40_CREATURES = (351000, 351100)
+NAXX40_GAMEOBJECTS = (361000,)
 
 # Gear: weapons and armour (including rings, necks, trinkets, shields), not shirts, tabards, bags, ammo.
 GEAR_SQL = ("SELECT entry, Quality, ItemLevel FROM item_template WHERE class IN (2, 4) AND Quality >= 2 "
@@ -126,6 +131,10 @@ def main():
     creature_exp = {}
     for cid, m in db.query('SELECT id, map FROM creature'):
         lower(creature_exp, cid, map_exp.get(m, UNKNOWN))
+    # Classic Naxxramas (src/naxx40) shares the Wrath map 533; its level 60 creatures are classic
+    for cid in range(*NAXX40_CREATURES):
+        if cid in creature_exp:
+            creature_exp[cid] = 0
     templates = db.query('SELECT entry, lootid, skinloot, pickpocketloot, exp, difficulty_entry_1, difficulty_entry_2, '
                          'difficulty_entry_3 FROM creature_template')
     for entry, _, _, _, exp, *_ in templates:
@@ -145,6 +154,8 @@ def main():
     go_exp = {}
     for gid, m in db.query('SELECT id, map FROM gameobject'):
         lower(go_exp, gid, map_exp.get(m, UNKNOWN))
+    for gid in NAXX40_GAMEOBJECTS:  # summoned by script, so never spawned
+        go_exp[gid] = 0
     go_loot_exp = {}
     for entry, lootid in db.query('SELECT entry, Data1 FROM gameobject_template WHERE type IN (3, 25) AND Data1 > 0'):
         lower(go_loot_exp, lootid, go_exp.get(entry, UNKNOWN))

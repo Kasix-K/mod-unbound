@@ -123,6 +123,19 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   mod-autobalance gets `AutoBalance.InflectionPoint.PerInstance = "249 -1 0.058 0.25"`: solo about 2.8
   players' worth of the classic 40-player Onyxia, ten players about 10. After applying it, run
   `python tools/item_expansions.py` so her classic loot counts for attunement.
+- **Classic Naxxramas:** `src/naxx40` and `data/sql/db-world/unbound_naxx40*.sql`, from mod-individual-progression
+  (MIT, `src/naxx40/LICENSE-mod-individual-progression`; what was changed is listed at the top of
+  `src/naxx40/unbound_naxx40_config.cpp`). It is map 533's third difficulty slot (10-player heroic) made a
+  40-player raid by a `mapdifficulty_dbc` row, with its own creatures (entries 351000-351097, spawn guids
+  361000-362114, spawnMask 4), gameobjects 361000 (Four Horsemen chest) and 361001 (runestone, spawn guids
+  361001-361003 with the Necropolis transport and meeting stone) and spells 90001-90008. Its
+  `instance_naxxramas` replaces the core's (module scripts with the same script name win) and handles all
+  three difficulties. The code is in namespace `UnboundNaxx40` because 20 of its classes have the same names
+  as the core's Naxxramas scripts and would clash at link time; keep it there when updating from upstream.
+  The runestone (`gobject_naxx40_tele`) checks the attunement quests 9121-9123, sets the raid difficulty to
+  10-player heroic and teleports the group (members within 30 yards; playerbot accounts always). The
+  expansion lock (`src/unbound_content_lock.cpp`) treats map 533 on that difficulty as classic.
+  `tools/item_expansions.py` counts the 351000-351099 creatures and chest 361000 as classic.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Players in a

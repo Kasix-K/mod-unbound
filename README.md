@@ -123,4 +123,12 @@ powershell -ExecutionPolicy Bypass -File server-setup\apply-unbound-settings.ps1
 - Custom IDs are shared, so pick new ones next to the existing ones and say so in the commit: spells
   2002xx, items 9100xx (heroic loot 910100-910999, world boss loot 911000-911999), item sets 950-999,
   creatures 1901xx (world bosses 190110-190199, spawn guids 9190110-9190199),
-  SkillLineAbility 9000xx, loot references 9100100-9100199.
+  SkillLineAbility 9000xx, loot references 9100100-9100199. Classic Naxxramas (from mod-individual-progression)
+  uses creatures 351000-351099, creature guids 361000-362999, gameobjects and their guids 361000-361003 and spells
+  90001-90008.
+
+## Credits
+
+Classic Naxxramas (`src/naxx40`, `data/sql/db-world/unbound_naxx40*.sql`) comes from
+[mod-individual-progression](https://github.com/ZhengPeiRu21/mod-individual-progression) by ZhengPeiRu21 (Naxx
+40 scripts and data by Sogladev), MIT license (`src/naxx40/LICENSE-mod-individual-progression`).

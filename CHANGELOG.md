@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Classic Naxxramas (40 players, level 60) in the Eastern Plaguelands, from mod-individual-progression | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Onyxia's Lair as a classic level 60 raid (classic stats, spell damage, loot, Head of Onyxia quests) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Soloable raid mechanics: Blackwing Lair (Razorgore, Vaelastrasz, Ebonroc, Chromaggus, Nefarian) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Ranks 4-5 for Defensive and Utility perks (GM-only for now) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
@@ -61,6 +62,21 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Added
+- **Classic Naxxramas** (40 players, level 60), taken from mod-individual-progression (ZhengPeiRu21; Naxx 40
+  scripts and data by Sogladev; MIT license), only its Naxxramas parts (`src/naxx40`,
+  `data/sql/db-world/unbound_naxx40*.sql`). The floating Necropolis is back above Plaguewood in the Eastern
+  Plaguelands, with a "Teleport To Naxxramas" runestone and a meeting stone below it; the runestone is the only
+  way in (the Stratholme back entrance is left out). It needs the classic attunement, "The Dread Citadel -
+  Naxxramas" from Archmage Angela Dosantos at Light's Hope, and takes the group in on Naxxramas' 40-player
+  difficulty (the level 80 10 and 25 player versions stay locked). All 15 bosses with their classic scripts,
+  classic creatures and models, classic loot (Tier 3 and the rest), the Light's Hope Tier 3 quests, Master
+  Craftsman Omarion, Archmage Tarsis Kir-Moldir, Frozen Runes and the Four Horsemen chest. Optional easier
+  Four Horsemen, Gluth, Patchwerk and Razuvious (`Unbound.Naxx40.Doable.*`, off by default). Solo: the
+  40-player raid scaling (about 2.8 players' worth). The expansion lock lets players into this version only.
+- **Attunement tags regenerated** (`tools/item_expansions.py`): classic Onyxia and Naxxramas loot counts (195
+  items, Naxxramas' creatures are classic although map 533 is Wrath), and so does the Heroic loot of batches 1-4
+  (910122-910549), which the committed tag file was missing. Onyxia's level 80 loot and the Onyxia Scale Cloak
+  and Breastplate no longer count (no source).
 - **Onyxia's Lair is a classic level 60 raid again** (it was the level 80 version from 3.2): entry from level
   60 (10-player difficulty; the 25-player one stays level 80, so it can't be entered). Onyxia is level 63 with
   her classic health (1.1 million), armor and melee; Onyxian Whelps and Warders are classic too, and the

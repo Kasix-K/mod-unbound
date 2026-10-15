@@ -9,7 +9,8 @@
  *    and Draenei starting zones share map 530 with Outland and stay open, so those races remain
  *    playable; Ebon Hold stays open for Death Knights (only GM accounts can create them while Wrath is
  *    locked, see CharacterCreating.Disabled.ClassMask).
- * Battlegrounds and arenas are left alone. GMs (with GM mode on) are exempt.
+ * Battlegrounds and arenas are left alone. GMs (with GM mode on) are exempt. Classic Naxxramas (the
+ * 40-player difficulty of the Wrath map, src/naxx40) counts as classic content.
  * The level cap and Death Knight creation are worldserver.conf settings (MaxPlayerLevel,
  * CharacterCreating.Disabled.ClassMask) and are changed alongside this when an expansion is released.
  */
@@ -25,6 +26,9 @@
 #include <unordered_set>
 
 static uint32 sExpansionUnlocked = 0;
+
+// Classic Naxxramas is map 533 (MAP_NAXXRAMAS) on the 10-player heroic difficulty slot, made a 40-player raid (src/naxx40).
+static constexpr Difficulty NAXX40_DIFFICULTY = RAID_DIFFICULTY_10MAN_HEROIC;
 
 // Zones of map 530 that are not Outland: the Blood Elf and Draenei starting areas and the seas around them.
 static std::unordered_set<uint32> const sClassicZonesOnOutlandMap =
@@ -56,6 +60,11 @@ static uint32 LocationExpansion(Player const* player, uint32 mapId, uint32 zoneI
 
     // The Death Knight starting area, like the Blood Elf and Draenei ones on map 530.
     if (mapId == MAP_EBON_HOLD && player->IsClass(CLASS_DEATH_KNIGHT))
+        return 0;
+
+    // Classic Naxxramas (src/naxx40): the 40-player difficulty of the Wrath map.
+    if (mapId == MAP_NAXXRAMAS && player->GetMapId() == MAP_NAXXRAMAS &&
+        player->GetMap()->GetDifficulty() == NAXX40_DIFFICULTY)
         return 0;
 
     return entry->Expansion();
@@ -127,9 +136,13 @@ public:
 
     // Dungeons and raids (the core only asks scripts about instanced maps; GMs never get here).
     bool OnPlayerCanEnterMap(Player* player, MapEntry const* entry, InstanceTemplate const* /*instance*/,
-        MapDifficulty const* /*mapDiff*/, bool /*loginCheck*/) override
+        MapDifficulty const* mapDiff, bool /*loginCheck*/) override
     {
         if (entry->IsBattlegroundOrArena() || entry->Expansion() <= sExpansionUnlocked)
+            return true;
+
+        // Classic Naxxramas: the runestone sets the 40-player difficulty before teleporting in.
+        if (entry->MapID == MAP_NAXXRAMAS && mapDiff && mapDiff == GetMapDifficultyData(MAP_NAXXRAMAS, NAXX40_DIFFICULTY))
             return true;
 
         ChatHandler(player->GetSession()).PSendSysMessage("{} has not been released yet.",
