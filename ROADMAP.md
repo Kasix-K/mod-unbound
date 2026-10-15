@@ -76,8 +76,11 @@ its full 20% whichever way it was collected. Time versus cost is the whole trade
 - Sacrifice always shows a confirmation (item and price) before destroying anything.
 - Tooltips show "Attunement: 37%", "Attuned", or "Can't attune: sacrifice only".
 - A collection window in the perks' talent-tree style shows every absorbed item and the stat totals.
-- Still to decide: an altar NPC in the capitals, a Sacrifice spell, or both; per character or
-  account-wide; the exact prices.
+- **Per character:** each character has its own collection (alts start their own).
+- **Sacrifice at an altar NPC:** an altar in the capital cities (players of both factions can use any,
+  as everything else is cross-faction). Talking to it opens the sacrifice window: pick an item from the bags,
+  see its stats and the price, confirm.
+- Still to decide: the exact prices.
 
 Mechanics are a separate problem: some bosses need more than one player whatever the numbers
 (Razorgore's orb, the Twin Emperors' teleport tank swap, C'Thun's stomach phase). They need small script
@@ -105,7 +108,7 @@ changes, raid by raid (see Next up).
       (equip it and kill creatures until 100%, Synastria-style) or by sacrificing it (destroy it for its
       stats at once, Peloria-style). Both styles, one shared collection. The main lever for soloing
       Mythic raids: numbers, item rules, minimum item level and the attune/sacrifice rules per the Power
-      budget. Still to decide: altar NPC or Sacrifice spell, per character or account-wide, prices.
+      budget. Per character; sacrifice at an altar NPC in the capitals. Still to decide: prices.
 - [ ] **Soloable raid mechanics** (moderate, per raid): script changes for bosses that need several
       players (Razorgore, Twin Emperors, C'Thun, ...).
 - [ ] **Perk ranks** (moderate): ranks like spell ranks for perks with a number (Rapid Recovery,
@@ -138,8 +141,9 @@ changes, raid by raid (see Next up).
       `tools/world_bosses.py`. Later a weekly rotation (boss of the week) with a first-kill bonus.
 
 - [ ] **Mythic+** (large): player-chosen +1, +2, ... levels on top of Heroic, through mod-autobalance's
-      multiplier hook. Still to decide: scaling per level (about +10% suggested), the cap, and how a
-      level is chosen (NPC or command). Best after the Heroic currency.
+      multiplier hook. Scaling and limits per the Power budget (+10% per level added, capstone +10,
+      configurable maximum starting at +30, 2 billion clamp). Still to decide: how a level is chosen
+      (NPC or command). Best after the Heroic currency.
 - [ ] **Heroic-only loot** (moderate, mostly data): better versions of drops, or extra drops, on Heroic.
 - [ ] **Random item bonuses** (easy): drops sometimes roll an extra enchant (mod-random-enchants).
 - [ ] **Daily "Heroic of the Day"** (moderate): one random Heroic gives bonus rewards each day.

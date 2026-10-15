@@ -77,7 +77,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   slow and only for gear the character can equip; sacrifice is instant, works on any item, costs gold (Heroic
   Badges later) scaled by quality, double for gear the character could attune. Collected stats are permanent
   (kept after unequipping, selling or deleting the item); attunement progress is saved per item; stats only
-  arrive at 100%.
+  arrive at 100%. Per character, with sacrifice at an altar NPC in the capital cities.
 
 ### Changed
 - **Classic raids soloable:** solo scaling for 20-player raids (Zul'Gurub, Ruins of Ahn'Qiraj) and
