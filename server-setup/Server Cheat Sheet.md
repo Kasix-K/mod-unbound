@@ -48,6 +48,11 @@ Preview a heroic item on a GM account with `.additem <item id>` (for example `.a
 World boss Hrimthar the Frostbound is on Lake Kel'Theril in Winterspring. GM shortcuts: `.go creature id 190110`
 goes to him; `.respawn` next to his corpse brings him back early (for testing).
 
+World boss announcements (whole server, in chat): 10 and 5 minutes before a world boss spawns, when it
+spawns (with the location), when it dies (with who killed it), and when nobody killed it within 24 hours
+(it then despawns, never mid-fight, and its 3-day respawn timer starts again). Settings:
+`Unbound.WorldBoss.*` in `mod_unbound.conf`; the yells themselves are only heard in the boss's zone now.
+
 ## In-game features
 
 - **Transmog:** cast Transmogrify, type `/transmog`, or talk to the Warpweaver.

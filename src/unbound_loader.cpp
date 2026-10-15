@@ -8,6 +8,7 @@ void AddSC_unbound_raid_reset();
 void AddSC_unbound_content_lock();
 void AddSC_unbound_perks();
 void AddSC_unbound_attunement();
+void AddSC_unbound_world_bosses();
 
 void Addmod_unboundScripts()
 {
@@ -17,4 +18,5 @@ void Addmod_unboundScripts()
     AddSC_unbound_content_lock();
     AddSC_unbound_perks();
     AddSC_unbound_attunement();
+    AddSC_unbound_world_bosses();
 }

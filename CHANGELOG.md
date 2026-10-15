@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| World boss announcements (10/5 min warnings, spawn, kill) and 24-hour unchallenged despawn | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | 8 Defensive perks (Greater Bulwark to Fortress), Defensive limited to 3 active | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | 11 Utility perks (Longer Legs to Mana Leech), Utility limited to 3 active | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Iron Will utility perk (shorter crowd control, 3 ranks by level) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
@@ -57,6 +58,12 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   collection window: attuned items and items in progress as an icon grid, the stats they give, and a bar showing
   the diminishing returns. Tooltips and the window update live as you kill, attune and sacrifice. Gear attunement
   is complete.
+- **World boss announcements** (`src/unbound_world_bosses.cpp`): the whole server is told 10 and 5 minutes
+  before a world boss spawns, when it spawns (with the location), when it dies (with who killed it), and
+  when nobody killed it within 24 hours, after which it despawns (never mid-fight) and its 3-day respawn
+  timer starts again. The boss's grid is loaded just before it respawns and kept loaded while it lives, so
+  this works with nobody nearby; the spawn time survives restarts. Hrimthar's yells are now zone-wide
+  instead of world-wide. Settings: `Unbound.WorldBoss.Announce`, `.Warnings`, `.DespawnHours`.
 - **Gear attunement, stage 3 of 4: the Altar of Sacrifice** (creature 190103, place it with `.npc add 190103`).
   Talking to it lists the items in your bags that count and aren't attuned yet; picking one shows the game's
   confirmation box with the gold price (2 / 10 / 50 / 250 for green / blue / epic / legendary, double for gear you

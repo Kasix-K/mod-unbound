@@ -1,5 +1,9 @@
 """
-World bosses: open-world bosses with their own spawn, fight script, server-wide yells and loot.
+World bosses: open-world bosses with their own spawn, fight script, zone yells and loot.
+
+The server-wide announcements (10 and 5 minutes before it spawns, when it spawns, when it dies) and the
+despawn of a boss nobody killed within a day are C++: src/unbound_world_bosses.cpp. A boss added here
+must also be added to WORLD_BOSSES there (entry, spawn guid, name, location).
 
 Everything is defined here once and generated into:
 
@@ -34,7 +38,7 @@ from heroic_loot import (  # noqa: E402
 
 # creature_text Type / TextRange
 YELL, BOSS_EMOTE = 14, 41
-RANGE_NORMAL, RANGE_WORLD = 0, 4
+RANGE_NORMAL, RANGE_ZONE = 0, 2  # world-wide messages come from src/unbound_world_bosses.cpp
 
 # SmartAI ids used below (src/server/game/AI/SmartScripts/SmartScriptMgr.h)
 EV_UPDATE_IC, EV_HEALTH_PCT, EV_AGGRO, EV_DEATH, EV_RESPAWN, EV_JUST_SUMMONED = 0, 2, 4, 6, 11, 54
@@ -85,11 +89,11 @@ WORLD_BOSSES = [
         map=1, x=6530.0, y=-4065.0, z=658.6, o=3.14,
         texts=[
             # group, type, range, text
-            (0, YELL, RANGE_WORLD, 'The ice of Kel\'Theril cracks... Hrimthar the Frostbound walks again!'),
-            (1, YELL, RANGE_WORLD, 'Who dares wake me upon the frozen lake? Your bones will join the ice!'),
+            (0, YELL, RANGE_ZONE, 'The ice of Kel\'Theril cracks... Hrimthar the Frostbound walks again!'),
+            (1, YELL, RANGE_ZONE, 'Who dares wake me upon the frozen lake? Your bones will join the ice!'),
             (2, YELL, RANGE_NORMAL, 'Rise, shards of the lake! Bury them!'),
             (3, BOSS_EMOTE, RANGE_NORMAL, '%s becomes enraged as the ice around him shatters!'),
-            (4, YELL, RANGE_WORLD, 'The lake... grows... still... (Hrimthar the Frostbound has been slain at Lake Kel\'Theril!)'),
+            (4, YELL, RANGE_ZONE, 'The lake... grows... still...'),
         ],
         # (event, params(6), flags, action, action params(6), target, target params(4), comment)
         script=[

@@ -15,6 +15,26 @@
 
 Unbound.ExpansionUnlocked = 0
 
+#    Unbound.WorldBoss.Announce
+#        Description: Server-wide announcements for world bosses (src/unbound_world_bosses.cpp): before one
+#                     spawns, when it spawns (with the location), when it dies (with who killed it) and
+#                     when it despawns unchallenged.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+#    Unbound.WorldBoss.Warnings
+#        Description: Minutes before a world boss spawns to announce it, one announcement each.
+#        Default:     "10, 5"
+#
+#    Unbound.WorldBoss.DespawnHours
+#        Description: A world boss nobody killed despawns this many hours after it spawned (never during a
+#                     fight); its normal respawn timer then starts again. 0 = it stays until killed.
+#        Default:     24
+
+Unbound.WorldBoss.Announce = 1
+Unbound.WorldBoss.Warnings = "10, 5"
+Unbound.WorldBoss.DespawnHours = 24
+
 #    Unbound.Perks.RapidRecovery
 #        Description: Rapid Recovery permanent perk: after leaving combat, restore a percentage of
 #                     maximum health and mana every second until full.
