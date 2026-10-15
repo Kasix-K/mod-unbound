@@ -4,9 +4,9 @@ Custom features for the WoW 3.3.5a Unbound server.
 
 ## Roadmap and changelog
 
-| [Roadmap](ROADMAP.md) | [Changelog](CHANGELOG.md) | [Technical notes](TECHNICAL_NOTES.md) |
-|---|---|---|
-| What's planned next, with rough effort | Every feature, with the date it was added and last changed | How each system is built and what to run after changing it |
+| [Roadmap](ROADMAP.md) | [Changelog](CHANGELOG.md) | [Technical notes](TECHNICAL_NOTES.md) | [In-game test checklist](IN_GAME_TEST_CHECKLIST.md) |
+|---|---|---|---|
+| What's planned next, with rough effort | Every feature, with the date it was added and last changed | How each system is built and what to run after changing it | What still needs checking in the game client |
 
 ## Custom spells, items and companions
 
