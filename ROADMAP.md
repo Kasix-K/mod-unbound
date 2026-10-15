@@ -40,13 +40,14 @@ numbers here first if testing says so. Every number below is meant to be a confi
 | Gear | Normal level 60 gear: the baseline (1x) |
 | Perks | About **x1.55** with five Offensive perks (about +10% per perk) |
 | Perk ranks | Up to about **x1.3** more on top of perks (together about x2) |
+| Class perk | About **x1.25-1.35**: each spec's class perk is worth about **+25-35% to that spec's single-target damage** (a lone raid boss is what a solo Mythic raid is about). Extra area damage on trash is fine on top. Every class perk is held to this target, so no spec pulls ahead. Measure with a damage meter on a training dummy, perk off vs on. Paladin **Retribution** is estimated at about +35-40% (Holy +15% / Physical +10% about +12%, a free Crusader Strike per Divine Storm about +10-15%, a free Exorcism per Judgement about +5-10%, stronger Exorcism a few %), the top of the range: if testing confirms it, lower Holy to +10% |
 | Gear attunement / sacrifice | About **+200% of gear stats** when well collected (about x3), the main lever: |
 | - per item | **20%** of the item's fixed stats (tune 15-25% in testing); fixed stats only (no procs, set bonuses, weapon damage) |
 | - which items count | **Every unique item** counts once (a second copy adds nothing); **green or better** |
 | - minimum item level | Only items whose **required level is within 10 of the level cap** count (level 50+ while the cap is 60; it moves up with each expansion), so every attuned item matters and nobody grinds low-level items |
 | - diminishing returns | Full value up to **+100%** of gear stats, half value up to **+200%**, a quarter beyond: early collecting feels strong, the long tail is the endgame grind (no hard cap) |
 | - the grind | About **255 level 60 blue/epic items** for +200% with the diminishing returns (about 170 items give +150%); 20% of an item is about 7 stat points, a full set is about 600 (`ReferenceSetStats`). Tune `Percent` or the diminishing returns after testing |
-| **Total** | About **6x** a normal level 60 when fully progressed: Mythic +10. Each further Mythic level needs more collected gear and higher perk ranks |
+| **Total** | About **6x** a normal level 60 when fully progressed, before the class perk: Mythic +10. With the class perk about **7.5-8x** (about Mythic +16-18). Each further Mythic level needs more collected gear and higher perk ranks |
 
 Numbers check: a 6x character has a few thousand of a primary stat and tens of thousands of health, well
 above normal WoW but nowhere near Peloria's billions.
@@ -136,9 +137,8 @@ changes, raid by raid (see Next up).
       with a number (Masteries, Pressure, ...) and how ranks are earned (levels, Heroic currency, quests).
 - [ ] **Defensive and Utility perks** (moderate): Thick Skin, Second Wind, Steadfast, Fleet Foot,
       Treasure Sense are listed in the window but do nothing yet.
-- [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, at the same
-      scale (about +10-15%, not Peloria's x27/x59).
-
+- [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
+      +25-35% to its spec's single-target damage (the class perk target in the Power budget).
 - [ ] **Remaining classic Heroic dungeons** (moderate): 16 more (Stockades, Deadmines and Ragefire Chasm
       are done), added in batches by level range.
       Each is one line in `tools/classic_heroics.py`. Also give heroic versions to creatures that boss

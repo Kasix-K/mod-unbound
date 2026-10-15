@@ -45,6 +45,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-14
 
 ### Added
+- **Class perk target** in the power budget: each spec's class perk is worth about +25-35% to that spec's
+  single-target damage (Retribution estimated at about +35-40%, to confirm on a training dummy).
 - **Perk ranks**, starting with Rapid Recovery: Rank 1 (6 seconds after combat, 4% health and mana per
   second) from level 1, Rank 2 (5 s, 6%) from level 30, Rank 3 (4 s, 8%) from level 60. Values and rank
   levels are in `mod_unbound.conf`. GMs set a rank with `.perk rank <perk id> <rank>` (saved per
