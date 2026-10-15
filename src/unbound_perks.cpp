@@ -66,7 +66,8 @@
  *                              spells and bleeds)
  *                              (a spell counts for a school if that school is part of it, e.g. Shadowfrost)
  *
- * Defensive perks (ids 201-299, at most 3 active; 201-203 were placeholders, never reuse them). Rank 1/2/3:
+ * Defensive perks (ids 201-299, at most 3 active; 201-203 were placeholders, never reuse them). Rank 1/2/3 shown;
+ * Ranks 4-5 (about 1.3x / 1.5x, GM-only for now) are in RANKED_PERKS:
  *   204 Greater Bulwark        all your Dodge and Parry become Block, at 100/110/120%  (needs a shield)
  *   205 Evasive Maneuvers      all your Block and Parry become Dodge, at 100/110/120%
  *   206 Parry King             all your Block and Dodge become Parry, at 100/110/120%
@@ -120,7 +121,8 @@
  *   312 Unbreakable Presence   you generate 50/100/150% more threat                       (exclusive with 311)
  *   313 Steady Hands           spell pushback -30/50/70%; interrupt lockouts and silences on you -10/20/30%
  *   314 Mana Leech             restore mana equal to 1/1.5/2% of the damage you deal, while using mana
- *   The numbers are Rank 1/2/3 (levels 1, 30, 60), all in mod_unbound.conf (RANKED_PERKS). Speed, threat
+ *   The numbers are Rank 1/2/3 (levels 1, 30, 60); Ranks 4-5 (about 1.3x / 1.5x, GM-only for now) and all
+ *   values are in mod_unbound.conf (RANKED_PERKS). Speed, threat
  *   and Steady Hands are server-only passive auras (SPELL_PERK_*); the leech perks and fall damage use the
  *   DealDamage hook (leech from damage actually dealt to another unit, capped at the victim's health).
  *
@@ -320,81 +322,82 @@ namespace
     };
 
     // Ranked perks read from mod_unbound.conf: perk, config key, and each stat with its default per rank.
-    // All of them reach their ranks at the levels in Unbound.Perks.<Key>.RankLevels (default "1, 30, 60").
+    // Every one has 5 ranks: Ranks 1-3 by level (Rank 3 = the values from before Ranks 4-5 existed), Ranks 4-5
+    // (about 1.3x / 1.5x of Rank 3) for the endgame. Level 255 can't be reached, so Ranks 4-5 are GM-only
+    // (.perk rank) until a way to earn them is built. Fixed parts (thresholds, durations, drawbacks) repeat
+    // the same value at every rank. Levels: Unbound.Perks.<Key>.RankLevels.
+    constexpr char const* RANK_LEVELS = "1, 30, 60, 255, 255";
     struct RankedPerkDef
     {
         uint32 perk;
         char const* key;
-        std::vector<std::pair<char const*, char const*>> stats; // stat name, default "rank 1, rank 2, rank 3"
-        char const* levels = "1, 30, 60";                       // default Unbound.Perks.<Key>.RankLevels
+        std::vector<std::pair<char const*, char const*>> stats; // stat name, default value per rank
+        char const* levels = RANK_LEVELS;                       // default Unbound.Perks.<Key>.RankLevels
     };
-    // Offensive perks: Ranks 1-3 by level (Rank 3 = the values before ranks existed), Ranks 4-5 for the endgame.
-    // Level 255 can't be reached, so Ranks 4-5 are GM-only (.perk rank) until a way to earn them is built.
-    constexpr char const* OFFENSIVE_LEVELS = "1, 30, 60, 255, 255";
     constexpr char const* PLUS_10 = "4, 7, 10, 13, 15";  // a +10% perk: 0.4x / 0.7x / 1x / 1.3x / 1.5x
     constexpr char const* PLUS_15 = "6, 10, 15, 19, 22";
     std::vector<RankedPerkDef> const RANKED_PERKS = {
-        { PERK_CYCLIC_POWER,           "CyclicPower",           { { "High", "10, 15, 20, 25, 30" } }, OFFENSIVE_LEVELS },
-        { PERK_CRITICAL_UNDERSTANDING, "CriticalUnderstanding", { { "Max", "8, 14, 20, 26, 30" } },   OFFENSIVE_LEVELS },
-        { PERK_DEFENSIVE_SACRIFICE,    "DefensiveSacrifice",    { { "StatPercent", PLUS_10 } },       OFFENSIVE_LEVELS },
-        { PERK_DESPERATE_POWER,        "DesperatePower",        { { "Damage", PLUS_10 } },            OFFENSIVE_LEVELS },
-        { PERK_BLOCK_CAPPING,          "BlockCapping",          { { "Max", PLUS_10 } },               OFFENSIVE_LEVELS },
-        { PERK_DODGE_CAPPING,          "DodgeCapping",          { { "Max", PLUS_10 } },               OFFENSIVE_LEVELS },
-        { PERK_PARRY_CAPPING,          "ParryCapping",          { { "Max", PLUS_10 } },               OFFENSIVE_LEVELS },
-        { PERK_HASTE_CAPPING,          "HasteCapping",          { { "Max", PLUS_10 } },               OFFENSIVE_LEVELS },
-        { PERK_PET_ENCOURAGEMENT,      "PetEncouragement",      { { "Percent", PLUS_15 } },           OFFENSIVE_LEVELS },
-        { PERK_ROLLING_MOMENTUM,       "RollingMomentum",       { { "Max", PLUS_10 } },               OFFENSIVE_LEVELS },
-        { PERK_TUNNEL_VISION,          "TunnelVision",          { { "Bonus", PLUS_10 } },             OFFENSIVE_LEVELS },
-        { PERK_COLLATERAL_DAMAGE,      "CollateralDamage",      { { "Bonus", PLUS_10 } },             OFFENSIVE_LEVELS },
-        { PERK_GIANT_SLAYER,           "GiantSlayer",           { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
-        { PERK_MERCILESS,              "Merciless",             { { "Percent", PLUS_15 } },           OFFENSIVE_LEVELS },
-        { PERK_PRESSURE,               "Pressure",              { { "Stacks", PLUS_10 } },            OFFENSIVE_LEVELS },
-        { PERK_CHAOS,                  "Chaos",                 { { "Chance", PLUS_10 } },            OFFENSIVE_LEVELS },
-        { PERK_POWER_CONVERSION,       "PowerConversion",       { { "Max", PLUS_10 } },               OFFENSIVE_LEVELS },
-        { PERK_HEALING_POWAH,          "HealingPowah",          { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
-        { PERK_SHADOW_MASTERY,         "ShadowMastery",         { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
-        { PERK_HOLY_MASTERY,           "HolyMastery",           { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
-        { PERK_ARCANE_MASTERY,         "ArcaneMastery",         { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
-        { PERK_NATURE_MASTERY,         "NatureMastery",         { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
-        { PERK_FIRE_MASTERY,           "FireMastery",           { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
-        { PERK_FROST_MASTERY,          "FrostMastery",          { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
-        { PERK_PHYSICAL_MASTERY,       "PhysicalMastery",       { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
-        { PERK_IRON_WILL,            "IronWill",            { { "Percent", "10, 20, 30" } } },
-        { PERK_LONGER_LEGS,          "LongerLegs",          { { "RunSpeed", "4, 7, 10" }, { "MountSpeed", "4, 7, 10" },
-                                                              { "SwimSpeed", "20, 35, 50" }, { "FallDamage", "20, 35, 50" } } },
-        { PERK_PLANTED_FEET,         "PlantedFeet",         { { "Health", "0.5, 0.75, 1" }, { "Mana", "0.25, 0.4, 0.5" },
-                                                              { "Delay", "3, 3, 3" } } },
-        { PERK_RELENTLESS_PURSUIT,   "RelentlessPursuit",   { { "Speed", "15, 25, 35" }, { "Duration", "10, 10, 10" } } },
-        { PERK_VAMPIRISM,            "Vampirism",           { { "Percent", "3, 4, 5" } } },
-        { PERK_SOUL_DRAIN,           "SoulDrain",           { { "Percent", "6, 8, 10" }, { "HealingTaken", "20, 20, 20" } } },
-        { PERK_PET_REPLENISHMENT,    "PetReplenishment",    { { "Percent", "20, 35, 50" } } },
-        { PERK_PETS_ROAR,            "PetsRoar",            { { "Percent", "100, 200, 300" } } },
-        { PERK_SILENT_KILLER,        "SilentKiller",        { { "Percent", "20, 35, 50" } } },
-        { PERK_UNBREAKABLE_PRESENCE, "UnbreakablePresence", { { "Percent", "50, 100, 150" } } },
-        { PERK_STEADY_HANDS,         "SteadyHands",         { { "Pushback", "30, 50, 70" }, { "Lockout", "10, 20, 30" } } },
-        { PERK_MANA_LEECH,           "ManaLeech",           { { "Percent", "1, 1.5, 2" } } },
-        { PERK_GREATER_BULWARK,      "GreaterBulwark",      { { "Efficiency", "100, 110, 120" } } },
-        { PERK_EVASIVE_MANEUVERS,    "EvasiveManeuvers",    { { "Efficiency", "100, 110, 120" } } },
-        { PERK_PARRY_KING,           "ParryKing",           { { "Efficiency", "100, 110, 120" } } },
-        { PERK_REINFORCED_ARMOR,     "ReinforcedArmor",     { { "Percent", "4, 7, 10" } } },
-        { PERK_SPELLWARDED,          "Spellwarded",         { { "Percent", "4, 7, 10" } } },
-        { PERK_STOICISM,             "Stoicism",            { { "Percent", "8, 14, 20" } } },
-        { PERK_DEFENSIVE_MOMENTUM,   "DefensiveMomentum",   { { "Max", "5, 7.5, 10" }, { "ResetAfter", "2, 2, 2" } } },
-        { PERK_FORTRESS,             "Fortress",            { { "Max", "5, 7.5, 10" }, { "ResetAfter", "3, 3, 3" } } },
-        { PERK_JUGGERNAUT,           "Juggernaut",          { { "Cap", "40, 35, 30" }, { "Cooldown", "3, 3, 3" } } },
-        { PERK_COUNTERWEIGHT,        "Counterweight",       { { "Percent", "10, 15, 20" } } },
-        { PERK_TITANS_RESOLVE,       "TitansResolve",       { { "Max", "5, 7.5, 10" } } },
-        { PERK_SECOND_WIND,          "SecondWind",          { { "Threshold", "15, 15, 15" }, { "Heal", "1, 1.5, 2" },
-                                                              { "Duration", "5, 5, 5" } } },
-        { PERK_HARDENED_FLESH,       "HardenedFlesh",       { { "Threshold", "10, 10, 10" }, { "Percent", "10, 15, 20" } } },
-        { PERK_PETS_BLESSING,        "PetsBlessing",        { { "Percent", "10, 15, 20" } } },
-        { PERK_SHIELD_WALL_TRAINING, "ShieldWallTraining",  { { "PerStack", "0.5, 0.75, 1" }, { "Stacks", "5, 5, 5" },
-                                                              { "Duration", "5, 5, 5" } } },
-        { PERK_SURVIVAL_INSTINCT,    "SurvivalInstinct",    { { "Below", "30, 30, 30" }, { "Percent", "8, 12, 15" } } },
-        { PERK_VITAL_RESERVE,        "VitalReserve",        { { "Percent", "4, 7, 10" } } },
-        { PERK_ENDURING,             "Enduring",            { { "Percent", "4, 7, 10" } } },
-        { PERK_THORNMAIL,            "Thornmail",           { { "Percent", "10, 20, 30" } } },
-        { PERK_HEAVY_FRAME,          "HeavyFrame",          { { "Percent", "5, 10, 15" } } },
+        { PERK_CYCLIC_POWER,           "CyclicPower",           { { "High", "10, 15, 20, 25, 30" } } },
+        { PERK_CRITICAL_UNDERSTANDING, "CriticalUnderstanding", { { "Max", "8, 14, 20, 26, 30" } } },
+        { PERK_DEFENSIVE_SACRIFICE,    "DefensiveSacrifice",    { { "StatPercent", PLUS_10 } } },
+        { PERK_DESPERATE_POWER,        "DesperatePower",        { { "Damage", PLUS_10 } } },
+        { PERK_BLOCK_CAPPING,          "BlockCapping",          { { "Max", PLUS_10 } } },
+        { PERK_DODGE_CAPPING,          "DodgeCapping",          { { "Max", PLUS_10 } } },
+        { PERK_PARRY_CAPPING,          "ParryCapping",          { { "Max", PLUS_10 } } },
+        { PERK_HASTE_CAPPING,          "HasteCapping",          { { "Max", PLUS_10 } } },
+        { PERK_PET_ENCOURAGEMENT,      "PetEncouragement",      { { "Percent", PLUS_15 } } },
+        { PERK_ROLLING_MOMENTUM,       "RollingMomentum",       { { "Max", PLUS_10 } } },
+        { PERK_TUNNEL_VISION,          "TunnelVision",          { { "Bonus", PLUS_10 } } },
+        { PERK_COLLATERAL_DAMAGE,      "CollateralDamage",      { { "Bonus", PLUS_10 } } },
+        { PERK_GIANT_SLAYER,           "GiantSlayer",           { { "Percent", PLUS_10 } } },
+        { PERK_MERCILESS,              "Merciless",             { { "Percent", PLUS_15 } } },
+        { PERK_PRESSURE,               "Pressure",              { { "Stacks", PLUS_10 } } },
+        { PERK_CHAOS,                  "Chaos",                 { { "Chance", PLUS_10 } } },
+        { PERK_POWER_CONVERSION,       "PowerConversion",       { { "Max", PLUS_10 } } },
+        { PERK_HEALING_POWAH,          "HealingPowah",          { { "Percent", PLUS_10 } } },
+        { PERK_SHADOW_MASTERY,         "ShadowMastery",         { { "Percent", PLUS_10 } } },
+        { PERK_HOLY_MASTERY,           "HolyMastery",           { { "Percent", PLUS_10 } } },
+        { PERK_ARCANE_MASTERY,         "ArcaneMastery",         { { "Percent", PLUS_10 } } },
+        { PERK_NATURE_MASTERY,         "NatureMastery",         { { "Percent", PLUS_10 } } },
+        { PERK_FIRE_MASTERY,           "FireMastery",           { { "Percent", PLUS_10 } } },
+        { PERK_FROST_MASTERY,          "FrostMastery",          { { "Percent", PLUS_10 } } },
+        { PERK_PHYSICAL_MASTERY,       "PhysicalMastery",       { { "Percent", PLUS_10 } } },
+        { PERK_IRON_WILL,            "IronWill",            { { "Percent", "10, 20, 30, 35, 40" } } },
+        { PERK_LONGER_LEGS,          "LongerLegs",          { { "RunSpeed", "4, 7, 10, 13, 15" }, { "MountSpeed", "4, 7, 10, 13, 15" },
+                                                              { "SwimSpeed", "20, 35, 50, 65, 75" }, { "FallDamage", "20, 35, 50, 65, 75" } } },
+        { PERK_PLANTED_FEET,         "PlantedFeet",         { { "Health", "0.5, 0.75, 1, 1.3, 1.5" }, { "Mana", "0.25, 0.4, 0.5, 0.65, 0.75" },
+                                                              { "Delay", "3, 3, 3, 3, 3" } } },
+        { PERK_RELENTLESS_PURSUIT,   "RelentlessPursuit",   { { "Speed", "15, 25, 35, 45, 50" }, { "Duration", "10, 10, 10, 10, 10" } } },
+        { PERK_VAMPIRISM,            "Vampirism",           { { "Percent", "3, 4, 5, 6.5, 7.5" } } },
+        { PERK_SOUL_DRAIN,           "SoulDrain",           { { "Percent", "6, 8, 10, 13, 15" }, { "HealingTaken", "20, 20, 20, 20, 20" } } },
+        { PERK_PET_REPLENISHMENT,    "PetReplenishment",    { { "Percent", "20, 35, 50, 65, 75" } } },
+        { PERK_PETS_ROAR,            "PetsRoar",            { { "Percent", "100, 200, 300, 400, 450" } } },
+        { PERK_SILENT_KILLER,        "SilentKiller",        { { "Percent", "20, 35, 50, 65, 75" } } },
+        { PERK_UNBREAKABLE_PRESENCE, "UnbreakablePresence", { { "Percent", "50, 100, 150, 200, 225" } } },
+        { PERK_STEADY_HANDS,         "SteadyHands",         { { "Pushback", "30, 50, 70, 80, 90" }, { "Lockout", "10, 20, 30, 35, 40" } } },
+        { PERK_MANA_LEECH,           "ManaLeech",           { { "Percent", "1, 1.5, 2, 2.5, 3" } } },
+        { PERK_GREATER_BULWARK,      "GreaterBulwark",      { { "Efficiency", "100, 110, 120, 125, 130" } } },
+        { PERK_EVASIVE_MANEUVERS,    "EvasiveManeuvers",    { { "Efficiency", "100, 110, 120, 125, 130" } } },
+        { PERK_PARRY_KING,           "ParryKing",           { { "Efficiency", "100, 110, 120, 125, 130" } } },
+        { PERK_REINFORCED_ARMOR,     "ReinforcedArmor",     { { "Percent", "4, 7, 10, 13, 15" } } },
+        { PERK_SPELLWARDED,          "Spellwarded",         { { "Percent", "4, 7, 10, 13, 15" } } },
+        { PERK_STOICISM,             "Stoicism",            { { "Percent", "8, 14, 20, 26, 30" } } },
+        { PERK_DEFENSIVE_MOMENTUM,   "DefensiveMomentum",   { { "Max", "5, 7.5, 10, 13, 15" }, { "ResetAfter", "2, 2, 2, 2, 2" } } },
+        { PERK_FORTRESS,             "Fortress",            { { "Max", "5, 7.5, 10, 13, 15" }, { "ResetAfter", "3, 3, 3, 3, 3" } } },
+        { PERK_JUGGERNAUT,           "Juggernaut",          { { "Cap", "40, 35, 30, 27, 25" }, { "Cooldown", "3, 3, 3, 3, 3" } } },
+        { PERK_COUNTERWEIGHT,        "Counterweight",       { { "Percent", "10, 15, 20, 26, 30" } } },
+        { PERK_TITANS_RESOLVE,       "TitansResolve",       { { "Max", "5, 7.5, 10, 13, 15" } } },
+        { PERK_SECOND_WIND,          "SecondWind",          { { "Threshold", "15, 15, 15, 15, 15" }, { "Heal", "1, 1.5, 2, 2.6, 3" },
+                                                              { "Duration", "5, 5, 5, 5, 5" } } },
+        { PERK_HARDENED_FLESH,       "HardenedFlesh",       { { "Threshold", "10, 10, 10, 10, 10" }, { "Percent", "10, 15, 20, 26, 30" } } },
+        { PERK_PETS_BLESSING,        "PetsBlessing",        { { "Percent", "10, 15, 20, 26, 30" } } },
+        { PERK_SHIELD_WALL_TRAINING, "ShieldWallTraining",  { { "PerStack", "0.5, 0.75, 1, 1.3, 1.5" }, { "Stacks", "5, 5, 5, 5, 5" },
+                                                              { "Duration", "5, 5, 5, 5, 5" } } },
+        { PERK_SURVIVAL_INSTINCT,    "SurvivalInstinct",    { { "Below", "30, 30, 30, 30, 30" }, { "Percent", "8, 12, 15, 19, 22" } } },
+        { PERK_VITAL_RESERVE,        "VitalReserve",        { { "Percent", "4, 7, 10, 13, 15" } } },
+        { PERK_ENDURING,             "Enduring",            { { "Percent", "4, 7, 10, 13, 15" } } },
+        { PERK_THORNMAIL,            "Thornmail",           { { "Percent", "10, 20, 30, 40, 45" } } },
+        { PERK_HEAVY_FRAME,          "HeavyFrame",          { { "Percent", "5, 10, 15, 19, 22" } } },
     };
 
     // Server-only passive spells (data/sql/db-world/unbound_perks_utility_spells.sql). Passive auras are never

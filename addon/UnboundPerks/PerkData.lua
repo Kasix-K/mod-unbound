@@ -493,7 +493,8 @@ UnboundPerks.PERKS = {
                       G(cur[1] .. "%") .. "."
           local lines = { "Rank " .. rank .. " / " .. maxRank }
           for i, v in ipairs(values) do
-              local line = string.format("Rank %d: -%d%% duration  (level %d)", i, v[1], v[2])
+              local when = v[2] >= 255 and "endgame, coming later" or ("level " .. v[2])
+              local line = string.format("Rank %d: -%g%% duration  (%s)", i, v[1], when)
               table.insert(lines, i == rank and G(line) or line)
           end
           table.insert(lines, "Stuns, fears, roots, silences, sleeps, polymorphs, charms, disorients and saps.")

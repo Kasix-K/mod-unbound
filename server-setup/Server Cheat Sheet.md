@@ -108,9 +108,11 @@ items count once those expansions are released). Settings: `Unbound.Attunement.*
 rank comes from its level; values in `mod_unbound.conf` (`Unbound.Perks.<Name>.*`). Test any rank with
 `.perk rank <perk id> <rank>`; `.perk rank <perk id>` goes back to the level's rank.
 
-**Offensive perks** have 5 ranks: Ranks 1-3 at levels 1 / 30 / 60 (Rank 3 is the value from before ranks
-existed), Ranks 4-5 for the endgame, GM-only for now (they unlock at level 255 until a way to earn them is
-built). A +10% perk is 4 / 7 / 10 / 13 / 15%, a +15% one (Pet Encouragement, Merciless) 6 / 10 / 15 / 19 / 22%;
+**Offensive, Defensive and Utility perks** have 5 ranks: Ranks 1-3 at levels 1 / 30 / 60 (Rank 3 is the
+value from before Ranks 4-5 existed), Ranks 4-5 (about 1.3x / 1.5x of Rank 3) for the endgame, GM-only for now
+(they unlock at level 255 until a way to earn them is built). The Defensive and Utility tables below show
+Ranks 1-3; Ranks 4-5 are in `mod_unbound.conf` (e.g. Iron Will 35 / 40%, Juggernaut's cap 27 / 25%, Steady
+Hands' pushback 80 / 90%). Thresholds, durations and drawbacks stay the same at every rank. A +10% perk is 4 / 7 / 10 / 13 / 15%, a +15% one (Pet Encouragement, Merciless) 6 / 10 / 15 / 19 / 22%;
 Cyclic Power's high point 10 / 15 / 20 / 25 / 30%, Critical Understanding's cap 8 / 14 / 20 / 26 / 30%, Pressure's
 stacks 4 / 7 / 10 / 13 / 15, Chaos's chance 4 / 7 / 10 / 13 / 15%. Drawbacks and caps don't change with the rank.
 

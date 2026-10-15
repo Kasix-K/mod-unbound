@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Ranks 4-5 for Defensive and Utility perks (GM-only for now) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Offensive perk ranks (5 ranks: 1-3 by level, 4-5 endgame, GM-only for now) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | 12 more Defensive perks (Juggernaut to Heavy Frame) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | World boss announcements (10/5 min warnings, spawn, kill) and 24-hour unchallenged despawn | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
@@ -58,6 +59,11 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Added
+- **Ranks 4-5 for the Defensive and Utility perks**, the same way as the Offensive ones: about 1.3x / 1.5x
+  of Rank 3 (e.g. Reinforced Armor 13 / 15%, Iron Will 35 / 40%, Vampirism 6.5 / 7.5%), GM-only for now
+  (level 255). Thresholds, durations, delays and drawbacks stay the same; Steady Hands' pushback stops at
+  90% and Juggernaut's cap goes down (27 / 25%, lower is stronger). All 57 Offensive, Defensive and Utility
+  perks now have 5 ranks.
 - **Offensive perk ranks.** All 25 Offensive perks have 5 ranks: Ranks 1-3 at levels 1 / 30 / 60 (Rank 3 is
   the value from before ranks existed, so level 60 characters lose nothing; lower levels get less), Ranks 4-5
   for the endgame (a +10% perk: 4 / 7 / 10 / 13 / 15%), the "Perk ranks" part of the power budget (about x1.3
