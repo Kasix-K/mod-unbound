@@ -69,8 +69,8 @@ accounts are your own; all the custom game data (heroics, companions, vendors) b
 
 6. Log in. `Server Cheat Sheet.md` in the server folder has everything else (NPCs to place, commands).
 
-**Setting up the client by hand** (if you skipped the script's last step): copy `addon\Unbound` and
-`addon\UnboundPerks` from this repository and `addon\Transmog` from `azerothcore\modules\mod-transmog-plus` into the client's
+**Setting up the client by hand** (if you skipped the script's last step): copy `addon\Unbound`,
+`addon\UnboundPerks` and `addon\UnboundAttunement` from this repository and `addon\Transmog` from `azerothcore\modules\mod-transmog-plus` into the client's
 `Interface\AddOns`, then build the client patch (with the game closed):
 
 ```bash

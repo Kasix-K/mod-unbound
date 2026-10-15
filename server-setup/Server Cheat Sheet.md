@@ -73,7 +73,10 @@ wear the item and kill creatures that give experience (not grey ones): 50 kills 
 chat shows 25%, 50%, 75% and "fully attuned". **Any player** can type `.attune progress` to see their
 equipped items' progress. **Sacrificing:** talk to the **Altar of Sacrifice** to pick an item from your bags; it is destroyed and
 attuned at once for 2 / 10 / 50 / 250 gold (green / blue / epic / legendary), double for gear you could attune
-by wearing it. Tooltips and a collection window come next. GM commands (they act on the selected
+by wearing it. **Item tooltips** show each piece's attunement (attuned, % and kills, sacrifice only, or why it
+doesn't count), and the **Attunement** tab on the character sheet (or `/attunement`) opens the collection window:
+your attuned items, items in progress, the stats they give and how far along the diminishing returns you are.
+Needs the **UnboundAttunement** addon. GM commands (they act on the selected
 player, else yourself):
 
 | Command | What it does |

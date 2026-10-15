@@ -1,0 +1,6 @@
+## Interface: 30300
+## Title: Unbound Attunement
+## Notes: Gear attunement for the Unbound server: attunement on item tooltips and the collection window (/attunement).
+## Author: mod-unbound
+## Version: 1.0
+UnboundAttunement.lua

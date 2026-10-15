@@ -48,6 +48,7 @@
 #include "StringConvert.h"
 #include "StringFormat.h"
 #include "Tokenize.h"
+#include "WorldPacket.h"
 #include "World.h"
 
 #include <algorithm>
@@ -449,6 +450,104 @@ namespace
         return 1;
     }
 
+    // ------------------------------------------------------------------ addon messages (stage 4)
+    // The UnboundAttunement addon (item tooltips, collection window) whispers its own character, prefix "UBATT":
+    //   Q:<id>,<id>,...  -> one I:<id>:<code>:<kills done>:<kills needed>:<sacrifice price, copper>:<reason>
+    //                       per item; code A attuned, W attunable by wearing it, S sacrifice only, N doesn't
+    //                       count (reason says why)
+    //   COLL             -> C:BEGIN, C:A:<id>,... (attuned), C:P:<id>=<done>=<needed>,... (in progress),
+    //                       C:S:<items>:<collected %>:<after diminishing returns %>:<full until>:<half until>,
+    //                       C:T:<stat>=<value>;... (attunement stats), C:END (lists are split over messages)
+    // The server also pushes P:<id>=<done>=<needed>,... (kill progress), A:<id> (attuned) and RESET (a GM changed
+    // the collection) so tooltips and the window stay current.
+    constexpr char const* ADDON_PREFIX = "UBATT";
+    constexpr size_t ADDON_CHUNK = 200;
+
+    uint32 SacrificePrice(Player const* player, ItemTemplate const* proto);
+
+    void SendAddon(Player* player, std::string const& text)
+    {
+        WorldPacket data;
+        ChatHandler::BuildChatPacket(data, CHAT_MSG_WHISPER, LANG_ADDON, player, player,
+            std::string(ADDON_PREFIX) + "\t" + text);
+        player->SendDirectMessage(&data);
+    }
+
+    // head + parts joined by sep, split over as many messages as needed
+    void SendChunked(Player* player, std::string const& head, std::vector<std::string> const& parts, char sep)
+    {
+        std::string line;
+        for (std::string const& part : parts)
+        {
+            if (!line.empty() && line.size() + part.size() + 1 > ADDON_CHUNK)
+            {
+                SendAddon(player, head + line);
+                line.clear();
+            }
+            if (!line.empty())
+                line += sep;
+            line += part;
+        }
+        if (!line.empty())
+            SendAddon(player, head + line);
+    }
+
+    std::string ItemInfo(Player* player, uint32 entry)
+    {
+        ItemTemplate const* proto = sObjectMgr->GetItemTemplate(entry);
+        if (!proto)
+            return Acore::StringFormat("I:{}:N:0:0:0:unknown item", entry);
+        AttunementState* state = StateOf(player);
+        uint32 needed = KillsNeeded(proto);
+        if (state->attuned.count(entry))
+            return Acore::StringFormat("I:{}:A:{}:{}:0:", entry, needed, needed);
+        ItemCheck check = CheckItem(proto);
+        if (check != ItemCheck::Counts)
+            return Acore::StringFormat("I:{}:N:0:{}:0:{}", entry, needed, CheckText(check));
+        auto itr = state->progress.find(entry);
+        uint32 done = itr != state->progress.end() ? itr->second : 0;
+        char code = player->CanUseItem(proto) == EQUIP_ERR_OK ? 'W' : 'S';
+        return Acore::StringFormat("I:{}:{}:{}:{}:{}:", entry, code, done, needed, SacrificePrice(player, proto));
+    }
+
+    void SendCollection(Player* player)
+    {
+        AttunementState* state = StateOf(player);
+        SendAddon(player, "C:BEGIN");
+        std::vector<std::string> attuned;
+        for (uint32 entry : state->attuned)
+            attuned.push_back(std::to_string(entry));
+        SendChunked(player, "C:A:", attuned, ',');
+        std::vector<std::string> progress;
+        for (auto const& [entry, done] : state->progress)
+            if (ItemTemplate const* proto = sObjectMgr->GetItemTemplate(entry))
+                progress.push_back(Acore::StringFormat("{}={}={}", entry, done, KillsNeeded(proto)));
+        SendChunked(player, "C:P:", progress, ',');
+        SendAddon(player, Acore::StringFormat("C:S:{}:{:.1f}:{:.1f}:{:.0f}:{:.0f}", state->attuned.size(),
+            state->rawPercent, state->effectivePercent, sFullValueUntil, sHalfValueUntil));
+        std::vector<std::string> stats;
+        for (auto const& [key, amount] : state->applied)
+            stats.push_back(Acore::StringFormat("{}={}", StatName(key), amount));
+        SendChunked(player, "C:T:", stats, ';');
+        SendAddon(player, "C:END");
+    }
+
+    void HandleAddonMessage(Player* player, std::string const& text)
+    {
+        if (text == "COLL")
+        {
+            SendCollection(player);
+            return;
+        }
+        if (text.rfind("Q:", 0) == 0)
+        {
+            uint32 answered = 0;
+            for (std::string_view id : Acore::Tokenize(std::string_view(text).substr(2), ',', false))
+                if (Optional<uint32> entry = Acore::StringTo<uint32>(id); entry && ++answered <= 50)
+                    SendAddon(player, ItemInfo(player, *entry));
+        }
+    }
+
     // Attune an item for good: the collection, the database, the stats, a message.
     void CompleteAttunement(Player* player, AttunementState* state, ItemTemplate const* proto, bool sacrificed = false)
     {
@@ -463,12 +562,14 @@ namespace
             "{}{} is fully attuned! Its stats are yours for good, even without the item ({} items attuned).",
             PREFIX, ItemLink(proto), state->attuned.size());
         player->PlayDirectSound(SOUND_ATTUNED, player);
+        SendAddon(player, "A:" + std::to_string(proto->ItemId));
     }
 
     // A kill: progress for every equipped item that counts and isn't attuned yet.
     void AddKill(Player* player, uint32 value)
     {
         AttunementState* state = StateOf(player);
+        std::vector<std::string> changed; // for the addon
         for (uint8 slot = EQUIPMENT_SLOT_START; slot < EQUIPMENT_SLOT_END; ++slot)
         {
             Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
@@ -485,11 +586,13 @@ namespace
                 continue;
             }
             state->unsaved.insert(proto->ItemId);
+            changed.push_back(Acore::StringFormat("{}={}={}", proto->ItemId, progress, needed));
             // a message at 25%, 50% and 75%
             if (before * 4 / needed != progress * 4 / needed)
                 ChatHandler(player->GetSession()).PSendSysMessage("{}{} {}% ({}/{} kills).", PREFIX, ItemLink(proto),
                     progress * 100 / needed, progress, needed);
         }
+        SendChunked(player, "P:", changed, ',');
     }
 
     // ------------------------------------------------------------------ sacrifice (stage 3)
@@ -598,8 +701,21 @@ public:
         PLAYERHOOK_ON_LOGIN,
         PLAYERHOOK_ON_DELETE,
         PLAYERHOOK_ON_SAVE,
-        PLAYERHOOK_ON_REWARD_KILL_REWARDER
+        PLAYERHOOK_ON_REWARD_KILL_REWARDER,
+        PLAYERHOOK_CAN_PLAYER_USE_PRIVATE_CHAT
     }) { }
+
+    // The UnboundAttunement addon whispers its own character: handle it and don't deliver the whisper.
+    bool OnPlayerCanUseChat(Player* player, uint32 type, uint32 language, std::string& msg, Player* receiver) override
+    {
+        if (type != CHAT_MSG_WHISPER || language != LANG_ADDON || receiver != player)
+            return true;
+        std::string const prefix = std::string(ADDON_PREFIX) + "\t";
+        if (msg.rfind(prefix, 0) != 0)
+            return true;
+        HandleAddonMessage(player, msg.substr(prefix.size()));
+        return false;
+    }
 
     void OnPlayerLogin(Player* player) override
     {
@@ -672,6 +788,7 @@ public:
         state->progress.erase(proto->ItemId);
         state->attuned.insert(proto->ItemId);
         Recalculate(target);
+        SendAddon(target, "RESET");
         handler->PSendSysMessage("{} attuned for {} ({} items, {:.0f}% of a full set).", ItemLink(proto),
             target->GetName(), state->attuned.size(), state->effectivePercent);
         return true;
@@ -690,6 +807,7 @@ public:
         CharacterDatabase.Execute("DELETE FROM `character_unbound_attunement` WHERE `guid` = {} AND `item` = {}",
             target->GetGUID().GetCounter(), proto->ItemId);
         Recalculate(target);
+        SendAddon(target, "RESET");
         handler->PSendSysMessage("Removed {} from {}'s attunements.", ItemLink(proto), target->GetName());
         return true;
     }
@@ -764,6 +882,7 @@ public:
         state->progress.clear();
         state->unsaved.clear();
         Recalculate(target);
+        SendAddon(target, "RESET");
         handler->PSendSysMessage("Removed all of {}'s attunements.", target->GetName());
         return true;
     }

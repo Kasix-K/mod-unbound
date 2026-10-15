@@ -12,6 +12,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | 11 Utility perks (Longer Legs to Mana Leech), Utility limited to 3 active | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Iron Will utility perk (shorter crowd control, 3 ranks by level) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Perk ranks (first: Rapid Recovery, 3 ranks by level; `.perk rank`) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
+| Gear attunement, stage 4: item tooltips, collection window, Attunement tab | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 3: Altar of Sacrifice (190103) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 2: attuning by kills (`.attune progress`) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 1: collection and stats (GM commands) | 2026-10-14 | 2026-10-14 | Kasix-K |
@@ -50,6 +51,12 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-14
 
 ### Added
+- **Gear attunement, stage 4 of 4: tooltips and the collection window** (new **UnboundAttunement** addon). Item
+  tooltips show each weapon or armour piece's attunement: attuned, % and kills, sacrifice only (with the price),
+  or why it doesn't count. The **Attunement** tab on the character sheet (next to Perks) or `/attunement` opens the
+  collection window: attuned items and items in progress as an icon grid, the stats they give, and a bar showing
+  the diminishing returns. Tooltips and the window update live as you kill, attune and sacrifice. Gear attunement
+  is complete.
 - **Gear attunement, stage 3 of 4: the Altar of Sacrifice** (creature 190103, place it with `.npc add 190103`).
   Talking to it lists the items in your bags that count and aren't attuned yet; picking one shows the game's
   confirmation box with the gold price (2 / 10 / 50 / 250 for green / blue / epic / legendary, double for gear you

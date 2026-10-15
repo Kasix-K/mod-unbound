@@ -121,15 +121,12 @@ changes, raid by raid (see Next up).
 - [x] Unbound Perks: `/perks` window, 3 Permanent perks, all 25 Offensive perks (5 active at once),
       Paladin Retribution class perk; numbers scaled to normal WoW ranges (about +10% per perk)
 
+- [x] Gear attunement (all 4 stages, 2026-10-14): the collection and its stats (20% per item, diminishing
+      returns), item expansion tags, attuning by kills, the Altar of Sacrifice, item tooltips and the collection
+      window (Attunement tab, `/attunement`)
+
 ## Next up
 
-- [ ] **Gear attunement and sacrifice** (large; stages 1-3 of 4 done 2026-10-14: the collection, its stats, item
-      expansion tags, `.attune` commands, attuning by kills, the Altar of Sacrifice; next: tooltips and window): absorb stats from acquired gear, either by attuning it
-      (equip it and kill creatures until 100%, Synastria-style) or by sacrificing it (destroy it for its
-      stats at once, Peloria-style). Both styles, one shared collection. The main lever for soloing
-      Mythic raids: numbers, item rules, minimum item level and the attune/sacrifice rules per the Power
-      budget. Per character; sacrifice at an altar NPC in the capitals, gold prices by quality. Ready to
-      build (in stages: collection and stats, attuning, the altar, tooltips and collection window).
 - [ ] **Soloable raid mechanics** (moderate, per raid): script changes for bosses that need several
       players (Razorgore, Twin Emperors, C'Thun, ...).
 - [ ] **Perk ranks** (moderate): rank support is built (rank table, per-rank values, "2/3" badges,

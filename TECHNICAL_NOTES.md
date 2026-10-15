@@ -33,7 +33,8 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   in `mod_unbound.conf`. Retribution's spell scripts: `data/sql/db-world/unbound_perks_spells.sql`. Perk
   numbers stay in normal WoW ranges (about +10% per perk); they are constants at the top of
   `unbound_perks.cpp` and must match `PerkData.lua`. The perk code assumes `MapUpdate.Threads = 1`.
-- **Gear attunement** (stages 1-3 of 4: the collection, its stats, attuning by kills, the sacrifice altar): `src/unbound_attunement.cpp`. Each
+- **Gear attunement** (all 4 stages: the collection, its stats, attuning by kills, the sacrifice altar, tooltips and the
+  collection window): `src/unbound_attunement.cpp`. Each
   character's collection is `characters.character_unbound_attunement` (item, progress, attuned). Attuned
   items give `Unbound.Attunement.Percent` (20%) of their fixed stats, applied like equipped-item stats
   (`Player::_ApplyItemBonuses`), with diminishing returns against `ReferenceSetStats` (600 stat points =
@@ -58,6 +59,11 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   (sender) and bag/slot (action) and uses the game's money confirmation box; on select the server checks the
   item, position and gold again, then takes the gold, destroys the item and attunes it. Prices:
   `SacrificeGold` by quality (2/10/50/250), times `SacrificeOwnGearMultiplier` (2) if `Player::CanUseItem`.
+  Client: `addon/UnboundAttunement` (tooltips on GameTooltip/ItemRefTooltip/ShoppingTooltips, the collection window,
+  the Attunement tab on the character sheet after the Perks tab, `/attunement`). It whispers its own character
+  (prefix `UBATT`): `Q:<ids>` -> `I:<id>:<code>:<done>:<needed>:<price>:<reason>` (code A attuned, W wear to
+  attune, S sacrifice only, N doesn't count); `COLL` -> `C:BEGIN`, `C:A:`, `C:P:`, `C:S:`, `C:T:`, `C:END`; the server
+  pushes `P:` (kill progress), `A:<id>` (attuned) and `RESET` (a GM changed the collection).
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Players in a
