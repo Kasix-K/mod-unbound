@@ -54,7 +54,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ### Added
 - **Gear attunement, stage 4 of 4: tooltips and the collection window** (new **UnboundAttunement** addon). Item
   tooltips show each weapon or armour piece's attunement: attuned, % and kills, sacrifice only (with the price),
-  or why it doesn't count. The **Attunement** button in the micro menu (after Help) or `/attunement` opens the
+  or why it doesn't count. The **Attunement** button in the micro menu (between Talents and Achievements) or `/attunement` opens the
   collection window: attuned items and items in progress as an icon grid, the stats they give, and a bar showing
   the diminishing returns. Tooltips and the window update live as you kill, attune and sacrifice. Gear attunement
   is complete.
@@ -156,7 +156,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 ### Changed
 - **Attunement window button** moved from a character sheet tab (too wide for the sheet) to the micro menu,
-  after Help; with ElvUI's micro bar it matches ElvUI's buttons and follows the bar's layout.
+  between Talents and Achievements; with ElvUI's micro bar it matches ElvUI's buttons and follows the bar's layout.
 - **Classic raids soloable:** solo scaling for 20-player raids (Zul'Gurub, Ruins of Ahn'Qiraj) and
   40-player raids (Molten Core, Blackwing Lair, Temple of Ahn'Qiraj) lowered so one player faces about 3
   players' worth of the raid (was about 9 and 17); a full raid is unchanged. Dungeons are unchanged.

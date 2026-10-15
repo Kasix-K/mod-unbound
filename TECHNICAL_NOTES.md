@@ -60,7 +60,7 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   item, position and gold again, then takes the gold, destroys the item and attunes it. Prices:
   `SacrificeGold` by quality (2/10/50/250), times `SacrificeOwnGearMultiplier` (2) if `Player::CanUseItem`.
   Client: `addon/UnboundAttunement` (tooltips on GameTooltip/ItemRefTooltip/ShoppingTooltips, the collection window,
-  the Attunement button in the micro menu after Help, `/attunement`; ElvUI's micro bar has a fixed button list, so
+  the Attunement button in the micro menu between Talents and Achievements, `/attunement`; ElvUI's micro bar has a fixed button list, so
   the button styles itself like ElvUI's and re-places itself after `AB:UpdateMicroPositionDimensions`). It whispers its own character
   (prefix `UBATT`): `Q:<ids>` -> `I:<id>:<code>:<done>:<needed>:<price>:<reason>` (code A attuned, W wear to
   attune, S sacrifice only, N doesn't count); `COLL` -> `C:BEGIN`, `C:A:`, `C:P:`, `C:S:`, `C:T:`, `C:END`; the server

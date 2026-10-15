@@ -469,7 +469,7 @@ local function toggle()
 end
 
 -- ------------------------------------------------------------------ micro menu button
--- An "Attunement" button after the micro menu's last button (Help). ElvUI keeps its own fixed list of micro
+-- An "Attunement" button in the micro menu, between Talents and Achievements. ElvUI keeps its own fixed list of micro
 -- buttons, so with ElvUI's micro bar the button styles itself like ElvUI's and follows the bar's layout;
 -- with the default UI it uses the game's micro button art.
 local MICRO_ICON = "Interface\\Icons\\INV_Enchant_EssenceEternalLarge"
@@ -504,14 +504,24 @@ local function addMicroButton()
         pushed:SetInside(f)
         button:SetPushedTexture(pushed)
 
+        -- One row (the usual layout): between Talents and Achievements; ElvUI anchors each button to the one
+        -- before it, so moving Achievements after this button shifts the rest along. Several rows: ElvUI's grid
+        -- would break, so the button goes after the last one (Help) instead.
         local function place()
             button:SetParent(HelpMicroButton:GetParent())
             button:SetSize(CharacterMicroButton:GetWidth(), CharacterMicroButton:GetHeight())
             local spacing = E:Scale((E.PixelMode and 1 or 3) + (AB.db.microbar.buttonSpacing or 0))
+            local oneRow = (AB.db.microbar.buttonsPerRow or 10) >= 10
             button:ClearAllPoints()
-            button:SetPoint("LEFT", HelpMicroButton, "RIGHT", spacing, 0)
+            if oneRow then
+                button:SetPoint("LEFT", TalentMicroButton, "RIGHT", spacing, 0)
+                AchievementMicroButton:ClearAllPoints()
+                AchievementMicroButton:SetPoint("LEFT", button, "RIGHT", spacing, 0)
+            else
+                button:SetPoint("LEFT", HelpMicroButton, "RIGHT", spacing, 0)
+            end
             -- one row: make the bar's background wide enough for the extra button
-            if HelpMicroButton:GetParent() == ElvUI_MicroBar and (AB.db.microbar.buttonsPerRow or 10) >= 10 and AB.MicroWidth then
+            if oneRow and HelpMicroButton:GetParent() == ElvUI_MicroBar and AB.MicroWidth then
                 ElvUI_MicroBar:SetWidth(AB.MicroWidth + button:GetWidth() + spacing)
             end
             button:SetAlpha(1)
@@ -535,9 +545,19 @@ local function addMicroButton()
         button.icon:SetSize(18, 25)
         button.icon:SetPoint("TOP", 0, -28)
         button.icon:SetTexCoord(0.2, 0.8, 0.0666, 0.9)
-        button:SetPoint("BOTTOMLEFT", HelpMicroButton, "BOTTOMRIGHT", -3, 0)
-        -- vehicles move the micro buttons to another bar: follow Help there
-        hooksecurefunc("VehicleMenuBar_MoveMicroButtons", function() button:SetParent(HelpMicroButton:GetParent()) end)
+        -- between Talents (hidden below level 10: then after Spellbook) and Achievements
+        local function place()
+            button:SetParent(AchievementMicroButton:GetParent())
+            local before = TalentMicroButton:IsShown() and TalentMicroButton or SpellbookMicroButton
+            button:ClearAllPoints()
+            button:SetPoint("BOTTOMLEFT", before, "BOTTOMRIGHT", -3, 0)
+            AchievementMicroButton:ClearAllPoints()
+            AchievementMicroButton:SetPoint("BOTTOMLEFT", button, "BOTTOMRIGHT", -3, 0)
+        end
+        -- the game re-anchors the micro buttons (talents unlocking, vehicles): put this one back each time
+        if UpdateMicroButtons then hooksecurefunc("UpdateMicroButtons", place) end
+        if VehicleMenuBar_MoveMicroButtons then hooksecurefunc("VehicleMenuBar_MoveMicroButtons", place) end
+        place()
         button:SetScript("OnMouseDown", function(self) self.icon:SetPoint("TOP", 1, -29) end)
         button:SetScript("OnMouseUp", function(self) self.icon:SetPoint("TOP", 0, -28) end)
     end
