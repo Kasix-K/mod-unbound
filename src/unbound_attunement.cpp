@@ -24,13 +24,13 @@
  * Progress is kept per item (unequipping pauses it) and saved with the character; completing an item saves
  * at once. Players see their equipped items' progress with .attune progress.
  *
- * Stage 3, sacrifice: the Altar of Sacrifice (creature 190103, placed with .npc add 190103) lists the items in
+ * Stage 3, tribute: the Altar of Tribute (creature 190103, placed with .npc add 190103) lists the items in
  * the player's bags that count and aren't attuned yet; choosing one shows the game's confirmation box with the
- * gold price (Unbound.Attunement.SacrificeGold by quality: 2 green, 10 blue, 50 epic, 250 legendary; times
- * SacrificeOwnGearMultiplier (2) for gear the player could attune by wearing it). The server checks the item, its
+ * gold price (Unbound.Attunement.TributeGold by quality: 2 green, 10 blue, 50 epic, 250 legendary; times
+ * TributeOwnGearMultiplier (2) for gear the player could attune by wearing it). The server checks the item, its
  * position and the gold again, then takes the gold, destroys the item and attunes it at once, at full value.
  *
- * Stage 4 (tooltips, collection window) comes next. See ROADMAP.md (Power budget, Attunement and sacrifice rules).
+ * Stage 4 (tooltips, collection window) comes next. See ROADMAP.md (Power budget, Attunement and tribute rules).
  */
 
 #include "Bag.h"
@@ -74,7 +74,7 @@ namespace
     uint32 sEliteKills = 2;                // an elite counts as this many kills
     uint32 sBossKills = 10;                // a boss counts as this many kills
     uint32 constexpr SOUND_ATTUNED = 12891; // the achievement sound
-    std::vector<uint32> sSacrificeGold = { 2, 10, 50, 250 }; // sacrifice price: green, blue, epic, legendary
+    std::vector<uint32> sTributeGold = { 2, 10, 50, 250 }; // tribute price: green, blue, epic, legendary
     uint32 sOwnGearMultiplier = 2;         // price multiplier for gear the player could attune by wearing it
 
     std::unordered_map<uint32, uint8> sItemExpansion;   // world.unbound_item_expansion
@@ -455,8 +455,8 @@ namespace
 
     // ------------------------------------------------------------------ addon messages (stage 4)
     // The UnboundAttunement addon (item tooltips, collection window) whispers its own character, prefix "UBATT":
-    //   Q:<id>,<id>,...  -> one I:<id>:<code>:<kills done>:<kills needed>:<sacrifice price, copper>:<reason>
-    //                       per item; code A attuned, W attunable by wearing it, S sacrifice only, N doesn't
+    //   Q:<id>,<id>,...  -> one I:<id>:<code>:<kills done>:<kills needed>:<tribute price, copper>:<reason>
+    //                       per item; code A attuned, W attunable by wearing it, S tribute only, N doesn't
     //                       count (reason says why)
     //   COLL             -> C:BEGIN, C:A:<id>,... (attuned), C:P:<id>=<done>=<needed>,... (in progress),
     //                       C:S:<items>:<collected %>:<after diminishing returns %>:<full until>:<half until>,
@@ -466,7 +466,7 @@ namespace
     constexpr char const* ADDON_PREFIX = "UBATT";
     constexpr size_t ADDON_CHUNK = 200;
 
-    uint32 SacrificePrice(Player const* player, ItemTemplate const* proto);
+    uint32 TributePrice(Player const* player, ItemTemplate const* proto);
 
     void SendAddon(Player* player, std::string const& text)
     {
@@ -510,7 +510,7 @@ namespace
         auto itr = state->progress.find(entry);
         uint32 done = itr != state->progress.end() ? itr->second : 0;
         char code = player->CanUseItem(proto) == EQUIP_ERR_OK ? 'W' : 'S';
-        return Acore::StringFormat("I:{}:{}:{}:{}:{}:", entry, code, done, needed, SacrificePrice(player, proto));
+        return Acore::StringFormat("I:{}:{}:{}:{}:{}:", entry, code, done, needed, TributePrice(player, proto));
     }
 
     void SendCollection(Player* player)
@@ -552,7 +552,7 @@ namespace
     }
 
     // Attune an item for good: the collection, the database, the stats, a message.
-    void CompleteAttunement(Player* player, AttunementState* state, ItemTemplate const* proto, bool sacrificed = false)
+    void CompleteAttunement(Player* player, AttunementState* state, ItemTemplate const* proto, bool tribute = false)
     {
         state->progress.erase(proto->ItemId);
         state->unsaved.erase(proto->ItemId);
@@ -560,8 +560,8 @@ namespace
         CharacterDatabase.Execute("REPLACE INTO `character_unbound_attunement` (`guid`, `item`, `progress`, `attuned`) "
             "VALUES ({}, {}, 0, 1)", player->GetGUID().GetCounter(), proto->ItemId);
         Recalculate(player);
-        ChatHandler(player->GetSession()).PSendSysMessage(sacrificed ?
-            "{}{} was sacrificed and is fully attuned! Its stats are yours for good ({} items attuned)." :
+        ChatHandler(player->GetSession()).PSendSysMessage(tribute ?
+            "{}{} was offered as tribute and is fully attuned! Its stats are yours for good ({} items attuned)." :
             "{}{} is fully attuned! Its stats are yours for good, even without the item ({} items attuned).",
             PREFIX, ItemLink(proto), state->attuned.size());
         player->PlayDirectSound(SOUND_ATTUNED, player);
@@ -598,15 +598,15 @@ namespace
         SendChunked(player, "P:", changed, ',');
     }
 
-    // ------------------------------------------------------------------ sacrifice (stage 3)
-    // Gold price to sacrifice an item: by quality, times sOwnGearMultiplier if the player could attune it by
+    // ------------------------------------------------------------------ tribute (stage 3)
+    // Gold price to give an item in tribute: by quality, times sOwnGearMultiplier if the player could attune it by
     // wearing it (attuning stays the main route for one's own gear).
-    uint32 SacrificePrice(Player const* player, ItemTemplate const* proto)
+    uint32 TributePrice(Player const* player, ItemTemplate const* proto)
     {
-        if (sSacrificeGold.empty())
+        if (sTributeGold.empty())
             return 0;
         uint32 index = proto->Quality > ITEM_QUALITY_UNCOMMON ? proto->Quality - ITEM_QUALITY_UNCOMMON : 0;
-        uint32 gold = sSacrificeGold[std::min<size_t>(index, sSacrificeGold.size() - 1)];
+        uint32 gold = sTributeGold[std::min<size_t>(index, sTributeGold.size() - 1)];
         if (player->CanUseItem(proto) == EQUIP_ERR_OK)
             gold *= sOwnGearMultiplier;
         return gold * GOLD;
@@ -666,9 +666,10 @@ public:
         sEliteKills = sConfigMgr->GetOption<uint32>("Unbound.Attunement.EliteKills", 2);
         sBossKills = sConfigMgr->GetOption<uint32>("Unbound.Attunement.BossKills", 10);
 
-        // "2, 10, 50, 250" -> sacrifice price in gold for green, blue, epic, legendary
-        sSacrificeGold.clear();
-        std::string const prices = sConfigMgr->GetOption<std::string>("Unbound.Attunement.SacrificeGold", "2, 10, 50, 250");
+        // "2, 10, 50, 250" -> tribute price in gold for green, blue, epic, legendary
+        sTributeGold.clear();
+        std::string const prices = sConfigMgr->GetOption<std::string>("Unbound.Attunement.TributeGold",
+            sConfigMgr->GetOption<std::string>("Unbound.Attunement.SacrificeGold", "2, 10, 50, 250", false));   // old name
         for (std::string_view part : Acore::Tokenize(prices, ',', false))
         {
             while (!part.empty() && part.front() == ' ')
@@ -676,11 +677,12 @@ public:
             while (!part.empty() && part.back() == ' ')
                 part.remove_suffix(1);
             if (Optional<uint32> value = Acore::StringTo<uint32>(part))
-                sSacrificeGold.push_back(*value);
+                sTributeGold.push_back(*value);
         }
-        if (sSacrificeGold.empty())
-            sSacrificeGold = { 2, 10, 50, 250 };
-        sOwnGearMultiplier = sConfigMgr->GetOption<uint32>("Unbound.Attunement.SacrificeOwnGearMultiplier", 2);
+        if (sTributeGold.empty())
+            sTributeGold = { 2, 10, 50, 250 };
+        sOwnGearMultiplier = sConfigMgr->GetOption<uint32>("Unbound.Attunement.TributeOwnGearMultiplier",
+            sConfigMgr->GetOption<uint32>("Unbound.Attunement.SacrificeOwnGearMultiplier", 2, false));   // old name
     }
 
     void OnStartup() override
@@ -891,7 +893,7 @@ public:
     }
 };
 
-// 190103 - Altar of Sacrifice: lists the items in the player's bags that can be sacrificed; choosing one shows the
+// 190103 - Altar of Tribute: lists the items in the player's bags that can be given in tribute; choosing one shows the
 // game's confirmation box with the gold price; the server checks everything again before destroying the item.
 class npc_unbound_attunement_altar : public CreatureScript
 {
@@ -909,7 +911,7 @@ public:
         ItemTemplate const* proto;
     };
 
-    // The items in the bags that can be sacrificed: counting, not attuned yet, each entry once.
+    // The items in the bags that can be given in tribute: counting, not attuned yet, each entry once.
     static std::vector<Offer> Offers(Player* player)
     {
         AttunementState* state = StateOf(player);
@@ -949,14 +951,14 @@ public:
         for (uint32 i = page * ITEMS_PER_PAGE; i < std::min<uint32>(offers.size(), (page + 1) * ITEMS_PER_PAGE); ++i)
         {
             Offer const& offer = offers[i];
-            uint32 price = SacrificePrice(player, offer.proto);
+            uint32 price = TributePrice(player, offer.proto);
             std::string text = Acore::StringFormat("|c{:08x}{}|r", ItemQualityColors[offer.proto->Quality], offer.proto->Name1);
             auto progress = state->progress.find(offer.proto->ItemId);
             if (progress != state->progress.end() && progress->second)
                 text += Acore::StringFormat(" ({}% attuned)", progress->second * 100 / KillsNeeded(offer.proto));
             if (player->CanUseItem(offer.proto) == EQUIP_ERR_OK)
                 text += " - you could attune it by wearing it";
-            std::string confirm = Acore::StringFormat("Sacrifice {}? It is destroyed, and {:.0f}% of its stats are yours "
+            std::string confirm = Acore::StringFormat("Offer {} as tribute? It is destroyed, and {:.0f}% of its stats are yours "
                 "for good.", offer.proto->Name1, sPercent);
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, text, offer.proto->ItemId,
                 (uint32(offer.bag) << 8) | offer.slot, confirm, price, false);
@@ -967,7 +969,7 @@ public:
         if (page > 0)
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Previous page", SENDER_PAGE, page - 1);
         if (offers.empty())
-            ChatHandler(player->GetSession()).PSendSysMessage("{}Nothing in your bags can be sacrificed: only gear "
+            ChatHandler(player->GetSession()).PSendSysMessage("{}Nothing in your bags can be offered as tribute: only gear "
                 "that counts for attunement and isn't attuned yet.", PREFIX);
         SendGossipMenuFor(player, NPC_TEXT_ALTAR, creature);
     }
@@ -995,9 +997,9 @@ public:
         ChatHandler chat(player->GetSession());
         if (!sEnabled || !proto || proto->ItemId != sender || !Player::IsInventoryPos(bag, slot) ||
             state->attuned.count(proto->ItemId) || CheckItem(proto) != ItemCheck::Counts)
-            chat.PSendSysMessage("{}That item is no longer in your bags or can't be sacrificed.", PREFIX);
-        else if (uint32 price = SacrificePrice(player, proto); !player->HasEnoughMoney(price))
-            chat.PSendSysMessage("{}You need {} gold to sacrifice {}.", PREFIX, price / GOLD, ItemLink(proto));
+            chat.PSendSysMessage("{}That item is no longer in your bags or can't be offered as tribute.", PREFIX);
+        else if (uint32 price = TributePrice(player, proto); !player->HasEnoughMoney(price))
+            chat.PSendSysMessage("{}You need {} gold to offer {} as tribute.", PREFIX, price / GOLD, ItemLink(proto));
         else
         {
             player->ModifyMoney(-int32(price));

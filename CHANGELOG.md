@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Altar of Sacrifice renamed Altar of Tribute (sacrifice is now tribute everywhere players see it) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Bulletin Board: daily bounties and profession quests, weekly dungeon and raid quests per tier, weekly elite bounty | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Raid Finder: Raids tab in the Dungeon Finder (enter raids, group prompt, Leave Raid) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Classic Naxxramas (40 players, level 60) in the Eastern Plaguelands, from mod-individual-progression | 2026-10-15 | 2026-10-15 | Kasix-K |
@@ -63,6 +64,13 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | Transmog (first version, mod-transmog) | 2026-10-12 | 2026-10-13 (replaced) | Kasix-K |
 
 ## 2026-10-15
+
+### Changed
+- **The Altar of Sacrifice is now the Altar of Tribute**, and "sacrifice" is "tribute" everywhere players see it:
+  the altar's name and its menu ("Offer <item> as tribute?"), chat messages ("… was offered as tribute and is fully
+  attuned!"), item tooltips ("Attunement: tribute only", "At an Altar of Tribute") and the collection window.
+  Settings `Unbound.Attunement.TributeGold` and `TributeOwnGearMultiplier` (the old `Sacrifice*` names are still
+  read). The Defensive Sacrifice perk keeps its name.
 
 ### Added
 - **Bulletin Board: weekly elite bounty.** One a week from 12 elite camps in the open world, level 55-62 (The

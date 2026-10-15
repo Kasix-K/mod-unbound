@@ -70,7 +70,7 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   in `mod_unbound.conf`. Retribution's spell scripts: `data/sql/db-world/unbound_perks_spells.sql`. Perk
   numbers stay in normal WoW ranges (about +10% per perk); they are constants at the top of
   `unbound_perks.cpp` and must match `PerkData.lua`. The perk code assumes `MapUpdate.Threads = 1`.
-- **Gear attunement** (all 4 stages: the collection, its stats, attuning by kills, the sacrifice altar, tooltips and the
+- **Gear attunement** (all 4 stages: the collection, its stats, attuning by kills, the tribute altar, tooltips and the
   collection window): `src/unbound_attunement.cpp`. Each
   character's collection is `characters.character_unbound_attunement` (item, progress, attuned). Attuned
   items give `Unbound.Attunement.Percent` (20%) of their fixed stats, applied like equipped-item stats
@@ -90,17 +90,18 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   not yet attuned item gains them; `Kills` by quality (50/100/200/400). Progress is saved with the
   character (`OnPlayerSave`, one transaction); completing an item saves at once. Messages at 25/50/75%
   and on completion (achievement sound). GM commands: `.attune add|remove|check <item>`, `.attune info`,
-  `.attune reset` (on the selected player, else yourself); players: `.attune progress`. Sacrifice: the Altar
-  of Sacrifice (creature 190103, `npc_unbound_attunement_altar`, `data/sql/db-world/unbound_attunement_altar.sql`)
+  `.attune reset` (on the selected player, else yourself); players: `.attune progress`. Tribute: the Altar
+  of Tribute (creature 190103, called the Altar of Sacrifice before 2026-10-15; `npc_unbound_attunement_altar`, `data/sql/db-world/unbound_attunement_altar.sql`)
   lists the bag items that count and aren't attuned (28 per page); each gossip option carries the item entry
   (sender) and bag/slot (action) and uses the game's money confirmation box; on select the server checks the
   item, position and gold again, then takes the gold, destroys the item and attunes it. Prices:
-  `SacrificeGold` by quality (2/10/50/250), times `SacrificeOwnGearMultiplier` (2) if `Player::CanUseItem`.
+  `TributeGold` by quality (2/10/50/250), times `TributeOwnGearMultiplier` (2; the old `Sacrifice*` names are still
+  read) if `Player::CanUseItem`.
   Client: `addon/UnboundAttunement` (tooltips on GameTooltip/ItemRefTooltip/ShoppingTooltips, the collection window,
   the Attunement button in the micro menu between Talents and Achievements, `/attunement`; ElvUI's micro bar has a fixed button list, so
   the button styles itself like ElvUI's and re-places itself after `AB:UpdateMicroPositionDimensions`). It whispers its own character
   (prefix `UBATT`): `Q:<ids>` -> `I:<id>:<code>:<done>:<needed>:<price>:<reason>` (code A attuned, W wear to
-  attune, S sacrifice only, N doesn't count); `COLL` -> `C:BEGIN`, `C:A:`, `C:P:`, `C:S:`, `C:T:`, `C:END`; the server
+  attune, S tribute only, N doesn't count); `COLL` -> `C:BEGIN`, `C:A:`, `C:P:`, `C:S:`, `C:T:`, `C:END`; the server
   pushes `P:` (kill progress), `A:<id>` (attuned) and `RESET` (a GM changed the collection).
 - **Soloable raid mechanics:** `src/unbound_solo_raids.cpp`. A fix applies while `Map::IsRaid()` and
   `GetPlayersCountExceptGMs() <= 1` (pets and guardians aren't players, playerbots are; a GM in GM mode

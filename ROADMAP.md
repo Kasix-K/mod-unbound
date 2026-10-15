@@ -61,7 +61,7 @@ content there is. Change these targets here first if testing says otherwise.
 | Perks | About **x1.55** with five Offensive perks (about +10% per perk) |
 | Perk ranks | Up to about **x1.3** more on top of perks (together about x2) |
 | Class perk | About **x1.25-1.35**: each spec's class perk is worth about **+25-35% to that spec's single-target damage** (a lone raid boss is what a solo Mythic raid is about). Extra area damage on trash is fine on top. Every class perk is held to this target, so no spec pulls ahead. Measure with a damage meter on a training dummy, perk off vs on. Paladin **Retribution** is estimated at about +35-40% (Holy +15% / Physical +10% about +12%, a free Crusader Strike per Divine Storm about +10-15%, a free Exorcism per Judgement about +5-10%, stronger Exorcism a few %), the top of the range: if testing confirms it, lower Holy to +10% |
-| Gear attunement / sacrifice | About **+200% of gear stats** when well collected (about x3), the main lever: |
+| Gear attunement / tribute | About **+200% of gear stats** when well collected (about x3), the main lever: |
 | - per item | **20%** of the item's fixed stats (tune 15-25% in testing); fixed stats only (no procs, set bonuses, weapon damage) |
 | - which items count | **Every unique item** counts once (a second copy adds nothing); **green or better** |
 | - minimum item level | Only items whose **required level is within 10 of the level cap** count (level 50+ while the cap is 60; it moves up with each expansion), so every attuned item matters and nobody grinds low-level items |
@@ -72,12 +72,12 @@ content there is. Change these targets here first if testing says otherwise.
 Numbers check: a 6x character has a few thousand of a primary stat and tens of thousands of health, well
 above normal WoW but nowhere near Peloria's billions.
 
-### Attunement and sacrifice rules
+### Attunement and tribute rules
 
 Both styles fill **one shared collection** per character, so the end result is the same: an item gives
 its full 20% whichever way it was collected. Time versus cost is the whole trade-off.
 
-| | Attune | Sacrifice |
+| | Attune | Tribute |
 |---|---|---|
 | How | Equip the item and kill creatures until it reaches 100% | Destroy the item for its stats at once |
 | Speed | Slow | Instant |
@@ -87,7 +87,7 @@ its full 20% whichever way it was collected. Time versus cost is the whole trade
 | Cost | Free | A price scaled by quality: gold for now, Heroic Badges once they exist |
 | Cost for gear the character could attune | (free) | **Double** the normal price, so attuning stays the main route for one's own gear |
 
-- **Collected stats are permanent:** once an item is 100% attuned (or sacrificed), its 20% stays whatever
+- **Collected stats are permanent:** once an item is 100% attuned (or given in tribute), its 20% stays whatever
   happens to the item (unequipped, banked, sold, deleted). An upgrade never costs anything: attune it too
   and both count. (The level copies of one Mythic item are the exception: the highest attuned copy
   replaces the lower ones, see Mythic+ gear.)
@@ -105,15 +105,15 @@ its full 20% whichever way it was collected. Time versus cost is the whole trade
   (some TBC items require level 58-60, and item levels overlap). Attunement only accepts items from
   expansions up to `Unbound.ExpansionUnlocked` (the content lock's setting), so releasing an expansion
   turns its items on with that one change.
-- An item counts only once. Sacrificing a partly attuned item finishes it (the price still applies).
-- Sacrifice always shows a confirmation (item and price) before destroying anything.
-- Tooltips show "Attunement: 37%", "Attuned", or "Can't attune: sacrifice only".
+- An item counts only once. Offering a partly attuned item as tribute finishes it (the price still applies).
+- Tribute always shows a confirmation (item and price) before destroying anything.
+- Tooltips show "Attunement: 37%", "Attuned", or "Attunement: tribute only".
 - A collection window in the perks' talent-tree style shows every absorbed item and the stat totals.
 - **Per character:** each character has its own collection (alts start their own).
-- **Sacrifice at an altar NPC:** an altar in the capital cities (players of both factions can use any,
-  as everything else is cross-faction). Talking to it opens the sacrifice window: pick an item from the bags,
+- **Tribute at an altar NPC (the Altar of Tribute):** an altar in the capital cities (players of both factions can use any,
+  as everything else is cross-faction). Talking to it opens the tribute window: pick an item from the bags,
   see its stats and the price, confirm.
-- **Sacrifice prices** (gold, scaled by quality; config settings, Heroic Badges later):
+- **Tribute prices** (gold, scaled by quality; config settings, Heroic Badges later):
 
   | Quality | Price | Gear the character could attune (double) |
   |---|---|---|
@@ -137,7 +137,7 @@ config settings (the item generator reads them).
 | Drop level | An item drops at the level the run was cleared at (a +7 clear drops +7 gear) |
 | Item count | About 450 dungeon items x 10 levels (about 4,500 entries, plus the raids' items; the client patch grows about 0.15 MB) |
 | Attunement percent | **20% + 2% per Mythic level** for Mythic items (+1: 22%, +5: 30%, +10: 40%), so attuning high is worth much more than wearing high: the helm gives 4 Stamina attuned at +1, about 10 at +10 |
-| Attunement: one item | All level copies of a Mythic item count as **one item**: attuning (or sacrificing) a higher copy **replaces** the lower copy's bonus, it never adds to it. Attuning early is never wasted, waiting for a higher copy pays more. (Heroic and Mythic versions of a piece are different items and both count.) |
+| Attunement: one item | All level copies of a Mythic item count as **one item**: attuning (or giving in tribute) a higher copy **replaces** the lower copy's bonus, it never adds to it. Attuning early is never wasted, waiting for a higher copy pays more. (Heroic and Mythic versions of a piece are different items and both count.) |
 | Attunement: kills | A higher copy needs its own kills (the normal epic count); an upgrade never changes what is already attuned |
 | Diminishing returns | A fourth step for the much larger Mythic totals: full value up to +100%, half to +200%, a quarter to +400%, **an eighth beyond** |
 
@@ -191,7 +191,7 @@ changes, raid by raid (see Next up).
       Paladin Retribution class perk; numbers scaled to normal WoW ranges (about +10% per perk)
 
 - [x] Gear attunement (all 4 stages, 2026-10-14): the collection and its stats (20% per item, diminishing
-      returns), item expansion tags, attuning by kills, the Altar of Sacrifice, item tooltips and the collection
+      returns), item expansion tags, attuning by kills, the Altar of Tribute, item tooltips and the collection
       window (Attunement micro menu button, `/attunement`)
 
 - [x] Classic Heroic dungeons, batch 1 (2026-10-14): Wailing Caverns, Shadowfang Keep, Blackfathom Deeps,

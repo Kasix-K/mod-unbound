@@ -342,19 +342,21 @@ Unbound.Attunement.Kills = "50, 100, 200, 400"
 Unbound.Attunement.EliteKills = 2
 Unbound.Attunement.BossKills = 10
 
-#    Unbound.Attunement.SacrificeGold
-#        Description: Gold price to sacrifice an item at the Altar of Sacrifice (190103), by quality:
+#    Unbound.Attunement.TributeGold
+#        Description: Gold price to offer an item as tribute at the Altar of Tribute (190103), by quality:
 #                     green, blue, epic, legendary. The item is destroyed and attuned at once.
+#                     (Before the rename: Unbound.Attunement.SacrificeGold, still read if this is missing.)
 #        Default:     "2, 10, 50, 250"
 #
-#    Unbound.Attunement.SacrificeOwnGearMultiplier
+#    Unbound.Attunement.TributeOwnGearMultiplier
 #        Description: The price is multiplied by this for gear the player could attune by wearing it
 #                     (their armour type, their class's weapons), so attuning stays the main route for
 #                     one's own gear.
+#                     (Before the rename: Unbound.Attunement.SacrificeOwnGearMultiplier.)
 #        Default:     2
 
-Unbound.Attunement.SacrificeGold = "2, 10, 50, 250"
-Unbound.Attunement.SacrificeOwnGearMultiplier = 2
+Unbound.Attunement.TributeGold = "2, 10, 50, 250"
+Unbound.Attunement.TributeOwnGearMultiplier = 2
 #    Unbound.SoloRaid.Enable
 #        Description: Soloable raid mechanics (src/unbound_solo_raids.cpp): mechanics no single player
 #                     can handle are changed while a raid has at most one player in it (GMs don't

@@ -58,10 +58,10 @@ local function addLines(tooltip, info)
         if info.done == 0 then
             tooltip:AddLine("Wear it and slay foes to attune it", unpack(GREY))
         end
-        tooltip:AddLine("Or sacrifice it at an Altar of Sacrifice: " .. money(info.price), unpack(GREY))
+        tooltip:AddLine("Or offer it as tribute at an Altar of Tribute: " .. money(info.price), unpack(GREY))
     elseif info.code == "S" then
-        tooltip:AddLine("Attunement: sacrifice only (you can't wear it)", unpack(LIGHT_BLUE))
-        tooltip:AddLine("At an Altar of Sacrifice: " .. money(info.price), unpack(GREY))
+        tooltip:AddLine("Attunement: tribute only (you can't wear it)", unpack(LIGHT_BLUE))
+        tooltip:AddLine("At an Altar of Tribute: " .. money(info.price), unpack(GREY))
     elseif info.reason and info.reason ~= "" then
         tooltip:AddLine("Attunement: " .. info.reason, unpack(GREY))
     end
@@ -316,7 +316,7 @@ local function updateGrid()
         if height > ui.scroll:GetHeight() + 1 then ui.scrollBar:Show() else ui.scrollBar:Hide() end
     end
     if #list == 0 then
-        ui.empty:SetText(showing == "attuned" and "Nothing attuned yet. Wear gear and slay foes, or sacrifice it at an Altar of Sacrifice."
+        ui.empty:SetText(showing == "attuned" and "Nothing attuned yet. Wear gear and slay foes, or offer it as tribute at an Altar of Tribute."
                                              or "No items in progress. Equip gear that counts and slay foes.")
         ui.empty:Show()
     else
@@ -453,7 +453,7 @@ local function build()
 
     local foot = text(frame, "GameFontDisableSmall")
     foot:SetPoint("BOTTOMLEFT", 22, 16)
-    foot:SetText("Wear gear and slay foes to attune it, or sacrifice it at an Altar of Sacrifice. Hover an item for details; shift-click links it.")
+    foot:SetText("Wear gear and slay foes to attune it, or offer it as tribute at an Altar of Tribute. Hover an item for details; shift-click links it.")
 
     frame:SetScript("OnShow", function()
         PlaySound("igCharacterInfoOpen")

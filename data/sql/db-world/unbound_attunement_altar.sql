@@ -1,11 +1,11 @@
--- mod-unbound: Altar of Sacrifice (creature 190103), gear attunement stage 3 (src/unbound_attunement.cpp).
--- Talking to it lists the items in your bags that can be sacrificed; the game's own confirmation box shows
+-- mod-unbound: Altar of Tribute (creature 190103), gear attunement stage 3 (src/unbound_attunement.cpp).
+-- Talking to it lists the items in your bags that can be offered as tribute; the game's own confirmation box shows
 -- the gold price. Place it in the capital cities with `.npc add 190103` (friendly to both factions).
 SET @ALTAR := 190103;
 
 DELETE FROM `creature_template` WHERE `entry` = @ALTAR;
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction`, `npcflag`, `rank`, `dmgschool`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `AIName`, `MovementType`, `HoverHeight`, `RacialLeader`, `movementId`, `RegenHealth`, `CreatureImmunitiesId`, `flags_extra`, `ScriptName`) VALUES
-(@ALTAR, 'Altar of Sacrifice', 'Attunement', NULL, 0, 80, 80, 2, 35, 1, 0, 0, 2000, 0, 1, 0, 10, 0, 0, 0, 0, '', 0, 1, 0, 0, 1, 0, 2, 'npc_unbound_attunement_altar');
+(@ALTAR, 'Altar of Tribute', 'Attunement', NULL, 0, 80, 80, 2, 35, 1, 0, 0, 2000, 0, 1, 0, 10, 0, 0, 0, 0, '', 0, 1, 0, 0, 1, 0, 2, 'npc_unbound_attunement_altar');
 
 -- The Spirit Healer's model (5233)
 DELETE FROM `creature_template_model` WHERE `CreatureID` = @ALTAR;

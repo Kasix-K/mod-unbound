@@ -29,7 +29,7 @@
 |---|---|
 | Warpweaver (transmogrifier) | `.npc add 190010` |
 | Grizzle Lootsnatch (companion vendor) | `.npc add 190101` |
-| Altar of Sacrifice (attunement; one per capital city) | `.npc add 190103` |
+| Altar of Tribute (attunement; one per capital city) | `.npc add 190103` |
 
 ## Custom IDs
 
@@ -106,9 +106,9 @@ Attuned items permanently give the character 20% of their stats, even after the 
 wear the item and kill creatures that give experience (not grey ones): 50 kills for a green, 100 for a blue,
 200 for an epic (an elite counts as 2, a boss as 10). Every equipped item that counts progresses at once, and
 chat shows 25%, 50%, 75% and "fully attuned". **Any player** can type `.attune progress` to see their
-equipped items' progress. **Sacrificing:** talk to the **Altar of Sacrifice** to pick an item from your bags; it is destroyed and
+equipped items' progress. **Tribute:** talk to the **Altar of Tribute** to pick an item from your bags; it is destroyed and
 attuned at once for 2 / 10 / 50 / 250 gold (green / blue / epic / legendary), double for gear you could attune
-by wearing it. **Item tooltips** show each piece's attunement (attuned, % and kills, sacrifice only, or why it
+by wearing it. **Item tooltips** show each piece's attunement (attuned, % and kills, tribute only, or why it
 doesn't count), and the **Attunement** button in the micro menu (between Talents and Achievements, or `/attunement`) opens the collection window:
 your attuned items, items in progress, the stats they give and how far along the diminishing returns you are.
 Needs the **UnboundAttunement** addon. GM commands (they act on the selected
