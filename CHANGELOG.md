@@ -63,6 +63,11 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Added
+- **Soloable raid mechanics, Naxxramas: Thaddius** (`Unbound.SoloRaid.Thaddius`): alone in the raid, Stalagg
+  and Feugen don't revive each other (normally both must die within 5 seconds, on platforms far apart) and
+  don't overload their Tesla Coils when they follow the player off their platforms.
+- **Endgame goals in the power budget:** classic Naxxramas Mythic +1 solo is the realistic endgame goal,
+  Naxxramas Mythic +10 the stretch goal, with player power estimates per classic raid.
 - **Soloable raid mechanics, Molten Core, Zul'Gurub and Ahn'Qiraj** (`src/unbound_solo_raids.cpp`), like Blackwing
   Lair: only while the raid has at most one player in it. Molten Core: Lucifron's Flamewaker Protectors'
   Dominate Mind fails. Zul'Gurub: Jin'do's Brain Wash Totem and Banish fail; Hakkar's Cause Insanity and Blood

@@ -431,6 +431,12 @@ Unbound.Attunement.SacrificeOwnGearMultiplier = 2
 #    Unbound.SoloRaid.QirajiMindslayer
 #        Description: Temple of Ahn'Qiraj, Qiraji Mindslayer: Cause Insanity (mind control) fails.
 #        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.Thaddius
+#        Description: Naxxramas (classic), Thaddius: Stalagg and Feugen don't revive each other (normally
+#                     both must die within 5 seconds, on platforms far apart) and don't overload their
+#                     Tesla Coils when they follow the player off their platforms.
+#        Default:     1 - Enabled
 
 Unbound.SoloRaid.Enable = 1
 Unbound.SoloRaid.Razorgore = 1
@@ -447,6 +453,7 @@ Unbound.SoloRaid.TwinEmperors = 1
 Unbound.SoloRaid.Viscidus = 1
 Unbound.SoloRaid.ViscidusHitMultiplier = 10
 Unbound.SoloRaid.QirajiMindslayer = 1
+Unbound.SoloRaid.Thaddius = 1
 
 #    Unbound.Naxx40.Doable.FourHorsemen
 #    Unbound.Naxx40.Doable.Gluth

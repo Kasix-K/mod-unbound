@@ -44,10 +44,18 @@
  *                          of freezing), which one player can't reach.
  *   Qiraji Mindslayer      Cause Insanity (26079, a mind control) fails.
  *
+ * Naxxramas (classic, src/naxx40):
+ *   Thaddius               Stalagg and Feugen don't revive each other (normally both must die within 5
+ *                          seconds, on platforms far apart) and don't overload their Tesla Coils when
+ *                          they follow the player off their platforms. The fix is in
+ *                          boss_thaddius_40.cpp, through UnboundSoloThaddius() (unbound_solo_raids.h).
+ *
  * The spells are bound to spell_unbound_solo_raid_block in data/sql/db-world/unbound_solo_raids.sql
  * and only fail when cast by the creature listed below, so the same spells used elsewhere are unchanged.
  * Each boss has an on/off setting in mod_unbound.conf (Unbound.SoloRaid.*).
  */
+
+#include "unbound_solo_raids.h"
 
 #include "Config.h"
 #include "Creature.h"
@@ -86,6 +94,7 @@ namespace
         FIX_TWIN_EMPERORS,
         FIX_VISCIDUS,
         FIX_QIRAJI_MINDSLAYER,
+        FIX_THADDIUS,
         MAX_SOLO_RAID_FIX
     };
 
@@ -93,7 +102,8 @@ namespace
     constexpr std::array<char const*, MAX_SOLO_RAID_FIX> FIX_KEYS =
     {
         "Razorgore", "Vaelastrasz", "Ebonroc", "Chromaggus", "Nefarian",
-        "Lucifron", "Jindo", "Hakkar", "Ayamiss", "Skeram", "TwinEmperors", "Viscidus", "QirajiMindslayer"
+        "Lucifron", "Jindo", "Hakkar", "Ayamiss", "Skeram", "TwinEmperors", "Viscidus", "QirajiMindslayer",
+        "Thaddius"
     };
 
     bool sEnabled = true;
@@ -148,6 +158,11 @@ namespace
     {
         return map && map->IsRaid() && map->GetPlayersCountExceptGMs() <= 1;
     }
+}
+
+bool UnboundSoloThaddius(Map const* map)
+{
+    return IsFixActive(FIX_THADDIUS) && IsSoloRaid(map);
 }
 
 class spell_unbound_solo_raid_block : public SpellScript

@@ -22,6 +22,7 @@
 #include "ScriptedCreature.h"
 #include "SpellScript.h"
 #include "naxx40_instance.h"
+#include "../unbound_solo_raids.h"   // mod-unbound: Thaddius solo fix
 
 namespace UnboundNaxx40
 {
@@ -276,7 +277,8 @@ public:
             if (me->HasUnitState(UNIT_STATE_CASTING))
                 return;
 
-            if (summonTimer) // Revive
+            // Revive (not solo: one player can't kill both within 5 seconds; Unbound.SoloRaid.Thaddius)
+            if (summonTimer && !UnboundSoloThaddius(me->GetMap()))
             {
                 summonTimer += diff;
                 if (summonTimer >= 5000)
@@ -548,7 +550,9 @@ public:
                 case EVENT_MINION_CHECK_DISTANCE:
                     if (Creature* cr = ObjectAccessor::GetCreature(*me, myCoil))
                     {
-                        if (!me->GetHomePosition().IsInDist(me, 28) && me->IsInCombat())
+                        // off its platform: the coil overloads (not solo, where both follow the only player;
+                        // Unbound.SoloRaid.Thaddius)
+                        if (!me->GetHomePosition().IsInDist(me, 28) && me->IsInCombat() && !UnboundSoloThaddius(me->GetMap()))
                         {
                             if (!overload)
                             {

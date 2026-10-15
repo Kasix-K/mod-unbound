@@ -9,7 +9,9 @@ player is at most several times a normal level 60, and every number stays far be
 
 ## Power budget
 
-The endgame goal: **one player can solo a full Mythic raid** (the player count will be low). Raids are
+The endgame goal: **one player can solo a full Mythic raid** (the player count will be low). The realistic
+goal is **classic Naxxramas on Mythic +1** solo; the stretch goal is **Naxxramas Mythic +10** (set 2026-10-15,
+see Endgame goals below). Raids are
 scaled down to one player, and **gear attunement is the main lever** that lets a player climb Mythic
 levels; perks and perk ranks add on top. Design every power system against these targets, and change the
 numbers here first if testing says so. Every number below is meant to be a config setting.
@@ -32,6 +34,26 @@ numbers here first if testing says so. Every number below is meant to be a confi
 | Mythic +5 | about 4.2x |
 | Mythic +10 (capstone) | about 5.6x |
 | Mythic +20 | about 8.4x |
+
+These are for a raid like Molten Core. Later raids have stronger bosses at the same player count (all scale
+to about 2.8 players' worth solo), so they need more (estimates from boss health and damage; check in
+testing):
+
+| Raid (solo) | Biggest bosses (health, normal) | Player power needed |
+|---|---|---|
+| Molten Core | Ragnaros 1.1M | about 2.8x |
+| Blackwing Lair, Ahn'Qiraj | Nefarian 2.2M, Viscidus 2.0M | about 3.5-4.5x |
+| Naxxramas (classic) | Thaddius 6.7M, Loatheb 5.3M, Patchwerk 4.0M, Kel'Thuzad 3.2M | about 6-7x |
+
+### Endgame goals
+
+| Goal | Raid | Player power needed | Reached with (see Player, Mythic+ gear) |
+|---|---|---|---|
+| **Realistic endgame goal** | **Naxxramas (classic) Mythic +1** | about 6.6-7.7x | A fully attuned character (normal gear, about +200%) with five Offensive perks, perk ranks and the class perk (about 7.5-8x); no Mythic gear needed |
+| **Stretch goal** | **Naxxramas (classic) Mythic +10** | about 12-14x | Mythic gear attuned around +10 on top (about 10.5x before the class perk, about 13-14x with it) |
+
+Past the stretch goal the climb goes on (every Mythic item attuned at +30 is about 18.5x before the class
+perk, about Naxxramas Mythic +16-18). Change these targets here first if testing says otherwise.
 
 ### Player
 
@@ -223,9 +245,15 @@ changes, raid by raid (see Next up).
   - [x] Ruins of Ahn'Qiraj (2026-10-15): Ayamiss (Paralyze, larva Feed)
   - [x] Temple of Ahn'Qiraj (2026-10-15): Viscidus (each hit counts 10 times towards freeze and shatter),
         Twin Emperors (Heal Brother), Skeram (True Fulfillment), Qiraji Mindslayer (Cause Insanity)
-  - [ ] Naxxramas (classic): to look at like the others (e.g. Razuvious needs priests to control his
-        students, the Four Horsemen several tanks, Thaddius' polarity shift); `Unbound.Naxx40.Doable.*`
-        already makes four bosses easier
+  - [x] Naxxramas (classic), Thaddius (2026-10-15): Stalagg and Feugen don't revive each other and don't
+        overload their Tesla Coils (`Unbound.SoloRaid.Thaddius`)
+  - [ ] Naxxramas (classic), the rest (checked 2026-10-15): the Four Horsemen stay as they are (all four
+        at once with stacking Marks: only beatable solo with `Unbound.Naxx40.Doable.FourHorsemen = 1`, kept
+        a server choice on purpose); test Sapphiron (Ice Bolt / Frost Breath with one player) and Gothik
+        (live and dead sides) in game. Fine solo, power checks only: Patchwerk (Hateful Strike falls back to
+        the tank, scaled by autobalance like all creature damage), Razuvious, Gluth, Loatheb, Faerlina,
+        Kel'Thuzad (his Chains are already off); no problem: Maexxna (never webs her target), Anub'Rekhan,
+        Noth, Heigan, Grobbulus
   - [ ] Then, after testing, the risky ones: Core Hounds, Ragnaros' Magma Blast, Firemaw's Flame Buffet,
         Nefarian's Bone Constructs, Mandokir, Thekal, Ossirian, C'Thun, Anubisath Sentinels
   - Shadowflame (Firemaw, Ebonroc, Flamegor, Nefarian) still needs an Onyxia Scale Cloak, which can't be
