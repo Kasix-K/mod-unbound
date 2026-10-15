@@ -200,6 +200,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   server). Client-side only; see the README.
 
 ### Fixed
+- **Attunement micro button lost its icon with ElvUI** after ElvUI re-laid out the micro bar (the button's
+  square moved in front of the icon); the icon is now drawn on the square itself.
 - **Heroic bosses dropped no quest items** (Head of VanCleef, Theradric Crystal Carving, Head of Balnazzar,
   ...): each Heroic boss now also drops its normal version's quest items at the same chances.
 - **Classic Heroic creatures summoned by spells or transformations** (Sneed in the Deadmines, boss adds, totems

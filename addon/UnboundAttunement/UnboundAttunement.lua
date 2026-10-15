@@ -486,23 +486,27 @@ end
 local function addMicroButton()
     if _G["UnboundAttunementMicroButton"] or not HelpMicroButton then return end
     local button = CreateFrame("Button", "UnboundAttunementMicroButton", HelpMicroButton:GetParent())
-    button.icon = button:CreateTexture(nil, "ARTWORK")
-    button.icon:SetTexture(MICRO_ICON)
 
     local E, AB = elvActionBars()
     if E then
-        -- ElvUI: a bordered square like its other micro buttons, the icon filling it
+        -- ElvUI: a bordered square like its other micro buttons, the icon filling it. The icon and the pressed
+        -- shade are drawn on the square's own frame: re-parenting the button (place() below) moves child frames
+        -- back above it, so an icon on the button itself would end up hidden behind the square's background.
         local f = CreateFrame("Frame", nil, button)
         f:SetFrameLevel(button:GetFrameLevel() - 1)
         f:SetTemplate("Default", true)
         f:SetOutside(button)
         button.backdrop = f
+        button.icon = f:CreateTexture(nil, "ARTWORK")
+        button.icon:SetTexture(MICRO_ICON)
         button.icon:SetInside(f)
         button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-        local pushed = button:CreateTexture(nil, "OVERLAY")
+        local pushed = f:CreateTexture(nil, "OVERLAY")
         pushed:SetTexture(1, 1, 1, 0.25)
         pushed:SetInside(f)
-        button:SetPushedTexture(pushed)
+        pushed:Hide()
+        button:HookScript("OnMouseDown", function() pushed:Show() end)
+        button:HookScript("OnMouseUp", function() pushed:Hide() end)
 
         -- One row (the usual layout): between Talents and Achievements; ElvUI anchors each button to the one
         -- before it, so moving Achievements after this button shifts the rest along. Several rows: ElvUI's grid
@@ -538,6 +542,8 @@ local function addMicroButton()
         place()
     else
         -- default UI: the game's micro button frame with the icon where the character portrait goes
+        button.icon = button:CreateTexture(nil, "ARTWORK")
+        button.icon:SetTexture(MICRO_ICON)
         button:SetSize(28, 58)
         button:SetNormalTexture("Interface\\Buttons\\UI-MicroButtonCharacter-Up")
         button:SetPushedTexture("Interface\\Buttons\\UI-MicroButtonCharacter-Down")
