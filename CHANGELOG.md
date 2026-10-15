@@ -63,6 +63,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Added
+- **Mythic maximum +10** (power budget): every Mythic dungeon and raid stops at +10, the number all Mythic
+  systems are designed around (was a configurable +30). Mythic gear, upgrades and the climb estimates
+  are reworked for it; Naxxramas Mythic +10 is the top of the game.
 - **Soloable raid mechanics, Naxxramas: Thaddius** (`Unbound.SoloRaid.Thaddius`): alone in the raid, Stalagg
   and Feugen don't revive each other (normally both must die within 5 seconds, on platforms far apart) and
   don't overload their Tesla Coils when they follow the player off their platforms.

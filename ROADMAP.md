@@ -21,9 +21,8 @@ numbers here first if testing says so. Every number below is meant to be a confi
 | Lever | Target |
 |---|---|
 | Classic raids solo (mod-autobalance) | A solo player faces **about 3 players' worth** of a raid; a full raid is unchanged. 20-player raids: `AutoBalance.InflectionPointRaid20M.CurveFloor = 0.1` (2.9 players' worth); 40-player raids: `AutoBalance.InflectionPointRaid40M.CurveFloor = 0.03` (2.8). Set 2026-10-14. |
-| Mythic scaling | **+10% per level, added** (not multiplied): Mythic +10 = 2x, +20 = 3x the solo raid |
-| Mythic capstone | **Mythic +10** is the first goal for a fully attuned player |
-| Mythic maximum | Configurable, start at **Mythic +30** (the long climb past the capstone); raise it as players progress |
+| Mythic scaling | **+10% per level, added** (not multiplied): Mythic +5 = 1.5x, Mythic +10 = 2x the solo raid |
+| Mythic maximum | **Mythic +10 for every dungeon and raid** (decided 2026-10-15): the top of the climb, and the number every Mythic system is designed around (the Keystone's Max button, Mythic gear, upgrades, the power budget). A config setting, but raising it means redoing this budget |
 | Safety clamp | No creature health or damage above **2 billion**, whatever the settings (the 3.3.5 client shows numbers above about 2.1 billion wrongly). With added scaling this is never reached in practice: the biggest classic boss (Vaelastrasz, 3.3 million health) would pass it only around Mythic +90,000 solo |
 
 ### Player power needed
@@ -32,8 +31,7 @@ numbers here first if testing says so. Every number below is meant to be a confi
 |---|---|
 | Base solo raid | about 2.8x |
 | Mythic +5 | about 4.2x |
-| Mythic +10 (capstone) | about 5.6x |
-| Mythic +20 | about 8.4x |
+| Mythic +10 (the maximum) | about 5.6x |
 
 These are for a raid like Molten Core. Later raids have stronger bosses at the same player count (all scale
 to about 2.8 players' worth solo), so they need more (estimates from boss health and damage; check in
@@ -52,8 +50,8 @@ testing):
 | **Realistic endgame goal** | **Naxxramas (classic) Mythic +1** | about 6.6-7.7x | A fully attuned character (normal gear, about +200%) with five Offensive perks, perk ranks and the class perk (about 7.5-8x); no Mythic gear needed |
 | **Stretch goal** | **Naxxramas (classic) Mythic +10** | about 12-14x | Mythic gear attuned around +10 on top (about 10.5x before the class perk, about 13-14x with it) |
 
-Past the stretch goal the climb goes on (every Mythic item attuned at +30 is about 18.5x before the class
-perk, about Naxxramas Mythic +16-18). Change these targets here first if testing says otherwise.
+Mythic stops at +10, so the stretch goal is also the top of the game: Naxxramas Mythic +10 is the hardest
+content there is. Change these targets here first if testing says otherwise.
 
 ### Player
 
@@ -69,7 +67,7 @@ perk, about Naxxramas Mythic +16-18). Change these targets here first if testing
 | - minimum item level | Only items whose **required level is within 10 of the level cap** count (level 50+ while the cap is 60; it moves up with each expansion), so every attuned item matters and nobody grinds low-level items |
 | - diminishing returns | Full value up to **+100%** of gear stats, half value up to **+200%**, a quarter beyond: early collecting feels strong, the long tail is the endgame grind (no hard cap) |
 | - the grind | About **255 level 60 blue/epic items** for +200% with the diminishing returns (about 170 items give +150%); 20% of an item is about 7 stat points, a full set is about 600 (`ReferenceSetStats`). Tune `Percent` or the diminishing returns after testing |
-| **Total** | About **6x** a normal level 60 when fully progressed, before the class perk: Mythic +10. With the class perk about **7.5-8x** (about Mythic +16-18). Each further Mythic level needs more collected gear and higher perk ranks |
+| **Total** | About **6x** a normal level 60 when fully progressed, before the class perk: Molten Core Mythic +10. With the class perk about **7.5-8x**: Naxxramas Mythic +1, the realistic endgame goal. Mythic gear on top leads to Naxxramas Mythic +10 (see Endgame goals) |
 
 Numbers check: a 6x character has a few thousand of a primary stat and tens of thousands of health, well
 above normal WoW but nowhere near Peloria's billions.
@@ -135,10 +133,10 @@ config settings (the item generator reads them).
 |---|---|
 | The items | Epic remakes of each boss's drops (same names and looks as its Heroic blues), one per boss, two from the final boss, like Heroic |
 | Mythic +1 stats | **Level 60 epic level**: about 1.3x the Heroic version |
-| Per Mythic level | **+2% of the +1 stats, added**: +10 = about 1.2x, +30 = about 1.6x the +1 item (helm: 20 Stamina at +1, about 24 at +10, 32 at +30) |
-| Drop level | An item drops at the level the run was cleared at (a +12 clear drops +12 gear) |
-| Item count | About 450 dungeon items x the configured maximum level (about 13,500 entries at +30; the client patch grows about 0.4 MB). Raising the maximum = rerun the generator and send out a new client patch |
-| Attunement percent | **20% + 2% per Mythic level** for Mythic items (+1: 22%, +10: 40%, +30: 80%), so attuning high is worth much more than wearing high: a +30 helm gives 32 Stamina worn, 25 attuned |
+| Per Mythic level | **+2% of the +1 stats, added**: +10 (the maximum) = about 1.2x the +1 item (helm: 20 Stamina at +1, about 22 at +5, about 24 at +10) |
+| Drop level | An item drops at the level the run was cleared at (a +7 clear drops +7 gear) |
+| Item count | About 450 dungeon items x 10 levels (about 4,500 entries, plus the raids' items; the client patch grows about 0.15 MB) |
+| Attunement percent | **20% + 2% per Mythic level** for Mythic items (+1: 22%, +5: 30%, +10: 40%), so attuning high is worth much more than wearing high: the helm gives 4 Stamina attuned at +1, about 10 at +10 |
 | Attunement: one item | All level copies of a Mythic item count as **one item**: attuning (or sacrificing) a higher copy **replaces** the lower copy's bonus, it never adds to it. Attuning early is never wasted, waiting for a higher copy pays more. (Heroic and Mythic versions of a piece are different items and both count.) |
 | Attunement: kills | A higher copy needs its own kills (the normal epic count); an upgrade never changes what is already attuned |
 | Diminishing returns | A fourth step for the much larger Mythic totals: full value up to +100%, half to +200%, a quarter to +400%, **an eighth beyond** |
@@ -151,11 +149,11 @@ config settings):
 
 | Level gained (to +N) | Gold | Mythic currency |
 |---|---|---|
-| +2 to +10 | 5 x N gold (to +5: 25 gold) | 1 |
-| +11 to +20 | 5 x N gold | 2 |
-| +21 and above | 5 x N gold | 3 |
+| +2 to +5 | 5 x N gold (to +5: 25 gold) | 1 |
+| +6 to +10 | 5 x N gold (to +10: 50 gold) | 2 |
 
-e.g. +1 to +5 costs 70 gold and 4 currency; +10 to +20 costs 775 gold and 20 currency.
+e.g. +1 to +5 costs 70 gold and 4 currency; +5 to +10 costs 200 gold and 10 currency; +1 to +10 costs 270 gold
+and 14 currency.
 
 **Mythic currency** (new, name to be decided, e.g. "Mythic Shard"): a currency item from Mythic bosses,
 more at higher levels (e.g. 1 per boss plus 1 per 5 Mythic levels, double from the final boss; config
@@ -165,14 +163,12 @@ settings). Used for upgrades; later also a vendor (cosmetics, perk ranks) like t
 
 | Fully collected | Gear worn | Attuned | Player power (with perks, before class perk) | Clears about |
 |---|---|---|---|---|
-| Before Mythic gear (normal attunement only) | 1x | +200% | about 6x | Mythic +10 (the capstone) |
-| Every Mythic item attuned at +10 | about 1.5x | about +380% | about 10.5x | Mythic +28 |
-| Every Mythic item attuned at +30 | about 2.1x | about +720% | about 18.5x | Mythic +55 |
+| Before Mythic gear (normal attunement only) | 1x | +200% | about 6x (7.5-8x with the class perk) | Molten Core Mythic +10; with the class perk Naxxramas Mythic +1 |
+| Every Mythic item attuned at +10 | about 1.5x | about +380% | about 10.5x (13-14x with the class perk) | Naxxramas Mythic +5-7; with the class perk Naxxramas Mythic +10 |
 
-The capstone (+10) stays the first goal; Mythic gear makes the climb past it much longer. The configured
-maximum (+30) is reached long before a full +30 collection: raise it towards +60 as players get there. If
-Mythic gear makes the climb too fast, lower the attunement percent per level first (2% to 1%), then the gear
-stats per level.
+Mythic gear is what carries a player from the realistic goal (Naxxramas +1) to the stretch goal (Naxxramas
++10, the top). If it gets there too fast, lower the attunement percent per level first (2% to 1%), then the
+gear stats per level.
 
 Mechanics are a separate problem: some bosses need more than one player whatever the numbers
 (Razorgore's orb, the Twin Emperors' teleport tank swap, C'Thun's stomach phase). They need small script
@@ -279,15 +275,15 @@ changes, raid by raid (see Next up).
       `tools/world_bosses.py`. Later a weekly rotation (boss of the week) with a first-kill bonus.
 
 - [ ] **Mythic+** (large): player-chosen +1, +2, ... levels on top of Heroic, through mod-autobalance's
-      multiplier hook. Scaling and limits per the Power budget (+10% per level added, capstone +10,
-      configurable maximum starting at +30, 2 billion clamp). Best after gear attunement (its rewards
+      multiplier hook. Scaling and limits per the Power budget (+10% per level added, **maximum +10 for every
+      dungeon and raid**, 2 billion clamp). Best after gear attunement (its rewards
       feed attunement). Design (inspired by Peloria's Mythic Keystone, adapted):
   - **Mythic Keystone NPC** just inside the entrance of every dungeon and raid. Spawned automatically when
     an instance is created, at the instance's entry point (from the game's area trigger data), so every
     current and future instance gets one without placing it by hand.
   - **Keystone window** (same style as the perk window), opened by talking to the NPC:
-    - **Tier picker:** - and + buttons, a slider from +1 to the configured maximum, and quick buttons
-      **+1**, **+5**, **Max** and **Last** (the level of the last run).
+    - **Tier picker:** - and + buttons, a slider from +1 to +10 (the maximum), and quick buttons
+      **+1**, **+5**, **Max** (+10) and **Last** (the level of the last run).
     - **Run preview:** enemy power (x(1 + 0.1 x level), e.g. +10 shows x2.0) and the attunement and gold
       reward at that level.
     - **Best cleared** and **Last run**, per character and per instance.
