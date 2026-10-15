@@ -25,6 +25,8 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   The level spread uses only the dungeon's creatures with loot (the real mobs and bosses), so critters, triggers
   and trainers (Uldaman's level 54 trainer, level 60 triggers) don't squeeze it; every copy is clamped to
   60-62. Scarlet Monastery is one map (189) with one Heroic mode for all four wings.
+  Creatures also spawned in another dungeon or raid get no heroic copy (it would show up in that map's heroic
+  too); spawns in the open world (maps 0, 1, 530, 571, `OPEN_WORLD_MAPS`) don't count, since it is never heroic.
 - **Heroic loot:** `tools/heroic_loot.py` defines heroic items (910100-910999), sets (950-999) and boss
   loot. After a change run `python tools/heroic_loot.py`, `python tools/classic_heroics.py` and
   `python tools/custom_dbc.py`, then restart the worldserver. Never delete an item that has dropped: take

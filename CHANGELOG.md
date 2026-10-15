@@ -184,6 +184,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   server). Client-side only; see the README.
 
 ### Fixed
+- **Classic Heroic creatures also spawned in the open world** (Scarlet Sentry, Son of Arugal, Defias Watchman,
+  Stonevault Rockchewer, Holdout Warrior, Suffering Victim) stayed at their normal level in Heroic; only spawns
+  in other dungeons and raids keep a creature normal now.
 - **Class perks only work for their own class**: the server refuses them for any other class (the window
   hid them, but a `/script` command could turn them on).
 

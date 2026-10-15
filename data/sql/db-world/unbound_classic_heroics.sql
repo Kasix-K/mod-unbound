@@ -12,8 +12,10 @@ CREATE TEMPORARY TABLE `unbound_hc_base` SELECT DISTINCT `id` AS `entry` FROM `c
 -- leave creatures that already have a heroic version of their own alone
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`
     WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);
--- and creatures also spawned on other maps: their heroic copy would show up in those maps' heroics too
-DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;
+-- and creatures also spawned in other dungeons or raids: their heroic copy would show up in those maps' heroics too
+-- (spawns in the open world don't count, it is never heroic: Scarlet Sentry, Son of Arugal, Defias Watchman, ...)
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP
+    AND `c`.`map` NOT IN (0, 1, 530, 571);
 -- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang
 -- Keep): they stay as they are and don't stretch the dungeon's level range
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;
@@ -81,8 +83,10 @@ CREATE TEMPORARY TABLE `unbound_hc_base` SELECT DISTINCT `id` AS `entry` FROM `c
 -- leave creatures that already have a heroic version of their own alone
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`
     WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);
--- and creatures also spawned on other maps: their heroic copy would show up in those maps' heroics too
-DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;
+-- and creatures also spawned in other dungeons or raids: their heroic copy would show up in those maps' heroics too
+-- (spawns in the open world don't count, it is never heroic: Scarlet Sentry, Son of Arugal, Defias Watchman, ...)
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP
+    AND `c`.`map` NOT IN (0, 1, 530, 571);
 -- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang
 -- Keep): they stay as they are and don't stretch the dungeon's level range
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;
@@ -157,8 +161,10 @@ CREATE TEMPORARY TABLE `unbound_hc_base` SELECT DISTINCT `id` AS `entry` FROM `c
 -- leave creatures that already have a heroic version of their own alone
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`
     WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);
--- and creatures also spawned on other maps: their heroic copy would show up in those maps' heroics too
-DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;
+-- and creatures also spawned in other dungeons or raids: their heroic copy would show up in those maps' heroics too
+-- (spawns in the open world don't count, it is never heroic: Scarlet Sentry, Son of Arugal, Defias Watchman, ...)
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP
+    AND `c`.`map` NOT IN (0, 1, 530, 571);
 -- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang
 -- Keep): they stay as they are and don't stretch the dungeon's level range
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;
@@ -228,8 +234,10 @@ INSERT INTO `unbound_hc_base` (`entry`) SELECT `entry` FROM `creature_template` 
 -- leave creatures that already have a heroic version of their own alone
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`
     WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);
--- and creatures also spawned on other maps: their heroic copy would show up in those maps' heroics too
-DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;
+-- and creatures also spawned in other dungeons or raids: their heroic copy would show up in those maps' heroics too
+-- (spawns in the open world don't count, it is never heroic: Scarlet Sentry, Son of Arugal, Defias Watchman, ...)
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP
+    AND `c`.`map` NOT IN (0, 1, 530, 571);
 -- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang
 -- Keep): they stay as they are and don't stretch the dungeon's level range
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;
@@ -307,8 +315,10 @@ INSERT INTO `unbound_hc_base` (`entry`) SELECT `entry` FROM `creature_template` 
 -- leave creatures that already have a heroic version of their own alone
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`
     WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);
--- and creatures also spawned on other maps: their heroic copy would show up in those maps' heroics too
-DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;
+-- and creatures also spawned in other dungeons or raids: their heroic copy would show up in those maps' heroics too
+-- (spawns in the open world don't count, it is never heroic: Scarlet Sentry, Son of Arugal, Defias Watchman, ...)
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP
+    AND `c`.`map` NOT IN (0, 1, 530, 571);
 -- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang
 -- Keep): they stay as they are and don't stretch the dungeon's level range
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;
@@ -386,8 +396,10 @@ INSERT INTO `unbound_hc_base` (`entry`) SELECT `entry` FROM `creature_template` 
 -- leave creatures that already have a heroic version of their own alone
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`
     WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);
--- and creatures also spawned on other maps: their heroic copy would show up in those maps' heroics too
-DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;
+-- and creatures also spawned in other dungeons or raids: their heroic copy would show up in those maps' heroics too
+-- (spawns in the open world don't count, it is never heroic: Scarlet Sentry, Son of Arugal, Defias Watchman, ...)
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP
+    AND `c`.`map` NOT IN (0, 1, 530, 571);
 -- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang
 -- Keep): they stay as they are and don't stretch the dungeon's level range
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;
@@ -464,8 +476,10 @@ INSERT INTO `unbound_hc_base` (`entry`) SELECT `entry` FROM `creature_template` 
 -- leave creatures that already have a heroic version of their own alone
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`
     WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);
--- and creatures also spawned on other maps: their heroic copy would show up in those maps' heroics too
-DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;
+-- and creatures also spawned in other dungeons or raids: their heroic copy would show up in those maps' heroics too
+-- (spawns in the open world don't count, it is never heroic: Scarlet Sentry, Son of Arugal, Defias Watchman, ...)
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP
+    AND `c`.`map` NOT IN (0, 1, 530, 571);
 -- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang
 -- Keep): they stay as they are and don't stretch the dungeon's level range
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;
@@ -538,8 +552,10 @@ CREATE TEMPORARY TABLE `unbound_hc_base` SELECT DISTINCT `id` AS `entry` FROM `c
 -- leave creatures that already have a heroic version of their own alone
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`
     WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);
--- and creatures also spawned on other maps: their heroic copy would show up in those maps' heroics too
-DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;
+-- and creatures also spawned in other dungeons or raids: their heroic copy would show up in those maps' heroics too
+-- (spawns in the open world don't count, it is never heroic: Scarlet Sentry, Son of Arugal, Defias Watchman, ...)
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP
+    AND `c`.`map` NOT IN (0, 1, 530, 571);
 -- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang
 -- Keep): they stay as they are and don't stretch the dungeon's level range
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;
@@ -615,8 +631,10 @@ INSERT INTO `unbound_hc_base` (`entry`) SELECT `entry` FROM `creature_template` 
 -- leave creatures that already have a heroic version of their own alone
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`
     WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);
--- and creatures also spawned on other maps: their heroic copy would show up in those maps' heroics too
-DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;
+-- and creatures also spawned in other dungeons or raids: their heroic copy would show up in those maps' heroics too
+-- (spawns in the open world don't count, it is never heroic: Scarlet Sentry, Son of Arugal, Defias Watchman, ...)
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP
+    AND `c`.`map` NOT IN (0, 1, 530, 571);
 -- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang
 -- Keep): they stay as they are and don't stretch the dungeon's level range
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;
@@ -694,8 +712,10 @@ INSERT INTO `unbound_hc_base` (`entry`) SELECT `entry` FROM `creature_template` 
 -- leave creatures that already have a heroic version of their own alone
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`
     WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);
--- and creatures also spawned on other maps: their heroic copy would show up in those maps' heroics too
-DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;
+-- and creatures also spawned in other dungeons or raids: their heroic copy would show up in those maps' heroics too
+-- (spawns in the open world don't count, it is never heroic: Scarlet Sentry, Son of Arugal, Defias Watchman, ...)
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP
+    AND `c`.`map` NOT IN (0, 1, 530, 571);
 -- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang
 -- Keep): they stay as they are and don't stretch the dungeon's level range
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;
@@ -768,8 +788,10 @@ CREATE TEMPORARY TABLE `unbound_hc_base` SELECT DISTINCT `id` AS `entry` FROM `c
 -- leave creatures that already have a heroic version of their own alone
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`
     WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);
--- and creatures also spawned on other maps: their heroic copy would show up in those maps' heroics too
-DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;
+-- and creatures also spawned in other dungeons or raids: their heroic copy would show up in those maps' heroics too
+-- (spawns in the open world don't count, it is never heroic: Scarlet Sentry, Son of Arugal, Defias Watchman, ...)
+DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP
+    AND `c`.`map` NOT IN (0, 1, 530, 571);
 -- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang
 -- Keep): they stay as they are and don't stretch the dungeon's level range
 DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;

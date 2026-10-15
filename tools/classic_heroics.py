@@ -37,6 +37,9 @@ DAMAGE_MULTIPLIER = 1.5
 # dungeon_access_template.id is a tinyint (max 255; ids up to 121 are taken): heroic rows use 200 + list index.
 ACCESS_ID_BASE = 200
 
+# Eastern Kingdoms, Kalimdor, Outland, Northrend: never heroic, so a creature also spawned there still gets a copy.
+OPEN_WORLD_MAPS = (0, 1, 530, 571)
+
 # (map id, name). MapDifficulty IDs are 10000 + map id. Only append to this list (the order sets access ids).
 HEROIC_DUNGEONS = [
     (34, 'Stormwind Stockades'),
@@ -97,8 +100,10 @@ def dungeon_sql(index, map_id, name):
         '-- leave creatures that already have a heroic version of their own alone',
         'DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`',
         '    WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);',
-        '-- and creatures also spawned on other maps: their heroic copy would show up in those maps\' heroics too',
-        'DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;',
+        '-- and creatures also spawned in other dungeons or raids: their heroic copy would show up in those maps\' heroics too',
+        '-- (spawns in the open world don\'t count, it is never heroic: Scarlet Sentry, Son of Arugal, Defias Watchman, ...)',
+        'DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP',
+        f'    AND `c`.`map` NOT IN ({", ".join(str(m) for m in OPEN_WORLD_MAPS)});',
         '-- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang',
         '-- Keep): they stay as they are and don\'t stretch the dungeon\'s level range',
         'DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;',
