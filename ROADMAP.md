@@ -123,7 +123,7 @@ changes, raid by raid (see Next up).
 
 - [x] Gear attunement (all 4 stages, 2026-10-14): the collection and its stats (20% per item, diminishing
       returns), item expansion tags, attuning by kills, the Altar of Sacrifice, item tooltips and the collection
-      window (Attunement tab, `/attunement`)
+      window (Attunement micro menu button, `/attunement`)
 
 ## Next up
 

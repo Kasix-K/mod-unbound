@@ -13,7 +13,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | 11 Utility perks (Longer Legs to Mana Leech), Utility limited to 3 active | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Iron Will utility perk (shorter crowd control, 3 ranks by level) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Perk ranks (first: Rapid Recovery, 3 ranks by level; `.perk rank`) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
-| Gear attunement, stage 4: item tooltips, collection window, Attunement tab | 2026-10-14 | 2026-10-14 | Kasix-K |
+| Gear attunement, stage 4: item tooltips, collection window, Attunement micro menu button | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 3: Altar of Sacrifice (190103) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 2: attuning by kills (`.attune progress`) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 1: collection and stats (GM commands) | 2026-10-14 | 2026-10-14 | Kasix-K |
@@ -54,7 +54,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ### Added
 - **Gear attunement, stage 4 of 4: tooltips and the collection window** (new **UnboundAttunement** addon). Item
   tooltips show each weapon or armour piece's attunement: attuned, % and kills, sacrifice only (with the price),
-  or why it doesn't count. The **Attunement** tab on the character sheet (next to Perks) or `/attunement` opens the
+  or why it doesn't count. The **Attunement** button in the micro menu (after Help) or `/attunement` opens the
   collection window: attuned items and items in progress as an icon grid, the stats they give, and a bar showing
   the diminishing returns. Tooltips and the window update live as you kill, attune and sacrifice. Gear attunement
   is complete.
@@ -155,6 +155,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   `Unbound.ExpansionUnlocked`).
 
 ### Changed
+- **Attunement window button** moved from a character sheet tab (too wide for the sheet) to the micro menu,
+  after Help; with ElvUI's micro bar it matches ElvUI's buttons and follows the bar's layout.
 - **Classic raids soloable:** solo scaling for 20-player raids (Zul'Gurub, Ruins of Ahn'Qiraj) and
   40-player raids (Molten Core, Blackwing Lair, Temple of Ahn'Qiraj) lowered so one player faces about 3
   players' worth of the raid (was about 9 and 17); a full raid is unchanged. Dungeons are unchanged.
