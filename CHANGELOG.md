@@ -79,6 +79,10 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   (kept after unequipping, selling or deleting the item); attunement progress is saved per item; stats only
   arrive at 100%. Per character, with sacrifice at an altar NPC in the capital cities.
   Sacrifice prices: 2/10/50/250 gold for green/blue/epic/legendary, double for gear the character could attune.
+- **Mythic+ design** in the roadmap: a Mythic Keystone NPC at the entrance of every dungeon and raid
+  (spawned automatically), a Keystone window (tier picker with -/+, slider, +1, +5, Max and Last; run preview;
+  best and last run; activate before the first pull; Missing Attunements for the instance), and rewards per
+  level of faster attunement plus more gold.
 
 ### Changed
 - **Classic raids soloable:** solo scaling for 20-player raids (Zul'Gurub, Ruins of Ahn'Qiraj) and

@@ -150,8 +150,25 @@ changes, raid by raid (see Next up).
 
 - [ ] **Mythic+** (large): player-chosen +1, +2, ... levels on top of Heroic, through mod-autobalance's
       multiplier hook. Scaling and limits per the Power budget (+10% per level added, capstone +10,
-      configurable maximum starting at +30, 2 billion clamp). Still to decide: how a level is chosen
-      (NPC or command). Best after the Heroic currency.
+      configurable maximum starting at +30, 2 billion clamp). Best after gear attunement (its rewards
+      feed attunement). Design (inspired by Peloria's Mythic Keystone, adapted):
+  - **Mythic Keystone NPC** just inside the entrance of every dungeon and raid. Spawned automatically when
+    an instance is created, at the instance's entry point (from the game's area trigger data), so every
+    current and future instance gets one without placing it by hand.
+  - **Keystone window** (same style as the perk window), opened by talking to the NPC:
+    - **Tier picker:** - and + buttons, a slider from +1 to the configured maximum, and quick buttons
+      **+1**, **+5**, **Max** and **Last** (the level of the last run).
+    - **Run preview:** enemy power (x(1 + 0.1 x level), e.g. +10 shows x2.0) and the attunement and gold
+      reward at that level.
+    - **Best cleared** and **Last run**, per character and per instance.
+    - **Activate Mythic +N:** group leader only, before the first pull; the level is locked once anything
+      is pulled.
+    - **Missing Attunements:** every item that can drop in this instance and counts for attunement (green
+      or better, within the level rule), built from the instance's loot tables, with a collected count
+      (e.g. "12 / 42 attuned") and the items still missing highlighted.
+  - **Rewards per level** (config settings): **faster attunement** (each kill gives more attunement progress,
+    about +10% per Mythic level) and **more gold** from bosses (Heroic Badges once they exist). Drops are
+    not upgraded (no new item copies per level).
 - [ ] **Heroic-only loot** (moderate, mostly data): better versions of drops, or extra drops, on Heroic.
 - [ ] **Random item bonuses** (easy): drops sometimes roll an extra enchant (mod-random-enchants).
 - [ ] **Daily "Heroic of the Day"** (moderate): one random Heroic gives bonus rewards each day.
