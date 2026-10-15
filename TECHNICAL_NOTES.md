@@ -39,6 +39,12 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   Batch 2 loot (Razorfen Kraul, Scarlet Monastery, Razorfen Downs, Uldaman) is made the same way; each Scarlet
   Monastery wing's last boss (Thalnos, Doan, Herod, Whitemane) counts as a final boss. Revelosh drops gold only;
   Archaedas has one drop of his own, so he drops one item.
+  Batch 3 loot (Zul'Farrak, Maraudon, Sunken Temple, Blackrock Depths): items dropped directly by 3 or more
+  creatures are dungeon-wide drops and are left out when the boss has drops of its own; grouped rows with
+  chance 0 (an equal share of the group) count as regular boss drops. Bosses that share a loot pool share the
+  heroic items too (the four Sunken Temple dragons; Nekrum shares two of Theka's). Lord Incendius (only
+  random-enchantment bracers) and Ribbly Screwspigot (bags) drop gold only. All six Ring of Law bosses have
+  heroic loot; one of them spawns per run.
 - **World bosses:** `tools/world_bosses.py` (SmartAI fights, no C++; creatures 190110-190199, spawn guids
   9190110-9190199, loot 911000-911999). Hrimthar is creature 190110, adds 190111. After a change run
   `python tools/world_bosses.py` and `python tools/custom_dbc.py`, then restart the worldserver.

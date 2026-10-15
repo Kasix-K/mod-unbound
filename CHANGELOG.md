@@ -13,6 +13,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | 11 Utility perks (Longer Legs to Mana Leech), Utility limited to 3 active | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Iron Will utility perk (shorter crowd control, 3 ranks by level) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Perk ranks (first: Rapid Recovery, 3 ranks by level; `.perk rank`) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
+| Heroic Zul'Farrak, Maraudon, Sunken Temple, Blackrock Depths (with Heroic loot) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Heroic Razorfen Kraul, Scarlet Monastery, Razorfen Downs, Uldaman (with Heroic loot) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Heroic Wailing Caverns, Shadowfang Keep, Blackfathom Deeps, Gnomeregan (with Heroic loot) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 4: item tooltips, collection window, Attunement micro menu button | 2026-10-14 | 2026-10-14 | Kasix-K |
@@ -54,6 +55,11 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-14
 
 ### Added
+- **Heroic Zul'Farrak, Maraudon, Sunken Temple and Blackrock Depths** (classic Heroic batch 3): level 60-62 with
+  1.5x health and damage, including the creatures their events summon (Gahz'rilla, the pyramid event's
+  Sandfury waves, Nekrum and Sezz'ziz, Noxxious Scions, the Avatar and Shade of Hakkar, the Ring of Law waves
+  and bosses, Watchman Doomgrip). Heroic loot: 120 level 60 blue remakes of each boss's own drops (one per
+  boss, two from the final boss) plus level 60 gold; they count for attunement.
 - **Heroic Razorfen Kraul, Scarlet Monastery (all 4 wings), Razorfen Downs and Uldaman** (classic Heroic batch 2):
   level 60-62 with 1.5x health and damage, including the creatures their events summon (Tuten'kash, Plaguemaw
   the Rotting, Tomb Fiends and Reavers, Scarlet Scryers and Trainees). Heroic loot: 68 level 60 blue remakes of

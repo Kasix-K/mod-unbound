@@ -53,6 +53,10 @@ HEROIC_DUNGEONS = [
     (189, 'Scarlet Monastery'),
     (129, 'Razorfen Downs'),
     (70, 'Uldaman'),
+    (209, "Zul'Farrak"),
+    (349, 'Maraudon'),
+    (109, 'Sunken Temple'),
+    (230, 'Blackrock Depths'),
 ]
 
 # Creatures that boss scripts, SmartAI or summon groups bring into a dungeon without a spawn there: they need a
@@ -77,6 +81,22 @@ HEROIC_EXTRA_CREATURES = {
           7351,   # Tomb Reaver (Tuten'kash event)
           7355,   # Tuten'kash (gong event boss)
           7356],  # Plaguemaw the Rotting
+    209: [7273,   # Gahz'rilla (gong)
+          7275,   # Shadowpriest Sezz'ziz (pyramid event)
+          7796,   # Nekrum Gutchewer (pyramid event)
+          7787, 7788, 7789, 8876, 8877],  # Sandfury Slave, Drudge, Cretin, Acolyte, Zealot (pyramid event waves)
+    349: [13696], # Noxxious Scion (Noxxion)
+    109: [8440,   # Shade of Hakkar (Avatar of Hakkar event)
+          8443],  # Avatar of Hakkar
+    230: [8925, 8926, 8927, 8928, 8932, 8933,  # Ring of Law: first waves
+          9027, 9028, 9029, 9030, 9031, 9032,  # Ring of Law bosses (Gorosh, Grizzle, Eviscerator, Ok'thor,
+                                               # Anub'shiah, Hedrum)
+          10096,  # High Justice Grimstone (Ring of Law)
+          9178,   # Burning Spirit (Ambassador Flamelash)
+          9437,   # Dark Keeper Vorfalk
+          9445,   # Dark Guard
+          9476,   # Watchman Doomgrip (the Vault)
+          10076], # High Priestess of Thaurissan
 }
 
 
@@ -148,7 +168,7 @@ def dungeon_sql(index, map_id, name):
         '',
         f'DELETE FROM `dungeon_access_template` WHERE `map_id` = @MAP AND `difficulty` = 1;',
         'INSERT INTO `dungeon_access_template` (`id`, `map_id`, `difficulty`, `min_level`, `max_level`, `min_avg_item_level`, `comment`) VALUES',
-        f"({ACCESS_ID_BASE + index}, @MAP, 1, @LEVEL, 0, 0, '{name} (Heroic)');",
+        f"({ACCESS_ID_BASE + index}, @MAP, 1, @LEVEL, 0, 0, '{name.replace("'", "''")} (Heroic)');",
         'DROP TEMPORARY TABLE IF EXISTS `unbound_hc_tmp`;',
         'DROP TEMPORARY TABLE IF EXISTS `unbound_hc_base`;',
     ]

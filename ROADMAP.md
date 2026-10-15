@@ -133,6 +133,10 @@ changes, raid by raid (see Next up).
       Downs, Uldaman, with their summoned creatures (Tuten'kash, Plaguemaw, the Tomb Fiends, Scarlet Scryers,
       ...) and Heroic loot (68 level 60 blues, 910181-910248)
 
+- [x] Classic Heroic dungeons, batch 3 (2026-10-14): Zul'Farrak, Maraudon, Sunken Temple, Blackrock Depths, with
+      their summoned creatures (Gahz'rilla, the pyramid event, Avatar of Hakkar, the Ring of Law, ...) and Heroic
+      loot (120 level 60 blues, 910249-910368)
+
 ## Next up
 
 - [ ] **Soloable raid mechanics** (moderate, per raid): script changes for bosses that need several
@@ -145,10 +149,10 @@ changes, raid by raid (see Next up).
       301-302 are not reused.
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
       +25-35% to its spec's single-target damage (the class perk target in the Power budget).
-- [ ] **Remaining classic Heroic dungeons** (moderate, in batches by level range): 8 more, each with its
-      Heroic mode, heroic versions of the creatures its bosses and events summon, and level 60 Heroic loot
-      (Mythic+ builds on these). Batch 3: Zul'Farrak, Maraudon, Sunken Temple, Blackrock Depths. Batch 4:
-      Lower/Upper Blackrock Spire (keeps its larger group size), Dire Maul (3 wings), Scholomance, Stratholme.
+- [ ] **Remaining classic Heroic dungeons** (moderate): batch 4, the last 4: Lower/Upper Blackrock Spire
+      (keeps its larger group size), Dire Maul (3 wings), Scholomance, Stratholme. Each with its Heroic mode,
+      heroic versions of the creatures its bosses and events summon, and level 60 Heroic loot (Mythic+ builds
+      on these).
 - [ ] **Heroic currency and vendor** (moderate): a token (e.g. "Heroic Badge") from Heroic bosses,
       spent on companions, mounts, transmog or gear. Becomes the Loot Goblin's currency.
 - [ ] **Heroic classic raids** (moderate): Molten Core, Blackwing Lair, Zul'Gurub, Ruins and Temple of
