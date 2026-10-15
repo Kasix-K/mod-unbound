@@ -224,6 +224,24 @@ UnboundPerks.PERKS = {
       desc = "Placeholder: +5% run speed out of combat." },
     { id = 302, name = "Treasure Sense", category = "UTILITY", icon = "Interface\\Icons\\INV_Misc_Coin_02",
       desc = "Placeholder: creatures drop 10% more gold." },
+    { id = 303, name = "Iron Will", category = "UTILITY", pets = PETS_TOO, works = true,
+      icon = "Interface\\Icons\\Spell_Magic_MageArmor",
+      desc = "Crowd-control effects on you (and your pets) have their duration reduced by " .. G("30%") .. ".",
+      note = "Stuns, fears, roots, silences, sleeps, polymorphs, charms, disorients and saps.",
+      -- Ranked: the server sends the rank and each rank's "percent,level" (mod_unbound.conf).
+      applyRank = function(perk, rank, maxRank, values)
+          local cur = values[rank] or values[#values]
+          if not cur then return end
+          perk.desc = "Crowd-control effects on you (and your pets) have their duration reduced by " ..
+                      G(cur[1] .. "%") .. "."
+          local lines = { "Rank " .. rank .. " / " .. maxRank }
+          for i, v in ipairs(values) do
+              local line = string.format("Rank %d: -%d%% duration  (level %d)", i, v[1], v[2])
+              table.insert(lines, i == rank and G(line) or line)
+          end
+          table.insert(lines, "Stuns, fears, roots, silences, sleeps, polymorphs, charms, disorients and saps.")
+          perk.note = table.concat(lines, "\n")
+      end },
 
     -- Class: Paladin ----------------------------------------------------------------------------------
     { id = 1001, name = "Retribution", category = "CLASS", class = "PALADIN", works = true,

@@ -82,14 +82,18 @@ items count once those expansions are released). Settings: `Unbound.Attunement.*
 
 ## Perk ranks
 
-Rank support is built; so far only **Rapid Recovery** (perk 3) has ranks. A character's rank comes from
-its level, values in `mod_unbound.conf`:
+Rank support is built; so far **Rapid Recovery** (perk 3) and **Iron Will** (perk 303) have ranks. A
+character's rank comes from its level, values in `mod_unbound.conf`:
 
-| Rank | Level | Delay after combat | Health and mana per second |
-|---|---|---|---|
-| 1 | 1 | 6 seconds | 4% |
-| 2 | 30 | 5 seconds | 6% |
-| 3 | 60 | 4 seconds | 8% |
+| Rank | Level | Rapid Recovery: delay after combat | Rapid Recovery: health and mana per second | Iron Will: crowd control shorter by |
+|---|---|---|---|---|
+| 1 | 1 | 6 seconds | 4% | 10% |
+| 2 | 30 | 5 seconds | 6% | 20% |
+| 3 | 60 | 4 seconds | 8% | 30% |
+
+Iron Will is a Utility perk (turn it on in `/perks`). It shortens enemy stuns, fears, roots, silences,
+sleeps, polymorphs, charms, disorients and saps on you and your pets, on top of racials, talents and
+diminishing returns.
 
 GM testing: target a player (or nobody, for yourself) and type `.perk rank 3 2` for Rank 2;
 `.perk rank 3` goes back to the rank the level gives. The perk window shows the rank as "2/3".

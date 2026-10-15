@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Iron Will utility perk (shorter crowd control, 3 ranks by level) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Perk ranks (first: Rapid Recovery, 3 ranks by level; `.perk rank`) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Gear attunement, stage 1: collection and stats (GM commands) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Item expansion tags (attunement counts released expansions only) | 2026-10-14 | 2026-10-14 | Kasix-K |
@@ -47,6 +48,10 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ### Added
 - **Class perk target** in the power budget: each spec's class perk is worth about +25-35% to that spec's
   single-target damage (Retribution estimated at about +35-40%, to confirm on a training dummy).
+- **Iron Will** (Utility perk, id 303): enemy crowd control on you and your pets (stun, fear, root, silence,
+  sleep, polymorph, charm, disorient, sap) lasts 10% shorter at Rank 1 (level 1), 20% at Rank 2 (level 30)
+  and 30% at Rank 3 (level 60). Stacks with racials, talents and diminishing returns. Values and rank levels
+  are in `mod_unbound.conf` (`Unbound.Perks.IronWill.*`); GMs can test ranks with `.perk rank 303 <rank>`.
 - **Perk ranks**, starting with Rapid Recovery: Rank 1 (6 seconds after combat, 4% health and mana per
   second) from level 1, Rank 2 (5 s, 6%) from level 30, Rank 3 (4 s, 8%) from level 60. Values and rank
   levels are in `mod_unbound.conf`. GMs set a rank with `.perk rank <perk id> <rank>` (saved per

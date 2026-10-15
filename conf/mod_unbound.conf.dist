@@ -39,6 +39,20 @@ Unbound.Perks.RapidRecovery.Delay = "6000, 5000, 4000"
 Unbound.Perks.RapidRecovery.Percent = "4, 6, 8"
 Unbound.Perks.RapidRecovery.RankLevels = "1, 30, 60"
 
+#    Unbound.Perks.IronWill.Percent
+#        Description: Iron Will utility perk: how much shorter enemy crowd control (stun, fear, root,
+#                     silence, sleep, polymorph, charm, disorient, sap) lasts on the player and their pets,
+#                     in percent, one value per rank.
+#        Default:     "10, 20, 30"
+#
+#    Unbound.Perks.IronWill.RankLevels
+#        Description: Character level that reaches each rank (a GM can set a rank with
+#                     ".perk rank 303 <rank>"; ".perk rank 303" goes back to the level's rank).
+#        Default:     "1, 30, 60"
+
+Unbound.Perks.IronWill.Percent = "10, 20, 30"
+Unbound.Perks.IronWill.RankLevels = "1, 30, 60"
+
 #    Unbound.Attunement.Enable
 #        Description: Gear attunement: attuned items permanently give the character a percentage of
 #                     their fixed stats (src/unbound_attunement.cpp, ROADMAP.md Power budget).

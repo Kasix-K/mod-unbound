@@ -61,6 +61,14 @@
  *                              spells and bleeds)
  *                              (a spell counts for a school if that school is part of it, e.g. Shadowfrost)
  *
+ * Utility perks (ids 301-399, no active limit):
+ *   303 Iron Will              crowd-control effects from enemies on you (and your pets) last shorter. Ranked
+ *                              (mod_unbound.conf): Rank 1 -10% from level 1, Rank 2 -20% from level 30, Rank 3
+ *                              -30% from level 60. Crowd control = charm, disorient, fear, root, silence, sleep,
+ *                              stun, freeze, knockout, polymorph, horror, sap (by mechanic, or by aura type for
+ *                              spells without one). Applied to the aura's base duration, so it stacks with
+ *                              racials and talents (e.g. an Orc's 15% stun reduction) and diminishing returns.
+ *
  * Class perks (ids 1001+):
  *  1001 Retribution (Paladin)  Improved Divine Storm: Divine Storm hits up to 6 enemies (normally 4), and every
  *                              enemy it hits also takes a Crusader Strike.
@@ -74,7 +82,7 @@
  *                              The extra Crusader Strikes, Judgements and Exorcisms are free triggered casts.
  *
  * Settings (mod_unbound.conf): Unbound.Perks.RapidRecovery (on/off), .Delay (ms per rank), .Percent (per rank),
- * .RankLevels (level per rank).
+ * .RankLevels (level per rank); Unbound.Perks.IronWill.Percent (per rank), .RankLevels (level per rank).
  */
 
 #include "Chat.h"
@@ -122,6 +130,14 @@ namespace
     constexpr uint32 RECOVERY_TICK_MS = 1000;
     constexpr uint32 PERK_ID_RAPID_RECOVERY = 3;
 
+    // ------------------------------------------------------------------ Iron Will settings
+    struct IronWillRank
+    {
+        uint32 percent; // crowd-control duration reduction
+        uint32 level;   // character level that reaches this rank
+    };
+    std::vector<IronWillRank> sIronWillRanks = { { 10, 1 }, { 20, 30 }, { 30, 60 } };
+
     // "6000, 5000, 4000" -> { 6000, 5000, 4000 }
     std::vector<uint32> ParseList(std::string const& text)
     {
@@ -166,6 +182,7 @@ namespace
         PERK_FIRE_MASTERY           = 123,
         PERK_FROST_MASTERY          = 124,
         PERK_PHYSICAL_MASTERY       = 125,
+        PERK_IRON_WILL              = 303,
         PERK_RETRIBUTION            = 1001,  // Paladin
     };
 
@@ -177,7 +194,7 @@ namespace
         PERK_MERCILESS, PERK_PRESSURE, PERK_CHAOS, PERK_POWER_CONVERSION,
         PERK_HEALING_POWAH, PERK_SHADOW_MASTERY, PERK_HOLY_MASTERY, PERK_ARCANE_MASTERY,
         PERK_NATURE_MASTERY, PERK_FIRE_MASTERY, PERK_FROST_MASTERY, PERK_PHYSICAL_MASTERY,
-        PERK_RETRIBUTION };
+        PERK_IRON_WILL, PERK_RETRIBUTION };
 
     // Class perks: the class each one belongs to. The server refuses a class perk for any other class.
     std::unordered_map<uint32, uint8> const CLASS_PERKS = {
@@ -683,7 +700,19 @@ namespace
     // Ranked perks and their number of ranks (more perks get ranks later).
     std::map<uint32, uint8> RankedPerks()
     {
-        return { { PERK_ID_RAPID_RECOVERY, uint8(sRecoveryRanks.size()) } };
+        return { { PERK_ID_RAPID_RECOVERY, uint8(sRecoveryRanks.size()) },
+                 { PERK_IRON_WILL, uint8(sIronWillRanks.size()) } };
+    }
+
+    // The highest rank whose level the character has reached.
+    template <typename Rank>
+    uint8 RankForLevel(Player const* player, std::vector<Rank> const& ranks)
+    {
+        uint8 rank = 1;
+        for (uint8 i = 0; i < ranks.size(); ++i)
+            if (player->GetLevel() >= ranks[i].level)
+                rank = i + 1;
+        return rank;
     }
 
     uint8 MaxRank(uint32 perk)
@@ -701,13 +730,9 @@ namespace
         if (set != state.rankOverride.end())
             return std::clamp<uint8>(set->second, 1, maxRank);
         if (perk == PERK_ID_RAPID_RECOVERY)
-        {
-            uint8 rank = 1;
-            for (uint8 i = 0; i < sRecoveryRanks.size(); ++i)
-                if (player->GetLevel() >= sRecoveryRanks[i].level)
-                    rank = i + 1;
-            return rank;
-        }
+            return RankForLevel(player, sRecoveryRanks);
+        if (perk == PERK_IRON_WILL)
+            return RankForLevel(player, sIronWillRanks);
         return 1;
     }
 
@@ -725,6 +750,9 @@ namespace
                 for (RecoveryRank const& r : sRecoveryRanks)
                     values += (values.empty() ? "" : ";") + std::to_string(r.delayMs) + "," +
                               std::to_string(r.percent) + "," + std::to_string(r.level);
+            else if (perk == PERK_IRON_WILL)
+                for (IronWillRank const& r : sIronWillRanks)
+                    values += (values.empty() ? "" : ";") + std::to_string(r.percent) + "," + std::to_string(r.level);
             SendAddon(player, "RANK:" + std::to_string(perk) + ":" + std::to_string(PerkRank(player, state, perk)) +
                 ":" + std::to_string(maxRank) + ":" + values);
         }
@@ -891,6 +919,46 @@ namespace
         state.tickMs = 0;
         RestoreTick(player, rank.percent);
     }
+
+    // ------------------------------------------------------------------ Iron Will
+    constexpr uint64 CROWD_CONTROL_MECHANICS =
+        (1ULL << MECHANIC_CHARM) | (1ULL << MECHANIC_DISORIENTED) | (1ULL << MECHANIC_FEAR) |
+        (1ULL << MECHANIC_ROOT) | (1ULL << MECHANIC_SILENCE) | (1ULL << MECHANIC_SLEEP) |
+        (1ULL << MECHANIC_STUN) | (1ULL << MECHANIC_FREEZE) | (1ULL << MECHANIC_KNOCKOUT) |
+        (1ULL << MECHANIC_POLYMORPH) | (1ULL << MECHANIC_HORROR) | (1ULL << MECHANIC_SAPPED);
+
+    bool IsCrowdControl(SpellInfo const* spellInfo)
+    {
+        if (spellInfo->GetAllEffectsMechanicMask() & CROWD_CONTROL_MECHANICS)
+            return true;
+        // spells without a mechanic: go by what the aura does
+        for (AuraType type : { SPELL_AURA_MOD_STUN, SPELL_AURA_MOD_FEAR, SPELL_AURA_MOD_CONFUSE, SPELL_AURA_MOD_ROOT,
+                               SPELL_AURA_MOD_CHARM, SPELL_AURA_MOD_POSSESS, SPELL_AURA_MOD_SILENCE,
+                               SPELL_AURA_MOD_PACIFY_SILENCE })
+            if (spellInfo->HasAura(type))
+                return true;
+        return false;
+    }
+
+    // Iron Will: shorten an enemy's crowd control on a player (or their pet) with the perk on.
+    void ApplyIronWill(Aura const* aura, int32& maxDuration)
+    {
+        if (maxDuration <= 0 || aura->GetType() != UNIT_AURA_TYPE)
+            return;
+        Unit* target = aura->GetUnitOwner();
+        PerkState const* state = PerkOwnerState(target);
+        if (!Has(state, PERK_IRON_WILL))
+            return;
+        SpellInfo const* spellInfo = aura->GetSpellInfo();
+        if (spellInfo->IsPositive() || !IsCrowdControl(spellInfo))
+            return;
+        Unit* caster = aura->GetCaster();
+        if (!caster || caster == target || !caster->IsHostileTo(target))
+            return;
+        Player* owner = target->GetCharmerOrOwnerPlayerOrPlayerItself();
+        uint32 percent = sIronWillRanks[PerkRank(owner, *state, PERK_IRON_WILL) - 1].percent;
+        maxDuration = std::max<int32>(1, maxDuration - int32(int64(maxDuration) * percent / 100));
+    }
 }
 
 class unbound_perks_world : public WorldScript
@@ -918,6 +986,28 @@ public:
         for (size_t i = 0; i < count; ++i)
             sRecoveryRanks.push_back({ delays[i], std::clamp<uint32>(percents[i], 1, 100),
                                        i < levels.size() ? levels[i] : (i == 0 ? 1 : 255) });
+
+        std::vector<uint32> willPercents = ParseList(sConfigMgr->GetOption<std::string>("Unbound.Perks.IronWill.Percent", "10, 20, 30"));
+        std::vector<uint32> willLevels = ParseList(sConfigMgr->GetOption<std::string>("Unbound.Perks.IronWill.RankLevels", "1, 30, 60"));
+        if (willPercents.empty())
+            willPercents = { 30 };
+        sIronWillRanks.clear();
+        for (size_t i = 0; i < willPercents.size(); ++i)
+            sIronWillRanks.push_back({ std::min<uint32>(willPercents[i], 100),
+                                       i < willLevels.size() ? willLevels[i] : (i == 0 ? 1 : 255) });
+    }
+};
+
+class unbound_perks_spell : public AllSpellScript
+{
+public:
+    unbound_perks_spell() : AllSpellScript("unbound_perks_spell", {
+        ALLSPELLHOOK_ON_CALC_MAX_DURATION
+    }) { }
+
+    void OnCalcMaxDuration(Aura const* aura, int32& maxDuration) override
+    {
+        ApplyIronWill(aura, maxDuration);
     }
 };
 
@@ -1183,7 +1273,7 @@ public:
         uint8 maxRank = MaxRank(perk);
         if (!RankedPerks().count(perk))
         {
-            handler->PSendSysMessage("Perk {} has no ranks. Ranked perks: 3 (Rapid Recovery).", perk);
+            handler->PSendSysMessage("Perk {} has no ranks. Ranked perks: 3 (Rapid Recovery), 303 (Iron Will).", perk);
             return true;
         }
         uint32 guid = target->GetGUID().GetCounter();
@@ -1213,6 +1303,7 @@ void AddSC_unbound_perks()
     new unbound_perks_command();
     new unbound_perks_player();
     new unbound_perks_unit();
+    new unbound_perks_spell();
     RegisterSpellScript(spell_unbound_ret_divine_storm);
     RegisterSpellScript(spell_unbound_ret_judgement);
 }
