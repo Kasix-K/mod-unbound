@@ -1,0 +1,567 @@
+/*
+ * mod-unbound: gear attunement, stage 1 (the collection and its stats).
+ *
+ * Each character has a collection of attuned items (characters.character_unbound_attunement). Every
+ * attuned item permanently gives the character Unbound.Attunement.Percent (20%) of the item's fixed stats
+ * (primary stats, ratings, attack and spell power, regeneration, armour, block, resistances; not procs, set
+ * bonuses, sockets or weapon damage), whatever happens to the item afterwards. The total has diminishing
+ * returns against a reference set of gear (Unbound.Attunement.ReferenceSetStats stat points): full value
+ * until the bonus reaches FullValueUntil percent of that set, half value until HalfValueUntil, a quarter
+ * beyond. The stats are applied the same way the server applies an equipped item's stats
+ * (Player::_ApplyItemBonuses), so they show on the character sheet like gear stats.
+ *
+ * Which items count (ItemRules): green or better weapons and armour (rings, necks, trinkets, shields too;
+ * not shirts, tabards, bags, ammo); required level within Unbound.Attunement.LevelRange of the level cap;
+ * from a released expansion (world.unbound_item_expansion, made by tools/item_expansions.py, compared with
+ * Unbound.ExpansionUnlocked); with fixed stats (random-stat items such as "of the Bear" have none). Each item
+ * counts once.
+ *
+ * Stage 1 adds the collection through GM commands only (.attune); attuning by kills (stage 2) and sacrifice
+ * at an altar (stage 3) come next. See ROADMAP.md (Power budget, Attunement and sacrifice rules).
+ */
+
+#include "Chat.h"
+#include "CommandScript.h"
+#include "Config.h"
+#include "DatabaseEnv.h"
+#include "ObjectMgr.h"
+#include "Player.h"
+#include "ScriptMgr.h"
+#include "StringFormat.h"
+#include "World.h"
+
+#include <algorithm>
+#include <cmath>
+#include <map>
+#include <unordered_map>
+#include <unordered_set>
+
+using namespace Acore::ChatCommands;
+
+namespace
+{
+    // ------------------------------------------------------------------ settings
+    bool sEnabled = true;
+    float sPercent = 20.0f;                // % of an item's stats
+    uint32 sLevelRange = 10;               // required level within this of the level cap
+    float sReferenceSetStats = 600.0f;     // stat points of a full set of level-60 blue/epic gear
+    float sFullValueUntil = 100.0f;        // % of the reference set: full value until here
+    float sHalfValueUntil = 200.0f;        // half value until here, a quarter beyond
+    uint32 sExpansionUnlocked = 0;         // Unbound.ExpansionUnlocked (the content lock's setting)
+
+    std::unordered_map<uint32, uint8> sItemExpansion;   // world.unbound_item_expansion
+
+    // Stat keys: ItemModType values, plus these for the item's other fixed stats.
+    enum ExtraStat : uint32
+    {
+        STAT_KEY_ARMOR = 1000,
+        STAT_KEY_BLOCK,
+        STAT_KEY_RES_HOLY,
+        STAT_KEY_RES_FIRE,
+        STAT_KEY_RES_NATURE,
+        STAT_KEY_RES_FROST,
+        STAT_KEY_RES_SHADOW,
+        STAT_KEY_RES_ARCANE,
+    };
+
+    using StatTotals = std::map<uint32, float>;
+
+    char const* StatName(uint32 key)
+    {
+        switch (key)
+        {
+            case ITEM_MOD_MANA: return "mana";
+            case ITEM_MOD_HEALTH: return "health";
+            case ITEM_MOD_AGILITY: return "Agility";
+            case ITEM_MOD_STRENGTH: return "Strength";
+            case ITEM_MOD_INTELLECT: return "Intellect";
+            case ITEM_MOD_SPIRIT: return "Spirit";
+            case ITEM_MOD_STAMINA: return "Stamina";
+            case ITEM_MOD_DEFENSE_SKILL_RATING: return "defense rating";
+            case ITEM_MOD_DODGE_RATING: return "dodge rating";
+            case ITEM_MOD_PARRY_RATING: return "parry rating";
+            case ITEM_MOD_BLOCK_RATING: return "block rating";
+            case ITEM_MOD_HIT_MELEE_RATING: return "melee hit rating";
+            case ITEM_MOD_HIT_RANGED_RATING: return "ranged hit rating";
+            case ITEM_MOD_HIT_SPELL_RATING: return "spell hit rating";
+            case ITEM_MOD_CRIT_MELEE_RATING: return "melee crit rating";
+            case ITEM_MOD_CRIT_RANGED_RATING: return "ranged crit rating";
+            case ITEM_MOD_CRIT_SPELL_RATING: return "spell crit rating";
+            case ITEM_MOD_HASTE_MELEE_RATING: return "melee haste rating";
+            case ITEM_MOD_HASTE_RANGED_RATING: return "ranged haste rating";
+            case ITEM_MOD_HASTE_SPELL_RATING: return "spell haste rating";
+            case ITEM_MOD_HIT_RATING: return "hit rating";
+            case ITEM_MOD_CRIT_RATING: return "crit rating";
+            case ITEM_MOD_RESILIENCE_RATING: return "resilience rating";
+            case ITEM_MOD_HASTE_RATING: return "haste rating";
+            case ITEM_MOD_EXPERTISE_RATING: return "expertise rating";
+            case ITEM_MOD_ATTACK_POWER: return "attack power";
+            case ITEM_MOD_RANGED_ATTACK_POWER: return "ranged attack power";
+            case ITEM_MOD_MANA_REGENERATION: return "mana per 5 sec";
+            case ITEM_MOD_ARMOR_PENETRATION_RATING: return "armor penetration rating";
+            case ITEM_MOD_SPELL_POWER: return "spell power";
+            case ITEM_MOD_HEALTH_REGEN: return "health per 5 sec";
+            case ITEM_MOD_SPELL_PENETRATION: return "spell penetration";
+            case ITEM_MOD_BLOCK_VALUE: return "block value";
+            case ITEM_MOD_SPELL_HEALING_DONE: return "healing";
+            case ITEM_MOD_SPELL_DAMAGE_DONE: return "spell damage";
+            case STAT_KEY_ARMOR: return "armor";
+            case STAT_KEY_BLOCK: return "block value";
+            case STAT_KEY_RES_HOLY: return "Holy resistance";
+            case STAT_KEY_RES_FIRE: return "Fire resistance";
+            case STAT_KEY_RES_NATURE: return "Nature resistance";
+            case STAT_KEY_RES_FROST: return "Frost resistance";
+            case STAT_KEY_RES_SHADOW: return "Shadow resistance";
+            case STAT_KEY_RES_ARCANE: return "Arcane resistance";
+            default: return "other";
+        }
+    }
+
+    // ------------------------------------------------------------------ item rules
+    enum class ItemCheck
+    {
+        Counts,
+        NotGreenOrBetter,
+        NotGear,
+        WrongLevel,
+        LockedExpansion,
+        NoFixedStats,
+    };
+
+    // An item's fixed stats (100%) and its stat points (the sum of its positive stats, for the diminishing
+    // returns; armour and resistances aren't stat points).
+    StatTotals ItemStats(ItemTemplate const* proto, float& statPoints)
+    {
+        StatTotals stats;
+        statPoints = 0.0f;
+        if (!proto->ScalingStatDistribution) // scaling (heirloom) items have no fixed stats
+        {
+            for (uint8 i = 0; i < std::min<uint32>(proto->StatsCount, MAX_ITEM_PROTO_STATS); ++i)
+            {
+                int32 value = proto->ItemStat[i].ItemStatValue;
+                if (!value)
+                    continue;
+                stats[proto->ItemStat[i].ItemStatType] += float(value);
+                if (value > 0)
+                    statPoints += float(value);
+            }
+        }
+        if (proto->Armor)
+            stats[STAT_KEY_ARMOR] += float(proto->Armor);
+        if (proto->Block)
+            stats[STAT_KEY_BLOCK] += float(proto->Block);
+        int32 const res[] = { proto->HolyRes, proto->FireRes, proto->NatureRes, proto->FrostRes, proto->ShadowRes,
+                              proto->ArcaneRes };
+        for (uint32 i = 0; i < 6; ++i)
+            if (res[i])
+                stats[STAT_KEY_RES_HOLY + i] += float(res[i]);
+        return stats;
+    }
+
+    ItemCheck CheckItem(ItemTemplate const* proto)
+    {
+        if (proto->Quality < ITEM_QUALITY_UNCOMMON)
+            return ItemCheck::NotGreenOrBetter;
+        if (proto->Class != ITEM_CLASS_WEAPON && proto->Class != ITEM_CLASS_ARMOR)
+            return ItemCheck::NotGear;
+        switch (proto->InventoryType)
+        {
+            case INVTYPE_NON_EQUIP:
+            case INVTYPE_BODY:
+            case INVTYPE_TABARD:
+            case INVTYPE_BAG:
+            case INVTYPE_AMMO:
+            case INVTYPE_QUIVER:
+                return ItemCheck::NotGear;
+            default:
+                break;
+        }
+        uint32 cap = sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL);
+        if (proto->RequiredLevel > cap || proto->RequiredLevel + sLevelRange < cap)
+            return ItemCheck::WrongLevel;
+        auto itr = sItemExpansion.find(proto->ItemId);
+        if (itr == sItemExpansion.end() || itr->second > sExpansionUnlocked)
+            return ItemCheck::LockedExpansion;
+        float statPoints;
+        if (ItemStats(proto, statPoints).empty())
+            return ItemCheck::NoFixedStats;
+        return ItemCheck::Counts;
+    }
+
+    std::string CheckText(ItemCheck check)
+    {
+        uint32 cap = sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL);
+        switch (check)
+        {
+            case ItemCheck::Counts: return "counts for attunement";
+            case ItemCheck::NotGreenOrBetter: return "doesn't count: not green quality or better";
+            case ItemCheck::NotGear: return "doesn't count: not a weapon or armor";
+            case ItemCheck::WrongLevel:
+                return Acore::StringFormat("doesn't count: required level must be {}-{}",
+                    cap > sLevelRange ? cap - sLevelRange : 1, cap);
+            case ItemCheck::LockedExpansion:
+                return "doesn't count: not from a released expansion (or no known source)";
+            case ItemCheck::NoFixedStats: return "doesn't count: no fixed stats (random stats like \"of the Bear\")";
+        }
+        return "";
+    }
+
+    // ------------------------------------------------------------------ per-character state
+    struct AttunementState : public DataMap::Base
+    {
+        std::unordered_set<uint32> attuned;            // item entries, 100% attuned
+        std::unordered_map<uint32, uint32> progress;   // item entry -> progress (stage 2)
+        std::map<uint32, int32> applied;               // stat key -> amount currently applied
+        float rawPercent = 0.0f;                       // collected stats as % of the reference set, before
+        float effectivePercent = 0.0f;                 // and after the diminishing returns
+    };
+
+    AttunementState* StateOf(Player* player)
+    {
+        return player->CustomData.GetDefault<AttunementState>("unbound_attunement");
+    }
+
+    // Diminishing returns on the collected stats (both in % of the reference set).
+    float Effective(float raw)
+    {
+        float halfSpan = 2.0f * std::max(0.0f, sHalfValueUntil - sFullValueUntil); // raw % covered at half value
+        if (raw <= sFullValueUntil)
+            return raw;
+        if (raw <= sFullValueUntil + halfSpan)
+            return sFullValueUntil + (raw - sFullValueUntil) / 2.0f;
+        return sHalfValueUntil + (raw - sFullValueUntil - halfSpan) / 4.0f;
+    }
+
+    // Apply or remove one stat the same way Player::_ApplyItemBonuses does for equipped items.
+    void ApplyStat(Player* player, uint32 key, int32 value, bool apply)
+    {
+        if (!value)
+            return;
+        float const v = float(value);
+        auto rating = [&](CombatRating cr) { player->ApplyRatingMod(cr, value, apply); };
+        auto primary = [&](UnitMods mod, Stats stat)
+        {
+            player->HandleStatFlatModifier(mod, BASE_VALUE, v, apply);
+            player->UpdateStatBuffMod(stat);
+        };
+        switch (key)
+        {
+            case ITEM_MOD_MANA: player->HandleStatFlatModifier(UNIT_MOD_MANA, BASE_VALUE, v, apply); break;
+            case ITEM_MOD_HEALTH: player->HandleStatFlatModifier(UNIT_MOD_HEALTH, BASE_VALUE, v, apply); break;
+            case ITEM_MOD_AGILITY: primary(UNIT_MOD_STAT_AGILITY, STAT_AGILITY); break;
+            case ITEM_MOD_STRENGTH: primary(UNIT_MOD_STAT_STRENGTH, STAT_STRENGTH); break;
+            case ITEM_MOD_INTELLECT: primary(UNIT_MOD_STAT_INTELLECT, STAT_INTELLECT); break;
+            case ITEM_MOD_SPIRIT: primary(UNIT_MOD_STAT_SPIRIT, STAT_SPIRIT); break;
+            case ITEM_MOD_STAMINA: primary(UNIT_MOD_STAT_STAMINA, STAT_STAMINA); break;
+            case ITEM_MOD_DEFENSE_SKILL_RATING: rating(CR_DEFENSE_SKILL); break;
+            case ITEM_MOD_DODGE_RATING: rating(CR_DODGE); break;
+            case ITEM_MOD_PARRY_RATING: rating(CR_PARRY); break;
+            case ITEM_MOD_BLOCK_RATING: rating(CR_BLOCK); break;
+            case ITEM_MOD_HIT_MELEE_RATING: rating(CR_HIT_MELEE); break;
+            case ITEM_MOD_HIT_RANGED_RATING: rating(CR_HIT_RANGED); break;
+            case ITEM_MOD_HIT_SPELL_RATING: rating(CR_HIT_SPELL); break;
+            case ITEM_MOD_CRIT_MELEE_RATING: rating(CR_CRIT_MELEE); break;
+            case ITEM_MOD_CRIT_RANGED_RATING: rating(CR_CRIT_RANGED); break;
+            case ITEM_MOD_CRIT_SPELL_RATING: rating(CR_CRIT_SPELL); break;
+            case ITEM_MOD_HIT_TAKEN_MELEE_RATING: rating(CR_HIT_TAKEN_MELEE); break;
+            case ITEM_MOD_HIT_TAKEN_RANGED_RATING: rating(CR_HIT_TAKEN_RANGED); break;
+            case ITEM_MOD_HIT_TAKEN_SPELL_RATING: rating(CR_HIT_TAKEN_SPELL); break;
+            case ITEM_MOD_CRIT_TAKEN_MELEE_RATING: rating(CR_CRIT_TAKEN_MELEE); break;
+            case ITEM_MOD_CRIT_TAKEN_RANGED_RATING: rating(CR_CRIT_TAKEN_RANGED); break;
+            case ITEM_MOD_CRIT_TAKEN_SPELL_RATING: rating(CR_CRIT_TAKEN_SPELL); break;
+            case ITEM_MOD_HASTE_MELEE_RATING: rating(CR_HASTE_MELEE); break;
+            case ITEM_MOD_HASTE_RANGED_RATING: rating(CR_HASTE_RANGED); break;
+            case ITEM_MOD_HASTE_SPELL_RATING: rating(CR_HASTE_SPELL); break;
+            case ITEM_MOD_HIT_RATING:
+                rating(CR_HIT_MELEE); rating(CR_HIT_RANGED); rating(CR_HIT_SPELL);
+                break;
+            case ITEM_MOD_CRIT_RATING:
+                rating(CR_CRIT_MELEE); rating(CR_CRIT_RANGED); rating(CR_CRIT_SPELL);
+                break;
+            case ITEM_MOD_HIT_TAKEN_RATING:
+                rating(CR_HIT_TAKEN_MELEE); rating(CR_HIT_TAKEN_RANGED); rating(CR_HIT_TAKEN_SPELL);
+                break;
+            case ITEM_MOD_CRIT_TAKEN_RATING:
+            case ITEM_MOD_RESILIENCE_RATING:
+                rating(CR_CRIT_TAKEN_MELEE); rating(CR_CRIT_TAKEN_RANGED); rating(CR_CRIT_TAKEN_SPELL);
+                break;
+            case ITEM_MOD_HASTE_RATING:
+                rating(CR_HASTE_MELEE); rating(CR_HASTE_RANGED); rating(CR_HASTE_SPELL);
+                break;
+            case ITEM_MOD_EXPERTISE_RATING: rating(CR_EXPERTISE); break;
+            case ITEM_MOD_ATTACK_POWER:
+                player->HandleStatFlatModifier(UNIT_MOD_ATTACK_POWER, TOTAL_VALUE, v, apply);
+                player->HandleStatFlatModifier(UNIT_MOD_ATTACK_POWER_RANGED, TOTAL_VALUE, v, apply);
+                break;
+            case ITEM_MOD_RANGED_ATTACK_POWER:
+                player->HandleStatFlatModifier(UNIT_MOD_ATTACK_POWER_RANGED, TOTAL_VALUE, v, apply);
+                break;
+            case ITEM_MOD_MANA_REGENERATION: player->ApplyManaRegenBonus(value, apply); break;
+            case ITEM_MOD_ARMOR_PENETRATION_RATING: rating(CR_ARMOR_PENETRATION); break;
+            case ITEM_MOD_SPELL_POWER: player->ApplySpellPowerBonus(value, apply); break;
+            case ITEM_MOD_HEALTH_REGEN: player->ApplyHealthRegenBonus(value, apply); break;
+            case ITEM_MOD_SPELL_PENETRATION: player->ApplySpellPenetrationBonus(value, apply); break;
+            case ITEM_MOD_BLOCK_VALUE:
+            case STAT_KEY_BLOCK: player->HandleBaseModFlatValue(SHIELD_BLOCK_VALUE, v, apply); break;
+            case ITEM_MOD_SPELL_HEALING_DONE: player->ApplySpellHealingBonus(value, apply); break;
+            case ITEM_MOD_SPELL_DAMAGE_DONE: player->ApplySpellDamageBonus(value, apply); break;
+            case STAT_KEY_ARMOR: player->HandleStatFlatModifier(UNIT_MOD_ARMOR, BASE_VALUE, v, apply); break;
+            case STAT_KEY_RES_HOLY:
+            case STAT_KEY_RES_FIRE:
+            case STAT_KEY_RES_NATURE:
+            case STAT_KEY_RES_FROST:
+            case STAT_KEY_RES_SHADOW:
+            case STAT_KEY_RES_ARCANE:
+                player->HandleStatFlatModifier(UnitMods(UNIT_MOD_RESISTANCE_HOLY + (key - STAT_KEY_RES_HOLY)),
+                    BASE_VALUE, v, apply);
+                break;
+            default:
+                break;
+        }
+    }
+
+    // Recompute the character's attunement stats from the collection and apply the difference.
+    void Recalculate(Player* player)
+    {
+        AttunementState* state = StateOf(player);
+
+        StatTotals totals;
+        float statPoints = 0.0f;
+        if (sEnabled)
+        {
+            for (uint32 entry : state->attuned)
+            {
+                ItemTemplate const* proto = sObjectMgr->GetItemTemplate(entry);
+                if (!proto || CheckItem(proto) != ItemCheck::Counts) // e.g. after a config change
+                    continue;
+                float points;
+                for (auto const& [key, value] : ItemStats(proto, points))
+                    totals[key] += value * sPercent / 100.0f;
+                statPoints += points * sPercent / 100.0f;
+            }
+        }
+
+        state->rawPercent = sReferenceSetStats > 0.0f ? statPoints / sReferenceSetStats * 100.0f : 0.0f;
+        state->effectivePercent = Effective(state->rawPercent);
+        float scale = state->rawPercent > 0.0f ? state->effectivePercent / state->rawPercent : 1.0f;
+
+        std::map<uint32, int32> wanted;
+        for (auto const& [key, value] : totals)
+            if (int32 amount = int32(std::lround(value * scale)))
+                wanted[key] = amount;
+
+        for (auto const& [key, amount] : state->applied)
+            ApplyStat(player, key, amount, false);
+        for (auto const& [key, amount] : wanted)
+            ApplyStat(player, key, amount, true);
+        state->applied = std::move(wanted);
+    }
+
+    void LoadCollection(Player* player)
+    {
+        AttunementState* state = StateOf(player);
+        state->attuned.clear();
+        state->progress.clear();
+        if (QueryResult result = CharacterDatabase.Query(
+            "SELECT `item`, `progress`, `attuned` FROM `character_unbound_attunement` WHERE `guid` = {}",
+            player->GetGUID().GetCounter()))
+        {
+            do
+            {
+                Field* fields = result->Fetch();
+                uint32 item = fields[0].Get<uint32>();
+                if (fields[2].Get<bool>())
+                    state->attuned.insert(item);
+                else
+                    state->progress[item] = fields[1].Get<uint32>();
+            } while (result->NextRow());
+        }
+    }
+
+    std::string StatList(std::map<uint32, int32> const& stats)
+    {
+        std::string text;
+        for (auto const& [key, amount] : stats)
+        {
+            if (!text.empty())
+                text += ", ";
+            text += Acore::StringFormat("{:+} {}", amount, StatName(key));
+        }
+        return text.empty() ? "none" : text;
+    }
+
+    std::string ItemLink(ItemTemplate const* proto)
+    {
+        return Acore::StringFormat("|c{:08x}|Hitem:{}:0:0:0:0:0:0:0:0|h[{}]|h|r", ItemQualityColors[proto->Quality],
+            proto->ItemId, proto->Name1);
+    }
+}
+
+class unbound_attunement_world : public WorldScript
+{
+public:
+    unbound_attunement_world() : WorldScript("unbound_attunement_world", {
+        WORLDHOOK_ON_AFTER_CONFIG_LOAD,
+        WORLDHOOK_ON_STARTUP
+    }) { }
+
+    void OnAfterConfigLoad(bool /*reload*/) override
+    {
+        sEnabled = sConfigMgr->GetOption<bool>("Unbound.Attunement.Enable", true);
+        sPercent = std::max(0.0f, sConfigMgr->GetOption<float>("Unbound.Attunement.Percent", 20.0f));
+        sLevelRange = sConfigMgr->GetOption<uint32>("Unbound.Attunement.LevelRange", 10);
+        sReferenceSetStats = sConfigMgr->GetOption<float>("Unbound.Attunement.ReferenceSetStats", 600.0f);
+        sFullValueUntil = sConfigMgr->GetOption<float>("Unbound.Attunement.FullValueUntil", 100.0f);
+        sHalfValueUntil = std::max(sFullValueUntil, sConfigMgr->GetOption<float>("Unbound.Attunement.HalfValueUntil", 200.0f));
+        sExpansionUnlocked = sConfigMgr->GetOption<uint32>("Unbound.ExpansionUnlocked", 0);
+    }
+
+    void OnStartup() override
+    {
+        sItemExpansion.clear();
+        if (QueryResult result = WorldDatabase.Query("SELECT `item`, `expansion` FROM `unbound_item_expansion`"))
+        {
+            do
+            {
+                sItemExpansion[(*result)[0].Get<uint32>()] = (*result)[1].Get<uint8>();
+            } while (result->NextRow());
+        }
+        LOG_INFO("server.loading", ">> mod-unbound: loaded {} gear item expansions for attunement", sItemExpansion.size());
+    }
+};
+
+class unbound_attunement_player : public PlayerScript
+{
+public:
+    unbound_attunement_player() : PlayerScript("unbound_attunement_player", {
+        PLAYERHOOK_ON_LOGIN,
+        PLAYERHOOK_ON_DELETE
+    }) { }
+
+    void OnPlayerLogin(Player* player) override
+    {
+        LoadCollection(player);
+        Recalculate(player);
+    }
+
+    void OnPlayerDelete(ObjectGuid guid, uint32 /*accountId*/) override
+    {
+        CharacterDatabase.Execute("DELETE FROM `character_unbound_attunement` WHERE `guid` = {}", guid.GetCounter());
+    }
+};
+
+class unbound_attunement_commands : public CommandScript
+{
+public:
+    unbound_attunement_commands() : CommandScript("unbound_attunement_commands") { }
+
+    ChatCommandTable GetCommands() const override
+    {
+        static ChatCommandTable attuneCommandTable =
+        {
+            { "add",    HandleAdd,    SEC_GAMEMASTER, Console::No },
+            { "remove", HandleRemove, SEC_GAMEMASTER, Console::No },
+            { "check",  HandleCheck,  SEC_GAMEMASTER, Console::No },
+            { "info",   HandleInfo,   SEC_GAMEMASTER, Console::No },
+            { "reset",  HandleReset,  SEC_GAMEMASTER, Console::No },
+        };
+        static ChatCommandTable commandTable =
+        {
+            { "attune", attuneCommandTable },
+        };
+        return commandTable;
+    }
+
+    // .attune add <item>: attune an item for the selected player (or yourself)
+    static bool HandleAdd(ChatHandler* handler, ItemTemplate const* proto)
+    {
+        Player* target = handler->getSelectedPlayerOrSelf();
+        ItemCheck check = CheckItem(proto);
+        if (check != ItemCheck::Counts)
+        {
+            handler->PSendSysMessage("{} {}.", ItemLink(proto), CheckText(check));
+            return true;
+        }
+        AttunementState* state = StateOf(target);
+        if (state->attuned.count(proto->ItemId))
+        {
+            handler->PSendSysMessage("{} already has {} attuned.", target->GetName(), ItemLink(proto));
+            return true;
+        }
+        CharacterDatabase.Execute("REPLACE INTO `character_unbound_attunement` (`guid`, `item`, `progress`, `attuned`) "
+            "VALUES ({}, {}, 0, 1)", target->GetGUID().GetCounter(), proto->ItemId);
+        state->progress.erase(proto->ItemId);
+        state->attuned.insert(proto->ItemId);
+        Recalculate(target);
+        handler->PSendSysMessage("{} attuned for {} ({} items, {:.0f}% of a full set).", ItemLink(proto),
+            target->GetName(), state->attuned.size(), state->effectivePercent);
+        return true;
+    }
+
+    // .attune remove <item>
+    static bool HandleRemove(ChatHandler* handler, ItemTemplate const* proto)
+    {
+        Player* target = handler->getSelectedPlayerOrSelf();
+        AttunementState* state = StateOf(target);
+        if (!state->attuned.erase(proto->ItemId) && !state->progress.erase(proto->ItemId))
+        {
+            handler->PSendSysMessage("{} has no attunement for {}.", target->GetName(), ItemLink(proto));
+            return true;
+        }
+        CharacterDatabase.Execute("DELETE FROM `character_unbound_attunement` WHERE `guid` = {} AND `item` = {}",
+            target->GetGUID().GetCounter(), proto->ItemId);
+        Recalculate(target);
+        handler->PSendSysMessage("Removed {} from {}'s attunements.", ItemLink(proto), target->GetName());
+        return true;
+    }
+
+    // .attune check <item>: does it count, and what it gives at full value
+    static bool HandleCheck(ChatHandler* handler, ItemTemplate const* proto)
+    {
+        ItemCheck check = CheckItem(proto);
+        handler->PSendSysMessage("{} {}.", ItemLink(proto), CheckText(check));
+        float points;
+        std::map<uint32, int32> gives;
+        for (auto const& [key, value] : ItemStats(proto, points))
+            if (int32 amount = int32(std::lround(value * sPercent / 100.0f)))
+                gives[key] = amount;
+        handler->PSendSysMessage("Attuned, it gives {:.0f}% of its stats (before diminishing returns): {}.", sPercent,
+            StatList(gives));
+        return true;
+    }
+
+    // .attune info: the selected player's (or your) collection and its stats
+    static bool HandleInfo(ChatHandler* handler)
+    {
+        Player* target = handler->getSelectedPlayerOrSelf();
+        AttunementState* state = StateOf(target);
+        handler->PSendSysMessage("{}: {} items attuned, {} in progress.", target->GetName(), state->attuned.size(),
+            state->progress.size());
+        handler->PSendSysMessage("Collected {:.0f}% of a full set of gear's stats; after diminishing returns {:.0f}% "
+            "(full value until {:.0f}%, half until {:.0f}%, a quarter beyond).", state->rawPercent,
+            state->effectivePercent, sFullValueUntil, sHalfValueUntil);
+        handler->PSendSysMessage("Attunement stats: {}.", StatList(state->applied));
+        return true;
+    }
+
+    // .attune reset: remove the selected player's (or your) whole collection
+    static bool HandleReset(ChatHandler* handler)
+    {
+        Player* target = handler->getSelectedPlayerOrSelf();
+        AttunementState* state = StateOf(target);
+        CharacterDatabase.Execute("DELETE FROM `character_unbound_attunement` WHERE `guid` = {}",
+            target->GetGUID().GetCounter());
+        state->attuned.clear();
+        state->progress.clear();
+        Recalculate(target);
+        handler->PSendSysMessage("Removed all of {}'s attunements.", target->GetName());
+        return true;
+    }
+};
+
+void AddSC_unbound_attunement()
+{
+    new unbound_attunement_world();
+    new unbound_attunement_player();
+    new unbound_attunement_commands();
+}

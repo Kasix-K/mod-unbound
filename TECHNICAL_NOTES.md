@@ -33,6 +33,21 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   in `mod_unbound.conf`. Retribution's spell scripts: `data/sql/db-world/unbound_perks_spells.sql`. Perk
   numbers stay in normal WoW ranges (about +10% per perk); they are constants at the top of
   `unbound_perks.cpp` and must match `PerkData.lua`. The perk code assumes `MapUpdate.Threads = 1`.
+- **Gear attunement** (stage 1 of 4: the collection and its stats): `src/unbound_attunement.cpp`. Each
+  character's collection is `characters.character_unbound_attunement` (item, progress, attuned). Attuned
+  items give `Unbound.Attunement.Percent` (20%) of their fixed stats, applied like equipped-item stats
+  (`Player::_ApplyItemBonuses`), with diminishing returns against `ReferenceSetStats` (600 stat points =
+  a full level-60 blue/epic set): full value until `FullValueUntil` (100%), half until `HalfValueUntil`
+  (200%), a quarter beyond. Item rules: green or better weapons/armour (not shirts, tabards, bags, ammo),
+  required level within `LevelRange` (10) of the level cap, fixed stats (random-stat "of the Bear" items
+  have none), and an expansion up to `Unbound.ExpansionUnlocked`. The expansions are in
+  `world.unbound_item_expansion`, made by `tools/item_expansions.py` from where each item comes from
+  (creature, skinning and pickpocket loot by spawn map, chests, containers, disenchanting, vendors, quest
+  starters/enders, crafting by its reagents, items made by using another item; greens/blues are also held
+  to their expansion's item level range, because shared world-drop tables mix expansions). Run
+  `python tools/item_expansions.py` again (database running) when loot, vendors or quests change;
+  `--check <item ids>` explains single items. GM commands: `.attune add|remove|check <item>`,
+  `.attune info`, `.attune reset` (on the selected player, else yourself).
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Players in a

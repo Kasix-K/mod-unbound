@@ -45,7 +45,7 @@ numbers here first if testing says so. Every number below is meant to be a confi
 | - which items count | **Every unique item** counts once (a second copy adds nothing); **green or better** |
 | - minimum item level | Only items whose **required level is within 10 of the level cap** count (level 50+ while the cap is 60; it moves up with each expansion), so every attuned item matters and nobody grinds low-level items |
 | - diminishing returns | Full value up to **+100%** of gear stats, half value up to **+200%**, a quarter beyond: early collecting feels strong, the long tail is the endgame grind (no hard cap) |
-| - the grind | About **170 level 60 blue/epic items** for +200% (about 220 blues or 130 epics; raid epics are the fast track) |
+| - the grind | About **255 level 60 blue/epic items** for +200% with the diminishing returns (about 170 items give +150%); 20% of an item is about 7 stat points, a full set is about 600 (`ReferenceSetStats`). Tune `Percent` or the diminishing returns after testing |
 | **Total** | About **6x** a normal level 60 when fully progressed: Mythic +10. Each further Mythic level needs more collected gear and higher perk ranks |
 
 Numbers check: a 6x character has a few thousand of a primary stat and tens of thousands of health, well
@@ -122,7 +122,8 @@ changes, raid by raid (see Next up).
 
 ## Next up
 
-- [ ] **Gear attunement and sacrifice** (large): absorb stats from acquired gear, either by attuning it
+- [ ] **Gear attunement and sacrifice** (large; stage 1 of 4 done 2026-10-14: the collection, its stats, item
+      expansion tags and `.attune` GM commands; next: attuning by kills, the altar, tooltips and window): absorb stats from acquired gear, either by attuning it
       (equip it and kill creatures until 100%, Synastria-style) or by sacrificing it (destroy it for its
       stats at once, Peloria-style). Both styles, one shared collection. The main lever for soloing
       Mythic raids: numbers, item rules, minimum item level and the attune/sacrifice rules per the Power

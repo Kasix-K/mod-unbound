@@ -32,3 +32,38 @@ Unbound.ExpansionUnlocked = 0
 Unbound.Perks.RapidRecovery = 1
 Unbound.Perks.RapidRecovery.Delay = 4000
 Unbound.Perks.RapidRecovery.Percent = 8
+
+#    Unbound.Attunement.Enable
+#        Description: Gear attunement: attuned items permanently give the character a percentage of
+#                     their fixed stats (src/unbound_attunement.cpp, ROADMAP.md Power budget).
+#        Default:     1 - Enabled
+#                     0 - Disabled (attunement stats are removed at the next login)
+#
+#    Unbound.Attunement.Percent
+#        Description: Percent of an attuned item's fixed stats the character gets.
+#        Default:     20
+#
+#    Unbound.Attunement.LevelRange
+#        Description: Only items whose required level is within this many levels of the level cap count
+#                     (with a cap of 60 and 10: required level 50-60).
+#        Default:     10
+#
+#    Unbound.Attunement.ReferenceSetStats
+#        Description: Stat points of a full set of gear at the level cap (about 17 blue/epic items of
+#                     about 35 stat points each at level 60). The diminishing returns below are percents
+#                     of this.
+#        Default:     600
+#
+#    Unbound.Attunement.FullValueUntil
+#    Unbound.Attunement.HalfValueUntil
+#        Description: Diminishing returns, in percent of the reference set: attunement stats count in full
+#                     until they reach FullValueUntil, at half value until HalfValueUntil, at a quarter
+#                     beyond.
+#        Default:     100, 200
+
+Unbound.Attunement.Enable = 1
+Unbound.Attunement.Percent = 20
+Unbound.Attunement.LevelRange = 10
+Unbound.Attunement.ReferenceSetStats = 600
+Unbound.Attunement.FullValueUntil = 100
+Unbound.Attunement.HalfValueUntil = 200

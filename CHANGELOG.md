@@ -8,6 +8,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Gear attunement, stage 1: collection and stats (GM commands) | 2026-10-14 | 2026-10-14 | Kasix-K |
+| Item expansion tags (attunement counts released expansions only) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Classic raids soloable (raid scaling to about 3 players' worth) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Power budget (endgame design targets, in the roadmap) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Perks tab on the character sheet (ElvUI skinned) | 2026-10-14 | 2026-10-14 | Kasix-K |
@@ -42,6 +44,14 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-14
 
 ### Added
+- **Gear attunement, stage 1 of 4** (the collection and its stats): each character has a collection of
+  attuned items that permanently give 20% of their fixed stats (applied like gear stats, shown on the
+  character sheet), with diminishing returns (full value until 100% of a full set of gear, half until 200%,
+  a quarter beyond). Counts: green or better weapons and armour, required level 50-60, fixed stats, from a
+  released expansion. For now items are added with GM commands (`.attune add/remove/check/info/reset`);
+  attuning by kills, the sacrifice altar and the tooltips/collection window follow.
+- **Item expansion tags** (`tools/item_expansions.py`): 20,286 gear items tagged with the expansion they come
+  from (8,612 classic, 4,870 TBC, 6,804 WotLK), so TBC and Wrath items can't count until those are released.
 - **Perks tab on the character sheet.** A "Perks" tab after Character, Pet, Reputation, Skills and
   Currency, built from the game's own tab template. It opens the perk window beside the character sheet.
   With ElvUI's character skin on, ElvUI skins it like its other tabs.

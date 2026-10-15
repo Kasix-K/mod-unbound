@@ -63,6 +63,23 @@ goes to him; `.respawn` next to his corpse brings him back early (for testing).
   mana per second). Switch on up to 5 Offensive perks (about +10% each) and your class perk (so far: Paladin
   Retribution). Perks can't be changed in combat; save favourite sets as loadouts.
 
+## Gear attunement (GM commands for testing)
+
+Attuned items permanently give the character 20% of their stats, even after the item is gone. Stage 1 (the
+collection and its stats) is built; attuning by killing creatures and the sacrifice altar come next. Until
+then, items are attuned with these GM commands (they act on the selected player, else yourself):
+
+| Command | What it does |
+|---|---|
+| `.attune check <item>` | Does the item count, and what would it give (shift-click the item, or type its id) |
+| `.attune add <item>` | Attune the item (it must count) |
+| `.attune remove <item>` | Take it out of the collection |
+| `.attune info` | Items attuned, % of a full set collected, and the stats it gives |
+| `.attune reset` | Remove the whole collection |
+
+Only green or better weapons and armour with required level 50-60 from classic content count (TBC and Wrath
+items count once those expansions are released). Settings: `Unbound.Attunement.*` in `mod_unbound.conf`.
+
 ## Perk ranks (planned, not built yet)
 
 No perk has ranks yet, Permanent ones included: each has one fixed value (for example Masteries +10%,
