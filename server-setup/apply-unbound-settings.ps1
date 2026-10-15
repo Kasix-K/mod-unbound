@@ -47,6 +47,11 @@ $Settings = [ordered]@{
         'AutoBalance.InflectionPointHeroic.CurveFloor'     = '0.4'
         'AutoBalance.InflectionPointRaid.CurveFloor'       = '0.4'
         'AutoBalance.InflectionPointRaidHeroic.CurveFloor' = '0.4'
+        # Classic raids solo: about 3 players' worth for one player, full strength for a full raid
+        # (ROADMAP.md, Power budget). 20-player: Zul'Gurub, Ruins of Ahn'Qiraj; 40-player: Molten Core,
+        # Blackwing Lair, Temple of Ahn'Qiraj.
+        'AutoBalance.InflectionPointRaid20M.CurveFloor'    = '0.1'
+        'AutoBalance.InflectionPointRaid40M.CurveFloor'    = '0.03'
         # Keep creature levels, XP and gold as they are
         'AutoBalance.LevelScaling'                         = '0'
         'AutoBalance.RewardScaling.XP'                     = '0'

@@ -6,6 +6,26 @@ module), **moderate** (custom code or data), **large** (several parts, client ch
 
 Guiding idea: inspired by Peloria, not a copy. Stats stay in normal WoW ranges (no huge numbers).
 
+## Power budget
+
+The endgame goal: **one player can solo a full Mythic raid** (the player count will be low). This is
+reached by scaling raids down to one player and keeping player power in normal WoW ranges, not by
+Peloria-sized numbers. Design every power system (perks, perk ranks, attunement/sacrifice, Mythic levels,
+gear) against these targets, and change these numbers here first if testing says so.
+
+| Side | Lever | Target |
+|---|---|---|
+| Content | Classic raids solo (mod-autobalance) | A solo player faces **about 3 players' worth** of a raid; a full raid is unchanged. 20-player raids: `AutoBalance.InflectionPointRaid20M.CurveFloor = 0.1` (2.9 players' worth); 40-player raids: `AutoBalance.InflectionPointRaid40M.CurveFloor = 0.03` (2.8). Set 2026-10-14. |
+| Content | Heroic / Mythic raids | Each step raises the raid from there; Mythic +1, +2, ... about **+10% per level** |
+| Player | Gear | Normal level 60 gear: the baseline (1x) |
+| Player | Perks | About **+50-60%** with five Offensive perks (about +10% per perk) |
+| Player | Absorbed gear (attunement / sacrifice) | About **+30-50%** when fully collected: 10% of each item's stats, each item counted once, green or better, best few items per slot |
+| Player | Perk ranks | The long-term climb: higher ranks push the total further |
+| **Total** | Fully progressed player | About **2.5-3x** a normal level 60 player: enough to solo a raid at its base solo scaling; each Mythic level then pushes the raid back up until the player runs out of power |
+
+Mechanics are a separate problem: some bosses need more than one player whatever the numbers
+(Razorgore's orb, the Twin Emperors' teleport tank swap, C'Thun's stomach phase). They need small script changes, raid by raid (see Next up).
+
 ## Done
 
 - [x] Transmogrify spell (mod-transmog-plus window from anywhere)
@@ -24,6 +44,12 @@ Guiding idea: inspired by Peloria, not a copy. Stats stay in normal WoW ranges (
 
 ## Next up
 
+- [ ] **Gear attunement and sacrifice** (large): absorb stats from acquired gear, either by attuning it
+      (equip it and kill creatures until 100%, Synastria-style) or by sacrificing it (destroy it for its
+      stats at once, Peloria-style). Fixed stats only (no procs, set bonuses or weapon damage). Numbers per
+      the Power budget. Still to decide: one style or both, per character or account-wide.
+- [ ] **Soloable raid mechanics** (moderate, per raid): script changes for bosses that need several
+      players (Razorgore, Twin Emperors, C'Thun, ...).
 - [ ] **Perk ranks** (moderate): ranks like spell ranks for perks with a number (Rapid Recovery,
       Masteries, Pressure, ...). Add the rank support soon (a rank column, per-rank values, "Rank 1 / 1" in
       the window, a GM command to set ranks) so new perks are written with ranks from the start; the rank

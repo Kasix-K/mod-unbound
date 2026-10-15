@@ -8,6 +8,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Classic raids soloable (raid scaling to about 3 players' worth) | 2026-10-14 | 2026-10-14 | Kasix-K |
+| Power budget (endgame design targets, in the roadmap) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Perks tab on the character sheet (ElvUI skinned) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Perk window: talent-tree style | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Chat window load-error guard (Unbound addon) | 2026-10-14 | 2026-10-14 | Kasix-K |
@@ -66,8 +68,13 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 - **Heroic The Deadmines and Ragefire Chasm.**
 - **Chat window guard** in the Unbound addon: stops a load-time chat error
   (`FloatingChatFrame.lua:1281`, seen with ElvUI's chat).
+- **Power budget** in the roadmap: the endgame goal (one player solos a full Mythic raid) and the power
+  targets every system is designed against (fully progressed player about 2.5-3x a normal level 60).
 
 ### Changed
+- **Classic raids soloable:** solo scaling for 20-player raids (Zul'Gurub, Ruins of Ahn'Qiraj) and
+  40-player raids (Molten Core, Blackwing Lair, Temple of Ahn'Qiraj) lowered so one player faces about 3
+  players' worth of the raid (was about 9 and 17); a full raid is unchanged. Dungeons are unchanged.
 - **Perk numbers scaled to normal WoW ranges** (about +10% per perk) instead of Peloria-sized values;
   Retribution went from Holy x59 / Physical x27 to +15% / +10%; Rapid Recovery from 15% after 3 seconds
   to 8% after 4 seconds; the stat-based perks now work with level 60 stats.
