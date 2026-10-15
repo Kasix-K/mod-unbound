@@ -22,16 +22,22 @@ Unbound.ExpansionUnlocked = 0
 #                     0 - Disabled
 #
 #    Unbound.Perks.RapidRecovery.Delay
-#        Description: Milliseconds out of combat before the recovery starts.
-#        Default:     4000
+#        Description: Milliseconds out of combat before the recovery starts, one value per rank.
+#        Default:     "6000, 5000, 4000"
 #
 #    Unbound.Perks.RapidRecovery.Percent
-#        Description: Percent of maximum health and mana restored each second.
-#        Default:     8
+#        Description: Percent of maximum health and mana restored each second, one value per rank.
+#        Default:     "4, 6, 8"
+#
+#    Unbound.Perks.RapidRecovery.RankLevels
+#        Description: Character level that reaches each rank (a GM can set a rank with
+#                     ".perk rank 3 <rank>"; ".perk rank 3" goes back to the level's rank).
+#        Default:     "1, 30, 60"
 
 Unbound.Perks.RapidRecovery = 1
-Unbound.Perks.RapidRecovery.Delay = 4000
-Unbound.Perks.RapidRecovery.Percent = 8
+Unbound.Perks.RapidRecovery.Delay = "6000, 5000, 4000"
+Unbound.Perks.RapidRecovery.Percent = "4, 6, 8"
+Unbound.Perks.RapidRecovery.RankLevels = "1, 30, 60"
 
 #    Unbound.Attunement.Enable
 #        Description: Gear attunement: attuned items permanently give the character a percentage of

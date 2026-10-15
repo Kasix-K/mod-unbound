@@ -91,7 +91,21 @@ UnboundPerks.PERKS = {
       icon = "Interface\\Icons\\Spell_Nature_Rejuvenation",
       desc = "After leaving combat for " .. G("4 seconds") .. ", you rapidly regenerate " ..
              G("8% of your maximum health and mana every second") .. " until full.",
-      note = ALWAYS },
+      note = ALWAYS,
+      -- Ranked: the server sends the rank and each rank's "delay ms,percent,level" (mod_unbound.conf).
+      applyRank = function(perk, rank, maxRank, values)
+          local cur = values[rank] or values[#values]
+          if not cur then return end
+          perk.desc = "After leaving combat for " .. G(string.format("%g seconds", cur[1] / 1000)) .. ", you rapidly regenerate " ..
+                      G(cur[2] .. "% of your maximum health and mana every second") .. " until full."
+          local lines = { "Rank " .. rank .. " / " .. maxRank }
+          for i, v in ipairs(values) do
+              local line = string.format("Rank %d: %g sec, %d%%  (level %d)", i, v[1] / 1000, v[2], v[3])
+              table.insert(lines, i == rank and G(line) or line)
+          end
+          table.insert(lines, ALWAYS)
+          perk.note = table.concat(lines, "\n")
+      end },
 
     -- Offensive -------------------------------------------------------------------------------------
     { id = 101, name = "Cyclic Power", category = "OFFENSIVE", pets = PETS_TOO, works = true,

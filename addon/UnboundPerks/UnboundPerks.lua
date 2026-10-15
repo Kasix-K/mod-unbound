@@ -253,6 +253,26 @@ serverIds = function()
     return table.concat(ids, ",")
 end
 
+-- Perk ranks from the server: RANK:<perk>:<rank>:<max>:<values> (values: "a,b,c;a,b,c" per rank)
+local ranks = {}
+
+local function onServerRank(rest)
+    local id, rank, maxRank, values = string.match(rest, "^(%d+):(%d+):(%d+):(.*)$")
+    id, rank, maxRank = tonumber(id), tonumber(rank), tonumber(maxRank)
+    if not id then return end
+    local parsed = {}
+    for entry in string.gmatch(values or "", "[^;]+") do
+        local nums = {}
+        for n in string.gmatch(entry, "%d+") do table.insert(nums, tonumber(n)) end
+        table.insert(parsed, nums)
+    end
+    ranks[id] = { rank = rank, max = maxRank }
+    for _, perk in ipairs(P.PERKS) do
+        if perk.id == id and perk.applyRank then perk.applyRank(perk, rank, maxRank, parsed) end
+    end
+    if refresh then refresh() end
+end
+
 local function onServerState(list)
     local on = {}
     for id in string.gmatch(list, "%d+") do on[tonumber(id)] = true end
@@ -402,7 +422,12 @@ local function updateGrid()
         if not on and not available then b.icon:SetVertexColor(0.6, 0.6, 0.6) end
         setShown(b.glow, on)
         setShown(b.sel, perk == selectedPerk)
-        b.rank:SetText(on and "1/1" or "0/1")
+        local r = ranks[perk.id]
+        if r then
+            b.rank:SetText((on and r.rank or 0) .. "/" .. r.max)
+        else
+            b.rank:SetText(on and "1/1" or "0/1")
+        end
         if on then
             b.rank:SetTextColor(unpack(C.gold))          -- learned (talent: yellow)
         elseif available then
@@ -784,6 +809,8 @@ comm:SetScript("OnEvent", function(_, _, prefix, message, channel, sender)
     local kind, rest = string.match(message, "^(%u+):(.*)$")
     if kind == "STATE" then
         onServerState(rest)
+    elseif kind == "RANK" then
+        onServerRank(rest)
     elseif kind == "ERR" then
         UIErrorsFrame:AddMessage(rest, 1, 0.3, 0.3)
         if frame then setStatus(rest) end

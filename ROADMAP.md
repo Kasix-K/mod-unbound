@@ -131,10 +131,9 @@ changes, raid by raid (see Next up).
       build (in stages: collection and stats, attuning, the altar, tooltips and collection window).
 - [ ] **Soloable raid mechanics** (moderate, per raid): script changes for bosses that need several
       players (Razorgore, Twin Emperors, C'Thun, ...).
-- [ ] **Perk ranks** (moderate): ranks like spell ranks for perks with a number (Rapid Recovery,
-      Masteries, Pressure, ...). Add the rank support soon (a rank column, per-rank values, "Rank 1 / 1" in
-      the window, a GM command to set ranks) so new perks are written with ranks from the start; the rank
-      values and how ranks are earned (levels, Heroic currency, quests) can come later.
+- [ ] **Perk ranks** (moderate): rank support is built (rank table, per-rank values, "2/3" badges,
+      `.perk rank`), so far for Rapid Recovery (3 ranks by level). Still to do: ranks for the other perks
+      with a number (Masteries, Pressure, ...) and how ranks are earned (levels, Heroic currency, quests).
 - [ ] **Defensive and Utility perks** (moderate): Thick Skin, Second Wind, Steadfast, Fleet Foot,
       Treasure Sense are listed in the window but do nothing yet.
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, at the same

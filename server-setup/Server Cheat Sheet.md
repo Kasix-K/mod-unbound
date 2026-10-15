@@ -59,8 +59,8 @@ goes to him; `.respawn` next to his corpse brings him back early (for testing).
   Needs the **Unbound** addon, which shows the menu from level 60 instead of 65.
 - **Solo dungeon finder:** queue alone or with bots, and you go straight in.
 - **Perks:** type `/perks` or click the **Perks** tab at the bottom of the character sheet (C) to open the Character Perks window (needs the **UnboundPerks** addon). Always on
-  for everyone: No Resurrection Sickness, No Daze, and Rapid Recovery (4 seconds after combat, 8% health and
-  mana per second). Switch on up to 5 Offensive perks (about +10% each) and your class perk (so far: Paladin
+  for everyone: No Resurrection Sickness, No Daze, and Rapid Recovery (ranked by level: up to 8% health
+  and mana per second, 4 seconds after combat). Switch on up to 5 Offensive perks (about +10% each) and your class perk (so far: Paladin
   Retribution). Perks can't be changed in combat; save favourite sets as loadouts.
 
 ## Gear attunement (GM commands for testing)
@@ -80,19 +80,21 @@ then, items are attuned with these GM commands (they act on the selected player,
 Only green or better weapons and armour with required level 50-60 from classic content count (TBC and Wrath
 items count once those expansions are released). Settings: `Unbound.Attunement.*` in `mod_unbound.conf`.
 
-## Perk ranks (planned, not built yet)
+## Perk ranks
 
-No perk has ranks yet, Permanent ones included: each has one fixed value (for example Masteries +10%,
-Rapid Recovery 8% per second after 4 seconds, which can be changed in `mod_unbound.conf`). The plan:
+Rank support is built; so far only **Rapid Recovery** (perk 3) has ranks. A character's rank comes from
+its level, values in `mod_unbound.conf`:
 
-1. **Add rank support first** (a few hours): a rank saved per perk for each character, a value per rank
-   for every perk, "Rank 1 / 1" in the perk window and tooltips, and a GM command to set a rank for
-   testing. Every perk starts at Rank 1 with today's numbers, so nothing changes in game.
-2. **Later, give each perk its real ranks**, for example Masteries: Rank 1 +4%, Rank 2 +6%, Rank 3 +8%,
-   Rank 4 +10%. Decide then how ranks are earned (levels, Heroic currency, quests, ...).
+| Rank | Level | Delay after combat | Health and mana per second |
+|---|---|---|---|
+| 1 | 1 | 6 seconds | 4% |
+| 2 | 30 | 5 seconds | 6% |
+| 3 | 60 | 4 seconds | 8% |
 
-No Daze and No Resurrection Sickness stay on/off (no ranks). Only one person should add the rank
-support, while the other holds off on perk changes (both edit the same files).
+GM testing: target a player (or nobody, for yourself) and type `.perk rank 3 2` for Rank 2;
+`.perk rank 3` goes back to the rank the level gives. The perk window shows the rank as "2/3".
+Next: give other perks ranks (for example Masteries: Rank 1 +4% ... Rank 4 +10%) and decide how ranks
+are earned (levels, Heroic currency, quests, ...). No Daze and No Resurrection Sickness stay on/off.
 
 ## Expansion lock (classic only for now)
 

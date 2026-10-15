@@ -4,8 +4,15 @@
  * Permanent perks (always on for every player):
  *   No Resurrection Sickness   worldserver.conf: Death.SicknessLevel = 255 (apply-unbound-settings.ps1)
  *   No Daze                    worldserver.conf: Daze.Enabled = 0          (apply-unbound-settings.ps1)
- *   Rapid Recovery             below: after 4 seconds out of combat, restore 8% of maximum health and
- *                              mana every second until full (mod_unbound.conf).
+ *   Rapid Recovery             below: after a few seconds out of combat, restore a percentage of maximum
+ *                              health and mana every second until full. It has ranks (mod_unbound.conf):
+ *                              Rank 1 6 s / 4% from level 1, Rank 2 5 s / 6% from level 30, Rank 3 4 s / 8%
+ *                              from level 60.
+ *
+ * Perk ranks: a perk listed in RankedPerks() has several ranks. A character's rank comes from its level
+ * (the rank levels in mod_unbound.conf) unless a GM set one with ".perk rank <perk id> <rank>" (saved in
+ * characters.character_unbound_perk_ranks; ".perk rank <perk id>" without a rank goes back to the level).
+ * The server tells the addon with "RANK:<perk>:<rank>:<max>:<values>" (values per rank, ';'-separated).
  *
  * Numbers are kept in normal WoW ranges (no Peloria-sized scaling): one perk is worth about +10%.
  *
@@ -66,10 +73,12 @@
  *                              By Sword & Light: Holy damage +15%, Physical damage +10%.
  *                              The extra Crusader Strikes, Judgements and Exorcisms are free triggered casts.
  *
- * Settings (mod_unbound.conf): Unbound.Perks.RapidRecovery (on/off), .Delay (ms), .Percent.
+ * Settings (mod_unbound.conf): Unbound.Perks.RapidRecovery (on/off), .Delay (ms per rank), .Percent (per rank),
+ * .RankLevels (level per rank).
  */
 
 #include "Chat.h"
+#include "ChatCommand.h"
 #include "Config.h"
 #include "CellImpl.h"
 #include "Creature.h"
@@ -93,17 +102,41 @@
 #include <algorithm>
 #include <cmath>
 #include <list>
+#include <map>
 #include <set>
 #include <unordered_map>
 #include <utility>
+#include <vector>
 
 namespace
 {
     // ------------------------------------------------------------------ Rapid Recovery settings
+    struct RecoveryRank
+    {
+        uint32 delayMs;
+        uint32 percent;
+        uint32 level;   // character level that reaches this rank
+    };
     bool sRapidRecovery = true;
-    uint32 sRecoveryDelayMs = 4000;
-    uint32 sRecoveryPercent = 8;
+    std::vector<RecoveryRank> sRecoveryRanks = { { 6000, 4, 1 }, { 5000, 6, 30 }, { 4000, 8, 60 } };
     constexpr uint32 RECOVERY_TICK_MS = 1000;
+    constexpr uint32 PERK_ID_RAPID_RECOVERY = 3;
+
+    // "6000, 5000, 4000" -> { 6000, 5000, 4000 }
+    std::vector<uint32> ParseList(std::string const& text)
+    {
+        std::vector<uint32> values;
+        for (std::string_view part : Acore::Tokenize(text, ',', false))
+        {
+            while (!part.empty() && part.front() == ' ')
+                part.remove_prefix(1);
+            while (!part.empty() && part.back() == ' ')
+                part.remove_suffix(1);
+            if (Optional<uint32> value = Acore::StringTo<uint32>(part))
+                values.push_back(*value);
+        }
+        return values;
+    }
 
     // ------------------------------------------------------------------ toggled perks
     enum PerkId : uint32
@@ -241,6 +274,7 @@ namespace
         int32 cappingBonus = 0;     // Block/Dodge/Parry/Haste Capping damage bonus (%), summed
         float powerConversion = 0;  // Power Conversion bonus (%)
         std::unordered_map<ObjectGuid, PressureTrack> pressure; // Pressure: per attacking unit (player, pets)
+        std::map<uint32, uint8> rankOverride;  // perk ranks set by a GM (.perk rank)
         int32 momentum = 0;         // Rolling Momentum bonus (%)
         uint32 momentumTimer = 0;
     };
@@ -645,6 +679,57 @@ namespace
         SendAddon(player, "STATE:" + ids);
     }
 
+    // ------------------------------------------------------------------ perk ranks
+    // Ranked perks and their number of ranks (more perks get ranks later).
+    std::map<uint32, uint8> RankedPerks()
+    {
+        return { { PERK_ID_RAPID_RECOVERY, uint8(sRecoveryRanks.size()) } };
+    }
+
+    uint8 MaxRank(uint32 perk)
+    {
+        auto ranks = RankedPerks();
+        auto itr = ranks.find(perk);
+        return itr == ranks.end() ? 1 : itr->second;
+    }
+
+    // The rank a character has: a GM-set rank, or the highest rank its level reaches.
+    uint8 PerkRank(Player const* player, PerkState const& state, uint32 perk)
+    {
+        uint8 maxRank = MaxRank(perk);
+        auto set = state.rankOverride.find(perk);
+        if (set != state.rankOverride.end())
+            return std::clamp<uint8>(set->second, 1, maxRank);
+        if (perk == PERK_ID_RAPID_RECOVERY)
+        {
+            uint8 rank = 1;
+            for (uint8 i = 0; i < sRecoveryRanks.size(); ++i)
+                if (player->GetLevel() >= sRecoveryRanks[i].level)
+                    rank = i + 1;
+            return rank;
+        }
+        return 1;
+    }
+
+    RecoveryRank const& RecoveryFor(Player const* player, PerkState const& state)
+    {
+        return sRecoveryRanks[PerkRank(player, state, PERK_ID_RAPID_RECOVERY) - 1];
+    }
+
+    void SendRanks(Player* player, PerkState const& state)
+    {
+        for (auto const& [perk, maxRank] : RankedPerks())
+        {
+            std::string values;
+            if (perk == PERK_ID_RAPID_RECOVERY)
+                for (RecoveryRank const& r : sRecoveryRanks)
+                    values += (values.empty() ? "" : ";") + std::to_string(r.delayMs) + "," +
+                              std::to_string(r.percent) + "," + std::to_string(r.level);
+            SendAddon(player, "RANK:" + std::to_string(perk) + ":" + std::to_string(PerkRank(player, state, perk)) +
+                ":" + std::to_string(maxRank) + ":" + values);
+        }
+    }
+
     void SavePerk(Player* player, uint32 perk, bool on)
     {
         uint32 guid = player->GetGUID().GetCounter();
@@ -676,6 +761,7 @@ namespace
         if (text == "SYNC")
         {
             SendState(player, state);
+            SendRanks(player, state);
             return;
         }
 
@@ -738,19 +824,19 @@ namespace
     }
 
     // ------------------------------------------------------------------ Rapid Recovery
-    void RestoreTick(Player* player)
+    void RestoreTick(Player* player, uint32 percent)
     {
         uint32 maxHealth = player->GetMaxHealth();
         if (player->GetHealth() < maxHealth)
         {
-            uint32 gain = std::max<uint32>(1, player->CountPctFromMaxHealth(sRecoveryPercent));
+            uint32 gain = std::max<uint32>(1, player->CountPctFromMaxHealth(percent));
             player->SetHealth(std::min<uint32>(maxHealth, player->GetHealth() + gain));
         }
 
         uint32 maxMana = player->GetMaxPower(POWER_MANA);
         if (maxMana && player->GetPower(POWER_MANA) < maxMana)
         {
-            uint32 gain = std::max<uint32>(1, maxMana * sRecoveryPercent / 100);
+            uint32 gain = std::max<uint32>(1, maxMana * percent / 100);
             player->SetPower(POWER_MANA, std::min<uint32>(maxMana, player->GetPower(POWER_MANA) + gain));
         }
     }
@@ -788,10 +874,11 @@ namespace
             return;
         }
 
-        if (state.outOfCombatMs < sRecoveryDelayMs)
+        RecoveryRank const& rank = RecoveryFor(player, state);
+        if (state.outOfCombatMs < rank.delayMs)
         {
             state.outOfCombatMs += diff;
-            if (state.outOfCombatMs < sRecoveryDelayMs)
+            if (state.outOfCombatMs < rank.delayMs)
                 return;
             state.tickMs = RECOVERY_TICK_MS; // first tick right at the delay mark
         }
@@ -802,7 +889,7 @@ namespace
             return;
 
         state.tickMs = 0;
-        RestoreTick(player);
+        RestoreTick(player, rank.percent);
     }
 }
 
@@ -816,8 +903,21 @@ public:
     void OnAfterConfigLoad(bool /*reload*/) override
     {
         sRapidRecovery = sConfigMgr->GetOption<bool>("Unbound.Perks.RapidRecovery", true);
-        sRecoveryDelayMs = sConfigMgr->GetOption<uint32>("Unbound.Perks.RapidRecovery.Delay", 4000);
-        sRecoveryPercent = std::clamp<uint32>(sConfigMgr->GetOption<uint32>("Unbound.Perks.RapidRecovery.Percent", 8), 1, 100);
+        // one value per rank; a single value means one rank
+        std::vector<uint32> delays = ParseList(sConfigMgr->GetOption<std::string>("Unbound.Perks.RapidRecovery.Delay", "6000, 5000, 4000"));
+        std::vector<uint32> percents = ParseList(sConfigMgr->GetOption<std::string>("Unbound.Perks.RapidRecovery.Percent", "4, 6, 8"));
+        std::vector<uint32> levels = ParseList(sConfigMgr->GetOption<std::string>("Unbound.Perks.RapidRecovery.RankLevels", "1, 30, 60"));
+        size_t count = std::min(delays.size(), percents.size());
+        if (!count)
+        {
+            delays = { 4000 };
+            percents = { 8 };
+            count = 1;
+        }
+        sRecoveryRanks.clear();
+        for (size_t i = 0; i < count; ++i)
+            sRecoveryRanks.push_back({ delays[i], std::clamp<uint32>(percents[i], 1, 100),
+                                       i < levels.size() ? levels[i] : (i == 0 ? 1 : 255) });
     }
 };
 
@@ -825,6 +925,7 @@ class unbound_perks_player : public PlayerScript
 {
 public:
     unbound_perks_player() : PlayerScript("unbound_perks_player", {
+        PLAYERHOOK_ON_LEVEL_CHANGED,
         PLAYERHOOK_ON_LOGIN,
         PLAYERHOOK_ON_LOGOUT,
         PLAYERHOOK_ON_UPDATE,
@@ -852,6 +953,13 @@ public:
                     SavePerk(player, perk, false); // another class's perk: switch it off for good
             } while (result->NextRow());
         }
+        if (QueryResult result = CharacterDatabase.Query("SELECT `perk`, `rank` FROM `character_unbound_perk_ranks` WHERE `guid` = {}",
+            player->GetGUID().GetCounter()))
+        {
+            do
+                state.rankOverride[(*result)[0].Get<uint32>()] = (*result)[1].Get<uint8>();
+            while (result->NextRow());
+        }
         // saved before the Offensive limit existed: keep the lowest ids, switch the rest off
         while (CountOffensive(state.active) > MAX_ACTIVE_OFFENSIVE)
         {
@@ -871,6 +979,14 @@ public:
     void OnPlayerDelete(ObjectGuid guid, uint32 /*accountId*/) override
     {
         CharacterDatabase.Execute("DELETE FROM `character_unbound_perks` WHERE `guid` = {}", guid.GetCounter());
+        CharacterDatabase.Execute("DELETE FROM `character_unbound_perk_ranks` WHERE `guid` = {}", guid.GetCounter());
+    }
+
+    // ranks that come from the level change with it
+    void OnPlayerLevelChanged(Player* player, uint8 /*oldLevel*/) override
+    {
+        if (PerkState* state = StateOf(player))
+            SendRanks(player, *state);
     }
 
     void OnPlayerUpdate(Player* player, uint32 diff) override
@@ -1037,9 +1153,64 @@ class spell_unbound_ret_judgement : public SpellScript
     }
 };
 
+// .perk rank <perk id> [rank]: set the selected player's (or your own) rank of a perk, for testing.
+// Without a rank the perk goes back to the rank the character's level gives.
+class unbound_perks_command : public CommandScript
+{
+public:
+    unbound_perks_command() : CommandScript("unbound_perks_command") { }
+
+    Acore::ChatCommands::ChatCommandTable GetCommands() const override
+    {
+        using namespace Acore::ChatCommands;
+        static ChatCommandTable perkTable =
+        {
+            { "rank", HandlePerkRank, rbac::RBAC_PERM_COMMAND_MODIFY, Console::No },
+        };
+        static ChatCommandTable commandTable =
+        {
+            { "perk", perkTable },
+        };
+        return commandTable;
+    }
+
+    static bool HandlePerkRank(ChatHandler* handler, uint32 perk, Optional<uint8> rank)
+    {
+        Player* target = handler->getSelectedPlayerOrSelf();
+        PerkState* state = target ? StateOf(target) : nullptr;
+        if (!state)
+            return false;
+        uint8 maxRank = MaxRank(perk);
+        if (!RankedPerks().count(perk))
+        {
+            handler->PSendSysMessage("Perk {} has no ranks. Ranked perks: 3 (Rapid Recovery).", perk);
+            return true;
+        }
+        uint32 guid = target->GetGUID().GetCounter();
+        if (rank)
+        {
+            uint8 value = std::clamp<uint8>(*rank, 1, maxRank);
+            state->rankOverride[perk] = value;
+            CharacterDatabase.Execute("REPLACE INTO `character_unbound_perk_ranks` (`guid`, `perk`, `rank`) VALUES ({}, {}, {})",
+                guid, perk, value);
+        }
+        else
+        {
+            state->rankOverride.erase(perk);
+            CharacterDatabase.Execute("DELETE FROM `character_unbound_perk_ranks` WHERE `guid` = {} AND `perk` = {}", guid, perk);
+        }
+        uint8 now = PerkRank(target, *state, perk);
+        handler->PSendSysMessage("{}: perk {} is now Rank {} / {}{}.", target->GetName(), perk, now, maxRank,
+            rank ? "" : " (from level)");
+        SendRanks(target, *state);
+        return true;
+    }
+};
+
 void AddSC_unbound_perks()
 {
     new unbound_perks_world();
+    new unbound_perks_command();
     new unbound_perks_player();
     new unbound_perks_unit();
     RegisterSpellScript(spell_unbound_ret_divine_storm);

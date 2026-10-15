@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Perk ranks (first: Rapid Recovery, 3 ranks by level; `.perk rank`) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Gear attunement, stage 1: collection and stats (GM commands) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Item expansion tags (attunement counts released expansions only) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Classic raids soloable (raid scaling to about 3 players' worth) | 2026-10-14 | 2026-10-14 | Kasix-K |
@@ -44,6 +45,11 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-14
 
 ### Added
+- **Perk ranks**, starting with Rapid Recovery: Rank 1 (6 seconds after combat, 4% health and mana per
+  second) from level 1, Rank 2 (5 s, 6%) from level 30, Rank 3 (4 s, 8%) from level 60. Values and rank
+  levels are in `mod_unbound.conf`. GMs set a rank with `.perk rank <perk id> <rank>` (saved per
+  character; `.perk rank <perk id>` goes back to the level's rank). The perk window shows "2/3" badges and
+  every rank in the tooltip.
 - **Gear attunement, stage 1 of 4** (the collection and its stats): each character has a collection of
   attuned items that permanently give 20% of their fixed stats (applied like gear stats, shown on the
   character sheet), with diminishing returns (full value until 100% of a full set of gear, half until 200%,
