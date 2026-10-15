@@ -113,6 +113,16 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   (`SetData(DATA_EGG_EVENT, SPECIAL)`); the instance counts it and starts phase two after the last one. The
   BWL instance constants it uses are copied from `blackwing_lair.h`. Settings: `Unbound.SoloRaid.Enable` and
   one per boss.
+- **Classic Onyxia's Lair:** `data/sql/db-world/unbound_classic_onyxia.sql` (entry level, creature stats from
+  `creature_classlevelstats`, loot with references 9100100-9100101, team conditions on the heads, quest givers)
+  and `src/unbound_classic_onyxia.cpp`. 3.3.5 kept the classic spell ids and raised their damage, so
+  `CLASSIC_DAMAGE` scales damage from those ids (`ModifySpellDamageTaken`, `ModifyPeriodicDamageAurasTick`)
+  in map 249 on difficulty 0 to classic / 3.3.5 average damage (1.12 and 3.3.5 Spell.dbc). Deep Breath and
+  Heated Ground chain through many spell ids (each one triggers the next), all listed. The Onyxian Lair Guard
+  (36561) has `npc_unbound_onyxia_no_lair_guard`, which despawns it. The map stays a 10-player map, so
+  mod-autobalance gets `AutoBalance.InflectionPoint.PerInstance = "249 -1 0.058 0.25"`: solo about 2.8
+  players' worth of the classic 40-player Onyxia, ten players about 10. After applying it, run
+  `python tools/item_expansions.py` so her classic loot counts for attunement.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Players in a

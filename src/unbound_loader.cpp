@@ -10,6 +10,7 @@ void AddSC_unbound_perks();
 void AddSC_unbound_attunement();
 void AddSC_unbound_world_bosses();
 void AddSC_unbound_solo_raids();
+void AddSC_unbound_classic_onyxia();
 
 void Addmod_unboundScripts()
 {
@@ -21,4 +22,5 @@ void Addmod_unboundScripts()
     AddSC_unbound_attunement();
     AddSC_unbound_world_bosses();
     AddSC_unbound_solo_raids();
+    AddSC_unbound_classic_onyxia();
 }

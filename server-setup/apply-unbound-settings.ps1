@@ -52,6 +52,9 @@ $Settings = [ordered]@{
         # Blackwing Lair, Temple of Ahn'Qiraj.
         'AutoBalance.InflectionPointRaid20M.CurveFloor'    = '0.1'
         'AutoBalance.InflectionPointRaid40M.CurveFloor'    = '0.03'
+        # Onyxia's Lair (map 249) is a 10-player map with classic 40-player Onyxia (unbound_classic_onyxia.sql):
+        # one player faces about 2.8 players' worth (like the 40-player raids above), ten players about 10
+        'AutoBalance.InflectionPoint.PerInstance'          = '"249 -1 0.058 0.25"'
         # Keep creature levels, XP and gold as they are
         'AutoBalance.LevelScaling'                         = '0'
         'AutoBalance.RewardScaling.XP'                     = '0'

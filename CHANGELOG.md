@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Onyxia's Lair as a classic level 60 raid (classic stats, spell damage, loot, Head of Onyxia quests) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Soloable raid mechanics: Blackwing Lair (Razorgore, Vaelastrasz, Ebonroc, Chromaggus, Nefarian) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Ranks 4-5 for Defensive and Utility perks (GM-only for now) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Offensive perk ranks (5 ranks: 1-3 by level, 4-5 endgame, GM-only for now) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
@@ -60,6 +61,20 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Added
+- **Onyxia's Lair is a classic level 60 raid again** (it was the level 80 version from 3.2): entry from level
+  60 (10-player difficulty; the 25-player one stays level 80, so it can't be entered). Onyxia is level 63 with
+  her classic health (1.1 million), armor and melee; Onyxian Whelps and Warders are classic too, and the
+  Onyxian Lair Guards (added in 3.2) are gone. Her spells keep their classic ids but were raised to level 80
+  damage in 3.2, so in the lair they deal their classic damage again (Flame Breath 3063-3937 instead of
+  18850-21150; also Wing Buffet, Fireball, Tail Sweep, Deep Breath, Eruption, Heated Ground and the Warders'
+  Fire Nova and Flame Lash; `src/unbound_classic_onyxia.cpp`). Classic loot: two Tier 2 helms, one of
+  Sapphiron Drape / Ring of Binding / Eskhandar's Collar / Ancient Cornerstone Grimoire, 24% one of
+  Deathbringer / Vis'kag / Shard of the Scale, the Onyxia Hide Backpack and the Head of Onyxia (level 80 gear,
+  emblems and the Onyxian Drake mount removed). The classic Head of Onyxia quests are back (Thrall and
+  Overlord Runthak; King Varian Wrynn instead of Bolvar and Major Mattingly), with the Rallying Cry of the
+  Dragonslayer. Solo: about 2.8 players' worth like the other classic raids
+  (`AutoBalance.InflectionPoint.PerInstance`). She can't be skinned: Scale of Onyxia and the Onyxia Scale
+  Cloak stay unobtainable.
 - **Soloable raid mechanics, Blackwing Lair** (`src/unbound_solo_raids.cpp`): mechanics no single player can
   handle, changed only while the raid has at most one player in it (GMs don't count; pets aren't players,
   playerbots are). With two or more players every fight is unchanged. Razorgore: Grethok the Controller's

@@ -199,6 +199,9 @@ changes, raid by raid (see Next up).
       placeholders (Thick Skin, Second Wind, Steadfast, Fleet Foot, Treasure Sense) were removed; their ids
       201-203 and 301-302 are not reused.
 
+- [x] Onyxia's Lair as a classic level 60 raid (2026-10-15): classic Onyxia, Whelps and Warders, classic
+      spell damage, no Lair Guards, classic loot and Head of Onyxia quests, solo scaling
+
 - [x] Perk ranks (2026-10-15, Idea 1: Ranks 1-3 by level, Ranks 4-5 earned at the endgame): 58 of 61 perks
       have ranks; all 57 Offensive, Defensive and Utility perks have 5 ranks (1-3 at levels 1 / 30 / 60, 4-5
       about 1.3x / 1.5x of Rank 3, GM-only via `.perk rank` for now; Rapid Recovery keeps 3). Values and rank
@@ -220,7 +223,8 @@ changes, raid by raid (see Next up).
   - [ ] Then, after testing, the risky ones: Core Hounds, Ragnaros' Magma Blast, Firemaw's Flame Buffet,
         Nefarian's Bone Constructs, Mandokir, Thekal, Ossirian, C'Thun, Anubisath Sentinels
   - Shadowflame (Firemaw, Ebonroc, Flamegor, Nefarian) still needs an Onyxia Scale Cloak, which can't be
-    obtained on this server (Onyxia is level 83, the pattern drops nowhere). A custom way to get one is planned.
+    obtained on this server (Onyxia isn't skinnable, the pattern drops nowhere, both on purpose). A custom
+    way to get one is planned.
 - [ ] **Earning perk Ranks 4-5** (moderate): how players reach the endgame ranks, now GM-only (buy per perk
       with gold, then Heroic Badges / Mythic currency; perk points; or rank by use), an Upgrade button in the
       perk window, and saving earned ranks (and what they cost, so purchases can be refunded if the design
@@ -230,7 +234,7 @@ changes, raid by raid (see Next up).
 - [ ] **Heroic currency and vendor** (moderate): a token (e.g. "Heroic Badge") from Heroic bosses,
       spent on companions, mounts, transmog or gear. Becomes the Loot Goblin's currency.
 - [ ] **Heroic classic raids** (moderate): Molten Core, Blackwing Lair, Zul'Gurub, Ruins and Temple of
-      Ahn'Qiraj. (In 3.3.5, Onyxia and Naxxramas only exist as their level-80 versions.)
+      Ahn'Qiraj, Onyxia's Lair. (In 3.3.5, Naxxramas only exists as its level-80 version.)
 - [ ] **Raid Finder** (moderate to large): raids in the dungeon finder in level brackets. Still to
       decide: strict brackets or every raid up to the player's level; an addon window plus a
       server hook.

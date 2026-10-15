@@ -71,6 +71,9 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
   except the Stockades and Ragefire Chasm. Needs the **Unbound** addon, which shows the menu from level 60
   instead of 65.
 - **Solo dungeon finder:** queue alone or with bots, and you go straight in.
+- **Onyxia's Lair:** a classic level 60 raid again (Dustwallow Marsh, the Wyrmbog), 10-player difficulty.
+  Hand the Head of Onyxia to Thrall or King Varian Wrynn, then the follow-up to Overlord Runthak or Major
+  Mattingly for the Rallying Cry of the Dragonslayer.
 - **Solo raids:** alone in a raid (no other players or bots; pets are fine), mechanics no single player can
   handle are changed. Blackwing Lair so far: in Razorgore's room, walk over (or click) the eggs to break
   them once Razorgore is pulled, and don't kill him before the last egg; Grethok, Vaelastrasz, Ebonroc,
