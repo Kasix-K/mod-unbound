@@ -78,9 +78,10 @@ Custom features for the WoW 3.3.5a Unbound server.
   expansion: raise `Unbound.ExpansionUnlocked`, `MaxPlayerLevel` (70/80) and, for Wrath, clear the class
   mask.
 
-## Roadmap
+## Roadmap and changelog
 
-Planned and possible features are tracked in [ROADMAP.md](ROADMAP.md).
+Planned and possible features are tracked in [ROADMAP.md](ROADMAP.md). Every feature, with the date it
+was added and last changed, is in [CHANGELOG.md](CHANGELOG.md).
 
 ## Custom spells, items and companions
 
@@ -190,7 +191,9 @@ powershell -ExecutionPolicy Bypass -File server-setup\apply-unbound-settings.ps1
     `--client`), restart the worldserver and the client.
   - `server-setup/apply-unbound-settings.ps1` changed: run it on your configs, restart the worldserver.
   - `addon/` changed: copy the addon into your client's `Interface\AddOns` again.
-- Keep `server-setup/Server Cheat Sheet.md` and `ROADMAP.md` up to date with your changes.
+- Keep `server-setup/Server Cheat Sheet.md` and `ROADMAP.md` up to date with your changes, and add every
+  new or changed feature to `CHANGELOG.md` under today's date (and to its feature index, with the date
+  added or last changed).
 - New features go in their own `src/unbound_<feature>.cpp`, registered in `src/unbound_loader.cpp`, and get
   a line under Features above.
 - Custom IDs are shared, so pick new ones next to the existing ones and say so in the commit: spells
