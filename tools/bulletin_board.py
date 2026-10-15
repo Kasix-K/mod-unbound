@@ -5,7 +5,7 @@ Generate the Bulletin Board's quests (src/unbound_bulletin_board.cpp):
 
 Two boards (gameobject 920000), in Stormwind's Trade District and Orgrimmar's Valley of Strength; both
 factions can use either (the server is cross-faction). Level 60 only. Rewards are gold only (no
-attunement progress: that stays behind killing).
+infusion progress: that stays behind killing).
 
 Daily quests (rotated by the core's quest pools at the daily reset):
   - 2 kill bounties a day, from KILL_QUESTS (level 55-60 creatures across the classic zones)

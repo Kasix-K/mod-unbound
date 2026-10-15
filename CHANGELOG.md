@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Gear attunement renamed infusion (infuse, infused, `.infuse`, `/infusion`; classic Naxxramas keeps its attunement) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Altar of Sacrifice renamed Altar of Tribute (sacrifice is now tribute everywhere players see it) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Bulletin Board: daily bounties and profession quests, weekly dungeon and raid quests per tier, weekly elite bounty | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Raid Finder: Raids tab in the Dungeon Finder (enter raids, group prompt, Leave Raid) | 2026-10-15 | 2026-10-15 | Kasix-K |
@@ -66,6 +67,14 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Changed
+- **Gear attunement is now infusion**: everywhere players see it, attune / attunement / attuned is infuse /
+  infusion / infused. Chat messages ("[Infusion] … is fully infused!"), item tooltips ("Infusion: 37% (…kills)",
+  "Infused: its stats are yours for good", "Wear it and slay foes to infuse it"), the collection window ("Gear
+  Infusion", "Infused (n)", "Infusion stats"), the micro menu button ("Infusion"), the Altar of Tribute's subname
+  and greeting. Commands: `.infuse progress` (and the GM `.infuse add|remove|check|info|reset`) and `/infusion` or
+  `/infuse`; the old `.attune`, `/attunement` and `/attune` still work. Unchanged: classic Naxxramas's attunement
+  (the quest, "You are not attuned", the Raid Finder's "Attunement" status), and names players never see (the
+  `UnboundAttunement` addon folder, the `character_unbound_attunement` table, the `Unbound.Attunement.*` settings).
 - **The Altar of Sacrifice is now the Altar of Tribute**, and "sacrifice" is "tribute" everywhere players see it:
   the altar's name and its menu ("Offer <item> as tribute?"), chat messages ("… was offered as tribute and is fully
   attuned!"), item tooltips ("Attunement: tribute only", "At an Altar of Tribute") and the collection window.

@@ -70,9 +70,9 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   in `mod_unbound.conf`. Retribution's spell scripts: `data/sql/db-world/unbound_perks_spells.sql`. Perk
   numbers stay in normal WoW ranges (about +10% per perk); they are constants at the top of
   `unbound_perks.cpp` and must match `PerkData.lua`. The perk code assumes `MapUpdate.Threads = 1`.
-- **Gear attunement** (all 4 stages: the collection, its stats, attuning by kills, the tribute altar, tooltips and the
+- **Gear infusion** (all 4 stages: the collection, its stats, infusing by kills, the tribute altar, tooltips and the
   collection window): `src/unbound_attunement.cpp`. Each
-  character's collection is `characters.character_unbound_attunement` (item, progress, attuned). Attuned
+  character's collection is `characters.character_unbound_attunement` (item, progress, attuned). Infused
   items give `Unbound.Attunement.Percent` (20%) of their fixed stats, applied like equipped-item stats
   (`Player::_ApplyItemBonuses`), with diminishing returns against `ReferenceSetStats` (600 stat points =
   a full level-60 blue/epic set): full value until `FullValueUntil` (100%), half until `HalfValueUntil`
@@ -84,25 +84,25 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   starters/enders, crafting by its reagents, items made by using another item; greens/blues are also held
   to their expansion's item level range, because shared world-drop tables mix expansions). Run
   `python tools/item_expansions.py` again (database running) when loot, vendors or quests change;
-  `--check <item ids>` explains single items. Attuning: `OnPlayerRewardKillRewarder` (each player credited
+  `--check <item ids>` explains single items. Infusing: `OnPlayerRewardKillRewarder` (each player credited
   for a kill, group members in range too); a creature counts if `Acore::XP::Gain` > 0 (would give
   experience); 1 kill, `EliteKills` (2) for elites, `BossKills` (10) for bosses; each equipped, counting,
-  not yet attuned item gains them; `Kills` by quality (50/100/200/400). Progress is saved with the
+  not yet infused item gains them; `Kills` by quality (50/100/200/400). Progress is saved with the
   character (`OnPlayerSave`, one transaction); completing an item saves at once. Messages at 25/50/75%
-  and on completion (achievement sound). GM commands: `.attune add|remove|check <item>`, `.attune info`,
-  `.attune reset` (on the selected player, else yourself); players: `.attune progress`. Tribute: the Altar
+  and on completion (achievement sound). GM commands: `.infuse add|remove|check <item>`, `.infuse info`,
+  `.infuse reset` (on the selected player, else yourself); players: `.infuse progress` (`.attune` is the old name, still works; players see "infusion", the code, table, settings and addon keep "attunement"). Tribute: the Altar
   of Tribute (creature 190103, called the Altar of Sacrifice before 2026-10-15; `npc_unbound_attunement_altar`, `data/sql/db-world/unbound_attunement_altar.sql`)
-  lists the bag items that count and aren't attuned (28 per page); each gossip option carries the item entry
+  lists the bag items that count and aren't infused (28 per page); each gossip option carries the item entry
   (sender) and bag/slot (action) and uses the game's money confirmation box; on select the server checks the
-  item, position and gold again, then takes the gold, destroys the item and attunes it. Prices:
+  item, position and gold again, then takes the gold, destroys the item and infuses it. Prices:
   `TributeGold` by quality (2/10/50/250), times `TributeOwnGearMultiplier` (2; the old `Sacrifice*` names are still
   read) if `Player::CanUseItem`.
   Client: `addon/UnboundAttunement` (tooltips on GameTooltip/ItemRefTooltip/ShoppingTooltips, the collection window,
-  the Attunement button in the micro menu between Talents and Achievements, `/attunement`; ElvUI's micro bar has a fixed button list, so
+  the Infusion button in the micro menu between Talents and Achievements, `/infusion`; ElvUI's micro bar has a fixed button list, so
   the button styles itself like ElvUI's and re-places itself after `AB:UpdateMicroPositionDimensions`). It whispers its own character
-  (prefix `UBATT`): `Q:<ids>` -> `I:<id>:<code>:<done>:<needed>:<price>:<reason>` (code A attuned, W wear to
-  attune, S tribute only, N doesn't count); `COLL` -> `C:BEGIN`, `C:A:`, `C:P:`, `C:S:`, `C:T:`, `C:END`; the server
-  pushes `P:` (kill progress), `A:<id>` (attuned) and `RESET` (a GM changed the collection).
+  (prefix `UBATT`): `Q:<ids>` -> `I:<id>:<code>:<done>:<needed>:<price>:<reason>` (code A infused, W wear to
+  infuse, S tribute only, N doesn't count); `COLL` -> `C:BEGIN`, `C:A:`, `C:P:`, `C:S:`, `C:T:`, `C:END`; the server
+  pushes `P:` (kill progress), `A:<id>` (infused) and `RESET` (a GM changed the collection).
 - **Soloable raid mechanics:** `src/unbound_solo_raids.cpp`. A fix applies while `Map::IsRaid()` and
   `GetPlayersCountExceptGMs() <= 1` (pets and guardians aren't players, playerbots are; a GM in GM mode
   isn't counted, so a GM alone also gets the solo version). Spells that must not happen solo are
@@ -130,7 +130,7 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   (36561) has `npc_unbound_onyxia_no_lair_guard`, which despawns it. The map stays a 10-player map, so
   mod-autobalance gets `AutoBalance.InflectionPoint.PerInstance = "249 -1 0.058 0.25"`: solo about 2.8
   players' worth of the classic 40-player Onyxia, ten players about 10. After applying it, run
-  `python tools/item_expansions.py` so her classic loot counts for attunement.
+  `python tools/item_expansions.py` so her classic loot counts for infusion.
 - **Classic Naxxramas:** `src/naxx40` and `data/sql/db-world/unbound_naxx40*.sql`, from mod-individual-progression
   (MIT, `src/naxx40/LICENSE-mod-individual-progression`; what was changed is listed at the top of
   `src/naxx40/unbound_naxx40_config.cpp`). It is map 533's third difficulty slot (10-player heroic) made a

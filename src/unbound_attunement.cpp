@@ -1,6 +1,9 @@
 /*
  * mod-unbound: gear attunement, stage 1 (the collection and its stats).
  *
+ * Players see this system as "infusion" (infuse, infused, .infuse); the code, the database table, the
+ * Unbound.Attunement.* settings and the addon keep the original name, attunement.
+ *
  * Each character has a collection of attuned items (characters.character_unbound_attunement). Every
  * attuned item permanently gives the character Unbound.Attunement.Percent (20%) of the item's fixed stats
  * (primary stats, ratings, attack and spell power, regeneration, armour, block, resistances; not procs, set
@@ -22,7 +25,7 @@
  * elite as Unbound.Attunement.EliteKills (2), a boss as BossKills (10). An item needs Unbound.Attunement.Kills
  * kills by quality (50 green, 100 blue, 200 epic, 400 legendary); at that point it is attuned for good.
  * Progress is kept per item (unequipping pauses it) and saved with the character; completing an item saves
- * at once. Players see their equipped items' progress with .attune progress.
+ * at once. Players see their equipped items' progress with .infuse progress (.attune also works).
  *
  * Stage 3, tribute: the Altar of Tribute (creature 190103, placed with .npc add 190103) lists the items in
  * the player's bags that count and aren't attuned yet; choosing one shows the game's confirmation box with the
@@ -224,7 +227,7 @@ namespace
         uint32 cap = sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL);
         switch (check)
         {
-            case ItemCheck::Counts: return "counts for attunement";
+            case ItemCheck::Counts: return "counts for infusion";
             case ItemCheck::NotGreenOrBetter: return "doesn't count: not green quality or better";
             case ItemCheck::NotGear: return "doesn't count: not a weapon or armor";
             case ItemCheck::WrongLevel:
@@ -430,7 +433,7 @@ namespace
     }
 
     // ------------------------------------------------------------------ attuning (stage 2)
-    char const* const PREFIX = "|cff4dc3ff[Attunement]|r ";
+    char const* const PREFIX = "|cff4dc3ff[Infusion]|r ";
 
     // Kills an item needs, by quality.
     uint32 KillsNeeded(ItemTemplate const* proto)
@@ -561,8 +564,8 @@ namespace
             "VALUES ({}, {}, 0, 1)", player->GetGUID().GetCounter(), proto->ItemId);
         Recalculate(player);
         ChatHandler(player->GetSession()).PSendSysMessage(tribute ?
-            "{}{} was offered as tribute and is fully attuned! Its stats are yours for good ({} items attuned)." :
-            "{}{} is fully attuned! Its stats are yours for good, even without the item ({} items attuned).",
+            "{}{} was offered as tribute and is fully infused! Its stats are yours for good ({} items infused)." :
+            "{}{} is fully infused! Its stats are yours for good, even without the item ({} items infused).",
             PREFIX, ItemLink(proto), state->attuned.size());
         player->PlayDirectSound(SOUND_ATTUNED, player);
         SendAddon(player, "A:" + std::to_string(proto->ItemId));
@@ -767,12 +770,13 @@ public:
         };
         static ChatCommandTable commandTable =
         {
-            { "attune", attuneCommandTable },
+            { "infuse", attuneCommandTable },
+            { "attune", attuneCommandTable },   // old name
         };
         return commandTable;
     }
 
-    // .attune add <item>: attune an item for the selected player (or yourself)
+    // .infuse add <item>: attune an item for the selected player (or yourself)
     static bool HandleAdd(ChatHandler* handler, ItemTemplate const* proto)
     {
         Player* target = handler->getSelectedPlayerOrSelf();
@@ -785,7 +789,7 @@ public:
         AttunementState* state = StateOf(target);
         if (state->attuned.count(proto->ItemId))
         {
-            handler->PSendSysMessage("{} already has {} attuned.", target->GetName(), ItemLink(proto));
+            handler->PSendSysMessage("{} already has {} infused.", target->GetName(), ItemLink(proto));
             return true;
         }
         CharacterDatabase.Execute("REPLACE INTO `character_unbound_attunement` (`guid`, `item`, `progress`, `attuned`) "
@@ -794,30 +798,30 @@ public:
         state->attuned.insert(proto->ItemId);
         Recalculate(target);
         SendAddon(target, "RESET");
-        handler->PSendSysMessage("{} attuned for {} ({} items, {:.0f}% of a full set).", ItemLink(proto),
+        handler->PSendSysMessage("{} infused for {} ({} items, {:.0f}% of a full set).", ItemLink(proto),
             target->GetName(), state->attuned.size(), state->effectivePercent);
         return true;
     }
 
-    // .attune remove <item>
+    // .infuse remove <item>
     static bool HandleRemove(ChatHandler* handler, ItemTemplate const* proto)
     {
         Player* target = handler->getSelectedPlayerOrSelf();
         AttunementState* state = StateOf(target);
         if (!state->attuned.erase(proto->ItemId) && !state->progress.erase(proto->ItemId))
         {
-            handler->PSendSysMessage("{} has no attunement for {}.", target->GetName(), ItemLink(proto));
+            handler->PSendSysMessage("{} has no infusion for {}.", target->GetName(), ItemLink(proto));
             return true;
         }
         CharacterDatabase.Execute("DELETE FROM `character_unbound_attunement` WHERE `guid` = {} AND `item` = {}",
             target->GetGUID().GetCounter(), proto->ItemId);
         Recalculate(target);
         SendAddon(target, "RESET");
-        handler->PSendSysMessage("Removed {} from {}'s attunements.", ItemLink(proto), target->GetName());
+        handler->PSendSysMessage("Removed {} from {}'s infusions.", ItemLink(proto), target->GetName());
         return true;
     }
 
-    // .attune check <item>: does it count, and what it gives at full value
+    // .infuse check <item>: does it count, and what it gives at full value
     static bool HandleCheck(ChatHandler* handler, ItemTemplate const* proto)
     {
         ItemCheck check = CheckItem(proto);
@@ -827,33 +831,33 @@ public:
         for (auto const& [key, value] : ItemStats(proto, points))
             if (int32 amount = int32(std::lround(value * sPercent / 100.0f)))
                 gives[key] = amount;
-        handler->PSendSysMessage("Attuned, it gives {:.0f}% of its stats (before diminishing returns): {}.", sPercent,
+        handler->PSendSysMessage("Infused, it gives {:.0f}% of its stats (before diminishing returns): {}.", sPercent,
             StatList(gives));
         return true;
     }
 
-    // .attune info: the selected player's (or your) collection and its stats
+    // .infuse info: the selected player's (or your) collection and its stats
     static bool HandleInfo(ChatHandler* handler)
     {
         Player* target = handler->getSelectedPlayerOrSelf();
         AttunementState* state = StateOf(target);
-        handler->PSendSysMessage("{}: {} items attuned, {} in progress.", target->GetName(), state->attuned.size(),
+        handler->PSendSysMessage("{}: {} items infused, {} in progress.", target->GetName(), state->attuned.size(),
             state->progress.size());
         handler->PSendSysMessage("Collected {:.0f}% of a full set of gear's stats; after diminishing returns {:.0f}% "
             "(full value until {:.0f}%, half until {:.0f}%, a quarter beyond).", state->rawPercent,
             state->effectivePercent, sFullValueUntil, sHalfValueUntil);
-        handler->PSendSysMessage("Attunement stats: {}.", StatList(state->applied));
+        handler->PSendSysMessage("Infusion stats: {}.", StatList(state->applied));
         return true;
     }
 
-    // .attune progress (any player): your equipped items' attunement
+    // .infuse progress (any player): your equipped items' attunement
     static bool HandleProgress(ChatHandler* handler)
     {
         Player* player = handler->GetSession() ? handler->GetSession()->GetPlayer() : nullptr;
         if (!player)
             return false;
         AttunementState* state = StateOf(player);
-        handler->PSendSysMessage("{}{} items attuned, {:.0f}% of a full set's stats (after diminishing returns). "
+        handler->PSendSysMessage("{}{} items infused, {:.0f}% of a full set's stats (after diminishing returns). "
             "Equipped:", PREFIX, state->attuned.size(), state->effectivePercent);
         for (uint8 slot = EQUIPMENT_SLOT_START; slot < EQUIPMENT_SLOT_END; ++slot)
         {
@@ -862,7 +866,7 @@ public:
                 continue;
             ItemTemplate const* proto = item->GetTemplate();
             if (state->attuned.count(proto->ItemId))
-                handler->PSendSysMessage("  {}: attuned", ItemLink(proto));
+                handler->PSendSysMessage("  {}: infused", ItemLink(proto));
             else if (ItemCheck check = CheckItem(proto); check != ItemCheck::Counts)
                 handler->PSendSysMessage("  {}: {}", ItemLink(proto), CheckText(check));
             else
@@ -876,7 +880,7 @@ public:
         return true;
     }
 
-    // .attune reset: remove the selected player's (or your) whole collection
+    // .infuse reset: remove the selected player's (or your) whole collection
     static bool HandleReset(ChatHandler* handler)
     {
         Player* target = handler->getSelectedPlayerOrSelf();
@@ -888,7 +892,7 @@ public:
         state->unsaved.clear();
         Recalculate(target);
         SendAddon(target, "RESET");
-        handler->PSendSysMessage("Removed all of {}'s attunements.", target->GetName());
+        handler->PSendSysMessage("Removed all of {}'s infusions.", target->GetName());
         return true;
     }
 };
@@ -955,9 +959,9 @@ public:
             std::string text = Acore::StringFormat("|c{:08x}{}|r", ItemQualityColors[offer.proto->Quality], offer.proto->Name1);
             auto progress = state->progress.find(offer.proto->ItemId);
             if (progress != state->progress.end() && progress->second)
-                text += Acore::StringFormat(" ({}% attuned)", progress->second * 100 / KillsNeeded(offer.proto));
+                text += Acore::StringFormat(" ({}% infused)", progress->second * 100 / KillsNeeded(offer.proto));
             if (player->CanUseItem(offer.proto) == EQUIP_ERR_OK)
-                text += " - you could attune it by wearing it";
+                text += " - you could infuse it by wearing it";
             std::string confirm = Acore::StringFormat("Offer {} as tribute? It is destroyed, and {:.0f}% of its stats are yours "
                 "for good.", offer.proto->Name1, sPercent);
             AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, text, offer.proto->ItemId,
@@ -970,7 +974,7 @@ public:
             AddGossipItemFor(player, GOSSIP_ICON_CHAT, "Previous page", SENDER_PAGE, page - 1);
         if (offers.empty())
             ChatHandler(player->GetSession()).PSendSysMessage("{}Nothing in your bags can be offered as tribute: only gear "
-                "that counts for attunement and isn't attuned yet.", PREFIX);
+                "that counts for infusion and isn't infused yet.", PREFIX);
         SendGossipMenuFor(player, NPC_TEXT_ALTAR, creature);
     }
 

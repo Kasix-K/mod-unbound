@@ -1,5 +1,5 @@
--- Unbound Attunement: gear attunement on item tooltips, and the collection window (/attunement, or the
--- Attunement button in the micro menu). The server (src/unbound_attunement.cpp) knows everything: the addon
+-- Unbound Attunement: gear infusion (called attunement in the code) on item tooltips, and the collection window
+-- (/infusion, or the Infusion button in the micro menu). The server (src/unbound_attunement.cpp) knows everything: the addon
 -- asks it about items and the collection with whispered addon messages (prefix UBATT) and keeps the answers.
 -- The window uses the same Blizzard frame art and talent-tree grid as the perk window.
 
@@ -51,19 +51,19 @@ end
 
 local function addLines(tooltip, info)
     if info.code == "A" then
-        tooltip:AddLine("Attuned: its stats are yours for good", unpack(GREEN))
+        tooltip:AddLine("Infused: its stats are yours for good", unpack(GREEN))
     elseif info.code == "W" then
         local percent = info.needed > 0 and math.floor(info.done * 100 / info.needed) or 0
-        tooltip:AddLine(string.format("Attunement: %d%% (%d/%d kills)", percent, info.done, info.needed), unpack(LIGHT_BLUE))
+        tooltip:AddLine(string.format("Infusion: %d%% (%d/%d kills)", percent, info.done, info.needed), unpack(LIGHT_BLUE))
         if info.done == 0 then
-            tooltip:AddLine("Wear it and slay foes to attune it", unpack(GREY))
+            tooltip:AddLine("Wear it and slay foes to infuse it", unpack(GREY))
         end
         tooltip:AddLine("Or offer it as tribute at an Altar of Tribute: " .. money(info.price), unpack(GREY))
     elseif info.code == "S" then
-        tooltip:AddLine("Attunement: tribute only (you can't wear it)", unpack(LIGHT_BLUE))
+        tooltip:AddLine("Infusion: tribute only (you can't wear it)", unpack(LIGHT_BLUE))
         tooltip:AddLine("At an Altar of Tribute: " .. money(info.price), unpack(GREY))
     elseif info.reason and info.reason ~= "" then
-        tooltip:AddLine("Attunement: " .. info.reason, unpack(GREY))
+        tooltip:AddLine("Infusion: " .. info.reason, unpack(GREY))
     end
 end
 
@@ -316,7 +316,7 @@ local function updateGrid()
         if height > ui.scroll:GetHeight() + 1 then ui.scrollBar:Show() else ui.scrollBar:Hide() end
     end
     if #list == 0 then
-        ui.empty:SetText(showing == "attuned" and "Nothing attuned yet. Wear gear and slay foes, or offer it as tribute at an Altar of Tribute."
+        ui.empty:SetText(showing == "attuned" and "Nothing infused yet. Wear gear and slay foes, or offer it as tribute at an Altar of Tribute."
                                              or "No items in progress. Equip gear that counts and slay foes.")
         ui.empty:Show()
     else
@@ -326,7 +326,7 @@ end
 
 local function updateSummary()
     local c = collection or { items = 0, raw = 0, effective = 0, full = 100, half = 200, stats = {}, progress = {} }
-    ui.count:SetText(string.format("%d items attuned", c.items))
+    ui.count:SetText(string.format("%d items infused", c.items))
     ui.percent:SetText(string.format("%.0f%% of a full set of gear's stats", c.effective))
     ui.raw:SetText(string.format("collected %.0f%% before diminishing returns: full value until %d%%, half until %d%%, a quarter beyond",
         c.raw, c.full, c.half))
@@ -340,8 +340,8 @@ local function updateSummary()
     for _, s in ipairs(c.stats) do
         table.insert(lines, string.format("|cff1eff00%+d|r %s", s.value, s.name))
     end
-    ui.stats:SetText(#lines > 0 and table.concat(lines, "\n") or "|cff999999No attunement stats yet.|r")
-    ui.tabAttuned:SetText(string.format("Attuned (%d)", #((collection and collection.attuned) or {})))
+    ui.stats:SetText(#lines > 0 and table.concat(lines, "\n") or "|cff999999No infusion stats yet.|r")
+    ui.tabAttuned:SetText(string.format("Infused (%d)", #((collection and collection.attuned) or {})))
     ui.tabProgress:SetText(string.format("In progress (%d)", #((collection and collection.progress) or {})))
     if showing == "attuned" then ui.tabAttuned:LockHighlight(); ui.tabProgress:UnlockHighlight()
     else ui.tabProgress:LockHighlight(); ui.tabAttuned:UnlockHighlight() end
@@ -389,7 +389,7 @@ local function build()
     header:SetPoint("TOP", 0, 12)
     local title = text(frame, "GameFontNormal")
     title:SetPoint("TOP", header, "TOP", 0, -14)
-    title:SetText("Gear Attunement")
+    title:SetText("Gear Infusion")
     local sub = text(frame)
     sub:SetPoint("TOP", 0, -26)
     sub:SetText("Gear whose stats are yours for good")
@@ -422,11 +422,11 @@ local function build()
     ui.raw:SetPoint("TOPLEFT", ui.bar, "BOTTOMLEFT", 0, -6)
     ui.raw:SetTextColor(unpack(C.muted))
 
-    -- left: the attunement stats
+    -- left: the infusion stats
     local left = panel(frame)
     left:SetPoint("TOPLEFT", top, "BOTTOMLEFT", 0, -6); left:SetPoint("BOTTOMLEFT", 18, 34); left:SetWidth(240)
     local statsHead = text(left, "GameFontNormal")
-    statsHead:SetPoint("TOPLEFT", 12, -12); statsHead:SetText("Attunement stats")
+    statsHead:SetPoint("TOPLEFT", 12, -12); statsHead:SetText("Infusion stats")
     separator(left, -30)
     ui.stats = text(left)
     ui.stats:SetPoint("TOPLEFT", 14, -38); ui.stats:SetWidth(212)
@@ -453,7 +453,7 @@ local function build()
 
     local foot = text(frame, "GameFontDisableSmall")
     foot:SetPoint("BOTTOMLEFT", 22, 16)
-    foot:SetText("Wear gear and slay foes to attune it, or offer it as tribute at an Altar of Tribute. Hover an item for details; shift-click links it.")
+    foot:SetText("Wear gear and slay foes to infuse it, or offer it as tribute at an Altar of Tribute. Hover an item for details; shift-click links it.")
 
     frame:SetScript("OnShow", function()
         PlaySound("igCharacterInfoOpen")
@@ -469,7 +469,7 @@ local function toggle()
 end
 
 -- ------------------------------------------------------------------ micro menu button
--- An "Attunement" button in the micro menu, between Talents and Achievements. ElvUI keeps its own fixed list of micro
+-- An "Infusion" button in the micro menu, between Talents and Achievements. ElvUI keeps its own fixed list of micro
 -- buttons, so with ElvUI's micro bar the button styles itself like ElvUI's and follows the bar's layout;
 -- with the default UI it uses the game's micro button art.
 local MICRO_ICON = "Interface\\Icons\\INV_Enchant_EssenceEternalLarge"
@@ -574,8 +574,8 @@ local function addMicroButton()
     end)
     button:HookScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        GameTooltip:SetText("Gear Attunement", 1, 1, 1)
-        GameTooltip:AddLine("Your attuned gear and the stats it gives (/attunement).", 1, 0.82, 0)
+        GameTooltip:SetText("Gear Infusion", 1, 1, 1)
+        GameTooltip:AddLine("Your infused gear and the stats it gives (/infusion).", 1, 0.82, 0)
         GameTooltip:Show()
     end)
     button:HookScript("OnLeave", function() GameTooltip:Hide() end)
@@ -597,6 +597,8 @@ loader:SetScript("OnEvent", function(self)
     end)
 end)
 
-SLASH_UNBOUNDATTUNEMENT1 = "/attunement"
-SLASH_UNBOUNDATTUNEMENT2 = "/attune"
+SLASH_UNBOUNDATTUNEMENT1 = "/infusion"
+SLASH_UNBOUNDATTUNEMENT2 = "/infuse"
+SLASH_UNBOUNDATTUNEMENT3 = "/attunement"   -- old names
+SLASH_UNBOUNDATTUNEMENT4 = "/attune"
 SlashCmdList["UNBOUNDATTUNEMENT"] = function() toggle() end

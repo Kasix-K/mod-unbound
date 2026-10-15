@@ -294,13 +294,14 @@ Unbound.Perks.HeavyFrame.Percent = "5, 10, 15, 19, 22"
 Unbound.Perks.HeavyFrame.RankLevels = "1, 30, 60, 255, 255"
 
 #    Unbound.Attunement.Enable
-#        Description: Gear attunement: attuned items permanently give the character a percentage of
-#                     their fixed stats (src/unbound_attunement.cpp, ROADMAP.md Power budget).
+#        Description: Gear infusion (called attunement in the code and these setting names): infused items
+#                     permanently give the character a percentage of their fixed stats
+#                     (src/unbound_attunement.cpp, ROADMAP.md Power budget).
 #        Default:     1 - Enabled
-#                     0 - Disabled (attunement stats are removed at the next login)
+#                     0 - Disabled (infusion stats are removed at the next login)
 #
 #    Unbound.Attunement.Percent
-#        Description: Percent of an attuned item's fixed stats the character gets.
+#        Description: Percent of an infused item's fixed stats the character gets.
 #        Default:     20
 #
 #    Unbound.Attunement.LevelRange
@@ -316,7 +317,7 @@ Unbound.Perks.HeavyFrame.RankLevels = "1, 30, 60, 255, 255"
 #
 #    Unbound.Attunement.FullValueUntil
 #    Unbound.Attunement.HalfValueUntil
-#        Description: Diminishing returns, in percent of the reference set: attunement stats count in full
+#        Description: Diminishing returns, in percent of the reference set: infusion stats count in full
 #                     until they reach FullValueUntil, at half value until HalfValueUntil, at a quarter
 #                     beyond.
 #        Default:     100, 200
@@ -329,7 +330,7 @@ Unbound.Attunement.FullValueUntil = 100
 Unbound.Attunement.HalfValueUntil = 200
 
 #    Unbound.Attunement.Kills
-#        Description: Kills an equipped item needs to be attuned, by quality: green, blue, epic, legendary.
+#        Description: Kills an equipped item needs to be infused, by quality: green, blue, epic, legendary.
 #                     Only creatures that would give experience count (not grey, critters, totems or pets).
 #        Default:     "50, 100, 200, 400"
 #
@@ -344,13 +345,13 @@ Unbound.Attunement.BossKills = 10
 
 #    Unbound.Attunement.TributeGold
 #        Description: Gold price to offer an item as tribute at the Altar of Tribute (190103), by quality:
-#                     green, blue, epic, legendary. The item is destroyed and attuned at once.
+#                     green, blue, epic, legendary. The item is destroyed and infused at once.
 #                     (Before the rename: Unbound.Attunement.SacrificeGold, still read if this is missing.)
 #        Default:     "2, 10, 50, 250"
 #
 #    Unbound.Attunement.TributeOwnGearMultiplier
-#        Description: The price is multiplied by this for gear the player could attune by wearing it
-#                     (their armour type, their class's weapons), so attuning stays the main route for
+#        Description: The price is multiplied by this for gear the player could infuse by wearing it
+#                     (their armour type, their class's weapons), so infusing stays the main route for
 #                     one's own gear.
 #                     (Before the rename: Unbound.Attunement.SacrificeOwnGearMultiplier.)
 #        Default:     2

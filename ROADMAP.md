@@ -12,7 +12,7 @@ player is at most several times a normal level 60, and every number stays far be
 The endgame goal: **one player can solo a full Mythic raid** (the player count will be low). The realistic
 goal is **classic Naxxramas on Mythic +1** solo; the stretch goal is **Naxxramas Mythic +10** (set 2026-10-15,
 see Endgame goals below). Raids are
-scaled down to one player, and **gear attunement is the main lever** that lets a player climb Mythic
+scaled down to one player, and **gear infusion is the main lever** that lets a player climb Mythic
 levels; perks and perk ranks add on top. Design every power system against these targets, and change the
 numbers here first if testing says so. Every number below is meant to be a config setting.
 
@@ -47,8 +47,8 @@ testing):
 
 | Goal | Raid | Player power needed | Reached with (see Player, Mythic+ gear) |
 |---|---|---|---|
-| **Realistic endgame goal** | **Naxxramas (classic) Mythic +1** | about 6.6-7.7x | A fully attuned character (normal gear, about +200%) with five Offensive perks, perk ranks and the class perk (about 7.5-8x); no Mythic gear needed |
-| **Stretch goal** | **Naxxramas (classic) Mythic +10** | about 12-14x | Mythic gear attuned around +10 on top (about 10.5x before the class perk, about 13-14x with it) |
+| **Realistic endgame goal** | **Naxxramas (classic) Mythic +1** | about 6.6-7.7x | A fully infused character (normal gear, about +200%) with five Offensive perks, perk ranks and the class perk (about 7.5-8x); no Mythic gear needed |
+| **Stretch goal** | **Naxxramas (classic) Mythic +10** | about 12-14x | Mythic gear infused around +10 on top (about 10.5x before the class perk, about 13-14x with it) |
 
 Mythic stops at +10, so the stretch goal is also the top of the game: Naxxramas Mythic +10 is the hardest
 content there is. Change these targets here first if testing says otherwise.
@@ -61,10 +61,10 @@ content there is. Change these targets here first if testing says otherwise.
 | Perks | About **x1.55** with five Offensive perks (about +10% per perk) |
 | Perk ranks | Up to about **x1.3** more on top of perks (together about x2) |
 | Class perk | About **x1.25-1.35**: each spec's class perk is worth about **+25-35% to that spec's single-target damage** (a lone raid boss is what a solo Mythic raid is about). Extra area damage on trash is fine on top. Every class perk is held to this target, so no spec pulls ahead. Measure with a damage meter on a training dummy, perk off vs on. Paladin **Retribution** is estimated at about +35-40% (Holy +15% / Physical +10% about +12%, a free Crusader Strike per Divine Storm about +10-15%, a free Exorcism per Judgement about +5-10%, stronger Exorcism a few %), the top of the range: if testing confirms it, lower Holy to +10% |
-| Gear attunement / tribute | About **+200% of gear stats** when well collected (about x3), the main lever: |
+| Gear infusion / tribute | About **+200% of gear stats** when well collected (about x3), the main lever: |
 | - per item | **20%** of the item's fixed stats (tune 15-25% in testing); fixed stats only (no procs, set bonuses, weapon damage) |
 | - which items count | **Every unique item** counts once (a second copy adds nothing); **green or better** |
-| - minimum item level | Only items whose **required level is within 10 of the level cap** count (level 50+ while the cap is 60; it moves up with each expansion), so every attuned item matters and nobody grinds low-level items |
+| - minimum item level | Only items whose **required level is within 10 of the level cap** count (level 50+ while the cap is 60; it moves up with each expansion), so every infused item matters and nobody grinds low-level items |
 | - diminishing returns | Full value up to **+100%** of gear stats, half value up to **+200%**, a quarter beyond: early collecting feels strong, the long tail is the endgame grind (no hard cap) |
 | - the grind | About **255 level 60 blue/epic items** for +200% with the diminishing returns (about 170 items give +150%); 20% of an item is about 7 stat points, a full set is about 600 (`ReferenceSetStats`). Tune `Percent` or the diminishing returns after testing |
 | **Total** | About **6x** a normal level 60 when fully progressed, before the class perk: Molten Core Mythic +10. With the class perk about **7.5-8x**: Naxxramas Mythic +1, the realistic endgame goal. Mythic gear on top leads to Naxxramas Mythic +10 (see Endgame goals) |
@@ -72,28 +72,28 @@ content there is. Change these targets here first if testing says otherwise.
 Numbers check: a 6x character has a few thousand of a primary stat and tens of thousands of health, well
 above normal WoW but nowhere near Peloria's billions.
 
-### Attunement and tribute rules
+### Infusion and tribute rules
 
 Both styles fill **one shared collection** per character, so the end result is the same: an item gives
 its full 20% whichever way it was collected. Time versus cost is the whole trade-off.
 
-| | Attune | Tribute |
+| | Infuse | Tribute |
 |---|---|---|
 | How | Equip the item and kill creatures until it reaches 100% | Destroy the item for its stats at once |
 | Speed | Slow | Instant |
 | The item | **Kept**: wear it, transmog it, sell it later | **Destroyed** |
-| Which items | Only gear the character **can equip** (their armour type, their class's weapons) | **Any item** that counts (see the Player table), including gear the character could attune |
+| Which items | Only gear the character **can equip** (their armour type, their class's weapons) | **Any item** that counts (see the Player table), including gear the character could infuse |
 | Value | **Full 20%** | **Full 20%** (not reduced) |
 | Cost | Free | A price scaled by quality: gold for now, Heroic Badges once they exist |
-| Cost for gear the character could attune | (free) | **Double** the normal price, so attuning stays the main route for one's own gear |
+| Cost for gear the character could infuse | (free) | **Double** the normal price, so infusing stays the main route for one's own gear |
 
-- **Collected stats are permanent:** once an item is 100% attuned (or given in tribute), its 20% stays whatever
-  happens to the item (unequipped, banked, sold, deleted). An upgrade never costs anything: attune it too
-  and both count. (The level copies of one Mythic item are the exception: the highest attuned copy
+- **Collected stats are permanent:** once an item is 100% infused (or given in tribute), its 20% stays whatever
+  happens to the item (unequipped, banked, sold, deleted). An upgrade never costs anything: infuse it too
+  and both count. (The level copies of one Mythic item are the exception: the highest infused copy
   replaces the lower ones, see Mythic+ gear.)
-- **Progress is saved per item:** unequipping a partly attuned item pauses it (60% stays 60%); equipping it
+- **Progress is saved per item:** unequipping a partly infused item pauses it (60% stays 60%); equipping it
   again carries on from there.
-- **Stats only at 100%:** a partly attuned item gives nothing yet; its full 20% arrives when it reaches 100%.
+- **Stats only at 100%:** a partly infused item gives nothing yet; its full 20% arrives when it reaches 100%.
 - **Kills needed** (config settings): about **50 kills** for a green, **100** for a blue, **200** for an epic.
   An elite counts as 2 kills, a boss as 10. Every eligible equipped item gets progress from each kill.
 - **Which kills count:** only creatures that **would give experience** (not grey for the player's level,
@@ -102,12 +102,12 @@ its full 20% whichever way it was collected. Time versus cost is the whole trade
 - **Released expansions only:** items from The Burning Crusade and Wrath of the Lich King don't count until
   that expansion is released. Every item is tagged with its expansion by a small tool (from where it comes
   from: classic or expansion zones, dungeons, quests, vendors), because the level rule alone isn't enough
-  (some TBC items require level 58-60, and item levels overlap). Attunement only accepts items from
+  (some TBC items require level 58-60, and item levels overlap). Infusion only accepts items from
   expansions up to `Unbound.ExpansionUnlocked` (the content lock's setting), so releasing an expansion
   turns its items on with that one change.
-- An item counts only once. Offering a partly attuned item as tribute finishes it (the price still applies).
+- An item counts only once. Offering a partly infused item as tribute finishes it (the price still applies).
 - Tribute always shows a confirmation (item and price) before destroying anything.
-- Tooltips show "Attunement: 37%", "Attuned", or "Attunement: tribute only".
+- Tooltips show "Infusion: 37%", "Infused", or "Infusion: tribute only".
 - A collection window in the perks' talent-tree style shows every absorbed item and the stat totals.
 - **Per character:** each character has its own collection (alts start their own).
 - **Tribute at an altar NPC (the Altar of Tribute):** an altar in the capital cities (players of both factions can use any,
@@ -115,7 +115,7 @@ its full 20% whichever way it was collected. Time versus cost is the whole trade
   see its stats and the price, confirm.
 - **Tribute prices** (gold, scaled by quality; config settings, Heroic Badges later):
 
-  | Quality | Price | Gear the character could attune (double) |
+  | Quality | Price | Gear the character could infuse (double) |
   |---|---|---|
   | Green (uncommon) | 2 gold | 4 gold |
   | Blue (rare) | 10 gold | 20 gold |
@@ -136,9 +136,9 @@ config settings (the item generator reads them).
 | Per Mythic level | **+2% of the +1 stats, added**: +10 (the maximum) = about 1.2x the +1 item (helm: 20 Stamina at +1, about 22 at +5, about 24 at +10) |
 | Drop level | An item drops at the level the run was cleared at (a +7 clear drops +7 gear) |
 | Item count | About 450 dungeon items x 10 levels (about 4,500 entries, plus the raids' items; the client patch grows about 0.15 MB) |
-| Attunement percent | **20% + 2% per Mythic level** for Mythic items (+1: 22%, +5: 30%, +10: 40%), so attuning high is worth much more than wearing high: the helm gives 4 Stamina attuned at +1, about 10 at +10 |
-| Attunement: one item | All level copies of a Mythic item count as **one item**: attuning (or giving in tribute) a higher copy **replaces** the lower copy's bonus, it never adds to it. Attuning early is never wasted, waiting for a higher copy pays more. (Heroic and Mythic versions of a piece are different items and both count.) |
-| Attunement: kills | A higher copy needs its own kills (the normal epic count); an upgrade never changes what is already attuned |
+| Infusion percent | **20% + 2% per Mythic level** for Mythic items (+1: 22%, +5: 30%, +10: 40%), so infusing high is worth much more than wearing high: the helm gives 4 Stamina infused at +1, about 10 at +10 |
+| Infusion: one item | All level copies of a Mythic item count as **one item**: infusing (or giving in tribute) a higher copy **replaces** the lower copy's bonus, it never adds to it. Infusing early is never wasted, waiting for a higher copy pays more. (Heroic and Mythic versions of a piece are different items and both count.) |
+| Infusion: kills | A higher copy needs its own kills (the normal epic count); an upgrade never changes what is already infused |
 | Diminishing returns | A fourth step for the much larger Mythic totals: full value up to +100%, half to +200%, a quarter to +400%, **an eighth beyond** |
 
 **Upgrading** (an Upgrade NPC next to the Keystone NPC): raise a Mythic item you own to a higher level, up to
@@ -161,13 +161,13 @@ settings). Used for upgrades; later also a vendor (cosmetics, perk ranks) like t
 
 **Effect on the climb** (estimates, to be checked in testing):
 
-| Fully collected | Gear worn | Attuned | Player power (with perks, before class perk) | Clears about |
+| Fully collected | Gear worn | Infused | Player power (with perks, before class perk) | Clears about |
 |---|---|---|---|---|
-| Before Mythic gear (normal attunement only) | 1x | +200% | about 6x (7.5-8x with the class perk) | Molten Core Mythic +10; with the class perk Naxxramas Mythic +1 |
-| Every Mythic item attuned at +10 | about 1.5x | about +380% | about 10.5x (13-14x with the class perk) | Naxxramas Mythic +5-7; with the class perk Naxxramas Mythic +10 |
+| Before Mythic gear (normal infusion only) | 1x | +200% | about 6x (7.5-8x with the class perk) | Molten Core Mythic +10; with the class perk Naxxramas Mythic +1 |
+| Every Mythic item infused at +10 | about 1.5x | about +380% | about 10.5x (13-14x with the class perk) | Naxxramas Mythic +5-7; with the class perk Naxxramas Mythic +10 |
 
 Mythic gear is what carries a player from the realistic goal (Naxxramas +1) to the stretch goal (Naxxramas
-+10, the top). If it gets there too fast, lower the attunement percent per level first (2% to 1%), then the
++10, the top). If it gets there too fast, lower the infusion percent per level first (2% to 1%), then the
 gear stats per level.
 
 Mechanics are a separate problem: some bosses need more than one player whatever the numbers
@@ -190,9 +190,9 @@ changes, raid by raid (see Next up).
 - [x] Unbound Perks: `/perks` window, 3 Permanent perks, all 25 Offensive perks (5 active at once),
       Paladin Retribution class perk; numbers scaled to normal WoW ranges (about +10% per perk)
 
-- [x] Gear attunement (all 4 stages, 2026-10-14): the collection and its stats (20% per item, diminishing
-      returns), item expansion tags, attuning by kills, the Altar of Tribute, item tooltips and the collection
-      window (Attunement micro menu button, `/attunement`)
+- [x] Gear infusion (all 4 stages, 2026-10-14): the collection and its stats (20% per item, diminishing
+      returns), item expansion tags, infusing by kills, the Altar of Tribute, item tooltips and the collection
+      window (Infusion micro menu button, `/infusion`)
 
 - [x] Classic Heroic dungeons, batch 1 (2026-10-14): Wailing Caverns, Shadowfang Keep, Blackfathom Deeps,
       Gnomeregan, with their summoned creatures (Mutanus, Baron Aquanis, Grubbis, ...) and Heroic loot
@@ -281,24 +281,24 @@ changes, raid by raid (see Next up).
 
 - [ ] **Mythic+** (large): player-chosen +1, +2, ... levels on top of Heroic, through mod-autobalance's
       multiplier hook. Scaling and limits per the Power budget (+10% per level added, **maximum +10 for every
-      dungeon and raid**, 2 billion clamp). Best after gear attunement (its rewards
-      feed attunement). Design (inspired by Peloria's Mythic Keystone, adapted):
+      dungeon and raid**, 2 billion clamp). Best after gear infusion (its rewards
+      feed infusion). Design (inspired by Peloria's Mythic Keystone, adapted):
   - **Mythic Keystone NPC** just inside the entrance of every dungeon and raid. Spawned automatically when
     an instance is created, at the instance's entry point (from the game's area trigger data), so every
     current and future instance gets one without placing it by hand.
   - **Keystone window** (same style as the perk window), opened by talking to the NPC:
     - **Tier picker:** - and + buttons, a slider from +1 to +10 (the maximum), and quick buttons
       **+1**, **+5**, **Max** (+10) and **Last** (the level of the last run).
-    - **Run preview:** enemy power (x(1 + 0.1 x level), e.g. +10 shows x2.0) and the attunement and gold
+    - **Run preview:** enemy power (x(1 + 0.1 x level), e.g. +10 shows x2.0) and the infusion and gold
       reward at that level.
     - **Best cleared** and **Last run**, per character and per instance.
     - **Activate Mythic +N:** group leader only, before the first pull; the level is locked once anything
       is pulled.
-    - **Missing Attunements:** every item that can drop in this instance and counts for attunement (green
+    - **Missing Infusions:** every item that can drop in this instance and counts for infusion (green
       or better, within the level rule), built from the instance's loot tables, with a collected count
-      (e.g. "12 / 42 attuned") and the items still missing highlighted.
+      (e.g. "12 / 42 infused") and the items still missing highlighted.
   - **Rewards:** **Mythic epic gear** whose stats grow with the level cleared, and the Mythic currency (see
-    Power budget, Mythic+ gear), plus **faster attunement** (each kill gives more attunement progress, about
+    Power budget, Mythic+ gear), plus **faster infusion** (each kill gives more infusion progress, about
     +10% per Mythic level) and **more gold** from bosses (config settings).
   - **Upgrade NPC** next to the Keystone NPC: raise an owned Mythic item up to your best clear of that
     instance, for gold and Mythic currency.
@@ -309,9 +309,9 @@ changes, raid by raid (see Next up).
     start with; a failed run costs nothing (the level just isn't recorded as cleared).
   - **Build order:** 1. scaling core (autobalance's `OnAfterDefaultMultiplier` hook, `.mythic set`);
     2. Keystone NPC with a plain menu, best/last per character; 3. Mythic gear generator, drops at the
-    cleared level, attunement changes (one item per Mythic piece, percent per level, fourth diminishing
+    cleared level, infusion changes (one item per Mythic piece, percent per level, fourth diminishing
     step); 4. Mythic currency and the Upgrade NPC; 5. other rewards; 6. Keystone window; 7. Missing
-    Attunements; 8. raids and tuning. About 8-11 sessions; 1-3 make it playable.
+    Infusions; 8. raids and tuning. About 8-11 sessions; 1-3 make it playable.
 - [ ] **Heroic-only loot** (moderate, mostly data): better versions of drops, or extra drops, on Heroic.
 - [ ] **Random item bonuses** (easy): drops sometimes roll an extra enchant (mod-random-enchants).
 - [ ] **Daily "Heroic of the Day"** (moderate): one random Heroic gives bonus rewards each day.

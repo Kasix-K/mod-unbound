@@ -29,7 +29,7 @@
 |---|---|
 | Warpweaver (transmogrifier) | `.npc add 190010` |
 | Grizzle Lootsnatch (companion vendor) | `.npc add 190101` |
-| Altar of Tribute (attunement; one per capital city) | `.npc add 190103` |
+| Altar of Tribute (infusion; one per capital city) | `.npc add 190103` |
 
 ## Custom IDs
 
@@ -100,28 +100,28 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
   and mana per second, 4 seconds after combat). Switch on up to 5 Offensive perks (about +10% each) and your class perk (so far: Paladin
   Retribution). Perks can't be changed in combat; save favourite sets as loadouts.
 
-## Gear attunement (GM commands for testing)
+## Gear infusion (GM commands for testing)
 
-Attuned items permanently give the character 20% of their stats, even after the item is gone. **Attuning:**
+Infused items permanently give the character 20% of their stats, even after the item is gone. **Infusing:**
 wear the item and kill creatures that give experience (not grey ones): 50 kills for a green, 100 for a blue,
 200 for an epic (an elite counts as 2, a boss as 10). Every equipped item that counts progresses at once, and
-chat shows 25%, 50%, 75% and "fully attuned". **Any player** can type `.attune progress` to see their
+chat shows 25%, 50%, 75% and "fully infused". **Any player** can type `.infuse progress` to see their
 equipped items' progress. **Tribute:** talk to the **Altar of Tribute** to pick an item from your bags; it is destroyed and
-attuned at once for 2 / 10 / 50 / 250 gold (green / blue / epic / legendary), double for gear you could attune
-by wearing it. **Item tooltips** show each piece's attunement (attuned, % and kills, tribute only, or why it
-doesn't count), and the **Attunement** button in the micro menu (between Talents and Achievements, or `/attunement`) opens the collection window:
-your attuned items, items in progress, the stats they give and how far along the diminishing returns you are.
+infused at once for 2 / 10 / 50 / 250 gold (green / blue / epic / legendary), double for gear you could infuse
+by wearing it. **Item tooltips** show each piece's infusion (infused, % and kills, tribute only, or why it
+doesn't count), and the **Infusion** button in the micro menu (between Talents and Achievements, or `/infusion`) opens the collection window:
+your infused items, items in progress, the stats they give and how far along the diminishing returns you are.
 Needs the **UnboundAttunement** addon. GM commands (they act on the selected
-player, else yourself):
+player, else yourself; the old `.attune` still works):
 
 | Command | What it does |
 |---|---|
-| `.attune check <item>` | Does the item count, and what would it give (shift-click the item, or type its id) |
-| `.attune add <item>` | Attune the item (it must count) |
-| `.attune remove <item>` | Take it out of the collection |
-| `.attune info` | Items attuned, % of a full set collected, and the stats it gives |
-| `.attune reset` | Remove the whole collection |
-| `.attune progress` | (any player) Your equipped items' attunement progress |
+| `.infuse check <item>` | Does the item count, and what would it give (shift-click the item, or type its id) |
+| `.infuse add <item>` | Infuse the item (it must count) |
+| `.infuse remove <item>` | Take it out of the collection |
+| `.infuse info` | Items infused, % of a full set collected, and the stats it gives |
+| `.infuse reset` | Remove the whole collection |
+| `.infuse progress` | (any player) Your equipped items' infusion progress |
 
 Only green or better weapons and armour with required level 50-60 from classic content count (TBC and Wrath
 items count once those expansions are released). Settings: `Unbound.Attunement.*` in `mod_unbound.conf`.
