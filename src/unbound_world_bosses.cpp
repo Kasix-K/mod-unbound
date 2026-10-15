@@ -28,6 +28,8 @@
 #include "ScriptMgr.h"
 #include "StringConvert.h"
 #include "Tokenize.h"
+#include "WorldPacket.h"
+#include "WorldSessionMgr.h"
 #include "WorldState.h"
 
 #include <algorithm>
@@ -66,10 +68,16 @@ namespace
     std::vector<BossTrack> sTracks(WORLD_BOSSES.size());
     uint32 sTimer = 0;
 
+    // A system chat line to every player online. (ChatHandler::SendWorldText only sends to its own session,
+    // and crashes without one.)
     void Announce(std::string const& text)
     {
-        if (sAnnounce)
-            ChatHandler(nullptr).SendWorldText("|cffff8000[World Boss]|r " + text);
+        if (!sAnnounce)
+            return;
+        WorldPacket data;
+        ChatHandler::BuildChatPacket(data, CHAT_MSG_SYSTEM, LANG_UNIVERSAL, nullptr, nullptr,
+            "|cffff8000[World Boss]|r " + text);
+        sWorldSessionMgr->SendGlobalMessage(&data);
     }
 
     // 259200 -> "3 days", 5400 -> "1 hour 30 minutes"
