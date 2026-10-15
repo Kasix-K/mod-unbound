@@ -20,7 +20,7 @@ numbers here first if testing says so. Every number below is meant to be a confi
 
 | Lever | Target |
 |---|---|
-| Classic raids solo (mod-autobalance) | A solo player faces **about 3 players' worth** of a raid; a full raid is unchanged. 20-player raids: `AutoBalance.InflectionPointRaid20M.CurveFloor = 0.1` (2.9 players' worth); 40-player raids: `AutoBalance.InflectionPointRaid40M.CurveFloor = 0.03` (2.8). Set 2026-10-14. |
+| Classic raids solo (mod-autobalance) | A solo player faces **about 3 players' worth** of a raid; a full raid is unchanged. 20-player raids: `AutoBalance.InflectionPointRaid20M.CurveFloor = 0.1` (2.9 players' worth); 40-player raids: `AutoBalance.InflectionPointRaid40M.CurveFloor = 0.03` (2.8). Set 2026-10-14. Onyxia's Lair (classic, a 10-player map) and classic Naxxramas (on the map's heroic slot) get the same 2.8 through `AutoBalance.InflectionPoint.PerInstance = "249 -1 0.058 0.25, 533 -1 0.03"` (2026-10-15). |
 | Mythic scaling | **+10% per level, added** (not multiplied): Mythic +5 = 1.5x, Mythic +10 = 2x the solo raid |
 | Mythic maximum | **Mythic +10 for every dungeon and raid** (decided 2026-10-15): the top of the climb, and the number every Mythic system is designed around (the Keystone's Max button, Mythic gear, upgrades, the power budget). A config setting, but raising it means redoing this budget |
 | Safety clamp | No creature health or damage above **2 billion**, whatever the settings (the 3.3.5 client shows numbers above about 2.1 billion wrongly). With added scaling this is never reached in practice: the biggest classic boss (Vaelastrasz, 3.3 million health) would pass it only around Mythic +90,000 solo |

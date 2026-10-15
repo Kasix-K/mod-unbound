@@ -98,6 +98,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   never the same as the week before; 75 gold. Zones were read from the server's map data.
 
 ### Fixed
+- **Classic Naxxramas was scaled for about 17 players solo** instead of about 2.8: it runs on the map's heroic
+  difficulty slot, so mod-autobalance used the heroic raid floor (0.4). It now gets the 40-player raids' floor
+  (0.03) through `AutoBalance.InflectionPoint.PerInstance` (`533 -1 0.03`, in `apply-unbound-settings.ps1`).
 - **Bulletin Board quests could be completed without doing them.** The daily quests had `QuestType` 0, which
   the core treats as auto-complete; all board quests are normal quests now (`QuestType` 2).
 - **Bulletin Board** (gameobject 920000, `tools/bulletin_board.py`, `src/unbound_bulletin_board.cpp`): a board in

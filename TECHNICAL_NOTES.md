@@ -132,7 +132,7 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   in map 249 on difficulty 0 to classic / 3.3.5 average damage (1.12 and 3.3.5 Spell.dbc). Deep Breath and
   Heated Ground chain through many spell ids (each one triggers the next), all listed. The Onyxian Lair Guard
   (36561) has `npc_unbound_onyxia_no_lair_guard`, which despawns it. The map stays a 10-player map, so
-  mod-autobalance gets `AutoBalance.InflectionPoint.PerInstance = "249 -1 0.058 0.25"`: solo about 2.8
+  mod-autobalance gets `AutoBalance.InflectionPoint.PerInstance = "249 -1 0.058 0.25, 533 -1 0.03"`: solo about 2.8
   players' worth of the classic 40-player Onyxia, ten players about 10. After applying it, run
   `python tools/item_expansions.py` so her classic loot counts for infusion.
 - **Classic Naxxramas:** `src/naxx40` and `data/sql/db-world/unbound_naxx40*.sql`, from mod-individual-progression
@@ -148,6 +148,11 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   10-player heroic and teleports the group (members within 30 yards; playerbot accounts always). The
   expansion lock (`src/unbound_content_lock.cpp`) treats map 533 on that difficulty as classic.
   `tools/item_expansions.py` counts the 351000-351099 creatures and chest 361000 as classic.
+  Solo scaling: classic Naxxramas is map 533's heroic difficulty slot, and mod-autobalance picks its curve by
+  difficulty before size, so it would use `InflectionPointRaidHeroic` (floor 0.4, about 17 players' worth solo).
+  The `533 -1 0.03` entry in `AutoBalance.InflectionPoint.PerInstance` gives it the 40-player raids' floor
+  (about 2.8 players' worth). The entry is per map, so it also covers the level 80 Naxxramas: revisit it when
+  Wrath is released.
 - **Raid Finder:** `src/unbound_raid_finder.cpp` and `addon/UnboundRaidFinder`. The raids are `RAIDS` in the
   C++ (id, name, map, difficulty, expansion, entrance area trigger or a fixed position for classic Naxxramas);
   levels come from `dungeon_access_template`, player counts from MapDifficulty. The addon whispers its own
