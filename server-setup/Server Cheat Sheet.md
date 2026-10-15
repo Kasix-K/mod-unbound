@@ -36,7 +36,7 @@
 | Thing | Creature | Item | Spell |
 |---|---|---|---|
 | Transmogrify spell | (none) | (none) | 200200 |
-| Utility perk auras (server-only, invisible) | (none) | (none) | 200210-200213 |
+| Perk auras (server-only, invisible) | (none) | (none) | 200210-200215 |
 | Loot Goblin companion | 190100 | 910001 | 200201 |
 | Arcane Loot Scanner companion | 190102 (size 0.08) | 910002 | 200202 |
 | Heroic Deadmines loot | (heroic bosses: entry + 1000000) | 910100-910121 | (none) |
@@ -129,6 +129,18 @@ diminishing returns.
 | 209 | Stoicism | damage-over-time taken -8 / 14 / 20% (you and pet) |
 | 210 | Defensive Momentum | up to 5 / 7.5 / 10% damage reduction built by moving, lost after 2 s still |
 | 211 | Fortress | up to 5 / 7.5 / 10% built by standing still, lost after 3 s moving (not with 210) |
+| 212 | Juggernaut | no hit takes more than 40 / 35 / 30% of maximum health, once every 3 s |
+| 213 | Counterweight | after a dodge, parry or block, next hit taken -10 / 15 / 20% |
+| 214 | Titan's Resolve | up to 5 / 7.5 / 10% damage reduction, the more health missing the more |
+| 215 | Second Wind | a hit over 15% of maximum health: heal 1 / 1.5 / 2% a second for 5 s |
+| 216 | Hardened Flesh | the part of a hit over 10% of maximum health -10 / 15 / 20% |
+| 217 | Pet's Blessing | pet damage taken -10 / 15 / 20% |
+| 218 | Shield Wall Training | each block: +0.5 / 0.75 / 1% block chance for 5 s, up to 5 stacks |
+| 219 | Survival Instinct | below 30% health: damage taken -8 / 12 / 15% |
+| 220 | Vital Reserve | maximum health +4 / 7 / 10% |
+| 221 | Enduring | healing received +4 / 7 / 10% |
+| 222 | Thornmail | melee attackers take 10 / 20 / 30% of the damage they deal back |
+| 223 | Heavy Frame | armor +5 / 10 / 15% |
 
 The avoidance conversions work on melee attacks; the character sheet still shows the unconverted chances.
 

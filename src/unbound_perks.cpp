@@ -75,6 +75,24 @@
  *                              stacks lost after 2 s standing still (you and your pet, each their own)
  *   211 Fortress               each second standing still: a stack of max/10, up to 5/7.5/10%; all stacks
  *                              lost after 3 s moving (you and your pet)          (210 and 211 are exclusive)
+ *   212 Juggernaut             no single hit takes more than 40/35/30% of maximum health, once every 3 s
+ *   213 Counterweight          after a dodge, parry or block, the next hit taken is reduced by 10/15/20%
+ *   214 Titan's Resolve        damage reduction up to 5/7.5/10%, in proportion to the health missing
+ *   215 Second Wind            a hit above 15% of maximum health: heal 1/1.5/2% of maximum health a second
+ *                              for 5 s
+ *   216 Hardened Flesh         the part of a hit above 10% of maximum health is reduced by 10/15/20%
+ *   217 Pet's Blessing         your pet takes 10/15/20% less damage
+ *   218 Shield Wall Training   each block: +0.5/0.75/1% block chance for 5 s, up to 5 stacks
+ *   219 Survival Instinct      below 30% health, damage taken -8/12/15%
+ *   220 Vital Reserve          maximum health +4/7/10%
+ *   221 Enduring               healing received +4/7/10%
+ *   222 Thornmail              melee attackers take 10/20/30% of the damage they deal back (as the warrior's
+ *                              Damage Shield, Physical)
+ *   223 Heavy Frame            armor +5/10/15%
+ *   (212-223 all work for you and your pet, each with its own timers.) Vital Reserve and Heavy Frame are a
+ *   server-only passive aura (SPELL_PERK_VITALITY); Counterweight, Shield Wall Training and Thornmail learn
+ *   about melee attacks taken from a proc aura (SPELL_PERK_DEFENSE_PROC); Juggernaut, Hardened Flesh and
+ *   Second Wind use the final damage in the DealDamage hook.
  *
  * Utility perks (ids 301-399, at most 3 active):
  *   303 Iron Will              crowd-control effects from enemies on you (and your pets) last shorter. Ranked
@@ -246,6 +264,18 @@ namespace
         PERK_STOICISM               = 209,
         PERK_DEFENSIVE_MOMENTUM     = 210,
         PERK_FORTRESS               = 211,
+        PERK_JUGGERNAUT             = 212,
+        PERK_COUNTERWEIGHT          = 213,
+        PERK_TITANS_RESOLVE         = 214,
+        PERK_SECOND_WIND            = 215,
+        PERK_HARDENED_FLESH         = 216,
+        PERK_PETS_BLESSING          = 217,
+        PERK_SHIELD_WALL_TRAINING   = 218,
+        PERK_SURVIVAL_INSTINCT      = 219,
+        PERK_VITAL_RESERVE          = 220,
+        PERK_ENDURING               = 221,
+        PERK_THORNMAIL              = 222,
+        PERK_HEAVY_FRAME            = 223,
         PERK_IRON_WILL              = 303,
         PERK_LONGER_LEGS            = 304,
         PERK_PLANTED_FEET           = 305,  // "Planting your legs"
@@ -273,7 +303,9 @@ namespace
         PERK_SOUL_DRAIN, PERK_PET_REPLENISHMENT, PERK_PETS_ROAR, PERK_SILENT_KILLER, PERK_UNBREAKABLE_PRESENCE,
         PERK_STEADY_HANDS, PERK_MANA_LEECH, PERK_GREATER_BULWARK, PERK_EVASIVE_MANEUVERS, PERK_PARRY_KING,
         PERK_REINFORCED_ARMOR, PERK_SPELLWARDED, PERK_STOICISM, PERK_DEFENSIVE_MOMENTUM, PERK_FORTRESS,
-        PERK_RETRIBUTION };
+        PERK_JUGGERNAUT, PERK_COUNTERWEIGHT, PERK_TITANS_RESOLVE, PERK_SECOND_WIND, PERK_HARDENED_FLESH,
+        PERK_PETS_BLESSING, PERK_SHIELD_WALL_TRAINING, PERK_SURVIVAL_INSTINCT, PERK_VITAL_RESERVE, PERK_ENDURING,
+        PERK_THORNMAIL, PERK_HEAVY_FRAME, PERK_RETRIBUTION };
 
     // Groups of perks that can't be active together: turning one on turns the others in its group off.
     std::vector<std::vector<uint32>> const EXCLUSIVE_GROUPS = {
@@ -314,6 +346,20 @@ namespace
         { PERK_STOICISM,             "Stoicism",            { { "Percent", "8, 14, 20" } } },
         { PERK_DEFENSIVE_MOMENTUM,   "DefensiveMomentum",   { { "Max", "5, 7.5, 10" }, { "ResetAfter", "2, 2, 2" } } },
         { PERK_FORTRESS,             "Fortress",            { { "Max", "5, 7.5, 10" }, { "ResetAfter", "3, 3, 3" } } },
+        { PERK_JUGGERNAUT,           "Juggernaut",          { { "Cap", "40, 35, 30" }, { "Cooldown", "3, 3, 3" } } },
+        { PERK_COUNTERWEIGHT,        "Counterweight",       { { "Percent", "10, 15, 20" } } },
+        { PERK_TITANS_RESOLVE,       "TitansResolve",       { { "Max", "5, 7.5, 10" } } },
+        { PERK_SECOND_WIND,          "SecondWind",          { { "Threshold", "15, 15, 15" }, { "Heal", "1, 1.5, 2" },
+                                                              { "Duration", "5, 5, 5" } } },
+        { PERK_HARDENED_FLESH,       "HardenedFlesh",       { { "Threshold", "10, 10, 10" }, { "Percent", "10, 15, 20" } } },
+        { PERK_PETS_BLESSING,        "PetsBlessing",        { { "Percent", "10, 15, 20" } } },
+        { PERK_SHIELD_WALL_TRAINING, "ShieldWallTraining",  { { "PerStack", "0.5, 0.75, 1" }, { "Stacks", "5, 5, 5" },
+                                                              { "Duration", "5, 5, 5" } } },
+        { PERK_SURVIVAL_INSTINCT,    "SurvivalInstinct",    { { "Below", "30, 30, 30" }, { "Percent", "8, 12, 15" } } },
+        { PERK_VITAL_RESERVE,        "VitalReserve",        { { "Percent", "4, 7, 10" } } },
+        { PERK_ENDURING,             "Enduring",            { { "Percent", "4, 7, 10" } } },
+        { PERK_THORNMAIL,            "Thornmail",           { { "Percent", "10, 20, 30" } } },
+        { PERK_HEAVY_FRAME,          "HeavyFrame",          { { "Percent", "5, 10, 15" } } },
     };
 
     // Server-only passive spells (data/sql/db-world/unbound_perks_utility_spells.sql). Passive auras are never
@@ -322,6 +368,10 @@ namespace
     constexpr uint32 SPELL_PERK_PURSUIT      = 200211;  // run speed (%), timed from the code
     constexpr uint32 SPELL_PERK_THREAT       = 200212;  // threat (%), all schools
     constexpr uint32 SPELL_PERK_STEADY_HANDS = 200213;  // pushback reduction (%), interrupt and silence duration (%)
+    // data/sql/db-world/unbound_perks_defensive_spells.sql
+    constexpr uint32 SPELL_PERK_VITALITY     = 200214;  // maximum health (%), armor (%)
+    constexpr uint32 SPELL_PERK_DEFENSE_PROC = 200215;  // procs on melee hits/dodges/parries/blocks taken
+    constexpr uint32 SPELL_DAMAGE_SHIELD     = 59653;   // the warrior's Damage Shield damage (Thornmail's hit)
 
     // Class perks: the class each one belongs to. The server refuses a class perk for any other class.
     std::unordered_map<uint32, uint8> const CLASS_PERKS = {
@@ -443,6 +493,18 @@ namespace
         uint32 stacks = 0;
     };
 
+    // Per-unit state of the hit-based Defensive perks (the player, or their pet).
+    struct DefenseTrack
+    {
+        ObjectGuid unit;
+        uint32 juggernautCooldownMs = 0;  // Juggernaut can cap a hit again when this reaches 0
+        uint32 secondWindMs = 0;          // Second Wind: healing time left
+        uint32 secondWindTickMs = 0;
+        bool counterweight = false;       // Counterweight: the next hit taken is reduced
+        uint32 shieldWallStacks = 0;      // Shield Wall Training
+        uint32 shieldWallMs = 0;          // time left on the stacks
+    };
+
     struct PerkState
     {
         std::set<uint32> active;
@@ -468,6 +530,8 @@ namespace
         uint32 stillTickMs = 0;
         StanceTrack selfStance;     // Defensive Momentum / Fortress
         StanceTrack petStance;
+        DefenseTrack selfDefense;   // Juggernaut, Second Wind, Counterweight, Shield Wall Training
+        DefenseTrack petDefense;
     };
 
     std::unordered_map<ObjectGuid::LowType, PerkState> sStates;
@@ -694,7 +758,31 @@ namespace
                 if (track.unit == victim->GetGUID() && track.stacks)
                     mult *= Reduction(OwnerRankValue(victim, perk, 0) * track.stacks / STANCE_MAX_STACKS);
             }
+
+        // Titan's Resolve: up to the max as health runs out; Survival Instinct: a flat reduction below a health %
+        float missingPct = 100.0f - victim->GetHealthPct();
+        if (Has(state, PERK_TITANS_RESOLVE))
+            mult *= Reduction(OwnerRankValue(victim, PERK_TITANS_RESOLVE, 0) * missingPct / 100.0f);
+        if (Has(state, PERK_SURVIVAL_INSTINCT) &&
+            victim->GetHealthPct() < OwnerRankValue(victim, PERK_SURVIVAL_INSTINCT, 0))
+            mult *= Reduction(OwnerRankValue(victim, PERK_SURVIVAL_INSTINCT, 1));
+        // Pet's Blessing: the pet only
+        if (!victim->IsPlayer() && Has(state, PERK_PETS_BLESSING))
+            mult *= Reduction(OwnerRankValue(victim, PERK_PETS_BLESSING, 0));
         return mult;
+    }
+
+    // The hit-based Defensive perks' state for this unit (the player or their current pet), reset when the pet
+    // changes.
+    DefenseTrack& DefenseOf(PerkState& state, Unit const* unit)
+    {
+        DefenseTrack& track = unit->IsPlayer() ? state.selfDefense : state.petDefense;
+        if (track.unit != unit->GetGUID())
+        {
+            track = DefenseTrack();
+            track.unit = unit->GetGUID();
+        }
+        return track;
     }
 
     // Perks that depend on the kind of hit or change state with every hit.
@@ -1035,11 +1123,20 @@ namespace
         SetPerkAura(player, SPELL_PERK_THREAT, { threat, 0, 0 });
         int32 lockout = -value(PERK_STEADY_HANDS, 1);
         SetPerkAura(player, SPELL_PERK_STEADY_HANDS, { value(PERK_STEADY_HANDS, 0), lockout, lockout });
+        // Vital Reserve (maximum health) and Heavy Frame (armor), you and your pet
+        std::array<int32, MAX_SPELL_EFFECTS> vitality = { value(PERK_VITAL_RESERVE, 0), value(PERK_HEAVY_FRAME, 0), 0 };
+        SetPerkAura(player, SPELL_PERK_VITALITY, vitality);
+        // the proc aura that tells Counterweight, Shield Wall Training and Thornmail about melee attacks taken
+        int32 defenseProc = Has(&state, PERK_COUNTERWEIGHT) || Has(&state, PERK_SHIELD_WALL_TRAINING) ||
+                            Has(&state, PERK_THORNMAIL) ? 1 : 0;
+        SetPerkAura(player, SPELL_PERK_DEFENSE_PROC, { defenseProc, 0, 0 });
 
         if (Pet* pet = player->GetPet())
         {
             SetPerkAura(pet, SPELL_PERK_MOVEMENT, { run, 0, swim });
             SetPerkAura(pet, SPELL_PERK_THREAT, { value(PERK_PETS_ROAR, 0), 0, 0 });
+            SetPerkAura(pet, SPELL_PERK_VITALITY, vitality);
+            SetPerkAura(pet, SPELL_PERK_DEFENSE_PROC, { defenseProc, 0, 0 });
         }
     }
 
@@ -1401,6 +1498,9 @@ namespace
         if (!target->IsPlayer())
             if (float bonus = OwnerRankValue(target, PERK_PET_REPLENISHMENT, 0))
                 heal = uint32(heal * (1.0f + bonus / 100.0f));
+        if (target->IsPlayer() || target->IsPet())
+            if (float bonus = OwnerRankValue(target, PERK_ENDURING, 0))  // Enduring: you and your pet
+                heal = uint32(heal * (1.0f + bonus / 100.0f));
         if (!isTick)
             if (float penalty = OwnerRankValue(target, PERK_SOUL_DRAIN, 1))
                 heal = uint32(heal * std::max(0.0f, 1.0f - penalty / 100.0f));
@@ -1415,6 +1515,110 @@ namespace
             return damage;
         float reduction = std::min(100.0f, OwnerRankValue(victim, PERK_LONGER_LEGS, 3));
         return uint32(damage * (1.0f - reduction / 100.0f));
+    }
+
+    // ------------------------------------------------------------------ hit-based Defensive perks
+    // On the final damage of a hit from another unit (after armor, resistances and the other perks): Counterweight
+    // (the charged hit is reduced), Hardened Flesh (the part above the threshold is reduced), Juggernaut (no hit
+    // above the cap, then a cooldown) and Second Wind (a big hit starts the healing).
+    uint32 ApplyBigHitPerks(Unit* attacker, Unit* victim, uint32 damage)
+    {
+        if (!attacker || attacker == victim || !damage)
+            return damage;
+        PerkState* state = PerkOwnerState(victim);
+        if (!state || state->active.empty() || (!victim->IsPlayer() && !victim->IsPet()))
+            return damage;
+        DefenseTrack& track = DefenseOf(*state, victim);
+        float maxHealth = float(victim->GetMaxHealth());
+
+        if (track.counterweight && Has(state, PERK_COUNTERWEIGHT))
+        {
+            damage = uint32(damage * Reduction(OwnerRankValue(victim, PERK_COUNTERWEIGHT, 0)));
+            track.counterweight = false;
+        }
+        if (Has(state, PERK_HARDENED_FLESH))
+        {
+            float threshold = maxHealth * OwnerRankValue(victim, PERK_HARDENED_FLESH, 0) / 100.0f;
+            if (damage > threshold)
+                damage = uint32(threshold + (damage - threshold) * Reduction(OwnerRankValue(victim, PERK_HARDENED_FLESH, 1)));
+        }
+        if (Has(state, PERK_JUGGERNAUT) && !track.juggernautCooldownMs)
+        {
+            uint32 cap = uint32(maxHealth * OwnerRankValue(victim, PERK_JUGGERNAUT, 0) / 100.0f);
+            if (damage > cap)
+            {
+                damage = cap;
+                track.juggernautCooldownMs = uint32(OwnerRankValue(victim, PERK_JUGGERNAUT, 1) * IN_MILLISECONDS);
+            }
+        }
+        if (Has(state, PERK_SECOND_WIND) && damage > maxHealth * OwnerRankValue(victim, PERK_SECOND_WIND, 0) / 100.0f)
+        {
+            track.secondWindMs = uint32(OwnerRankValue(victim, PERK_SECOND_WIND, 2) * IN_MILLISECONDS);
+            track.secondWindTickMs = 0;
+        }
+        return damage;
+    }
+
+    // Counterweight, Shield Wall Training and Thornmail, from the defense proc aura (a melee attack taken).
+    void HandleDefenseProc(Unit* victim, Unit* attacker, uint32 hitMask, uint32 damage)
+    {
+        PerkState* state = PerkOwnerState(victim);
+        if (!state || !victim->IsAlive())
+            return;
+        DefenseTrack& track = DefenseOf(*state, victim);
+        if ((hitMask & (PROC_HIT_DODGE | PROC_HIT_PARRY | PROC_HIT_BLOCK)) && Has(state, PERK_COUNTERWEIGHT))
+            track.counterweight = true;
+        if ((hitMask & PROC_HIT_BLOCK) && Has(state, PERK_SHIELD_WALL_TRAINING))
+        {
+            track.shieldWallStacks = std::min<uint32>(track.shieldWallStacks + 1,
+                uint32(OwnerRankValue(victim, PERK_SHIELD_WALL_TRAINING, 1)));
+            track.shieldWallMs = uint32(OwnerRankValue(victim, PERK_SHIELD_WALL_TRAINING, 2) * IN_MILLISECONDS);
+        }
+        if (damage && attacker && attacker != victim && attacker->IsAlive() && Has(state, PERK_THORNMAIL))
+            if (int32 thorns = int32(damage * OwnerRankValue(victim, PERK_THORNMAIL, 0) / 100.0f))
+                victim->CastCustomSpell(SPELL_DAMAGE_SHIELD, SPELLVALUE_BASE_POINT0, thorns, attacker, true);
+    }
+
+    // Shield Wall Training's block chance (x100, for the melee roll).
+    int32 ShieldWallBonus(Unit const* victim)
+    {
+        PerkState* state = PerkOwnerState(victim);
+        if (!Has(state, PERK_SHIELD_WALL_TRAINING))
+            return 0;
+        DefenseTrack const& track = victim->IsPlayer() ? state->selfDefense : state->petDefense;
+        if (track.unit != victim->GetGUID() || !track.shieldWallStacks)
+            return 0;
+        return int32(track.shieldWallStacks * OwnerRankValue(victim, PERK_SHIELD_WALL_TRAINING, 0) * 100.0f);
+    }
+
+    // Timers of the hit-based perks, and Second Wind's healing once a second.
+    void UpdateDefense(Unit* unit, PerkState& state, uint32 diff)
+    {
+        if (!unit)
+            return;
+        DefenseTrack& track = DefenseOf(state, unit);
+        track.juggernautCooldownMs = track.juggernautCooldownMs > diff ? track.juggernautCooldownMs - diff : 0;
+        if (track.shieldWallMs)
+        {
+            track.shieldWallMs = track.shieldWallMs > diff ? track.shieldWallMs - diff : 0;
+            if (!track.shieldWallMs)
+                track.shieldWallStacks = 0;
+        }
+        if (!track.secondWindMs)
+            return;
+        if (!unit->IsAlive() || !Has(&state, PERK_SECOND_WIND))
+        {
+            track.secondWindMs = 0;
+            return;
+        }
+        track.secondWindTickMs += diff;
+        while (track.secondWindTickMs >= 1000 && track.secondWindMs)
+        {
+            track.secondWindTickMs -= 1000;
+            track.secondWindMs = track.secondWindMs > 1000 ? track.secondWindMs - 1000 : 0;
+            if (unit->GetHealth() < unit->GetMaxHealth())
+                unit->ModifyHealth(std::max<int32>(1, int32(unit->GetMaxHealth() * OwnerRankValue(unit, PERK_SECOND_WIND, 1) / 100.0f)));
+        }
     }
 }
 
@@ -1587,6 +1791,8 @@ public:
         UpdatePlantedFeet(player, state, diff);
         UpdateStance(player, state, state.selfStance, diff);
         UpdateStance(player->GetPet(), state, state.petStance, diff);
+        UpdateDefense(player, state, diff);
+        UpdateDefense(player->GetPet(), state, diff);
 
         if (state.active.empty() && !state.sacrificeAP && !state.sacrificeSP && !state.critBonus &&
             std::none_of(std::begin(state.desperateResist), std::end(state.desperateResist), [](int32 r) { return r != 0; }))
@@ -1646,6 +1852,8 @@ public:
         if (!state || state->active.empty())
             return;
         ConvertAvoidance(victim, dodge_chance, parry_chance, block_chance);  // before the caps below
+        if (block_chance > 0)
+            block_chance += ShieldWallBonus(victim);  // Shield Wall Training (only with a block chance, i.e. a shield)
         int32 const cap = int32(AVOIDANCE_CAP * 100);
         if (Has(state, PERK_BLOCK_CAPPING))
             block_chance = std::min(block_chance, cap);
@@ -1676,6 +1884,7 @@ public:
         if (!victim)
             return damage;
         damage = ApplyFallDamage(attacker, victim, damage, damagetype);
+        damage = ApplyBigHitPerks(attacker, victim, damage);
         ApplyLeech(attacker, victim, damage);
         if (damage && victim->IsAlive() && damage >= victim->GetHealth() &&
             victim->HasAura(SPELL_RIGHTEOUS_VENGEANCE_DOT))
@@ -1755,6 +1964,26 @@ class spell_unbound_ret_judgement : public SpellScript
     }
 };
 
+// 200215 - Unbound perk defense proc (server-only passive aura on a player and pet with Counterweight, Shield
+// Wall Training or Thornmail; spell_proc: melee attacks taken that hit, crit, or are dodged, parried, blocked)
+class spell_unbound_perk_defense_proc : public AuraScript
+{
+    PrepareAuraScript(spell_unbound_perk_defense_proc);
+
+    void OnProc(AuraEffect const* /*aurEff*/, ProcEventInfo& eventInfo)
+    {
+        PreventDefaultAction();
+        DamageInfo* damageInfo = eventInfo.GetDamageInfo();
+        uint32 damage = damageInfo ? damageInfo->GetDamage() + damageInfo->GetAbsorb() : 0;
+        HandleDefenseProc(GetTarget(), eventInfo.GetProcTarget(), eventInfo.GetHitMask(), damage);
+    }
+
+    void Register() override
+    {
+        OnEffectProc += AuraEffectProcFn(spell_unbound_perk_defense_proc::OnProc, EFFECT_0, SPELL_AURA_DUMMY);
+    }
+};
+
 // .perk rank <perk id> [rank]: set the selected player's (or your own) rank of a perk, for testing.
 // Without a rank the perk goes back to the rank the character's level gives.
 class unbound_perks_command : public CommandScript
@@ -1818,4 +2047,5 @@ void AddSC_unbound_perks()
     new unbound_perks_spell();
     RegisterSpellScript(spell_unbound_ret_divine_storm);
     RegisterSpellScript(spell_unbound_ret_judgement);
+    RegisterSpellScript(spell_unbound_perk_defense_proc);
 }

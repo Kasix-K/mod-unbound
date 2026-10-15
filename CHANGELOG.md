@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| 12 more Defensive perks (Juggernaut to Heavy Frame) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | World boss announcements (10/5 min warnings, spawn, kill) and 24-hour unchallenged despawn | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | 8 Defensive perks (Greater Bulwark to Fortress), Defensive limited to 3 active | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | 11 Utility perks (Longer Legs to Mana Leech), Utility limited to 3 active | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
@@ -77,6 +78,16 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   Devourer, Baron Aquanis, Grubbis, Chomper, Arugal's Voidwalker, Walking Bombs, the Naralex and Aku'mai event
   adds). Heroic loot: 59 level 60 blue remakes of each boss's own drops (one per boss, two from the final boss)
   plus level 60 gold; they count for attunement.
+- **12 more Defensive perks** (20 in all, still at most 3 active), 3 ranks each at levels 1 / 30 / 60:
+  Juggernaut (no hit over 40/35/30% of maximum health, once every 3 s), Counterweight (next hit after a
+  dodge, parry or block -10/15/20%), Titan's Resolve (up to 5/7.5/10% damage reduction as health drops),
+  Second Wind (a hit over 15% of maximum health: heal 1/1.5/2% a second for 5 s), Hardened Flesh (the part
+  of a hit over 10% of maximum health -10/15/20%), Pet's Blessing (pet damage taken -10/15/20%), Shield
+  Wall Training (+0.5/0.75/1% block per block for 5 s, 5 stacks), Survival Instinct (below 30% health:
+  damage taken -8/12/15%), Vital Reserve (maximum health +4/7/10%), Enduring (healing received +4/7/10%),
+  Thornmail (10/20/30% of melee damage taken dealt back) and Heavy Frame (armor +5/10/15%). Most also work
+  for your pet. New server-only spells 200214 (health and armor) and 200215 (a proc aura for dodges,
+  parries, blocks and melee hits taken).
 - **Gear attunement, stage 4 of 4: tooltips and the collection window** (new **UnboundAttunement** addon). Item
   tooltips show each weapon or armour piece's attunement: attuned, % and kills, sacrifice only (with the price),
   or why it doesn't count. The **Attunement** button in the micro menu (between Talents and Achievements) or `/attunement` opens the

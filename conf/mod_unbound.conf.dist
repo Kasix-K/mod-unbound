@@ -161,6 +161,55 @@ Unbound.Perks.DefensiveMomentum.RankLevels = "1, 30, 60"
 Unbound.Perks.Fortress.Max = "5, 7.5, 10"
 Unbound.Perks.Fortress.ResetAfter = "3, 3, 3"
 Unbound.Perks.Fortress.RankLevels = "1, 30, 60"
+#
+#    Unbound.Perks.Juggernaut.*                 (perk 212) Cap: no hit takes more than this % of maximum health;
+#                                               Cooldown: seconds before it can cap a hit again
+#    Unbound.Perks.Counterweight.Percent        (perk 213) next hit after a dodge, parry or block -%
+#    Unbound.Perks.TitansResolve.Max            (perk 214) damage reduction % at 0 health (in proportion to
+#                                               the health missing)
+#    Unbound.Perks.SecondWind.*                 (perk 215) Threshold: hit size in % of maximum health; Heal: %
+#                                               of maximum health a second; Duration: seconds
+#    Unbound.Perks.HardenedFlesh.*              (perk 216) Threshold: % of maximum health; Percent: reduction of
+#                                               the part above it
+#    Unbound.Perks.PetsBlessing.Percent         (perk 217) pet damage taken -%
+#    Unbound.Perks.ShieldWallTraining.*         (perk 218) PerStack: block chance % per block; Stacks; Duration
+#    Unbound.Perks.SurvivalInstinct.*           (perk 219) Below: health %; Percent: damage taken -%
+#    Unbound.Perks.VitalReserve.Percent         (perk 220) maximum health +%
+#    Unbound.Perks.Enduring.Percent             (perk 221) healing received +%
+#    Unbound.Perks.Thornmail.Percent            (perk 222) % of a melee hit's damage dealt back to the attacker
+#    Unbound.Perks.HeavyFrame.Percent           (perk 223) armor +%
+
+Unbound.Perks.Juggernaut.Cap = "40, 35, 30"
+Unbound.Perks.Juggernaut.Cooldown = "3, 3, 3"
+Unbound.Perks.Juggernaut.RankLevels = "1, 30, 60"
+Unbound.Perks.Counterweight.Percent = "10, 15, 20"
+Unbound.Perks.Counterweight.RankLevels = "1, 30, 60"
+Unbound.Perks.TitansResolve.Max = "5, 7.5, 10"
+Unbound.Perks.TitansResolve.RankLevels = "1, 30, 60"
+Unbound.Perks.SecondWind.Threshold = "15, 15, 15"
+Unbound.Perks.SecondWind.Heal = "1, 1.5, 2"
+Unbound.Perks.SecondWind.Duration = "5, 5, 5"
+Unbound.Perks.SecondWind.RankLevels = "1, 30, 60"
+Unbound.Perks.HardenedFlesh.Threshold = "10, 10, 10"
+Unbound.Perks.HardenedFlesh.Percent = "10, 15, 20"
+Unbound.Perks.HardenedFlesh.RankLevels = "1, 30, 60"
+Unbound.Perks.PetsBlessing.Percent = "10, 15, 20"
+Unbound.Perks.PetsBlessing.RankLevels = "1, 30, 60"
+Unbound.Perks.ShieldWallTraining.PerStack = "0.5, 0.75, 1"
+Unbound.Perks.ShieldWallTraining.Stacks = "5, 5, 5"
+Unbound.Perks.ShieldWallTraining.Duration = "5, 5, 5"
+Unbound.Perks.ShieldWallTraining.RankLevels = "1, 30, 60"
+Unbound.Perks.SurvivalInstinct.Below = "30, 30, 30"
+Unbound.Perks.SurvivalInstinct.Percent = "8, 12, 15"
+Unbound.Perks.SurvivalInstinct.RankLevels = "1, 30, 60"
+Unbound.Perks.VitalReserve.Percent = "4, 7, 10"
+Unbound.Perks.VitalReserve.RankLevels = "1, 30, 60"
+Unbound.Perks.Enduring.Percent = "4, 7, 10"
+Unbound.Perks.Enduring.RankLevels = "1, 30, 60"
+Unbound.Perks.Thornmail.Percent = "10, 20, 30"
+Unbound.Perks.Thornmail.RankLevels = "1, 30, 60"
+Unbound.Perks.HeavyFrame.Percent = "5, 10, 15"
+Unbound.Perks.HeavyFrame.RankLevels = "1, 30, 60"
 
 #    Unbound.Attunement.Enable
 #        Description: Gear attunement: attuned items permanently give the character a percentage of

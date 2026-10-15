@@ -170,7 +170,43 @@ local function fortress(v)
            G(pct(v[1])) .. " (10 stacks). Moving for over " .. string.format("%g", v[2]) .. " seconds removes the stacks."
 end
 
-local MANA_ONLY ="Requires a mana bar. It does nothing while you use Rage, Energy, Runic Power or Focus, " ..
+local function sec(n) return string.format("%g second%s", n, n == 1 and "" or "s") end
+local function juggernaut(v)
+    return "You and your pet cannot lose more than " .. G(pct(v[1])) .. " of maximum health from a single hit. " ..
+           "This can occur once every " .. sec(v[2]) .. " for each of you."
+end
+local function counterweight(v)
+    return "Successfully dodging, parrying, or blocking reduces your next incoming hit by " .. G(pct(v[1])) .. "."
+end
+local function titansResolve(v)
+    return "You and your pet gain " .. G(pct(v[1] / 100)) .. " damage reduction for every " .. G("1%") ..
+           " of your own health missing (up to " .. G(pct(v[1])) .. ")."
+end
+local function secondWind(v)
+    return "After you or your pet suffer a hit exceeding " .. G(pct(v[1])) .. " of maximum health, the one struck " ..
+           "regenerates " .. G(pct(v[2])) .. " health per second for " .. sec(v[3]) .. "."
+end
+local function hardenedFlesh(v)
+    return "Hits on you and your pet that exceed " .. G(pct(v[1])) .. " of maximum health have their excess damage " ..
+           "reduced by " .. G(pct(v[2])) .. "."
+end
+local function petsBlessing(v) return "Your pet takes " .. G(pct(v[1])) .. " less damage." end
+local function shieldWall(v)
+    return "Blocking an attack increases your block chance by " .. G(pct(v[1])) .. " for " .. sec(v[3]) ..
+           ", stacking up to " .. string.format("%g", v[2]) .. " times."
+end
+local function survivalInstinct(v)
+    return "While below " .. G(pct(v[1])) .. " Health, all damage taken by you and your pet is reduced by " .. G(pct(v[2])) .. "."
+end
+local function vitalReserve(v) return "Increases your and your pet's maximum Health by " .. G(pct(v[1])) .. "." end
+local function enduring(v) return "Increases your and your pet's healing received by " .. G(pct(v[1])) .. "." end
+local function thornmail(v)
+    return "Melee attackers suffer Physical damage equal to " .. G(pct(v[1])) .. " of the damage they hit you and your pet for."
+end
+local function heavyFrame(v) return "Increases your and your pet's Armor by " .. G(pct(v[1])) .. "." end
+local function one(fmt) return function(v) return string.format(fmt, v[1]) end end
+
+local MANA_ONLY = "Requires a mana bar. It does nothing while you use Rage, Energy, Runic Power or Focus, " ..
                   "including a druid in Cat, Bear or Dire Bear Form."
 
 UnboundPerks.PERKS = {
@@ -342,6 +378,46 @@ UnboundPerks.PERKS = {
       note = "Can't be active together with Defensive Momentum.",
       applyRank = ranked(fortress, function(v) return string.format("up to %g%% damage reduction", v[1]) end,
           "Can't be active together with Defensive Momentum.") },
+    { id = 212, name = "Juggernaut", category = "DEFENSIVE", works = true, pets = PETS_TOO,
+      icon = "Interface\\Icons\\Ability_Warrior_EndlessRage",
+      desc = juggernaut({ 30, 3 }), applyRank = ranked(juggernaut, one("hits capped at %g%% of health")) },
+    { id = 213, name = "Counterweight", category = "DEFENSIVE", works = true,
+      icon = "Interface\\Icons\\Ability_Warrior_Revenge",
+      desc = counterweight({ 20 }), applyRank = ranked(counterweight, one("next hit -%g%%")) },
+    { id = 214, name = "Titan's Resolve", category = "DEFENSIVE", works = true, pets = PETS_TOO,
+      icon = "Interface\\Icons\\Spell_Holy_AshesToAshes",
+      desc = titansResolve({ 10 }), applyRank = ranked(titansResolve, one("up to %g%% damage reduction")) },
+    { id = 215, name = "Second Wind", category = "DEFENSIVE", works = true, pets = PETS_TOO,
+      icon = "Interface\\Icons\\INV_Misc_Bandage_15",
+      desc = secondWind({ 15, 2, 5 }),
+      applyRank = ranked(secondWind, function(v) return string.format("%g%% health per second", v[2]) end) },
+    { id = 216, name = "Hardened Flesh", category = "DEFENSIVE", works = true, pets = PETS_TOO,
+      icon = "Interface\\Icons\\Spell_Nature_StoneClawTotem",
+      desc = hardenedFlesh({ 10, 20 }),
+      applyRank = ranked(hardenedFlesh, function(v) return string.format("excess -%g%%", v[2]) end) },
+    { id = 217, name = "Pet's Blessing", category = "DEFENSIVE", works = true,
+      icon = "Interface\\Icons\\Ability_Hunter_Pet_Turtle",
+      desc = petsBlessing({ 20 }), applyRank = ranked(petsBlessing, one("pet damage taken -%g%%")) },
+    { id = 218, name = "Shield Wall Training", category = "DEFENSIVE", works = true,
+      icon = "Interface\\Icons\\Ability_Warrior_ShieldMastery",
+      desc = shieldWall({ 1, 5, 5 }), note = "Needs a shield (block chance).",
+      applyRank = ranked(shieldWall, one("+%g%% block per stack"), "Needs a shield (block chance).") },
+    { id = 219, name = "Survival Instinct", category = "DEFENSIVE", works = true, pets = PETS_TOO,
+      icon = "Interface\\Icons\\Ability_Druid_TigersRoar",
+      desc = survivalInstinct({ 30, 15 }),
+      applyRank = ranked(survivalInstinct, function(v) return string.format("-%g%% below %g%% health", v[2], v[1]) end) },
+    { id = 220, name = "Vital Reserve", category = "DEFENSIVE", works = true, pets = PETS_TOO,
+      icon = "Interface\\Icons\\Spell_Holy_WordFortitude",
+      desc = vitalReserve({ 10 }), applyRank = ranked(vitalReserve, one("+%g%% maximum health")) },
+    { id = 221, name = "Enduring", category = "DEFENSIVE", works = true, pets = PETS_TOO,
+      icon = "Interface\\Icons\\Spell_Holy_Renew",
+      desc = enduring({ 10 }), applyRank = ranked(enduring, one("+%g%% healing received")) },
+    { id = 222, name = "Thornmail", category = "DEFENSIVE", works = true, pets = PETS_TOO,
+      icon = "Interface\\Icons\\Spell_Nature_Thorns",
+      desc = thornmail({ 30 }), applyRank = ranked(thornmail, one("%g%% reflected")) },
+    { id = 223, name = "Heavy Frame", category = "DEFENSIVE", works = true, pets = PETS_TOO,
+      icon = "Interface\\Icons\\INV_Chest_Plate04",
+      desc = heavyFrame({ 15 }), applyRank = ranked(heavyFrame, one("+%g%% armor")) },
 
     -- Utility (ids 301 and 302 were placeholders, removed: never reuse them) ------------------------------
     { id = 303, name = "Iron Will", category = "UTILITY", pets = PETS_TOO, works = true,

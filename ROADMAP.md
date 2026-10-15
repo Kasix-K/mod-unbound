@@ -202,7 +202,7 @@ changes, raid by raid (see Next up).
 - [ ] **Perk ranks** (moderate): rank support is built (rank table, per-rank values, "2/3" badges,
       `.perk rank`), so far for Rapid Recovery (3 ranks by level). Still to do: ranks for the other perks
       with a number (Masteries, Pressure, ...) and how ranks are earned (levels, Heroic currency, quests).
-- [x] **Defensive perks**: 8 working (Greater Bulwark to Fortress, at most 3 active). The old placeholders
+- [x] **Defensive perks**: 20 working (Greater Bulwark to Heavy Frame, at most 3 active). The old placeholders
       (Thick Skin, Second Wind, Steadfast, Fleet Foot, Treasure Sense) were removed; their ids 201-203 and
       301-302 are not reused.
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
