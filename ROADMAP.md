@@ -199,16 +199,19 @@ changes, raid by raid (see Next up).
       placeholders (Thick Skin, Second Wind, Steadfast, Fleet Foot, Treasure Sense) were removed; their ids
       201-203 and 301-302 are not reused.
 
+- [x] Perk ranks (2026-10-15, Idea 1: Ranks 1-3 by level, Ranks 4-5 earned at the endgame): 58 of 61 perks
+      have ranks; all 57 Offensive, Defensive and Utility perks have 5 ranks (1-3 at levels 1 / 30 / 60, 4-5
+      about 1.3x / 1.5x of Rank 3, GM-only via `.perk rank` for now; Rapid Recovery keeps 3). Values and rank
+      levels in `mod_unbound.conf`; "3/5" badges and every rank in the tooltip.
+
 ## Next up
 
 - [ ] **Soloable raid mechanics** (moderate, per raid): script changes for bosses that need several
       players (Razorgore, Twin Emperors, C'Thun, ...).
-- [ ] **Perk ranks** (moderate): Idea 1 chosen (2026-10-15): Ranks 1-3 by level, Ranks 4-5 earned at the
-      endgame. Done: 58 of 61 perks have ranks; all 57 Offensive, Defensive and Utility perks have 5 ranks
-      (1-3 by level, 4-5 about 1.3x / 1.5x, GM-only via `.perk rank` for now; Rapid Recovery keeps 3). Still
-      to do: how Ranks 4-5 are earned (buy per perk with gold, then Heroic Badges / Mythic currency; perk
-      points; or rank by use), an Upgrade button in the perk window, and saving earned ranks (and what they
-      cost, so purchases can be refunded if the design changes).
+- [ ] **Earning perk Ranks 4-5** (moderate): how players reach the endgame ranks, now GM-only (buy per perk
+      with gold, then Heroic Badges / Mythic currency; perk points; or rank by use), an Upgrade button in the
+      perk window, and saving earned ranks (and what they cost, so purchases can be refunded if the design
+      changes).
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
       +25-35% to its spec's single-target damage (the class perk target in the Power budget).
 - [ ] **Heroic currency and vendor** (moderate): a token (e.g. "Heroic Badge") from Heroic bosses,
