@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Bulletin Board: daily bounties and profession quests, weekly dungeon and raid quests per tier | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Raid Finder: Raids tab in the Dungeon Finder (enter raids, group prompt, Leave Raid) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Classic Naxxramas (40 players, level 60) in the Eastern Plaguelands, from mod-individual-progression | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Onyxia's Lair as a classic level 60 raid (classic stats, spell damage, loot, Head of Onyxia quests) | 2026-10-15 | 2026-10-15 | Kasix-K |
@@ -64,6 +65,16 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Added
+- **Bulletin Board** (gameobject 920000, `tools/bulletin_board.py`, `src/unbound_bulletin_board.cpp`): a board in
+  Stormwind's Trade District and Orgrimmar's Valley of Strength (both usable by both factions), level 60 only,
+  gold rewards only (no attunement progress). **Dailies**: 2 kill bounties a day from 16 (level 55-60 creatures
+  in the Plaguelands, Silithus, Winterspring and the Burning Steppes, 15 gold), and for every profession one
+  gathering (Mining, Herbalism, Skinning, Fishing; 12 gold) or crafting quest (Alchemy, Blacksmithing,
+  Leatherworking, Tailoring, Engineering, Enchanting, Cooking, First Aid; 15 gold) a day, shown only to players
+  with that profession. **Weeklies**: kill the final boss of this week's dungeon and raid, one per tier, never
+  the same dungeon (raid) for two tiers: Normal dungeon 50 gold, Heroic dungeon 100 gold, Normal raid 100 gold;
+  Mythic dungeons and Heroic / Mythic raids are already picked each week and get their quests once those
+  modes exist. GM commands `.bulletinboard show` and `.bulletinboard reroll`.
 - **Raid Finder** (new **UnboundRaidFinder** addon, `src/unbound_raid_finder.cpp`): "Dungeons" and "Raids" tabs
   under the Dungeon Finder window (`/raidfinder` opens the Raids tab). It lists every raid by expansion with its
   level and whether you can enter it (available, level, attunement for classic Naxxramas, not released yet).

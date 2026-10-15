@@ -272,6 +272,10 @@ changes, raid by raid (see Next up).
 
 ## Endgame and rewards
 
+- [x] **Bulletin Board** (2026-10-15): daily kill bounties and profession quests, weekly dungeon and raid quests
+      per tier (Normal and Heroic dungeons, Normal raids so far). Add the Mythic and Heroic raid weeklies to
+      `tools/bulletin_board.py` when those modes exist; switch rewards to Heroic Badges / Mythic currency then.
+
 - [ ] **More world bosses** (moderate, mostly data): one per continent and level range, added to
       `tools/world_bosses.py`. Later a weekly rotation (boss of the week) with a first-kill bonus.
 

@@ -78,6 +78,11 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
   Naxxramas" runestone below it (level 60-70). Needs "The Dread Citadel - Naxxramas" from Archmage Angela
   Dosantos at Light's Hope (cheaper with more Argent Dawn reputation). Your group within 30 yards comes along.
   Tier 3 quests are at Light's Hope; there are no exit portals inside (use your hearthstone).
+- **Bulletin Board:** in Stormwind's Trade District (by the auction house) and Orgrimmar's Valley of Strength
+  (both factions can use either). Level 60: two daily kill bounties, a daily quest for each of your
+  professions, and weekly dungeon and raid quests (Normal dungeon, Heroic dungeon, Normal raid, a different
+  one each). GMs: `.bulletinboard show` lists this week's picks, `.bulletinboard reroll` picks again. Move a
+  board with `.gobject move` if it stands badly.
 - **Raid Finder:** open the Dungeon Finder (or type `/raidfinder`) and click the **Raids** tab at the bottom.
   Pick a raid and press **Enter Raid**. In a group the leader picks; everyone else gets an "Enter the raid?"
   prompt. **Leave Raid** takes you back to where you joined from. Needs the **UnboundRaidFinder** addon.

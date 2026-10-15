@@ -13,6 +13,7 @@ void AddSC_unbound_solo_raids();
 void AddSC_unbound_classic_onyxia();
 void AddSC_unbound_naxx40();
 void AddSC_unbound_raid_finder();
+void AddSC_unbound_bulletin_board();
 
 void Addmod_unboundScripts()
 {
@@ -27,4 +28,5 @@ void Addmod_unboundScripts()
     AddSC_unbound_classic_onyxia();
     AddSC_unbound_naxx40();
     AddSC_unbound_raid_finder();
+    AddSC_unbound_bulletin_board();
 }

@@ -157,6 +157,16 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   game's `CONFIRM_SUMMON` popup on `INVITE` and restores them when it closes. The tabs are
   `LFDParentFrameTab1/2` (CharacterFrameTabButtonTemplate) and switch between `LFDQueueFrame` and
   `UnboundRaidFinderFrame`.
+- **Bulletin Board:** `tools/bulletin_board.py` generates `data/sql/db-world/unbound_bulletin_board.sql` (the board,
+  gameobject 920000 spawned as guids 9920000-9920001; quests 920001-920999; pools 920000-920012; conditions).
+  Dailies are core quest pools (`pool_template` / `pool_quest`, rerolled at the daily reset); profession quests
+  have `RequiredSkillID` / `RequiredSkillPoints`. Weeklies: one quest per tier and dungeon (raid), ids
+  920100 + i (Normal dungeon), 920200 + i (Heroic, the boss's heroic copy entry + 1000000), 920300 (Mythic,
+  none yet), 920400 + i (Normal raid), 920500 / 920600 (Heroic / Mythic raid, none yet), each with a
+  `CONDITION_WORLD_STATE` condition (source type 19). `src/unbound_bulletin_board.cpp` sets world states
+  920001-920003 (dungeon per tier) and 920004-920006 (raid per tier) to distinct positions in DUNGEONS / RAIDS
+  whenever the core's weekly reset time (world state 20002) changes; 920009 remembers which reset the picks
+  were for. Append to DUNGEONS / RAIDS only (positions are stored) and keep the counts in the C++ in sync.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Players in a
