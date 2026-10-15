@@ -440,6 +440,12 @@ Unbound.Attunement.TributeOwnGearMultiplier = 2
 #                     both must die within 5 seconds, on platforms far apart) and don't overload their
 #                     Tesla Coils when they follow the player off their platforms.
 #        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.Gothik
+#        Description: Naxxramas (classic), Gothik the Harvester: his phase two teleport keeps the player on
+#                     his threat list (normally it drops everyone on the other side; with one player he
+#                     would reset). Solo the gate is open by then, so he follows the player through it.
+#        Default:     1 - Enabled
 
 Unbound.SoloRaid.Enable = 1
 Unbound.SoloRaid.Razorgore = 1
@@ -457,6 +463,7 @@ Unbound.SoloRaid.Viscidus = 1
 Unbound.SoloRaid.ViscidusHitMultiplier = 10
 Unbound.SoloRaid.QirajiMindslayer = 1
 Unbound.SoloRaid.Thaddius = 1
+Unbound.SoloRaid.Gothik = 1
 
 #    Unbound.Naxx40.Doable.FourHorsemen
 #    Unbound.Naxx40.Doable.Gluth

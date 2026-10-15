@@ -243,10 +243,14 @@ changes, raid by raid (see Next up).
         Twin Emperors (Heal Brother), Skeram (True Fulfillment), Qiraji Mindslayer (Cause Insanity)
   - [x] Naxxramas (classic), Thaddius (2026-10-15): Stalagg and Feugen don't revive each other and don't
         overload their Tesla Coils (`Unbound.SoloRaid.Thaddius`)
+  - [x] Naxxramas (classic), Gothik (2026-10-15): his phase two teleport keeps the player on his threat
+        list (it dropped everyone on the other side, so solo he reset) and the gate is open
+        (`Unbound.SoloRaid.Gothik`)
   - [ ] Naxxramas (classic), the rest (checked 2026-10-15): the Four Horsemen stay as they are (all four
         at once with stacking Marks: only beatable solo with `Unbound.Naxx40.Doable.FourHorsemen = 1`, kept
-        a server choice on purpose); test Sapphiron (Ice Bolt / Frost Breath with one player) and Gothik
-        (live and dead sides) in game. Fine solo, power checks only: Patchwerk (Hateful Strike falls back to
+        a server choice on purpose). Sapphiron is fine solo by the script (the player is always the one
+        ice-bolted, and the Frost Breath skips ice-bolted players; a pet dies unless behind the block): test
+        in game. Fine solo, power checks only: Patchwerk (Hateful Strike falls back to
         the tank, scaled by autobalance like all creature damage), Razuvious, Gluth, Loatheb, Faerlina,
         Kel'Thuzad (his Chains are already off); no problem: Maexxna (never webs her target), Anub'Rekhan,
         Noth, Heigan, Grobbulus

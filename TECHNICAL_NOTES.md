@@ -122,8 +122,9 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   his own script do the rest. Swings count before the hit roll, so misses count too. Settings:
   `Unbound.SoloRaid.Enable`, one per boss and `Unbound.SoloRaid.ViscidusHitMultiplier`. Thaddius' fix is in
   `src/naxx40/boss_thaddius_40.cpp` (the boss skips the 5-second revive, the minions skip the Tesla Coil
-  overload), asking `UnboundSoloThaddius()` from `src/unbound_solo_raids.h`; keep those two checks when
-  updating the Naxx 40 scripts from upstream.
+  overload), asking `UnboundSoloThaddius()` from `src/unbound_solo_raids.h`; Gothik's is in
+  `boss_gothik_40.cpp` (`EVENT_TELEPORT` skips clearing threat, phase two opens the gate), asking
+  `UnboundSoloGothik()`. Keep these checks when updating the Naxx 40 scripts from upstream.
 - **Classic Onyxia's Lair:** `data/sql/db-world/unbound_classic_onyxia.sql` (entry level, creature stats from
   `creature_classlevelstats`, loot with references 9100100-9100101, team conditions on the heads, quest givers)
   and `src/unbound_classic_onyxia.cpp`. 3.3.5 kept the classic spell ids and raised their damage, so

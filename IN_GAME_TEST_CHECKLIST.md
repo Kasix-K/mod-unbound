@@ -144,6 +144,10 @@ bring one other player or a playerbot for at least one boss.
 **Naxxramas (classic)**
 - [ ] Thaddius: alone, Stalagg and Feugen don't revive each other, and their Tesla Coils don't overload when
       they follow you off their platforms.
+- [ ] Gothik: alone, the gate opens at about 2 minutes and his adds from both sides come at you; in phase two
+      he keeps attacking you after each teleport to the other side (no reset), and comes through the gate.
+- [ ] Sapphiron: alone, his Ice Bolt in the air phase freezes you and his Frost Breath doesn't kill you. A pet
+      dies to the breath unless it stands behind your ice block.
 
 **With two players**
 - [ ] For one boss above, the normal mechanic happens again with a second player in the raid.

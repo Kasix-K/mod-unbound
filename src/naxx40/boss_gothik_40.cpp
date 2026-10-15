@@ -22,6 +22,7 @@
 #include "SpellScript.h"
 #include "SpellScriptLoader.h"
 #include "naxx40_instance.h"
+#include "../unbound_solo_raids.h"   // mod-unbound: Gothik solo fix
 
 namespace UnboundNaxx40
 {
@@ -392,11 +393,15 @@ public:
                     else
                         me->CastSpell(me, SPELL_TELEPORT_LIVE, false);
 
-                    // Clear threat from targets not on the same side as Gothik
-                    NotOnSameSide notOnSameSide(me);
-                    for (ThreatReference const* ref : me->GetThreatMgr().GetUnsortedThreatList())
-                        if (notOnSameSide(ref->GetVictim()))
-                            me->GetThreatMgr().ClearThreat(ref->GetVictim());
+                    // Clear threat from targets not on the same side as Gothik (not solo: with one player that
+                    // empties his threat list and he resets; Unbound.SoloRaid.Gothik)
+                    if (!UnboundSoloGothik(me->GetMap()))
+                    {
+                        NotOnSameSide notOnSameSide(me);
+                        for (ThreatReference const* ref : me->GetThreatMgr().GetUnsortedThreatList())
+                            if (notOnSameSide(ref->GetVictim()))
+                                me->GetThreatMgr().ClearThreat(ref->GetVictim());
+                    }
 
                     if (Unit* pTarget = SelectTarget(SelectTargetMethod::MaxDistance, 0))
                     {
@@ -437,6 +442,15 @@ public:
                         events.ScheduleEvent(EVENT_HARVEST_SOUL, 5s, 15s);
                         events.ScheduleEvent(EVENT_TELEPORT, 20s);
                         events.ScheduleEvent(EVENT_CHECK_HEALTH, 1s);
+
+                        // solo: make sure the gate is open, so Gothik and the player can reach each other after
+                        // his teleports (Unbound.SoloRaid.Gothik)
+                        if (UnboundSoloGothik(me->GetMap()) && !gateOpened)
+                        {
+                            if (GameObject* go = instance->GetGameObject(DATA_GOTHIK_INNER_GATE))
+                                go->SetGoState(GO_STATE_ACTIVE);
+                            gateOpened = true;
+                        }
                     }
                     waveCount++;
                     break;

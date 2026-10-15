@@ -93,7 +93,8 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
   Nefarius skip their solo-killing spells. Molten Core, Zul'Gurub and Ahn'Qiraj: no mind controls (Lucifron's
   adds, Jin'do's totem, Hakkar, Skeram, Qiraji Mindslayers), no Jin'do Banish, Hakkar Blood Siphon, Ayamiss
   Paralyze or Twin Emperors Heal Brother; each hit on Viscidus counts 10 times towards freezing (frost) and
-  shattering (melee) him. Naxxramas: Stalagg and Feugen don't revive each other or overload their coils (the
+  shattering (melee) him. Naxxramas: Gothik doesn't reset when he teleports to the other side, and Stalagg and
+  Feugen don't revive each other or overload their coils (the
   Four Horsemen need `Unbound.Naxx40.Doable.FourHorsemen = 1` to be beaten solo). Switch them off in
   `mod_unbound.conf` (`Unbound.SoloRaid.*`).
 - **Perks:** type `/perks` or click the **Perks** tab at the bottom of the character sheet (C) to open the Character Perks window (needs the **UnboundPerks** addon). Always on

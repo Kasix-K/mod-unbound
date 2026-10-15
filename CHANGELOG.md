@@ -15,6 +15,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | Raid Finder: Raids tab in the Dungeon Finder (enter raids, group prompt, Leave Raid) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Classic Naxxramas (40 players, level 60) in the Eastern Plaguelands, from mod-individual-progression | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Onyxia's Lair as a classic level 60 raid (classic stats, spell damage, loot, Head of Onyxia quests) | 2026-10-15 | 2026-10-15 | Kasix-K |
+| Soloable raid mechanics: Naxxramas (Thaddius, Gothik) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Soloable raid mechanics: Molten Core, Zul'Gurub, Ruins and Temple of Ahn'Qiraj | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Soloable raid mechanics: Blackwing Lair (Razorgore, Vaelastrasz, Ebonroc, Chromaggus, Nefarian) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Ranks 4-5 for Defensive and Utility perks (GM-only for now) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
@@ -87,6 +88,10 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   read). The Defensive Sacrifice perk keeps its name.
 
 ### Added
+- **Soloable raid mechanics, Naxxramas: Gothik** (`Unbound.SoloRaid.Gothik`): alone, his phase two teleport
+  between the live and dead sides keeps the player on his threat list (it dropped everyone on the other side,
+  which with one player emptied it and made him reset), and the gate is open in phase two. Sapphiron was
+  checked too and needs no change (the only player is always ice-bolted, and the Frost Breath skips them).
 - **Bulletin Board: weekly elite bounty.** One a week from 12 elite camps in the open world, level 55-62 (The
   Tainted Scar, the Dragonmaw Gates, Purgation Isle, Tyr's Hand, Alcaz Island, the Isle of Dread, Darkwhisper and
   Frostwhisper Gorge, Mazthoril, and the Emerald portal guardians at Seradane, Jademir Lake and Bough Shadow),

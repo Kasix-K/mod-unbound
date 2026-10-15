@@ -49,6 +49,11 @@
  *                          seconds, on platforms far apart) and don't overload their Tesla Coils when
  *                          they follow the player off their platforms. The fix is in
  *                          boss_thaddius_40.cpp, through UnboundSoloThaddius() (unbound_solo_raids.h).
+ *   Gothik the Harvester   His phase two teleport between the live and dead sides keeps the player on his
+ *                          threat list instead of dropping everyone on the other side (with one player
+ *                          that empties it and he resets). Solo the gate is open by then (it opens when
+ *                          the raid isn't split between the sides), so he follows the player through it.
+ *                          The fix is in boss_gothik_40.cpp, through UnboundSoloGothik().
  *
  * The spells are bound to spell_unbound_solo_raid_block in data/sql/db-world/unbound_solo_raids.sql
  * and only fail when cast by the creature listed below, so the same spells used elsewhere are unchanged.
@@ -95,6 +100,7 @@ namespace
         FIX_VISCIDUS,
         FIX_QIRAJI_MINDSLAYER,
         FIX_THADDIUS,
+        FIX_GOTHIK,
         MAX_SOLO_RAID_FIX
     };
 
@@ -103,7 +109,7 @@ namespace
     {
         "Razorgore", "Vaelastrasz", "Ebonroc", "Chromaggus", "Nefarian",
         "Lucifron", "Jindo", "Hakkar", "Ayamiss", "Skeram", "TwinEmperors", "Viscidus", "QirajiMindslayer",
-        "Thaddius"
+        "Thaddius", "Gothik"
     };
 
     bool sEnabled = true;
@@ -163,6 +169,11 @@ namespace
 bool UnboundSoloThaddius(Map const* map)
 {
     return IsFixActive(FIX_THADDIUS) && IsSoloRaid(map);
+}
+
+bool UnboundSoloGothik(Map const* map)
+{
+    return IsFixActive(FIX_GOTHIK) && IsSoloRaid(map);
 }
 
 class spell_unbound_solo_raid_block : public SpellScript
