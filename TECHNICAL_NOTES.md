@@ -166,7 +166,9 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   `CONDITION_WORLD_STATE` condition (source type 19). `src/unbound_bulletin_board.cpp` sets world states
   920001-920003 (dungeon per tier) and 920004-920006 (raid per tier) to distinct positions in DUNGEONS / RAIDS
   whenever the core's weekly reset time (world state 20002) changes; 920009 remembers which reset the picks
-  were for. Append to DUNGEONS / RAIDS only (positions are stored) and keep the counts in the C++ in sync.
+  were for; 920007 is the week's elite bounty (920900 + i), any but last week's. Append to DUNGEONS / RAIDS /
+  ELITE_QUESTS only (positions are stored) and keep the counts in the C++ in sync. `QuestType` must be 2: 0
+  makes a quest auto-complete.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Players in a

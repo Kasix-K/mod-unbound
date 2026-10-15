@@ -22,6 +22,9 @@ quest is only available while its world state says so (conditions, CONDITION_WOR
 Normal, Heroic, Mythic for dungeons and raids. Only the tiers that exist get quests (Normal and Heroic
 dungeons, Normal raids); the others are picked already, so adding their quests later is all it takes.
 
+Weekly elite bounty: one of ELITE_QUESTS (elite camps in the open world, level 55-62) each week, never
+the same as the week before (world state WS_ELITE).
+
 IDs: gameobject 920000 (spawn guids 9920000-9920009), quests 920001-920999, pools 920000-920099, world
 states 920001-920009 (keep WS_* and the counts in sync with src/unbound_bulletin_board.cpp).
 
@@ -175,6 +178,43 @@ RAID_TIERS = {
     'Mythic': (920600, 300 * GOLD, None),
 }
 
+# ---------------------------------------------------------------- weekly elite bounty (one a week)
+# Elite camps in the open world, level 55-62. One bounty is offered each week, never last week's
+# (src/unbound_bulletin_board.cpp, world state WS_ELITE). Append only: the position is stored.
+WS_ELITE = 920007
+ELITE_QUEST_BASE = 920900
+ELITE_REWARD = 75 * GOLD
+ELITE_GROUP = 3
+ELITE_QUESTS = [
+    ('The Tainted Scar', 'Blasted Lands',
+     [(8717, 'Felguard Elite', 15), (8718, 'Manahound', 8), (12396, 'Doomguard Commander', 6), (8716, 'Dreadlord', 3)]),
+    ('The Dragonmaw Gates', 'Wetlands',
+     [(1050, 'Scalebane Royal Guard', 8), (1049, 'Wyrmkin Firebrand', 6), (1047, 'Red Scalebane', 5),
+      (1048, 'Scalebane Lieutenant', 4)]),
+    ('Purgation Isle', 'Hillsbrad Foothills',
+     [(7071, 'Cursed Paladin', 6), (7075, 'Writhing Mage', 5), (7072, 'Cursed Justicar', 3), (7070, 'Condemned Cleric', 3)]),
+    ("Tyr's Hand", 'Eastern Plaguelands',
+     [(9448, 'Scarlet Praetorian', 15), (9450, 'Scarlet Curate', 8), (9451, 'Scarlet Archmage', 8)]),
+    ('Alcaz Island', 'Dustwallow Marsh',
+     [(4374, 'Strashaz Hydra', 8), (4368, 'Strashaz Myrmidon', 5), (4366, 'Strashaz Serpent Guard', 5),
+      (4371, 'Strashaz Siren', 4)]),
+    ('The Isle of Dread', 'Feralas',
+     [(12800, 'Chimaerok', 6), (12801, 'Arcane Chimaerok', 6), (12802, 'Chimaerok Devourer', 6),
+      (12803, 'Lord Lakmaeran', 1)]),
+    ('Darkwhisper Gorge', 'Winterspring',
+     [(7462, 'Hederine Manastalker', 10), (7463, 'Hederine Slayer', 10), (7461, 'Hederine Initiate', 10)]),
+    ('Frostwhisper Gorge', 'Winterspring',
+     [(7428, 'Frostmaul Giant', 10), (7429, 'Frostmaul Preserver', 10)]),
+    ('Mazthoril', 'Winterspring',
+     [(7435, 'Cobalt Wyrmkin', 10), (7437, 'Cobalt Mageweaver', 8), (7436, 'Cobalt Scalebane', 5)]),
+    ('Seradane', 'The Hinterlands',
+     [(12477, 'Verdantine Boughguard', 10), (12478, 'Verdantine Oracle', 8), (12479, 'Verdantine Tree Warder', 5)]),
+    ('Jademir Lake', 'Feralas',
+     [(5320, 'Jademir Boughguard', 10), (5317, 'Jademir Oracle', 10), (5319, 'Jademir Tree Warder', 10)]),
+    ('Bough Shadow', 'Ashenvale',
+     [(12474, 'Emeraldon Boughguard', 6), (12476, 'Emeraldon Oracle', 5), (12475, 'Emeraldon Tree Warder', 4)]),
+]
+
 # pools (pool_template / pool_quest), one quest a day per pool except the kill bounties
 POOL_KILL = 920000
 POOL_FIRST_PROFESSION = 920001
@@ -195,7 +235,8 @@ QUEST_COLUMNS = ['ID', 'QuestType', 'QuestLevel', 'MinLevel', 'QuestSortID', 'Qu
 
 def quest_row(qid, title, log, description, flags, reward, kills=(), item=None, info=0, group=0, area=''):
     kills = list(kills) + [(0, 0)] * (4 - len(kills))
-    row = [qid, 2 if group else 0, LEVEL, LEVEL, 0, info, group, 0, reward, flags, 0, esc(title), esc(log),
+    # QuestType 2: a normal quest (0 would make it auto-complete, skipping its objectives)
+    row = [qid, 2, LEVEL, LEVEL, 0, info, group, 0, reward, flags, 0, esc(title), esc(log),
            esc(description), esc(area), esc('Return to a Bulletin Board.')]
     row += [k[0] for k in kills] + [k[1] for k in kills]
     row += [item[0] if item else 0, item[1] if item else 0, "''", "''", "''", "''", 0]
@@ -262,6 +303,18 @@ def main():
                     offer=f'{boss_name} is defeated. Well done; the reward is yours.')
                 conditions.append(f"(19, 0, {qid}, 0, 0, 11, 0, {ws[tier]}, {i}, 0, 0, 0, 0, '', "
                                   f"{esc(f'Bulletin Board: {label} is this week' + chr(39) + 's ' + tier + ' ' + kind)})")
+
+    # weekly elite bounty: one of ELITE_QUESTS, chosen each week
+    for i, (place, zone, targets) in enumerate(ELITE_QUESTS, start=1):
+        qid = ELITE_QUEST_BASE + i
+        names = ', '.join(f'{count} {name}' for _, name, count in targets)
+        add(qid, f'Weekly Elite Bounty: {place}', f'Slay {names} at {place} in {zone}.',
+            f'The board has posted a bounty on the elites of {place}, {zone}. They are dangerous: bring '
+            f'friends if you need them.$B$BSlay {names}.',
+            QUEST_FLAGS_WEEKLY, ELITE_REWARD, kills=[(entry, count) for entry, _, count in targets],
+            group=ELITE_GROUP, area=zone, offer=f'{place} will be quieter for a while. The bounty is yours.')
+        conditions.append(f"(19, 0, {qid}, 0, 0, 11, 0, {WS_ELITE}, {i}, 0, 0, 0, 0, '', "
+                          f"{esc('Bulletin Board: this week' + chr(39) + 's elite bounty is ' + place)})")
 
     ids = 'BETWEEN 920001 AND 920999'
     out = [

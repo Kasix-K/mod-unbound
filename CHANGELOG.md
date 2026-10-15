@@ -8,7 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
-| Bulletin Board: daily bounties and profession quests, weekly dungeon and raid quests per tier | 2026-10-15 | 2026-10-15 | Kasix-K |
+| Bulletin Board: daily bounties and profession quests, weekly dungeon and raid quests per tier, weekly elite bounty | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Raid Finder: Raids tab in the Dungeon Finder (enter raids, group prompt, Leave Raid) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Classic Naxxramas (40 players, level 60) in the Eastern Plaguelands, from mod-individual-progression | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Onyxia's Lair as a classic level 60 raid (classic stats, spell damage, loot, Head of Onyxia quests) | 2026-10-15 | 2026-10-15 | Kasix-K |
@@ -65,6 +65,14 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Added
+- **Bulletin Board: weekly elite bounty.** One a week from 12 elite camps in the open world, level 55-62 (The
+  Tainted Scar, the Dragonmaw Gates, Purgation Isle, Tyr's Hand, Alcaz Island, the Isle of Dread, Darkwhisper and
+  Frostwhisper Gorge, Mazthoril, and the Emerald portal guardians at Seradane, Jademir Lake and Bough Shadow),
+  never the same as the week before; 75 gold. Zones were read from the server's map data.
+
+### Fixed
+- **Bulletin Board quests could be completed without doing them.** The daily quests had `QuestType` 0, which
+  the core treats as auto-complete; all board quests are normal quests now (`QuestType` 2).
 - **Bulletin Board** (gameobject 920000, `tools/bulletin_board.py`, `src/unbound_bulletin_board.cpp`): a board in
   Stormwind's Trade District and Orgrimmar's Valley of Strength (both usable by both factions), level 60 only,
   gold rewards only (no attunement progress). **Dailies**: 2 kill bounties a day from 16 (level 55-60 creatures
