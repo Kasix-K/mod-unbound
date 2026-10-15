@@ -355,3 +355,43 @@ Unbound.Attunement.BossKills = 10
 
 Unbound.Attunement.SacrificeGold = "2, 10, 50, 250"
 Unbound.Attunement.SacrificeOwnGearMultiplier = 2
+#    Unbound.SoloRaid.Enable
+#        Description: Soloable raid mechanics (src/unbound_solo_raids.cpp): mechanics no single player
+#                     can handle are changed while a raid has at most one player in it (GMs don't
+#                     count; pets aren't players, playerbots are). With two or more players every fight
+#                     is unchanged. Turns all of the fixes below on or off.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+#    Unbound.SoloRaid.Razorgore
+#        Description: Blackwing Lair, Razorgore the Untamed: Grethok the Controller's Dominate Mind
+#                     fails, and the player breaks the eggs by walking over or clicking them (instead of
+#                     controlling Razorgore with the Orb of Domination, which still works).
+#        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.Vaelastrasz
+#        Description: Blackwing Lair, Vaelastrasz the Corrupt: Burning Adrenaline (kills its target
+#                     when it ends) fails.
+#        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.Ebonroc
+#        Description: Blackwing Lair, Ebonroc: Shadow of Ebonroc (heals him from every hit on the
+#                     debuffed tank) fails.
+#        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.Chromaggus
+#        Description: Blackwing Lair, Chromaggus: Time Lapse (he ignores targets that have it) and
+#                     Chromatic Mutation (all five Brood Afflictions) fail.
+#        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.Nefarian
+#        Description: Blackwing Lair, Nefarian: Lord Victor Nefarius' Shadow Command (mind control)
+#                     fails.
+#        Default:     1 - Enabled
+
+Unbound.SoloRaid.Enable = 1
+Unbound.SoloRaid.Razorgore = 1
+Unbound.SoloRaid.Vaelastrasz = 1
+Unbound.SoloRaid.Ebonroc = 1
+Unbound.SoloRaid.Chromaggus = 1
+Unbound.SoloRaid.Nefarian = 1

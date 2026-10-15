@@ -71,6 +71,11 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
   except the Stockades and Ragefire Chasm. Needs the **Unbound** addon, which shows the menu from level 60
   instead of 65.
 - **Solo dungeon finder:** queue alone or with bots, and you go straight in.
+- **Solo raids:** alone in a raid (no other players or bots; pets are fine), mechanics no single player can
+  handle are changed. Blackwing Lair so far: in Razorgore's room, walk over (or click) the eggs to break
+  them once Razorgore is pulled, and don't kill him before the last egg; Grethok, Vaelastrasz, Ebonroc,
+  Chromaggus and Nefarius skip their solo-killing spells. Switch them off in `mod_unbound.conf`
+  (`Unbound.SoloRaid.*`).
 - **Perks:** type `/perks` or click the **Perks** tab at the bottom of the character sheet (C) to open the Character Perks window (needs the **UnboundPerks** addon). Always on
   for everyone: No Resurrection Sickness, No Daze, and Rapid Recovery (ranked by level: up to 8% health
   and mana per second, 4 seconds after combat). Switch on up to 5 Offensive perks (about +10% each) and your class perk (so far: Paladin

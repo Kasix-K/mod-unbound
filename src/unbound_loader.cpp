@@ -9,6 +9,7 @@ void AddSC_unbound_content_lock();
 void AddSC_unbound_perks();
 void AddSC_unbound_attunement();
 void AddSC_unbound_world_bosses();
+void AddSC_unbound_solo_raids();
 
 void Addmod_unboundScripts()
 {
@@ -19,4 +20,5 @@ void Addmod_unboundScripts()
     AddSC_unbound_perks();
     AddSC_unbound_attunement();
     AddSC_unbound_world_bosses();
+    AddSC_unbound_solo_raids();
 }

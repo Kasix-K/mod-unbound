@@ -206,8 +206,21 @@ changes, raid by raid (see Next up).
 
 ## Next up
 
-- [ ] **Soloable raid mechanics** (moderate, per raid): script changes for bosses that need several
-      players (Razorgore, Twin Emperors, C'Thun, ...).
+- [ ] **Soloable raid mechanics** (moderate, per raid): changes for mechanics no single player can handle,
+      only while a raid has one player (`src/unbound_solo_raids.cpp`). First the 13 that block a solo clear:
+  - [x] Blackwing Lair (2026-10-15): Razorgore (Grethok's Dominate Mind, eggs broken by walking over them),
+        Vaelastrasz (Burning Adrenaline), Ebonroc (Shadow of Ebonroc), Chromaggus (Time Lapse, Chromatic
+        Mutation), Nefarian (Shadow Command)
+  - [ ] Molten Core: Lucifron's Flamewaker Protectors (Dominate Mind)
+  - [ ] Zul'Gurub: Jin'do (Brain Wash Totem, Banish), Hakkar (Cause Insanity, Blood Siphon without
+        Poisonous Blood)
+  - [ ] Ruins of Ahn'Qiraj: Ayamiss (Paralyze + larva Feed)
+  - [ ] Temple of Ahn'Qiraj: Viscidus (frost/shatter hit counts), Twin Emperors (Heal Brother), Skeram
+        (True Fulfillment with a pet out), Qiraji Mindslayer (Cause Insanity)
+  - [ ] Then, after testing, the risky ones: Core Hounds, Ragnaros' Magma Blast, Firemaw's Flame Buffet,
+        Nefarian's Bone Constructs, Mandokir, Thekal, Ossirian, C'Thun, Anubisath Sentinels
+  - Shadowflame (Firemaw, Ebonroc, Flamegor, Nefarian) still needs an Onyxia Scale Cloak, which can't be
+    obtained on this server (Onyxia is level 83, the pattern drops nowhere). A custom way to get one is planned.
 - [ ] **Earning perk Ranks 4-5** (moderate): how players reach the endgame ranks, now GM-only (buy per perk
       with gold, then Heroic Badges / Mythic currency; perk points; or rank by use), an Upgrade button in the
       perk window, and saving earned ranks (and what they cost, so purchases can be refunded if the design

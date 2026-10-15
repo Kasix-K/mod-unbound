@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Soloable raid mechanics: Blackwing Lair (Razorgore, Vaelastrasz, Ebonroc, Chromaggus, Nefarian) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Ranks 4-5 for Defensive and Utility perks (GM-only for now) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Offensive perk ranks (5 ranks: 1-3 by level, 4-5 endgame, GM-only for now) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | 12 more Defensive perks (Juggernaut to Heavy Frame) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
@@ -59,6 +60,14 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Added
+- **Soloable raid mechanics, Blackwing Lair** (`src/unbound_solo_raids.cpp`): mechanics no single player can
+  handle, changed only while the raid has at most one player in it (GMs don't count; pets aren't players,
+  playerbots are). With two or more players every fight is unchanged. Razorgore: Grethok the Controller's
+  Dominate Mind fails, and the player breaks the eggs by walking over or clicking them (the Orb of Domination still
+  works; killing Razorgore before the last egg still blows up the room). Vaelastrasz: Burning Adrenaline
+  fails. Ebonroc: Shadow of Ebonroc fails. Chromaggus: Time Lapse and Chromatic Mutation fail. Nefarian:
+  Lord Victor Nefarius' Shadow Command fails. Each boss can be switched off in `mod_unbound.conf`
+  (`Unbound.SoloRaid.*`). Shadowflame still needs an Onyxia Scale Cloak (a custom way to get one is planned).
 - **Ranks 4-5 for the Defensive and Utility perks**, the same way as the Offensive ones: about 1.3x / 1.5x
   of Rank 3 (e.g. Reinforced Armor 13 / 15%, Iron Will 35 / 40%, Vampirism 6.5 / 7.5%), GM-only for now
   (level 255). Thresholds, durations, delays and drawbacks stay the same; Steady Hands' pushback stops at

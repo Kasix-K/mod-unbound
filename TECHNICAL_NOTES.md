@@ -102,6 +102,17 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   (prefix `UBATT`): `Q:<ids>` -> `I:<id>:<code>:<done>:<needed>:<price>:<reason>` (code A attuned, W wear to
   attune, S sacrifice only, N doesn't count); `COLL` -> `C:BEGIN`, `C:A:`, `C:P:`, `C:S:`, `C:T:`, `C:END`; the server
   pushes `P:` (kill progress), `A:<id>` (attuned) and `RESET` (a GM changed the collection).
+- **Soloable raid mechanics:** `src/unbound_solo_raids.cpp`. A fix applies while `Map::IsRaid()` and
+  `GetPlayersCountExceptGMs() <= 1` (pets and guardians aren't players, playerbots are; a GM in GM mode
+  isn't counted, so a GM alone also gets the solo version). Spells that must not happen solo are
+  bound to `spell_unbound_solo_raid_block` (`data/sql/db-world/unbound_solo_raids.sql`), whose `OnCheckCast`
+  fails them (`SPELL_FAILED_DONT_REPORT`) only for the caster entry listed in `BLOCKED_SPELLS`, so the same
+  spell cast elsewhere is unchanged; add a spell to both lists. The check also runs for triggered casts.
+  Razorgore's eggs (177807) get `go_unbound_solo_razorgore_egg`: while the instance's egg event is in progress
+  (Razorgore engaged), a player within 2.5 yards or clicking breaks an egg the way `spell_egg_event` does
+  (`SetData(DATA_EGG_EVENT, SPECIAL)`); the instance counts it and starts phase two after the last one. The
+  BWL instance constants it uses are copied from `blackwing_lair.h`. Settings: `Unbound.SoloRaid.Enable` and
+  one per boss.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Players in a
