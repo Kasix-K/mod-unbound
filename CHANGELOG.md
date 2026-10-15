@@ -13,6 +13,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | 11 Utility perks (Longer Legs to Mana Leech), Utility limited to 3 active | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Iron Will utility perk (shorter crowd control, 3 ranks by level) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Perk ranks (first: Rapid Recovery, 3 ranks by level; `.perk rank`) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
+| Heroic Razorfen Kraul, Scarlet Monastery, Razorfen Downs, Uldaman (with Heroic loot) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Heroic Wailing Caverns, Shadowfang Keep, Blackfathom Deeps, Gnomeregan (with Heroic loot) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 4: item tooltips, collection window, Attunement micro menu button | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 3: Altar of Sacrifice (190103) | 2026-10-14 | 2026-10-14 | Kasix-K |
@@ -53,6 +54,11 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-14
 
 ### Added
+- **Heroic Razorfen Kraul, Scarlet Monastery (all 4 wings), Razorfen Downs and Uldaman** (classic Heroic batch 2):
+  level 60-62 with 1.5x health and damage, including the creatures their events summon (Tuten'kash, Plaguemaw
+  the Rotting, Tomb Fiends and Reavers, Scarlet Scryers and Trainees). Heroic loot: 68 level 60 blue remakes of
+  each boss's own drops (one per boss, two from the final boss and each Scarlet Monastery wing's last boss) plus
+  level 60 gold; they count for attunement.
 - **Heroic Wailing Caverns, Shadowfang Keep, Blackfathom Deeps and Gnomeregan** (classic Heroic batch 1): level
   60-62 with 1.5x health and damage like the others, including the creatures their events summon (Mutanus the
   Devourer, Baron Aquanis, Grubbis, Chomper, Arugal's Voidwalker, Walking Bombs, the Naralex and Aku'mai event
@@ -161,6 +167,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   `Unbound.ExpansionUnlocked`).
 
 ### Changed
+- **Classic Heroic levels:** the level spread now comes from the creatures with loot only, and every heroic
+  creature stays within 60-62 (Uldaman's trainer and triggers were squeezing it). The dungeons already
+  released are re-spread slightly too.
 - **Classic Heroic levels:** creatures already above level 60 (holiday bosses) keep their normal version, so they
   don't squeeze the dungeon's level spread (Shadowfang Keep's bosses are 61, not 60).
 - **Attunement window button** moved from a character sheet tab (too wide for the sheet) to the micro menu,

@@ -22,6 +22,9 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   folder (NPC constants, SummonCreature), SmartAI summon actions (action 12, including timed action lists)
   and `creature_summon_groups`. Creatures already above level 60 (holiday bosses such as Apothecary Hummel in
   Shadowfang Keep) keep their normal version and don't stretch the level spread.
+  The level spread uses only the dungeon's creatures with loot (the real mobs and bosses), so critters, triggers
+  and trainers (Uldaman's level 54 trainer, level 60 triggers) don't squeeze it; every copy is clamped to
+  60-62. Scarlet Monastery is one map (189) with one Heroic mode for all four wings.
 - **Heroic loot:** `tools/heroic_loot.py` defines heroic items (910100-910999), sets (950-999) and boss
   loot. After a change run `python tools/heroic_loot.py`, `python tools/classic_heroics.py` and
   `python tools/custom_dbc.py`, then restart the worldserver. Never delete an item that has dropped: take
@@ -31,6 +34,9 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   look and stat types, stats scaled to the median stat points of classic level 58-60 blues in that slot, armour,
   block and weapon damage per second from the same reference. Bosses without gear drops of their own (Kresh)
   drop gold only. Rare spawns are left out.
+  Batch 2 loot (Razorfen Kraul, Scarlet Monastery, Razorfen Downs, Uldaman) is made the same way; each Scarlet
+  Monastery wing's last boss (Thalnos, Doan, Herod, Whitemane) counts as a final boss. Revelosh drops gold only;
+  Archaedas has one drop of his own, so he drops one item.
 - **World bosses:** `tools/world_bosses.py` (SmartAI fights, no C++; creatures 190110-190199, spawn guids
   9190110-9190199, loot 911000-911999). Hrimthar is creature 190110, adds 190111. After a change run
   `python tools/world_bosses.py` and `python tools/custom_dbc.py`, then restart the worldserver.
