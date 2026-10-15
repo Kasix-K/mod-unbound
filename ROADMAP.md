@@ -51,6 +51,28 @@ numbers here first if testing says so. Every number below is meant to be a confi
 Numbers check: a 6x character has a few thousand of a primary stat and tens of thousands of health, well
 above normal WoW but nowhere near Peloria's billions.
 
+### Attunement and sacrifice rules
+
+Both styles fill **one shared collection** per character, so the end result is the same: an item gives
+its full 20% whichever way it was collected. Time versus cost is the whole trade-off.
+
+| | Attune | Sacrifice |
+|---|---|---|
+| How | Equip the item and kill creatures until it reaches 100% | Destroy the item for its stats at once |
+| Speed | Slow | Instant |
+| The item | **Kept**: wear it, transmog it, sell it later | **Destroyed** |
+| Which items | Only gear the character **can equip** (their armour type, their class's weapons) | **Any item** that counts (see the Player table), including gear the character could attune |
+| Value | **Full 20%** | **Full 20%** (not reduced) |
+| Cost | Free | A price scaled by quality: gold for now, Heroic Badges once they exist |
+| Cost for gear the character could attune | (free) | **Double** the normal price, so attuning stays the main route for one's own gear |
+
+- An item counts only once. Sacrificing a partly attuned item finishes it (the price still applies).
+- Sacrifice always shows a confirmation (item and price) before destroying anything.
+- Tooltips show "Attunement: 37%", "Attuned", or "Can't attune: sacrifice only".
+- A collection window in the perks' talent-tree style shows every absorbed item and the stat totals.
+- Still to decide: an altar NPC in the capitals, a Sacrifice spell, or both; per character or
+  account-wide; the exact prices.
+
 Mechanics are a separate problem: some bosses need more than one player whatever the numbers
 (Razorgore's orb, the Twin Emperors' teleport tank swap, C'Thun's stomach phase). They need small script
 changes, raid by raid (see Next up).
@@ -75,9 +97,9 @@ changes, raid by raid (see Next up).
 
 - [ ] **Gear attunement and sacrifice** (large): absorb stats from acquired gear, either by attuning it
       (equip it and kill creatures until 100%, Synastria-style) or by sacrificing it (destroy it for its
-      stats at once, Peloria-style). The main lever for soloing Mythic raids: numbers, item rules and
-      minimum item level per the Power budget. Still to decide: one style or both, per character or
-      account-wide.
+      stats at once, Peloria-style). Both styles, one shared collection. The main lever for soloing
+      Mythic raids: numbers, item rules, minimum item level and the attune/sacrifice rules per the Power
+      budget. Still to decide: altar NPC or Sacrifice spell, per character or account-wide, prices.
 - [ ] **Soloable raid mechanics** (moderate, per raid): script changes for bosses that need several
       players (Razorgore, Twin Emperors, C'Thun, ...).
 - [ ] **Perk ranks** (moderate): ranks like spell ranks for perks with a number (Rapid Recovery,

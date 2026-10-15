@@ -73,6 +73,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   stats, green or better, required level within 10 of the cap, diminishing returns past +100% and +200%;
   about 170 level 60 blue/epic items for about +200%. Mythic +10% per level (added), capstone Mythic +10,
   configurable maximum (start +30), 2 billion safety clamp. Fully progressed player about 6x a normal level 60.
+  Attunement and sacrifice: both styles fill one shared collection at the full 20%; attuning is free but
+  slow and only for gear the character can equip; sacrifice is instant, works on any item, costs gold (Heroic
+  Badges later) scaled by quality, double for gear the character could attune.
 
 ### Changed
 - **Classic raids soloable:** solo scaling for 20-player raids (Zul'Gurub, Ruins of Ahn'Qiraj) and
