@@ -195,6 +195,10 @@ changes, raid by raid (see Next up).
 - [x] Heroic creatures summoned by spells or transformations (2026-10-14), in all 19 dungeons: Sneed, boss adds,
       totems and wards now come at Heroic level too
 
+- [x] Defensive perks (2026-10-14): 20 working (Greater Bulwark to Heavy Frame, at most 3 active). The old
+      placeholders (Thick Skin, Second Wind, Steadfast, Fleet Foot, Treasure Sense) were removed; their ids
+      201-203 and 301-302 are not reused.
+
 ## Next up
 
 - [ ] **Soloable raid mechanics** (moderate, per raid): script changes for bosses that need several
@@ -202,9 +206,6 @@ changes, raid by raid (see Next up).
 - [ ] **Perk ranks** (moderate): rank support is built (rank table, per-rank values, "2/3" badges,
       `.perk rank`), so far for Rapid Recovery (3 ranks by level). Still to do: ranks for the other perks
       with a number (Masteries, Pressure, ...) and how ranks are earned (levels, Heroic currency, quests).
-- [x] **Defensive perks**: 20 working (Greater Bulwark to Heavy Frame, at most 3 active). The old placeholders
-      (Thick Skin, Second Wind, Steadfast, Fleet Foot, Treasure Sense) were removed; their ids 201-203 and
-      301-302 are not reused.
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
       +25-35% to its spec's single-target damage (the class perk target in the Power budget).
 - [ ] **Heroic currency and vendor** (moderate): a token (e.g. "Heroic Badge") from Heroic bosses,
