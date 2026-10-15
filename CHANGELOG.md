@@ -75,7 +75,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   configurable maximum (start +30), 2 billion safety clamp. Fully progressed player about 6x a normal level 60.
   Attunement and sacrifice: both styles fill one shared collection at the full 20%; attuning is free but
   slow and only for gear the character can equip; sacrifice is instant, works on any item, costs gold (Heroic
-  Badges later) scaled by quality, double for gear the character could attune.
+  Badges later) scaled by quality, double for gear the character could attune. Collected stats are permanent
+  (kept after unequipping, selling or deleting the item); attunement progress is saved per item; stats only
+  arrive at 100%.
 
 ### Changed
 - **Classic raids soloable:** solo scaling for 20-player raids (Zul'Gurub, Ruins of Ahn'Qiraj) and

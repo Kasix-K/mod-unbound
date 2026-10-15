@@ -66,6 +66,12 @@ its full 20% whichever way it was collected. Time versus cost is the whole trade
 | Cost | Free | A price scaled by quality: gold for now, Heroic Badges once they exist |
 | Cost for gear the character could attune | (free) | **Double** the normal price, so attuning stays the main route for one's own gear |
 
+- **Collected stats are permanent:** once an item is 100% attuned (or sacrificed), its 20% stays whatever
+  happens to the item (unequipped, banked, sold, deleted). An upgrade never costs anything: attune it too
+  and both count.
+- **Progress is saved per item:** unequipping a partly attuned item pauses it (60% stays 60%); equipping it
+  again carries on from there.
+- **Stats only at 100%:** a partly attuned item gives nothing yet; its full 20% arrives when it reaches 100%.
 - An item counts only once. Sacrificing a partly attuned item finishes it (the price still applies).
 - Sacrifice always shows a confirmation (item and price) before destroying anything.
 - Tooltips show "Attunement: 37%", "Attuned", or "Can't attune: sacrifice only".
