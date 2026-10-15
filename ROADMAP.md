@@ -72,6 +72,17 @@ its full 20% whichever way it was collected. Time versus cost is the whole trade
 - **Progress is saved per item:** unequipping a partly attuned item pauses it (60% stays 60%); equipping it
   again carries on from there.
 - **Stats only at 100%:** a partly attuned item gives nothing yet; its full 20% arrives when it reaches 100%.
+- **Kills needed** (config settings): about **50 kills** for a green, **100** for a blue, **200** for an epic.
+  An elite counts as 2 kills, a boss as 10. Every eligible equipped item gets progress from each kill.
+- **Which kills count:** only creatures that **would give experience** (not grey for the player's level,
+  not a no-experience creature such as critters or training dummies). At the level cap players earn no
+  experience, so the check is "would give", not "gave".
+- **Released expansions only:** items from The Burning Crusade and Wrath of the Lich King don't count until
+  that expansion is released. Every item is tagged with its expansion by a small tool (from where it comes
+  from: classic or expansion zones, dungeons, quests, vendors), because the level rule alone isn't enough
+  (some TBC items require level 58-60, and item levels overlap). Attunement only accepts items from
+  expansions up to `Unbound.ExpansionUnlocked` (the content lock's setting), so releasing an expansion
+  turns its items on with that one change.
 - An item counts only once. Sacrificing a partly attuned item finishes it (the price still applies).
 - Sacrifice always shows a confirmation (item and price) before destroying anything.
 - Tooltips show "Attunement: 37%", "Attuned", or "Can't attune: sacrifice only".

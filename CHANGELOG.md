@@ -83,6 +83,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   (spawned automatically), a Keystone window (tier picker with -/+, slider, +1, +5, Max and Last; run preview;
   best and last run; activate before the first pull; Missing Attunements for the instance), and rewards per
   level of faster attunement plus more gold.
+- **Attunement kill rules** in the roadmap: 50/100/200 kills for green/blue/epic (elite 2, boss 10), only
+  creatures that would give experience; only items from released expansions count (tagged per item, following
+  `Unbound.ExpansionUnlocked`).
 
 ### Changed
 - **Classic raids soloable:** solo scaling for 20-player raids (Zul'Gurub, Ruins of Ahn'Qiraj) and
