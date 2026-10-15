@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| AoE loot only from loot companions (`.aoeloot on/off` disabled) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Gear attunement renamed infusion (infuse, infused, `.infuse`, `/infusion`; classic Naxxramas keeps its attunement) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Altar of Sacrifice renamed Altar of Tribute (sacrifice is now tribute everywhere players see it) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Bulletin Board: daily bounties and profession quests, weekly dungeon and raid quests per tier, weekly elite bounty | 2026-10-15 | 2026-10-15 | Kasix-K |
@@ -67,6 +68,10 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Changed
+- **AoE loot comes only from loot companions.** mod-aoe-loot's `.aoeloot on` and `.aoeloot off` (and short
+  forms like `.aoe on`) are disabled for everyone and say that AoE looting comes from summoning a Loot Goblin
+  or an Arcane Loot Scanner. Future loot companions get it by adding their creature to `IsLootCompanion` in
+  `src/unbound_loot_goblin.cpp`.
 - **Gear attunement is now infusion**: everywhere players see it, attune / attunement / attuned is infuse /
   infusion / infused. Chat messages ("[Infusion] … is fully infused!"), item tooltips ("Infusion: 37% (…kills)",
   "Infused: its stats are yours for good", "Wear it and slay foes to infuse it"), the collection window ("Gear

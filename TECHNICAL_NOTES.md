@@ -9,7 +9,10 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   (item 910002, spell 200202, creature 190102, the Arcane Protector 16504 shrunk), sold by Grizzle
   Lootsnatch (vendor 190101, `.npc add 190101`). While one is out, corpses within `AOELoot.Range` are
   auto-looted once a second (gold shared with the group; items needing a roll or the master looter, and
-  anything that doesn't fit in the bags, stay on the corpse) and mod-aoe-loot is on. Price/currency:
+  anything that doesn't fit in the bags, stay on the corpse) and mod-aoe-loot is on. AoE loot comes only from
+  loot companions: `.aoeloot on/off` is blocked for everyone (`unbound_loot_goblin_commands`,
+  `OnTryExecuteCommand`, also catches abbreviations like `.aoe on`); a new loot companion only needs its entry
+  in `IsLootCompanion`. Price/currency:
   `data/sql/db-world/unbound_loot_goblin.sql`.
 - **Reset all instances:** resets all raid saves (any difficulty) and heroic and normal dungeon saves,
   whatever the difficulty setting. In a group only the leader can, for the group's instances; an instance

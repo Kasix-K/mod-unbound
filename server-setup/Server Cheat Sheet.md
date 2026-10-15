@@ -61,7 +61,8 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
 
 - **Transmog:** cast Transmogrify, type `/transmog`, or talk to the Warpweaver.
 - **Loot companions:** while the Loot Goblin or Arcane Loot Scanner is out, corpses within 55 yards are
-  auto-looted, and opening a corpse also loots the corpses around it.
+  auto-looted, and opening a corpse also loots the corpses around it. That's the only way to AoE loot:
+  `.aoeloot on/off` is disabled.
 - **Reset lockouts:** right-click your portrait, then **Reset all instances**. This resets raids and
   heroic and normal dungeons. You must be outside the instance, with no bots inside.
 - **Classic heroics:** right-click your portrait, then Dungeon Difficulty > Heroic (or type `/heroic`;

@@ -340,5 +340,5 @@ changes, raid by raid (see Next up).
 
 ## Open questions
 
-- [ ] Disable the `.aoeloot on/off` commands, so AoE loot only comes from the loot companions?
+- [x] Disable the `.aoeloot on/off` commands, so AoE loot only comes from the loot companions (2026-10-15).
 - [ ] Confirm the content lock and Death Knight block in game on a non-GM account.

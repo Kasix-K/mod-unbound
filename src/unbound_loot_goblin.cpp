@@ -8,10 +8,12 @@
  *    with the group, items that need a group roll (or the master looter) stay on the corpse, and
  *    whatever doesn't fit in the bags stays too.
  * When the companion leaves the world (dismissed, replaced by another companion, zoning, logout) both
- * stop. The companion's spell, item and vendor are defined in tools/custom_dbc.py and
+ * stop. AoE loot comes only from loot companions: mod-aoe-loot's own .aoeloot on/off commands are blocked
+ * for everyone. A new loot companion only needs its entry added to IsLootCompanion. The companion's spell, item and vendor are defined in tools/custom_dbc.py and
  * data/sql/db-world/unbound_loot_goblin.sql.
  */
 
+#include "AllCommandScript.h"
 #include "Chat.h"
 #include "Creature.h"
 #include "Group.h"
@@ -22,7 +24,10 @@
 #include "TemporarySummon.h"
 #include "WorldPacket.h"
 
+#include <algorithm>
+#include <cctype>
 #include <list>
+#include <string_view>
 #include <unordered_map>
 #include <vector>
 
@@ -290,8 +295,33 @@ public:
     }
 };
 
+// AoE loot is a loot companion perk: block mod-aoe-loot's .aoeloot on/off. Commands can be abbreviated
+// (".aoe on"), so any first word that starts "aoeloot" is caught (no other command starts with "ao").
+class unbound_loot_goblin_commands : public AllCommandScript
+{
+public:
+    unbound_loot_goblin_commands() : AllCommandScript("unbound_loot_goblin_commands", {
+        ALLCOMMANDHOOK_ON_TRY_EXECUTE_COMMAND
+    }) { }
+
+    bool OnTryExecuteCommand(ChatHandler& handler, std::string_view cmdStr) override
+    {
+        std::string_view const word = cmdStr.substr(0, cmdStr.find(' '));
+        constexpr std::string_view AOE_LOOT = "aoeloot";
+        if (word.size() < 2 || word.size() > AOE_LOOT.size() ||
+            !std::equal(word.begin(), word.end(), AOE_LOOT.begin(),
+                [](char a, char b) { return std::tolower(static_cast<unsigned char>(a)) == b; }))
+            return true;
+
+        handler.SendSysMessage("AoE looting comes from loot companions: summon a Loot Goblin or an Arcane Loot "
+                               "Scanner and it turns on while the companion is out.");
+        return false;
+    }
+};
+
 void AddSC_unbound_loot_goblin()
 {
     new unbound_loot_goblin_creature();
     new unbound_loot_goblin_player();
+    new unbound_loot_goblin_commands();
 }

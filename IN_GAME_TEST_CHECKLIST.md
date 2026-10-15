@@ -179,7 +179,15 @@ bring one other player or a playerbot for at least one boss.
 - [ ] As a GM, `.perk rank` can set Rank 4 or 5 and the stronger value applies (for example Reinforced Armor
       13% / 15%).
 
-## 9. Report back
+## 9. AoE loot only from loot companions
+
+- [ ] `.aoeloot on`, `.aoeloot off` and the short form `.aoe on` answer "AoE looting comes from loot
+      companions…" and change nothing (on a normal player and on a GM).
+- [ ] Without a companion out, opening a corpse loots only that corpse.
+- [ ] With the Loot Goblin or Arcane Loot Scanner out, corpses within 55 yards are auto-looted and opening one
+      corpse loots the ones around it. Dismissing the companion turns it off again.
+
+## 10. Report back
 
 Note anything that failed or felt wrong (too hard, too easy, wrong text) and paste it into the chat with
 Claude, with the section number.
