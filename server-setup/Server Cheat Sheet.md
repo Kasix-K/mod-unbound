@@ -78,6 +78,9 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
   Naxxramas" runestone below it (level 60-70). Needs "The Dread Citadel - Naxxramas" from Archmage Angela
   Dosantos at Light's Hope (cheaper with more Argent Dawn reputation). Your group within 30 yards comes along.
   Tier 3 quests are at Light's Hope; there are no exit portals inside (use your hearthstone).
+- **Raid Finder:** open the Dungeon Finder (or type `/raidfinder`) and click the **Raids** tab at the bottom.
+  Pick a raid and press **Enter Raid**. In a group the leader picks; everyone else gets an "Enter the raid?"
+  prompt. **Leave Raid** takes you back to where you joined from. Needs the **UnboundRaidFinder** addon.
 - **Solo raids:** alone in a raid (no other players or bots; pets are fine), mechanics no single player can
   handle are changed. Blackwing Lair: in Razorgore's room, walk over (or click) the eggs to break them once
   Razorgore is pulled, and don't kill him before the last egg; Grethok, Vaelastrasz, Ebonroc, Chromaggus and

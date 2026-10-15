@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Raid Finder: Raids tab in the Dungeon Finder (enter raids, group prompt, Leave Raid) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Classic Naxxramas (40 players, level 60) in the Eastern Plaguelands, from mod-individual-progression | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Onyxia's Lair as a classic level 60 raid (classic stats, spell damage, loot, Head of Onyxia quests) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Soloable raid mechanics: Molten Core, Zul'Gurub, Ruins and Temple of Ahn'Qiraj | 2026-10-15 | 2026-10-15 | Kasix-K |
@@ -63,6 +64,14 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Added
+- **Raid Finder** (new **UnboundRaidFinder** addon, `src/unbound_raid_finder.cpp`): "Dungeons" and "Raids" tabs
+  under the Dungeon Finder window (`/raidfinder` opens the Raids tab). It lists every raid by expansion with its
+  level and whether you can enter it (available, level, attunement for classic Naxxramas, not released yet).
+  No queue: solo you enter straight away; in a group only the leader picks, goes in first, and every other
+  member gets a prompt ("<leader>'s group is entering <raid>. Enter the raid?", the game's summon prompt, two
+  minutes) and is teleported next to the leader on accepting. Members who can't enter are told why; playerbots
+  come along. "Leave Raid" sends you back to where you joined from (kept across relogs). Setting
+  `Unbound.RaidFinder.Enable`.
 - **Mythic maximum +10** (power budget): every Mythic dungeon and raid stops at +10, the number all Mythic
   systems are designed around (was a configurable +30). Mythic gear, upgrades and the climb estimates
   are reworked for it; Naxxramas Mythic +10 is the top of the game.

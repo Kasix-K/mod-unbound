@@ -477,3 +477,13 @@ Unbound.Naxx40.Doable.Gluth = 0
 Unbound.Naxx40.Doable.Patchwerk = 0
 Unbound.Naxx40.Doable.Razuvious = 0
 Unbound.Naxx40.BotAccountRegex = "^RNDBOT.*"
+
+#    Unbound.RaidFinder.Enable
+#        Description: Raid Finder (src/unbound_raid_finder.cpp): the Raids tab in the Dungeon Finder (needs the
+#                     UnboundRaidFinder addon). Solo players enter a raid straight away; in a group the
+#                     leader enters first and everyone else gets a prompt to follow. "Leave Raid" sends a
+#                     player back to where they joined from.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+
+Unbound.RaidFinder.Enable = 1

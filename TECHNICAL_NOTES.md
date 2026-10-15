@@ -143,6 +143,20 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   10-player heroic and teleports the group (members within 30 yards; playerbot accounts always). The
   expansion lock (`src/unbound_content_lock.cpp`) treats map 533 on that difficulty as classic.
   `tools/item_expansions.py` counts the 351000-351099 creatures and chest 361000 as classic.
+- **Raid Finder:** `src/unbound_raid_finder.cpp` and `addon/UnboundRaidFinder`. The raids are `RAIDS` in the
+  C++ (id, name, map, difficulty, expansion, entrance area trigger or a fixed position for classic Naxxramas);
+  levels come from `dungeon_access_template`, player counts from MapDifficulty. The addon whispers its own
+  character (prefix `UBRAID`: `LIST`, `ENTER:<id>`, `LEAVE`; answers `R:<id>:<status>:<min>:<max>:<players>:
+  <expansion>:<name>`, `END:<current raid>:<may pick>`, `INVITE:<raid>`, `MSG:`, `ERR:`). Entering sets the
+  raid difficulty (the group's, or the player's), saves the return spot in
+  `characters.character_unbound_raid_finder`, and teleports. When the leader's map changes to the raid
+  (`OnPlayerMapChanged`), each other member is checked and sent `SMSG_SUMMON_REQUEST` from the leader after
+  `SetSummonPoint` at the leader's position; the core's summon accept does the teleport into the leader's
+  instance, and the member's return spot is saved when they arrive. Playerbot accounts
+  (`UnboundNaxx40Config::IsBotAccount`) are teleported directly. The addon sets the text and buttons of the
+  game's `CONFIRM_SUMMON` popup on `INVITE` and restores them when it closes. The tabs are
+  `LFDParentFrameTab1/2` (CharacterFrameTabButtonTemplate) and switch between `LFDQueueFrame` and
+  `UnboundRaidFinderFrame`.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Players in a

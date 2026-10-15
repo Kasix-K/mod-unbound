@@ -681,6 +681,7 @@ if (-not $client) {
     foreach ($a in @((Join-Path $Src 'modules\mod-unbound\addon\Unbound'),
                      (Join-Path $Src 'modules\mod-unbound\addon\UnboundPerks'),
                      (Join-Path $Src 'modules\mod-unbound\addon\UnboundAttunement'),
+                     (Join-Path $Src 'modules\mod-unbound\addon\UnboundRaidFinder'),
                      (Join-Path $Src 'modules\mod-transmog-plus\addon\Transmog'))) {
         Copy-Item -Recurse -Force $a $addons
         Ok "Installed addon $(Split-Path $a -Leaf)"
