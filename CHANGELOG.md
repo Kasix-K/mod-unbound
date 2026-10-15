@@ -13,6 +13,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | 11 Utility perks (Longer Legs to Mana Leech), Utility limited to 3 active | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Iron Will utility perk (shorter crowd control, 3 ranks by level) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Perk ranks (first: Rapid Recovery, 3 ranks by level; `.perk rank`) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
+| Heroic Wailing Caverns, Shadowfang Keep, Blackfathom Deeps, Gnomeregan (with Heroic loot) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 4: item tooltips, collection window, Attunement micro menu button | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 3: Altar of Sacrifice (190103) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 2: attuning by kills (`.attune progress`) | 2026-10-14 | 2026-10-14 | Kasix-K |
@@ -52,6 +53,11 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-14
 
 ### Added
+- **Heroic Wailing Caverns, Shadowfang Keep, Blackfathom Deeps and Gnomeregan** (classic Heroic batch 1): level
+  60-62 with 1.5x health and damage like the others, including the creatures their events summon (Mutanus the
+  Devourer, Baron Aquanis, Grubbis, Chomper, Arugal's Voidwalker, Walking Bombs, the Naralex and Aku'mai event
+  adds). Heroic loot: 59 level 60 blue remakes of each boss's own drops (one per boss, two from the final boss)
+  plus level 60 gold; they count for attunement.
 - **Gear attunement, stage 4 of 4: tooltips and the collection window** (new **UnboundAttunement** addon). Item
   tooltips show each weapon or armour piece's attunement: attuned, % and kills, sacrifice only (with the price),
   or why it doesn't count. The **Attunement** button in the micro menu (between Talents and Achievements) or `/attunement` opens the
@@ -155,6 +161,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   `Unbound.ExpansionUnlocked`).
 
 ### Changed
+- **Classic Heroic levels:** creatures already above level 60 (holiday bosses) keep their normal version, so they
+  don't squeeze the dungeon's level spread (Shadowfang Keep's bosses are 61, not 60).
 - **Attunement window button** moved from a character sheet tab (too wide for the sheet) to the micro menu,
   between Talents and Achievements; with ElvUI's micro bar it matches ElvUI's buttons and follows the bar's layout.
 - **Classic raids soloable:** solo scaling for 20-player raids (Zul'Gurub, Ruins of Ahn'Qiraj) and

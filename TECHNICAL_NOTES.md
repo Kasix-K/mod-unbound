@@ -17,10 +17,20 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
 - **Classic heroics:** `tools/classic_heroics.py` lists them (`HEROIC_DUNGEONS`, only append: the order
   sets access ids). Heroic creatures are copies (entry + 1000000) at level 60-62 with 1.5x health and
   damage. After a change run `python tools/classic_heroics.py` and `python tools/custom_dbc.py`.
+  Creatures summoned without a spawn in the dungeon (event bosses such as Mutanus, Baron Aquanis, Grubbis, and
+  event adds) are listed in `HEROIC_EXTRA_CREATURES` per map; find them by checking the dungeon's C++ script
+  folder (NPC constants, SummonCreature), SmartAI summon actions (action 12, including timed action lists)
+  and `creature_summon_groups`. Creatures already above level 60 (holiday bosses such as Apothecary Hummel in
+  Shadowfang Keep) keep their normal version and don't stretch the level spread.
 - **Heroic loot:** `tools/heroic_loot.py` defines heroic items (910100-910999), sets (950-999) and boss
   loot. After a change run `python tools/heroic_loot.py`, `python tools/classic_heroics.py` and
   `python tools/custom_dbc.py`, then restart the worldserver. Never delete an item that has dropped: take
   it out of `LOOT` instead.
+  Batch 1 loot (Wailing Caverns, Shadowfang Keep, Blackfathom Deeps, Gnomeregan) remakes each boss's own drops
+  (up to 3, one tank / caster / damage piece where possible; final bosses two pools) as level 60 blues: same name,
+  look and stat types, stats scaled to the median stat points of classic level 58-60 blues in that slot, armour,
+  block and weapon damage per second from the same reference. Bosses without gear drops of their own (Kresh)
+  drop gold only. Rare spawns are left out.
 - **World bosses:** `tools/world_bosses.py` (SmartAI fights, no C++; creatures 190110-190199, spawn guids
   9190110-9190199, loot 911000-911999). Hrimthar is creature 190110, adds 190111. After a change run
   `python tools/world_bosses.py` and `python tools/custom_dbc.py`, then restart the worldserver.

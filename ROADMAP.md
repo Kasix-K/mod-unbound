@@ -125,6 +125,10 @@ changes, raid by raid (see Next up).
       returns), item expansion tags, attuning by kills, the Altar of Sacrifice, item tooltips and the collection
       window (Attunement micro menu button, `/attunement`)
 
+- [x] Classic Heroic dungeons, batch 1 (2026-10-14): Wailing Caverns, Shadowfang Keep, Blackfathom Deeps,
+      Gnomeregan, with their summoned creatures (Mutanus, Baron Aquanis, Grubbis, ...) and Heroic loot
+      (59 level 60 blues, 910122-910180)
+
 ## Next up
 
 - [ ] **Soloable raid mechanics** (moderate, per raid): script changes for bosses that need several
@@ -137,13 +141,11 @@ changes, raid by raid (see Next up).
       301-302 are not reused.
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
       +25-35% to its spec's single-target damage (the class perk target in the Power budget).
-- [ ] **Remaining classic Heroic dungeons** (moderate): 16 more (Stockades, Deadmines and Ragefire Chasm
-      are done), added in batches by level range.
-      Each is one line in `tools/classic_heroics.py`. Also give heroic versions to creatures that boss
-      scripts summon (Blackrock Depths' Ring of Law, the Zul'Farrak stairs, Razorfen Downs' gong,
-      Stratholme's Baron run, Arugal's adds, Gnomeregan). Blackrock Spire keeps its larger group size.
-- [ ] **Heroic loot for the other heroics** (moderate): same approach as The Deadmines, one dungeon at a
-      time in `tools/heroic_loot.py`.
+- [ ] **Remaining classic Heroic dungeons** (moderate, in batches by level range): 12 more, each with its
+      Heroic mode, heroic versions of the creatures its bosses and events summon, and level 60 Heroic loot
+      (Mythic+ builds on these). Batch 2: Razorfen Kraul, Scarlet Monastery (4 wings), Razorfen Downs,
+      Uldaman. Batch 3: Zul'Farrak, Maraudon, Sunken Temple, Blackrock Depths. Batch 4: Lower/Upper Blackrock
+      Spire (keeps its larger group size), Dire Maul (3 wings), Scholomance, Stratholme.
 - [ ] **Heroic currency and vendor** (moderate): a token (e.g. "Heroic Badge") from Heroic bosses,
       spent on companions, mounts, transmog or gear. Becomes the Loot Goblin's currency.
 - [ ] **Heroic classic raids** (moderate): Molten Core, Blackwing Lair, Zul'Gurub, Ruins and Temple of

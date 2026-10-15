@@ -42,7 +42,28 @@ HEROIC_DUNGEONS = [
     (34, 'Stormwind Stockades'),
     (36, 'Deadmines'),
     (389, 'Ragefire Chasm'),
+    (43, 'Wailing Caverns'),
+    (33, 'Shadowfang Keep'),
+    (48, 'Blackfathom Deeps'),
+    (90, 'Gnomeregan'),
 ]
+
+# Creatures that boss scripts, SmartAI or summon groups bring into a dungeon without a spawn there: they need a
+# heroic copy too, or a heroic event summons them at their normal level. Found by checking the dungeon's C++
+# scripts, SmartAI summon actions and creature_summon_groups (see TECHNICAL_NOTES.md).
+HEROIC_EXTRA_CREATURES = {
+    43: [3654,    # Mutanus the Devourer (final boss, the Naralex event)
+         5762,    # Deviate Moccasin (Naralex event)
+         5763],   # Nightmare Ectoplasm (Naralex event)
+    33: [4627],   # Arugal's Voidwalker
+    48: [4977,    # Murkshallow Softshell (fire event)
+         4978,    # Aku'mai Servant (fire event)
+         6729,    # Morridune (after Aku'mai)
+         12876],  # Baron Aquanis (Fathom Stone)
+    90: [6215,    # Chomper (Emi Shortfuse event)
+         7361,    # Grubbis (Emi Shortfuse event)
+         7915],   # Walking Bomb (Mekgineer Thermaplugg)
+}
 
 
 def map_difficulty_id(map_id):
@@ -55,11 +76,21 @@ def dungeon_sql(index, map_id, name):
         f'SET @MAP := {map_id};',
         'DROP TEMPORARY TABLE IF EXISTS `unbound_hc_base`;',
         'CREATE TEMPORARY TABLE `unbound_hc_base` SELECT DISTINCT `id` AS `entry` FROM `creature` WHERE `map` = @MAP;',
+    ]
+    extra = HEROIC_EXTRA_CREATURES.get(map_id)
+    if extra:
+        lines.append('-- creatures summoned in this dungeon (no spawn here)')
+        lines.append('INSERT INTO `unbound_hc_base` (`entry`) SELECT `entry` FROM `creature_template` WHERE `entry` IN ('
+                     + ', '.join(str(e) for e in extra) + ');')
+    lines += [
         '-- leave creatures that already have a heroic version of their own alone',
         'DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`',
         '    WHERE `ct`.`difficulty_entry_1` NOT IN (0, `b`.`entry` + @OFFSET);',
         '-- and creatures also spawned on other maps: their heroic copy would show up in those maps\' heroics too',
         'DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP;',
+        '-- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang',
+        '-- Keep): they stay as they are and don\'t stretch the dungeon\'s level range',
+        'DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;',
         'SET @MINL := (SELECT MIN(`ct`.`minlevel`) FROM `creature_template` `ct` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `ct`.`entry`);',
         'SET @SPAN := GREATEST((SELECT MAX(`ct`.`maxlevel`) FROM `creature_template` `ct` JOIN `unbound_hc_base` `b` ON `b`.`entry` = `ct`.`entry`) - @MINL, 1);',
         '',

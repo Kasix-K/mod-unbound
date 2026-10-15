@@ -207,8 +207,11 @@ namespace
         uint32 cap = sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL);
         if (proto->RequiredLevel > cap || proto->RequiredLevel + sLevelRange < cap)
             return ItemCheck::WrongLevel;
+        // this module's own items (heroic and world boss loot, 900000-999999) are classic, like
+        // tools/item_expansions.py tags them, so new ones count without running the tool again
         auto itr = sItemExpansion.find(proto->ItemId);
-        if (itr == sItemExpansion.end() || itr->second > sExpansionUnlocked)
+        bool custom = proto->ItemId >= 900000 && proto->ItemId < 1000000;
+        if (itr == sItemExpansion.end() ? !custom : itr->second > sExpansionUnlocked)
             return ItemCheck::LockedExpansion;
         float statPoints;
         if (ItemStats(proto, statPoints).empty())
