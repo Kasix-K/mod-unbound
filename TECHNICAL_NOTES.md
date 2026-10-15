@@ -27,6 +27,11 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   60-62. Scarlet Monastery is one map (189) with one Heroic mode for all four wings.
   Creatures also spawned in another dungeon or raid get no heroic copy (it would show up in that map's heroic
   too); spawns in the open world (maps 0, 1, 530, 571, `OPEN_WORLD_MAPS`) don't count, since it is never heroic.
+  Creatures that spells summon (Spell.dbc effect 28, from the dungeon's SmartAI, creature spells and C++ SPELL_
+  constants) and creatures others transform into (UpdateEntry: Balnazzar, Dark Shade, Veng, Maraudos) are listed
+  in `HEROIC_SPELL_SUMMONS`. Creatures above level 63 (`CLASSIC_MAX_LEVEL`) are holiday and event bosses and
+  keep their normal version. `HEROIC_MAX_PLAYERS` sets a heroic group size other than 5 (Blackrock Spire: 15,
+  like its normal mode); custom_dbc.py reads it.
 - **Heroic loot:** `tools/heroic_loot.py` defines heroic items (910100-910999), sets (950-999) and boss
   loot. After a change run `python tools/heroic_loot.py`, `python tools/classic_heroics.py` and
   `python tools/custom_dbc.py`, then restart the worldserver. Never delete an item that has dropped: take
@@ -45,6 +50,10 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   heroic items too (the four Sunken Temple dragons; Nekrum shares two of Theka's). Lord Incendius (only
   random-enchantment bracers) and Ribbly Screwspigot (bags) drop gold only. All six Ring of Law bosses have
   heroic loot; one of them spawns per run.
+  Batch 4 loot (Blackrock Spire, Dire Maul, Scholomance, Stratholme): each wing's last boss counts as a final
+  boss (Wyrmthalak, Drakkisath, Alzzin, Tortheldrin, Gordok, Balnazzar, Rivendare). The Gordok guards share one
+  pool; Lady Illucia shares Malicia's and Krastinov's items. Pusillin, Fras Siabi, Jarien and Sothos drop gold
+  only. Dungeon Set 1 remakes keep the name but not the set bonus.
 - **World bosses:** `tools/world_bosses.py` (SmartAI fights, no C++; creatures 190110-190199, spawn guids
   9190110-9190199, loot 911000-911999). Hrimthar is creature 190110, adds 190111. After a change run
   `python tools/world_bosses.py` and `python tools/custom_dbc.py`, then restart the worldserver.

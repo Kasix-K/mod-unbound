@@ -33,6 +33,9 @@ HEROIC_LEVEL = 60
 LEVEL_SPREAD = 2
 HEALTH_MULTIPLIER = 1.5
 DAMAGE_MULTIPLIER = 1.5
+# Highest level of a classic creature (skull bosses): creatures above it are holiday and event bosses (Apothecary
+# Hummel 82, Coren Direbrew 80, ...) and keep their normal version.
+CLASSIC_MAX_LEVEL = 63
 
 # dungeon_access_template.id is a tinyint (max 255; ids up to 121 are taken): heroic rows use 200 + list index.
 ACCESS_ID_BASE = 200
@@ -57,7 +60,14 @@ HEROIC_DUNGEONS = [
     (349, 'Maraudon'),
     (109, 'Sunken Temple'),
     (230, 'Blackrock Depths'),
+    (229, 'Blackrock Spire'),
+    (429, 'Dire Maul'),
+    (289, 'Scholomance'),
+    (329, 'Stratholme'),
 ]
+
+# Group size of the heroic mode where it isn't 5 (the same as the dungeon's normal mode).
+HEROIC_MAX_PLAYERS = {229: 15}
 
 # Creatures that boss scripts, SmartAI or summon groups bring into a dungeon without a spawn there: they need a
 # heroic copy too, or a heroic event summons them at their normal level. Found by checking the dungeon's C++
@@ -97,6 +107,87 @@ HEROIC_EXTRA_CREATURES = {
           9445,   # Dark Guard
           9476,   # Watchman Doomgrip (the Vault)
           10076], # High Priestess of Thaurissan
+    229: [10161, 10258, 10683,  # Rookery Whelp, Guardian, Hatcher (Solakar Flamewreath event)
+          10264,  # Solakar Flamewreath
+          10268,  # Gizrul the Slavener (Halycon)
+          10584, 10601, 10602,  # Urok Doomhowl, Urok Enforcer, Urok Ogre Magus (Urok event)
+          10339,  # Gyth (Rend Blackhand event)
+          10742,  # Blackhand Dragon Handler (Rend Blackhand event)
+          16042,  # Lord Valthalak (Brazier of Beckoning)
+          16080], # Mor Grayhoof (Brazier of Beckoning)
+    429: [11460,  # Alzzin's Minion
+          14351,  # Gordok Bushwacker (King Gordok)
+          16097], # Isalien (Brazier of Beckoning)
+    289: [10506,  # Kirtonos the Herald (Brazier of the Herald)
+          11598,  # Risen Guardian (Darkmaster Gandling)
+          16118], # Kormok (Brazier of Beckoning)
+    329: [10387,  # Vengeful Phantom
+          10394,  # Black Guard Sentry (Baron Rivendare event)
+          10439,  # Ramstein the Gorger
+          10441, 10461, 10536,  # Plagued Rat, Insect, Maggot (Stratholme events)
+          11030,  # Mindless Undead (Ramstein event)
+          11058,  # Fras Siabi (Smokey's crate)
+          11120,  # Crimson Hammersmith
+          11121,  # Black Guard Swordsmith
+          11142, 11143,  # Undead Postman, Postmaster Malown
+          16101, 16102], # Jarien and Sothos (Brazier of Beckoning)
+}
+
+
+# Creatures that spells cast in a dungeon summon, and creatures that others transform into (UpdateEntry), with no
+# spawn there: found by matching the summon spells (Spell.dbc effect 28) of the dungeon's SmartAI, creature spells
+# and C++ scripts.
+HEROIC_SPELL_SUMMONS = {
+    36: [643,     # Sneed (leaves Sneed's Shredder)
+         2520],   # Remote-Controlled Golem
+    33: [5097],   # Lupine Delusion
+    90: [7738,    # Burning Servant
+         8035],   # Dark Iron Land Mine
+    47: [2992, 6016, 6017, 6066,  # Healing Ward V, Elemental Protection / Lava Spout / Earthgrab Totem
+         6021],   # Boar Spirit
+    189: [6493],  # Illusionary Phantasm (Arcanist Doan)
+    129: [7340,   # Skeletal Shadowcaster
+          8585],  # Frost Spectre
+    70: [3560, 6017,  # Healing Ward, Lava Spout Totem
+         7209,    # Obsidian Shard (Obsidian Sentinel)
+         7226],   # Sand Storm
+    209: [6017, 6066, 8179,  # Lava Spout Totem, Earthgrab Totem, Greater Healing Ward
+          7527,   # Goblin Land Mine
+          7785,   # Ward of Zum'rah
+          8156],  # Servant of Antu'sul
+    349: [11783,  # Theradrim Shardling
+          13456,  # Noxxion's Spawn
+          13738, 13739],  # Veng, Maraudos (the Khan spirits transform into them)
+    109: [6066, 8179, 8510,  # Earthgrab Totem, Greater Healing Ward, Atal'ai Totem
+          8257,   # Oozeling
+          8317,   # Atal'ai Deathwalker's Spirit
+          8324,   # Atal'ai Skeleton
+          8656, 8657, 8658],  # Hukku's Voidwalker, Succubus, Imp
+    230: [8996,   # Voidwalker Minion (Tomb of the Seven)
+          9436],  # Spawn of Bael'Gar
+    229: [9707,   # Scarshield Portal
+          10217,  # Flame Buffet Totem
+          16066], # Spectral Assassin (Lord Valthalak)
+    429: [6066,   # Earthgrab Totem
+          14122,  # Massive Geyser
+          14350,  # Hydroling (Hydrospawn)
+          14389,  # Netherwalker
+          14396,  # Eye of Immol'thar
+          14397,  # Mana Burst
+          16098], # Empyrean (Isalien)
+    289: [10482,  # Risen Lackey
+          11258,  # Frail Skeleton
+          11263,  # Spectral Projection
+          11284,  # Dark Shade (transform)
+          11439,  # Illusion of Jandice Barov
+          16120], # Bone Mage (Kormok)
+    329: [10813,  # Balnazzar (Grand Crusader Dathrohan transforms into him)
+          10383,  # Broken Cadaver
+          10697,  # Bile Slime
+          10876,  # Undead Scarab
+          10955,  # Summoned Water Elemental
+          11054,  # Crimson Rifleman
+          11197], # Mindless Skeleton
 }
 
 
@@ -111,7 +202,7 @@ def dungeon_sql(index, map_id, name):
         'DROP TEMPORARY TABLE IF EXISTS `unbound_hc_base`;',
         'CREATE TEMPORARY TABLE `unbound_hc_base` SELECT DISTINCT `id` AS `entry` FROM `creature` WHERE `map` = @MAP;',
     ]
-    extra = HEROIC_EXTRA_CREATURES.get(map_id)
+    extra = HEROIC_EXTRA_CREATURES.get(map_id, []) + HEROIC_SPELL_SUMMONS.get(map_id, [])
     if extra:
         lines.append('-- creatures summoned in this dungeon (no spawn here)')
         lines.append('INSERT INTO `unbound_hc_base` (`entry`) SELECT `entry` FROM `creature_template` WHERE `entry` IN ('
@@ -124,9 +215,10 @@ def dungeon_sql(index, map_id, name):
         '-- (spawns in the open world don\'t count, it is never heroic: Scarlet Sentry, Son of Arugal, Defias Watchman, ...)',
         'DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature` `c` ON `c`.`id` = `b`.`entry` AND `c`.`map` <> @MAP',
         f'    AND `c`.`map` NOT IN ({", ".join(str(m) for m in OPEN_WORLD_MAPS)});',
-        '-- and creatures already above the heroic level (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang',
+        '-- and creatures above the classic levels (holiday bosses, e.g. Apothecary Hummel, level 82, in Shadowfang',
         '-- Keep): they stay as they are and don\'t stretch the dungeon\'s level range',
-        'DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry` WHERE `ct`.`maxlevel` > @LEVEL;',
+        'DELETE `b` FROM `unbound_hc_base` `b` JOIN `creature_template` `ct` ON `ct`.`entry` = `b`.`entry`',
+        f'    WHERE `ct`.`maxlevel` > {CLASSIC_MAX_LEVEL};',
         '-- the level range comes from the creatures with loot (the real mobs and bosses), not critters, triggers or',
         '-- trainers; every copy is kept within @LEVEL .. @LEVEL + @SPREAD',
         '-- (one statement can read a temporary table only once, hence the separate SETs)',

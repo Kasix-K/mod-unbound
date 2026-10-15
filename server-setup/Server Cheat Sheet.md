@@ -43,6 +43,7 @@
 | Heroic loot: Wailing Caverns, Shadowfang Keep, Blackfathom Deeps, Gnomeregan | (heroic bosses: entry + 1000000) | 910122-910180 | (none) |
 | Heroic loot: Razorfen Kraul, Scarlet Monastery, Razorfen Downs, Uldaman | (heroic bosses: entry + 1000000) | 910181-910248 | (none) |
 | Heroic loot: Zul'Farrak, Maraudon, Sunken Temple, Blackrock Depths | (heroic bosses: entry + 1000000) | 910249-910368 | (none) |
+| Heroic loot: Blackrock Spire, Dire Maul, Scholomance, Stratholme | (heroic bosses: entry + 1000000) | 910369-910549 | (none) |
 | Blackened Defias Garb set (item set 950) | (none) | 910112, 910115, 910118, 910119 | 9102, 9336 (set bonuses) |
 | World boss Hrimthar the Frostbound (spawn guid 9190110) | 190110, adds 190111 | 911000-911005 | (none) |
 
@@ -64,12 +65,11 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
 - **Reset lockouts:** right-click your portrait, then **Reset all instances**. This resets raids and
   heroic and normal dungeons. You must be outside the instance, with no bots inside.
 - **Classic heroics:** right-click your portrait, then Dungeon Difficulty > Heroic (or type `/heroic`;
-  `/normal` switches back), and enter the dungeon (level 60+). Available so far: Stormwind Stockades, The
-  Deadmines, Ragefire Chasm, Wailing Caverns, Shadowfang Keep, Blackfathom Deeps, Gnomeregan, Razorfen Kraul,
-  Scarlet Monastery (all 4 wings), Razorfen Downs, Uldaman, Zul'Farrak, Maraudon, Sunken Temple,
-  Blackrock Depths. Heroic bosses drop level 60 loot (one item each,
-  two from the final boss, or each Scarlet Monastery wing's last boss) in all of them except the Stockades and
-  Ragefire Chasm. Needs the **Unbound** addon, which shows the menu from level 60 instead of 65.
+  `/normal` switches back), and enter the dungeon (level 60+). Every classic dungeon has one (19), from the
+  Stormwind Stockades to Stratholme; Blackrock Spire's is for up to 15 players like its normal mode. Heroic
+  bosses drop level 60 loot (one item each, two from the final boss or each wing's last boss) in all of them
+  except the Stockades and Ragefire Chasm. Needs the **Unbound** addon, which shows the menu from level 60
+  instead of 65.
 - **Solo dungeon finder:** queue alone or with bots, and you go straight in.
 - **Perks:** type `/perks` or click the **Perks** tab at the bottom of the character sheet (C) to open the Character Perks window (needs the **UnboundPerks** addon). Always on
   for everyone: No Resurrection Sickness, No Daze, and Rapid Recovery (ranked by level: up to 8% health

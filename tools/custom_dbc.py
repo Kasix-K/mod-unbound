@@ -19,7 +19,7 @@ import zlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from classic_heroics import HEROIC_DUNGEONS, HEROIC_LEVEL, map_difficulty_id  # noqa: E402
+from classic_heroics import HEROIC_DUNGEONS, HEROIC_LEVEL, HEROIC_MAX_PLAYERS, map_difficulty_id  # noqa: E402
 import heroic_loot  # noqa: E402
 import world_bosses  # noqa: E402
 MODULE = os.path.dirname(HERE)
@@ -115,7 +115,7 @@ MAP_DIFFICULTIES = [
         'Difficulty': 1,
         'Message_Lang_enUS': f'Heroic Difficulty requires you to be level {HEROIC_LEVEL}.',
         'RaidDuration': 86400,
-        'MaxPlayers': 5,
+        'MaxPlayers': HEROIC_MAX_PLAYERS.get(map_id, 5),
         'Difficultystring': 'DUNGEON_DIFFICULTY_5PLAYER_HEROIC',
     }
     for map_id, _ in HEROIC_DUNGEONS

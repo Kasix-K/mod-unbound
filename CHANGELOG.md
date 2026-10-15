@@ -13,6 +13,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | 11 Utility perks (Longer Legs to Mana Leech), Utility limited to 3 active | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Iron Will utility perk (shorter crowd control, 3 ranks by level) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Perk ranks (first: Rapid Recovery, 3 ranks by level; `.perk rank`) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
+| Heroic Blackrock Spire, Dire Maul, Scholomance, Stratholme (with Heroic loot) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Heroic Zul'Farrak, Maraudon, Sunken Temple, Blackrock Depths (with Heroic loot) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Heroic Razorfen Kraul, Scarlet Monastery, Razorfen Downs, Uldaman (with Heroic loot) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Heroic Wailing Caverns, Shadowfang Keep, Blackfathom Deeps, Gnomeregan (with Heroic loot) | 2026-10-14 | 2026-10-14 | Kasix-K |
@@ -55,6 +56,12 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-14
 
 ### Added
+- **Heroic Blackrock Spire, Dire Maul, Scholomance and Stratholme** (classic Heroic batch 4, the last): level
+  60-62 with 1.5x health and damage; Blackrock Spire's Heroic is for up to 15 players like its normal mode.
+  Includes the creatures their events summon (Gyth, the Rookery and Urok events, Kirtonos, Ramstein, Balnazzar,
+  the Postmaster, the Brazier of Beckoning bosses). Heroic loot: 181 level 60 blue remakes of each boss's own
+  drops (one per boss, two from each wing's last boss) plus level 60 gold; they count for attunement. All 19
+  classic dungeons now have a Heroic mode.
 - **Heroic Zul'Farrak, Maraudon, Sunken Temple and Blackrock Depths** (classic Heroic batch 3): level 60-62 with
   1.5x health and damage, including the creatures their events summon (Gahz'rilla, the pyramid event's
   Sandfury waves, Nekrum and Sezz'ziz, Noxxious Scions, the Avatar and Shade of Hakkar, the Ring of Law waves
@@ -190,6 +197,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   server). Client-side only; see the README.
 
 ### Fixed
+- **Classic Heroic creatures summoned by spells or transformations** (Sneed in the Deadmines, boss adds, totems
+  and wards, Veng and Maraudos in Maraudon, ...) came at their normal level in Heroic; they have Heroic versions
+  now in all 19 dungeons.
 - **Classic Heroic creatures also spawned in the open world** (Scarlet Sentry, Son of Arugal, Defias Watchman,
   Stonevault Rockchewer, Holdout Warrior, Suffering Victim) stayed at their normal level in Heroic; only spawns
   in other dungeons and raids keep a creature normal now.
