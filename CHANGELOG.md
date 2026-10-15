@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Offensive perk ranks (5 ranks: 1-3 by level, 4-5 endgame, GM-only for now) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | 12 more Defensive perks (Juggernaut to Heavy Frame) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | World boss announcements (10/5 min warnings, spawn, kill) and 24-hour unchallenged despawn | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | 8 Defensive perks (Greater Bulwark to Fortress), Defensive limited to 3 active | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
@@ -53,6 +54,16 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | Transmog window (mod-transmog-plus), Warpweaver NPC kept | 2026-10-13 | 2026-10-13 | Kasix-K |
 | Transmogrify spell | 2026-10-13 | 2026-10-13 | Kasix-K |
 | Transmog (first version, mod-transmog) | 2026-10-12 | 2026-10-13 (replaced) | Kasix-K |
+
+## 2026-10-15
+
+### Added
+- **Offensive perk ranks.** All 25 Offensive perks have 5 ranks: Ranks 1-3 at levels 1 / 30 / 60 (Rank 3 is
+  the value from before ranks existed, so level 60 characters lose nothing; lower levels get less), Ranks 4-5
+  for the endgame (a +10% perk: 4 / 7 / 10 / 13 / 15%), the "Perk ranks" part of the power budget (about x1.3
+  on top of perks). Ranks 4-5 unlock at level 255 for now, i.e. only with `.perk rank`, until a way to earn
+  them is built. Only the upside is ranked; drawbacks and caps stay. All values in `mod_unbound.conf`. The
+  perk window shows "3/5" badges and every rank in the tooltip ("endgame, coming later" for Ranks 4-5).
 
 ## 2026-10-14
 

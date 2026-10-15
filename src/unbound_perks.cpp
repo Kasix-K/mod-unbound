@@ -27,7 +27,11 @@
  * Exclusive groups (EXCLUSIVE_GROUPS): turning one on turns the others off. Class perks (ids 1001+) only work for
  * their class (CLASS_PERKS); the server refuses them for any other class.
  *
- * Working toggled perks (ids match addon/UnboundPerks/PerkData.lua; all also work for pets):
+ * Working toggled perks (ids match addon/UnboundPerks/PerkData.lua; all also work for pets). The Offensive
+ * numbers below are Rank 3 (level 60). Each has 5 ranks (RANKED_PERKS): Ranks 1-3 by level 1/30/60 at about
+ * 0.4x/0.7x/1x, Ranks 4-5 at about 1.3x/1.5x for the endgame (a +10% perk: 4/7/10/13/15%). Ranks 4-5 unlock at
+ * level 255, i.e. only with .perk rank, until a way to earn them exists. Only the upside is ranked; drawbacks,
+ * caps and steps (FOCUS_PENALTY, AVOIDANCE_CAP, CHAOS_MULTIPLIER, ...) stay fixed.
  *   101 Cyclic Power           damage done cycles between -10% and +20% over 25 seconds
  *   102 Critical Understanding every 1% crit chance above 25% = +1% crit damage, up to +20%
  *   103 Defensive Sacrifice    take 10% more damage; +10% of current attack power and spell power
@@ -322,8 +326,39 @@ namespace
         uint32 perk;
         char const* key;
         std::vector<std::pair<char const*, char const*>> stats; // stat name, default "rank 1, rank 2, rank 3"
+        char const* levels = "1, 30, 60";                       // default Unbound.Perks.<Key>.RankLevels
     };
+    // Offensive perks: Ranks 1-3 by level (Rank 3 = the values before ranks existed), Ranks 4-5 for the endgame.
+    // Level 255 can't be reached, so Ranks 4-5 are GM-only (.perk rank) until a way to earn them is built.
+    constexpr char const* OFFENSIVE_LEVELS = "1, 30, 60, 255, 255";
+    constexpr char const* PLUS_10 = "4, 7, 10, 13, 15";  // a +10% perk: 0.4x / 0.7x / 1x / 1.3x / 1.5x
+    constexpr char const* PLUS_15 = "6, 10, 15, 19, 22";
     std::vector<RankedPerkDef> const RANKED_PERKS = {
+        { PERK_CYCLIC_POWER,           "CyclicPower",           { { "High", "10, 15, 20, 25, 30" } }, OFFENSIVE_LEVELS },
+        { PERK_CRITICAL_UNDERSTANDING, "CriticalUnderstanding", { { "Max", "8, 14, 20, 26, 30" } },   OFFENSIVE_LEVELS },
+        { PERK_DEFENSIVE_SACRIFICE,    "DefensiveSacrifice",    { { "StatPercent", PLUS_10 } },       OFFENSIVE_LEVELS },
+        { PERK_DESPERATE_POWER,        "DesperatePower",        { { "Damage", PLUS_10 } },            OFFENSIVE_LEVELS },
+        { PERK_BLOCK_CAPPING,          "BlockCapping",          { { "Max", PLUS_10 } },               OFFENSIVE_LEVELS },
+        { PERK_DODGE_CAPPING,          "DodgeCapping",          { { "Max", PLUS_10 } },               OFFENSIVE_LEVELS },
+        { PERK_PARRY_CAPPING,          "ParryCapping",          { { "Max", PLUS_10 } },               OFFENSIVE_LEVELS },
+        { PERK_HASTE_CAPPING,          "HasteCapping",          { { "Max", PLUS_10 } },               OFFENSIVE_LEVELS },
+        { PERK_PET_ENCOURAGEMENT,      "PetEncouragement",      { { "Percent", PLUS_15 } },           OFFENSIVE_LEVELS },
+        { PERK_ROLLING_MOMENTUM,       "RollingMomentum",       { { "Max", PLUS_10 } },               OFFENSIVE_LEVELS },
+        { PERK_TUNNEL_VISION,          "TunnelVision",          { { "Bonus", PLUS_10 } },             OFFENSIVE_LEVELS },
+        { PERK_COLLATERAL_DAMAGE,      "CollateralDamage",      { { "Bonus", PLUS_10 } },             OFFENSIVE_LEVELS },
+        { PERK_GIANT_SLAYER,           "GiantSlayer",           { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
+        { PERK_MERCILESS,              "Merciless",             { { "Percent", PLUS_15 } },           OFFENSIVE_LEVELS },
+        { PERK_PRESSURE,               "Pressure",              { { "Stacks", PLUS_10 } },            OFFENSIVE_LEVELS },
+        { PERK_CHAOS,                  "Chaos",                 { { "Chance", PLUS_10 } },            OFFENSIVE_LEVELS },
+        { PERK_POWER_CONVERSION,       "PowerConversion",       { { "Max", PLUS_10 } },               OFFENSIVE_LEVELS },
+        { PERK_HEALING_POWAH,          "HealingPowah",          { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
+        { PERK_SHADOW_MASTERY,         "ShadowMastery",         { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
+        { PERK_HOLY_MASTERY,           "HolyMastery",           { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
+        { PERK_ARCANE_MASTERY,         "ArcaneMastery",         { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
+        { PERK_NATURE_MASTERY,         "NatureMastery",         { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
+        { PERK_FIRE_MASTERY,           "FireMastery",           { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
+        { PERK_FROST_MASTERY,          "FrostMastery",          { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
+        { PERK_PHYSICAL_MASTERY,       "PhysicalMastery",       { { "Percent", PLUS_10 } },           OFFENSIVE_LEVELS },
         { PERK_IRON_WILL,            "IronWill",            { { "Percent", "10, 20, 30" } } },
         { PERK_LONGER_LEGS,          "LongerLegs",          { { "RunSpeed", "4, 7, 10" }, { "MountSpeed", "4, 7, 10" },
                                                               { "SwimSpeed", "20, 35, 50" }, { "FallDamage", "20, 35, 50" } } },
@@ -440,36 +475,23 @@ namespace
 
     constexpr uint32 STAT_REFRESH_MS = 2000;
 
+    // Offensive perks: the numbers that grow with the rank are in RANKED_PERKS (mod_unbound.conf); these are
+    // the fixed parts (drawbacks, caps, steps), which stay the same at every rank.
     constexpr uint32 CYCLE_MS = 25000;               // Cyclic Power period
-    constexpr float CYCLE_CENTER = 1.05f;            // Cyclic Power: 0.90 .. 1.20 (-10% .. +20%)
-    constexpr float CYCLE_AMPLITUDE = 0.15f;
-    constexpr float SACRIFICE_DAMAGE_TAKEN = 1.10f;  // Defensive Sacrifice
-    constexpr float SACRIFICE_STAT_PCT = 0.10f;
+    constexpr float CYCLE_LOW = -10.0f;              // Cyclic Power: the wave's low point (%); the high is ranked
+    constexpr float SACRIFICE_DAMAGE_TAKEN = 1.10f;  // Defensive Sacrifice (the AP/SP share is ranked)
     constexpr uint32 SPELL_CRIT_DAMAGE_AURA = 58670; // "Prey on the Weak": one aura, +X% crit damage, all schools
     constexpr float CRIT_UNDERSTANDING_FLOOR = 25.0f;  // Critical Understanding: +1% crit damage per 1% crit above this
-    constexpr int32 CRIT_UNDERSTANDING_MAX = 20;
-    constexpr float DESPERATE_DAMAGE_DONE = 1.10f;   // Desperate Power
-    constexpr float DESPERATE_RESIST_PCT = 0.50f;
+    constexpr float DESPERATE_RESIST_PCT = 0.50f;    // Desperate Power (the damage is ranked)
     constexpr float AVOIDANCE_CAP = 20.0f;           // Block/Dodge/Parry Capping: cap (%)
-    constexpr float AVOIDANCE_STEP = 1.0f;           // ... +1% damage per this much above the cap
-    constexpr int32 AVOIDANCE_MAX_BONUS = 10;        // ... up to +10% each
+    constexpr float AVOIDANCE_STEP = 1.0f;           // ... +1% damage per this much above the cap (max is ranked)
     constexpr float HASTE_CAP = 5.0f;                // Haste Capping: +1% damage per 1% haste above this
     constexpr float HASTE_DAMAGE_TAKEN = 1.05f;
-    constexpr float PET_DAMAGE_DONE = 1.15f;         // Pet Encouragement
-    constexpr int32 MOMENTUM_STEP = 1;               // Rolling Momentum: % per second
-    constexpr int32 MOMENTUM_MAX = 10;
-    constexpr float FOCUS_BONUS = 1.10f;             // Tunnel Vision / Collateral Damage
-    constexpr float FOCUS_PENALTY = 0.90f;
-    constexpr float GIANT_SLAYER_BONUS = 1.10f;
-    constexpr float MERCILESS_DOT_BONUS = 1.15f;
-    constexpr float HEALING_POWAH_BONUS = 1.10f;
-    constexpr float SCHOOL_MASTERY_BONUS = 1.10f;
-    constexpr int32 PRESSURE_STEP = 1;               // % per stack
-    constexpr uint32 PRESSURE_MAX_STACKS = 10;
-    constexpr float CHAOS_CHANCE = 10.0f;            // %
-    constexpr float CHAOS_MULTIPLIER = 1.50f;
-    constexpr float POWER_CONVERSION_STAT = 100.0f;  // +1% per this much of the highest base stat
-    constexpr float POWER_CONVERSION_MAX = 10.0f;
+    constexpr int32 MOMENTUM_STEP = 1;               // Rolling Momentum: % per second (max is ranked)
+    constexpr float FOCUS_PENALTY = 0.90f;           // Tunnel Vision / Collateral Damage (the bonus is ranked)
+    constexpr int32 PRESSURE_STEP = 1;               // % per stack (max stacks are ranked)
+    constexpr float CHAOS_MULTIPLIER = 1.50f;        // (the chance is ranked)
+    constexpr float POWER_CONVERSION_STAT = 100.0f;  // +1% per this much of the highest base stat (max is ranked)
 
     enum class HitKind { Melee, Spell, Periodic };
 
@@ -556,12 +578,24 @@ namespace
         return state && state->active.count(perk);
     }
 
-    // ------------------------------------------------------------------ damage multipliers
-    float CyclicMultiplier(PerkState const* state)
+    // A ranked perk's number at the character's rank (defined with the perk ranks below).
+    float RankValue(Player const* player, PerkState const& state, uint32 perk, size_t stat);
+    float OwnerRankValue(Unit const* unit, uint32 perk, size_t stat);
+
+    // "+x%" as a multiplier
+    float Bonus(float percent)
     {
-        // 0.9 .. 1.2 (-10% .. +20%), a smooth wave over CYCLE_MS starting at +5%
+        return 1.0f + percent / 100.0f;
+    }
+
+    // ------------------------------------------------------------------ damage multipliers
+    float CyclicMultiplier(PerkState const* state, float high)
+    {
+        // a smooth wave over CYCLE_MS between CYCLE_LOW and the rank's high point (Rank 3: -10% .. +20%)
         uint32 t = (getMSTime() - state->cycleStartMs) % CYCLE_MS;
-        return CYCLE_CENTER + CYCLE_AMPLITUDE * std::sin(2.0f * float(M_PI) * float(t) / float(CYCLE_MS));
+        float center = 1.0f + (CYCLE_LOW + high) / 200.0f;
+        float amplitude = (high - CYCLE_LOW) / 200.0f;
+        return center + amplitude * std::sin(2.0f * float(M_PI) * float(t) / float(CYCLE_MS));
     }
 
     bool IsAreaDamage(SpellInfo const* spellInfo)
@@ -589,25 +623,25 @@ namespace
             return 1.0f;
         float mult = 1.0f;
         if (Has(state, PERK_CYCLIC_POWER))
-            mult *= CyclicMultiplier(state);
+            mult *= CyclicMultiplier(state, OwnerRankValue(attacker, PERK_CYCLIC_POWER, 0));
         if (Has(state, PERK_DESPERATE_POWER))
-            mult *= DESPERATE_DAMAGE_DONE;
+            mult *= Bonus(OwnerRankValue(attacker, PERK_DESPERATE_POWER, 0));
         if (state->cappingBonus)
             mult *= 1.0f + state->cappingBonus / 100.0f;
         if (Has(state, PERK_ROLLING_MOMENTUM) && state->momentum)
             mult *= 1.0f + state->momentum / 100.0f;
         if (Has(state, PERK_PET_ENCOURAGEMENT) && !attacker->IsPlayer())  // pets, guardians, totems
-            mult *= PET_DAMAGE_DONE;
+            mult *= Bonus(OwnerRankValue(attacker, PERK_PET_ENCOURAGEMENT, 0));
         if (Has(state, PERK_TUNNEL_VISION) || Has(state, PERK_COLLATERAL_DAMAGE))
         {
             bool area = IsAreaDamage(spellInfo);
             if (Has(state, PERK_TUNNEL_VISION))
-                mult *= area ? FOCUS_PENALTY : FOCUS_BONUS;
+                mult *= area ? FOCUS_PENALTY : Bonus(OwnerRankValue(attacker, PERK_TUNNEL_VISION, 0));
             if (Has(state, PERK_COLLATERAL_DAMAGE))
-                mult *= area ? FOCUS_BONUS : FOCUS_PENALTY;
+                mult *= area ? Bonus(OwnerRankValue(attacker, PERK_COLLATERAL_DAMAGE, 0)) : FOCUS_PENALTY;
         }
         if (Has(state, PERK_GIANT_SLAYER) && IsBoss(victim))
-            mult *= GIANT_SLAYER_BONUS;
+            mult *= Bonus(OwnerRankValue(attacker, PERK_GIANT_SLAYER, 0));
         // School masteries; melee swings (no spell) are Physical.
         static constexpr std::pair<uint32, uint32> MASTERIES[] = {
             { PERK_PHYSICAL_MASTERY, SPELL_SCHOOL_MASK_NORMAL }, { PERK_HOLY_MASTERY,   SPELL_SCHOOL_MASK_HOLY   },
@@ -618,7 +652,7 @@ namespace
         uint32 schools = spellInfo ? uint32(spellInfo->GetSchoolMask()) : uint32(SPELL_SCHOOL_MASK_NORMAL);
         for (auto const& [perk, mask] : MASTERIES)
             if ((schools & mask) && Has(state, perk))
-                mult *= SCHOOL_MASTERY_BONUS;
+                mult *= Bonus(OwnerRankValue(attacker, perk, 0));
 
         // Retribution - By Sword & Light (the Paladin's own damage)
         if (Has(state, PERK_RETRIBUTION) && attacker->IsPlayer())
@@ -718,7 +752,7 @@ namespace
     {
         PerkState const* state = PerkOwnerState(healer);
         if (heal && Has(state, PERK_HEALING_POWAH))
-            heal = uint32(std::round(float(heal) * HEALING_POWAH_BONUS));
+            heal = uint32(std::round(float(heal) * Bonus(OwnerRankValue(healer, PERK_HEALING_POWAH, 0))));
     }
 
     float OwnerRankValue(Unit const* unit, uint32 perk, size_t stat);
@@ -794,9 +828,9 @@ namespace
         float mult = 1.0f;
 
         if (kind == HitKind::Periodic && Has(state, PERK_MERCILESS))
-            mult *= MERCILESS_DOT_BONUS;
+            mult *= Bonus(OwnerRankValue(attacker, PERK_MERCILESS, 0));
 
-        if (kind == HitKind::Spell && Has(state, PERK_CHAOS) && roll_chance_f(CHAOS_CHANCE))
+        if (kind == HitKind::Spell && Has(state, PERK_CHAOS) && roll_chance_f(OwnerRankValue(attacker, PERK_CHAOS, 0)))
             mult *= CHAOS_MULTIPLIER;
 
         if (state->powerConversion > 0.0f)
@@ -812,7 +846,7 @@ namespace
             }
             mult *= 1.0f + (PRESSURE_STEP * track.stacks) / 100.0f;
             if (kind != HitKind::Periodic)
-                track.stacks = std::min(PRESSURE_MAX_STACKS, track.stacks + 1);
+                track.stacks = std::min(uint32(OwnerRankValue(attacker, PERK_PRESSURE, 0)), track.stacks + 1);
         }
         return mult;
     }
@@ -902,10 +936,10 @@ namespace
         state.desperateResist[school] = amount;
     }
 
-    // Block/Dodge/Parry/Haste Capping: +1% damage per AVOIDANCE_STEP above the cap, up to AVOIDANCE_MAX_BONUS
-    int32 OverCapBonus(float chance, float cap = AVOIDANCE_CAP)
+    // Block/Dodge/Parry/Haste Capping: +1% damage per AVOIDANCE_STEP above the cap, up to the rank's maximum
+    int32 OverCapBonus(float chance, float max, float cap = AVOIDANCE_CAP)
     {
-        return std::min(AVOIDANCE_MAX_BONUS, int32(std::max(0.0f, chance - cap) / AVOIDANCE_STEP));
+        return std::min(int32(max), int32(std::max(0.0f, chance - cap) / AVOIDANCE_STEP));
     }
 
     void RefreshUtilityAuras(Player* player, PerkState const& state);
@@ -922,18 +956,19 @@ namespace
         }
 
         // Block/Dodge/Parry Capping (the character sheet shows the uncapped chance)
+        auto rank = [&](uint32 perk) { return RankValue(player, state, perk, 0); };
         int32 capping = 0;
         if (Has(&state, PERK_BLOCK_CAPPING))
-            capping += OverCapBonus(player->GetFloatValue(PLAYER_BLOCK_PERCENTAGE));
+            capping += OverCapBonus(player->GetFloatValue(PLAYER_BLOCK_PERCENTAGE), rank(PERK_BLOCK_CAPPING));
         if (Has(&state, PERK_DODGE_CAPPING))
-            capping += OverCapBonus(player->GetFloatValue(PLAYER_DODGE_PERCENTAGE));
+            capping += OverCapBonus(player->GetFloatValue(PLAYER_DODGE_PERCENTAGE), rank(PERK_DODGE_CAPPING));
         if (Has(&state, PERK_PARRY_CAPPING))
-            capping += OverCapBonus(player->GetFloatValue(PLAYER_PARRY_PERCENTAGE));
+            capping += OverCapBonus(player->GetFloatValue(PLAYER_PARRY_PERCENTAGE), rank(PERK_PARRY_CAPPING));
         if (Has(&state, PERK_HASTE_CAPPING))
         {
             float haste = std::max({ player->GetRatingBonusValue(CR_HASTE_MELEE), player->GetRatingBonusValue(CR_HASTE_RANGED),
                                      player->GetRatingBonusValue(CR_HASTE_SPELL) });
-            capping += OverCapBonus(haste, HASTE_CAP);
+            capping += OverCapBonus(haste, rank(PERK_HASTE_CAPPING), HASTE_CAP);
         }
         state.cappingBonus = capping;
 
@@ -944,7 +979,7 @@ namespace
             float highest = 0.0f;
             for (uint8 stat = STAT_STRENGTH; stat < MAX_STATS; ++stat)
                 highest = std::max(highest, player->GetStat(Stats(stat)));
-            state.powerConversion = std::min(POWER_CONVERSION_MAX, std::floor(highest / POWER_CONVERSION_STAT));
+            state.powerConversion = std::min(rank(PERK_POWER_CONVERSION), std::floor(highest / POWER_CONVERSION_STAT));
         }
         if (!Has(&state, PERK_PRESSURE))
             state.pressure.clear();
@@ -952,7 +987,8 @@ namespace
         // Critical Understanding
         int32 crit = 0;
         if (Has(&state, PERK_CRITICAL_UNDERSTANDING))
-            crit = std::min(CRIT_UNDERSTANDING_MAX, int32(std::max(0.0f, HighestCritChance(player) - CRIT_UNDERSTANDING_FLOOR)));
+            crit = std::min(int32(rank(PERK_CRITICAL_UNDERSTANDING)),
+                            int32(std::max(0.0f, HighestCritChance(player) - CRIT_UNDERSTANDING_FLOOR)));
         SetCritBonus(player, state, crit);
 
         // Defensive Sacrifice: 10% of current attack power and spell power, not counting its own bonus
@@ -961,8 +997,9 @@ namespace
         {
             int32 currentAP = int32(player->GetTotalAttackPowerValue(BASE_ATTACK)) - state.sacrificeAP;
             int32 currentSP = SpellPower(player) - state.sacrificeSP;
-            ap = std::max(0, int32(currentAP * SACRIFICE_STAT_PCT));
-            sp = std::max(0, int32(currentSP * SACRIFICE_STAT_PCT));
+            float share = rank(PERK_DEFENSIVE_SACRIFICE) / 100.0f;
+            ap = std::max(0, int32(currentAP * share));
+            sp = std::max(0, int32(currentSP * share));
         }
         SetSacrificeBonus(player, state, ap, sp);
 
@@ -1009,11 +1046,13 @@ namespace
         return rank;
     }
 
+    // (a direct lookup: the Offensive perks ask for their rank on every hit)
     uint8 MaxRank(uint32 perk)
     {
-        auto ranks = RankedPerks();
-        auto itr = ranks.find(perk);
-        return itr == ranks.end() ? 1 : itr->second;
+        if (perk == PERK_ID_RAPID_RECOVERY)
+            return uint8(sRecoveryRanks.size());
+        auto itr = sPerkRanks.find(perk);
+        return itr == sPerkRanks.end() || itr->second.values.empty() ? 1 : uint8(itr->second.values.size());
     }
 
     // The rank a character has: a GM-set rank, or the highest rank its level reaches.
@@ -1274,7 +1313,7 @@ namespace
         }
     }
 
-    // Rolling Momentum: once a second, +2% in combat (up to +50%) or -2% out of combat.
+    // Rolling Momentum: once a second, +1% in combat (up to the rank's maximum) or -1% out of combat.
     void UpdateMomentum(Player* player, PerkState& state, uint32 diff)
     {
         if (!Has(&state, PERK_ROLLING_MOMENTUM))
@@ -1288,7 +1327,7 @@ namespace
         {
             state.momentumTimer -= 1000;
             if (player->IsInCombat())
-                state.momentum = std::min(MOMENTUM_MAX, state.momentum + MOMENTUM_STEP);
+                state.momentum = std::min(int32(RankValue(player, state, PERK_ROLLING_MOMENTUM, 0)), state.momentum + MOMENTUM_STEP);
             else
                 state.momentum = std::max(0, state.momentum - MOMENTUM_STEP);
         }
@@ -1663,7 +1702,7 @@ public:
                 rankCount = std::min(rankCount, values.size());
                 stats.push_back(std::move(values));
             }
-            std::vector<uint32> rankLevels = ParseList(sConfigMgr->GetOption<std::string>(prefix + "RankLevels", "1, 30, 60"));
+            std::vector<uint32> rankLevels = ParseList(sConfigMgr->GetOption<std::string>(prefix + "RankLevels", def.levels));
 
             PerkRanks& ranks = sPerkRanks[def.perk];
             for (size_t rank = 0; rank < rankCount; ++rank)

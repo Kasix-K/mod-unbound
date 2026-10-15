@@ -72,8 +72,8 @@ local function overCap(value, floor, max)
     return math.min(max, math.floor(math.max(0, value - floor)))
 end
 
-local function capLine(label, value, floor)
-    return string.format("You have %d%% %s -> %s damage.", math.floor(value), label, G("+" .. overCap(value, floor, 10) .. "%"))
+local function capLine(label, value, floor, max)
+    return string.format("You have %d%% %s -> %s damage.", math.floor(value), label, G("+" .. overCap(value, floor, max) .. "%"))
 end
 
 local PETS_TOO = true
@@ -90,7 +90,9 @@ local function ranked(describe, summary, extra)
         perk.desc = describe(cur)
         local lines = { "Rank " .. rank .. " / " .. maxRank }
         for i, v in ipairs(values) do
-            local line = string.format("Rank %d: %s  (level %d)", i, summary(v), v[#v])
+            -- level 255 can't be reached: an endgame rank that can't be earned yet
+            local when = v[#v] >= 255 and "endgame, coming later" or ("level " .. v[#v])
+            local line = string.format("Rank %d: %s  (%s)", i, summary(v), when)
             table.insert(lines, i == rank and G(line) or line)
         end
         if extra then table.insert(lines, extra) end
@@ -206,6 +208,71 @@ end
 local function heavyFrame(v) return "Increases your and your pet's Armor by " .. G(pct(v[1])) .. "." end
 local function one(fmt) return function(v) return string.format(fmt, v[1]) end end
 
+-- Offensive: CUR[id] holds the current rank's numbers (from the server) for the live lines; until the server
+-- sends them, cur() gives Rank 3's (the values before ranks existed).
+local CUR = {}
+local function cur(id, default)
+    local v = CUR[id]
+    return v and v[1] or default
+end
+local function offensive(describe, summary)
+    local apply = ranked(describe, summary)
+    return function(perk, rank, maxRank, values)
+        CUR[perk.id] = values[rank] or values[#values]
+        apply(perk, rank, maxRank, values)
+    end
+end
+local function plus(v) return G("+" .. pct(v[1])) end
+local function cyclic(v)
+    return "Your damage output continuously cycles between " .. B("-10%") .. " and " .. plus(v) .. " over 25 seconds."
+end
+local function critUnderstanding(v)
+    return "Every 1% critical strike chance above 25% grants " .. G("+1%") .. " critical strike damage, up to " .. plus(v) .. "."
+end
+local function sacrifice(v)
+    return "Take " .. B("10% more damage") .. " in exchange for " .. G(pct(v[1])) .. " of your current attack power and spell power:"
+end
+local function desperate(v)
+    return "Sacrifice " .. B("50%") .. " of your magic resistances for " .. plus(v) .. " damage dealt."
+end
+local function capping(label)
+    return function(v)
+        return "Your " .. label .. " caps at " .. B("20%") .. "; every 1% of " .. label .. " above the cap grants " .. G("+1%") ..
+               " damage dealt, up to " .. plus(v) .. "."
+    end
+end
+local function hasteCapping(v)
+    return "Every 1% Haste above 5% grants " .. G("+1%") .. " damage dealt, up to " .. plus(v) ..
+           ". Your Haste is not capped; instead you take " .. B("5% more damage") .. "."
+end
+local function petEncouragement(v) return "Your controlled units deal " .. G(pct(v[1])) .. " increased damage." end
+local function rollingMomentum(v)
+    return "For every second you spend in combat you deal " .. G("+1%") .. " damage, stacking up to " .. plus(v) ..
+           ". While out of combat the bonus bleeds away at " .. B("-1%") .. " per second."
+end
+local function tunnelVision(v)
+    return "Your single-target damage is increased by " .. G(pct(v[1])) .. ", but your area-of-effect damage is reduced by " .. B("10%") .. "."
+end
+local function collateral(v)
+    return "Your area-of-effect damage is increased by " .. G(pct(v[1])) .. ", but your single-target damage is reduced by " .. B("10%") .. "."
+end
+local function giantSlayer(v) return "Deal " .. G(pct(v[1])) .. " increased damage to " .. B("bosses") .. "." end
+local function merciless(v) return "Your damage-over-time effects deal " .. G(pct(v[1])) .. " more damage." end
+local function pressure(v)
+    return "Each hit on the same target grants " .. G("+1%") .. " damage, stacking up to " .. G(string.format("%g", v[1])) ..
+           " times (" .. plus(v) .. "). Resets when you switch targets."
+end
+local function chaos(v)
+    return "Every damaging ability has a " .. G(pct(v[1])) .. " chance to deal " .. G("50% more") .. " damage."
+end
+local function powerConversion(v)
+    return "Every 100 of your highest primary stat grants " .. G("+1%") .. " damage, up to " .. plus(v) .. "."
+end
+local function healingPowah(v) return "Increases your healing done by " .. G(pct(v[1])) .. "." end
+local function mastery(school, extra)
+    return function(v) return "Increases all " .. school .. " damage you deal by " .. G(pct(v[1])) .. "." .. (extra or "") end
+end
+
 local MANA_ONLY = "Requires a mana bar. It does nothing while you use Rage, Energy, Runic Power or Focus, " ..
                   "including a druid in Cat, Bear or Dire Bear Form."
 
@@ -240,109 +307,103 @@ UnboundPerks.PERKS = {
           perk.note = table.concat(lines, "\n")
       end },
 
-    -- Offensive -------------------------------------------------------------------------------------
+    -- Offensive (5 ranks each: Ranks 1-3 by level, Ranks 4-5 for the endgame) -------------------------
     { id = 101, name = "Cyclic Power", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Nature_TimeStop",
-      desc = "Your damage output continuously cycles between " .. B("-10%") .. " and " .. G("+20%") .. " over 25 seconds." },
+      desc = cyclic({ 20 }), applyRank = offensive(cyclic, one("up to +%g%%")) },
     { id = 102, name = "Critical Understanding", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_CriticalStrike",
-      desc = "Every 1% critical strike chance above 25% grants " .. G("+1%") ..
-             " critical strike damage, up to " .. G("+20%") .. ".",
+      desc = critUnderstanding({ 20 }), applyRank = offensive(critUnderstanding, one("up to +%g%% crit damage")),
       live = function()
           local crit = critChance()
-          return string.format("You have %d%% crit -> %s critical strike damage.", math.floor(crit), G("+" .. overCap(crit, 25, 20) .. "%"))
+          return string.format("You have %d%% crit -> %s critical strike damage.", math.floor(crit),
+              G("+" .. overCap(crit, 25, cur(102, 20)) .. "%"))
       end },
     { id = 103, name = "Defensive Sacrifice", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Warrior_BattleShout",
-      desc = "Take " .. B("10% more damage") .. " in exchange for:",
+      desc = sacrifice({ 10 }), applyRank = offensive(sacrifice, one("%g%% of attack power and spell power")),
       live = function()
-          return string.format(" %s attack power  |cffaaaaaa(10%% of current)|r\n %s spell power  |cffaaaaaa(10%% of current)|r",
-              G("+" .. math.floor(attackPower() * 0.1)), G("+" .. math.floor(spellPower() * 0.1)))
+          local share = cur(103, 10)
+          return string.format(" %s attack power  |cffaaaaaa(%g%% of current)|r\n %s spell power  |cffaaaaaa(%g%% of current)|r",
+              G("+" .. math.floor(attackPower() * share / 100)), share, G("+" .. math.floor(spellPower() * share / 100)), share)
       end,
       liveInline = true },
     { id = 104, name = "Desperate Power", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Shadow_UnholyFrenzy",
-      desc = "Sacrifice " .. B("50%") .. " of your magic resistances for " .. G("+10%") .. " damage dealt." },
+      desc = desperate({ 10 }), applyRank = offensive(desperate, one("+%g%% damage")) },
     { id = 105, name = "Block Capping", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\INV_Shield_05",
-      desc = "Your Block caps at " .. B("20%") .. "; every 1% of Block above the cap grants " .. G("+1%") ..
-             " damage dealt, up to " .. G("+10%") .. ".",
-      live = function() return capLine("Block", GetBlockChance() or 0, 20) end },
+      desc = capping("Block")({ 10 }), applyRank = offensive(capping("Block"), one("up to +%g%%")),
+      live = function() return capLine("Block", GetBlockChance() or 0, 20, cur(105, 10)) end },
     { id = 106, name = "Dodge Capping", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Rogue_Feint",
-      desc = "Your Dodge caps at " .. B("20%") .. "; every 1% of Dodge above the cap grants " .. G("+1%") ..
-             " damage dealt, up to " .. G("+10%") .. ".",
-      live = function() return capLine("Dodge", GetDodgeChance() or 0, 20) end },
+      desc = capping("Dodge")({ 10 }), applyRank = offensive(capping("Dodge"), one("up to +%g%%")),
+      live = function() return capLine("Dodge", GetDodgeChance() or 0, 20, cur(106, 10)) end },
     { id = 107, name = "Parry Capping", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Parry",
-      desc = "Your Parry caps at " .. B("20%") .. "; every 1% of Parry above the cap grants " .. G("+1%") ..
-             " damage dealt, up to " .. G("+10%") .. ".",
-      live = function() return capLine("Parry", GetParryChance() or 0, 20) end },
+      desc = capping("Parry")({ 10 }), applyRank = offensive(capping("Parry"), one("up to +%g%%")),
+      live = function() return capLine("Parry", GetParryChance() or 0, 20, cur(107, 10)) end },
     { id = 108, name = "Haste Capping", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Nature_Bloodlust",
-      desc = "Every 1% Haste above 5% grants " .. G("+1%") .. " damage dealt, up to " .. G("+10%") ..
-             ". Your Haste is not capped; instead you take " .. B("5% more damage") .. ".",
-      live = function() return capLine("Haste", hastePercent(), 5) end },
+      desc = hasteCapping({ 10 }), applyRank = offensive(hasteCapping, one("up to +%g%%")),
+      live = function() return capLine("Haste", hastePercent(), 5, cur(108, 10)) end },
     { id = 109, name = "Pet Encouragement", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Hunter_BeastWithin",
-      desc = "Your controlled units deal " .. G("15%") .. " increased damage." },
+      desc = petEncouragement({ 15 }), applyRank = offensive(petEncouragement, one("+%g%% pet damage")) },
     { id = 110, name = "Rolling Momentum", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Warrior_Charge",
-      desc = "For every second you spend in combat you deal " .. G("+1%") .. " damage, stacking up to " .. G("+10%") ..
-             ". While out of combat the bonus bleeds away at " .. B("-1%") .. " per second." },
+      desc = rollingMomentum({ 10 }), applyRank = offensive(rollingMomentum, one("up to +%g%%")) },
     { id = 111, name = "Tunnel Vision", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Hunter_SniperShot",
-      desc = "Your single-target damage is increased by " .. G("10%") ..
-             ", but your area-of-effect damage is reduced by " .. B("10%") .. "." },
+      desc = tunnelVision({ 10 }), applyRank = offensive(tunnelVision, one("single-target +%g%%")) },
     { id = 112, name = "Collateral Damage", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Fire_SelfDestruct",
-      desc = "Your area-of-effect damage is increased by " .. G("10%") ..
-             ", but your single-target damage is reduced by " .. B("10%") .. "." },
+      desc = collateral({ 10 }), applyRank = offensive(collateral, one("area +%g%%")) },
     { id = 113, name = "Giant Slayer", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Warrior_Decisivestrike",
-      desc = "Deal " .. G("10%") .. " increased damage to " .. B("bosses") .. "." },
+      desc = giantSlayer({ 10 }), applyRank = offensive(giantSlayer, one("+%g%% to bosses")) },
     { id = 114, name = "Merciless", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Shadow_CurseOfSargeras",
-      desc = "Your damage-over-time effects deal " .. G("15%") .. " more damage." },
+      desc = merciless({ 15 }), applyRank = offensive(merciless, one("+%g%% damage over time")) },
     { id = 115, name = "Pressure", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_Warrior_Sunder",
-      desc = "Each hit on the same target grants " .. G("+1%") .. " damage, stacking up to " .. G("10") ..
-             " times (" .. G("+10%") .. "). Resets when you switch targets." },
+      desc = pressure({ 10 }), applyRank = offensive(pressure, one("up to %g stacks")) },
     { id = 116, name = "Chaos", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Shadow_ChillTouch",
-      desc = "Every damaging ability has a " .. G("10%") .. " chance to deal " .. G("50% more") .. " damage." },
+      desc = chaos({ 10 }), applyRank = offensive(chaos, one("%g%% chance")) },
     { id = 117, name = "Power Conversion", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Arcane_ArcanePotency",
-      desc = "Every 100 of your highest primary stat grants " .. G("+1%") .. " damage, up to " .. G("+10%") .. ".",
+      desc = powerConversion({ 10 }), applyRank = offensive(powerConversion, one("up to +%g%%")),
       live = function()
           local stat = highestPrimaryStat()
-          local bonus = math.min(10, math.floor(stat / 100))
+          local bonus = math.min(cur(117, 10), math.floor(stat / 100))
           return string.format("Highest stat %d  ->  %s damage.", math.floor(stat), G(string.format("+%d%%", bonus)))
       end },
     { id = 118, name = "Healing Powah", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Holy_FlashHeal",
-      desc = "Increases your healing done by " .. G("10%") .. "." },
+      desc = healingPowah({ 10 }), applyRank = offensive(healingPowah, one("+%g%% healing")) },
     { id = 119, name = "Shadow Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Shadow_ShadowBolt",
-      desc = "Increases all |cff8c8cffShadow|r damage you deal by " .. G("10%") .. "." },
+      desc = mastery("|cff8c8cffShadow|r")({ 10 }), applyRank = offensive(mastery("|cff8c8cffShadow|r"), one("+%g%%")) },
     { id = 120, name = "Holy Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Holy_HolyBolt",
-      desc = "Increases all |cffffe680Holy|r damage you deal by " .. G("10%") .. "." },
+      desc = mastery("|cffffe680Holy|r")({ 10 }), applyRank = offensive(mastery("|cffffe680Holy|r"), one("+%g%%")) },
     { id = 121, name = "Arcane Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Nature_StarFall",
-      desc = "Increases all |cffff80ffArcane|r damage you deal by " .. G("10%") .. "." },
+      desc = mastery("|cffff80ffArcane|r")({ 10 }), applyRank = offensive(mastery("|cffff80ffArcane|r"), one("+%g%%")) },
     { id = 122, name = "Nature Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Nature_Lightning",
-      desc = "Increases all |cff4dff4dNature|r damage you deal by " .. G("10%") .. "." },
+      desc = mastery("|cff4dff4dNature|r")({ 10 }), applyRank = offensive(mastery("|cff4dff4dNature|r"), one("+%g%%")) },
     { id = 123, name = "Fire Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Fire_FlameBolt",
-      desc = "Increases all |cffff8040Fire|r damage you deal by " .. G("10%") .. "." },
+      desc = mastery("|cffff8040Fire|r")({ 10 }), applyRank = offensive(mastery("|cffff8040Fire|r"), one("+%g%%")) },
     { id = 124, name = "Frost Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Frost_FrostBolt02",
-      desc = "Increases all |cff80ffffFrost|r damage you deal by " .. G("10%") .. "." },
+      desc = mastery("|cff80ffffFrost|r")({ 10 }), applyRank = offensive(mastery("|cff80ffffFrost|r"), one("+%g%%")) },
     { id = 125, name = "Physical Mastery", category = "OFFENSIVE", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Ability_MeleeDamage",
-      desc = "Increases all Physical damage you deal by " .. G("10%") .. ".\nYour pet gains this too." },
+      desc = mastery("Physical", "\nYour pet gains this too.")({ 10 }),
+      applyRank = offensive(mastery("Physical", "\nYour pet gains this too."), one("+%g%%")) },
 
     -- Defensive (ids 201-299, at most 3 active; 201-203 were placeholders, removed: never reuse them) --------
     { id = 204, name = "Greater Bulwark", category = "DEFENSIVE", works = true, excludes = { 205, 206 },

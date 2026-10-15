@@ -59,6 +59,88 @@ Unbound.Perks.RapidRecovery.Delay = "6000, 5000, 4000"
 Unbound.Perks.RapidRecovery.Percent = "4, 6, 8"
 Unbound.Perks.RapidRecovery.RankLevels = "1, 30, 60"
 
+#    Offensive perks (src/unbound_perks.cpp). Five ranks each: Ranks 1-3 by level (1, 30, 60; Rank 3 is the
+#    value from before ranks existed), Ranks 4-5 for the endgame. Level 255 can't be reached, so Ranks 4-5
+#    are only for GM testing (.perk rank <id> <rank>) until a way to earn them exists; lower a 255 to open
+#    a rank, or give a perk fewer values for fewer ranks. Only the upside is ranked: drawbacks and caps stay.
+#
+#    Unbound.Perks.CyclicPower.High                     (perk 101) the high point of the damage wave (%, the low stays -10%)
+#    Unbound.Perks.CriticalUnderstanding.Max            (perk 102) maximum crit damage bonus (%)
+#    Unbound.Perks.DefensiveSacrifice.StatPercent       (perk 103) % of attack power and spell power gained
+#    Unbound.Perks.DesperatePower.Damage                (perk 104) damage dealt +%
+#    Unbound.Perks.BlockCapping.Max                     (perk 105) maximum damage bonus (%)
+#    Unbound.Perks.DodgeCapping.Max                     (perk 106) maximum damage bonus (%)
+#    Unbound.Perks.ParryCapping.Max                     (perk 107) maximum damage bonus (%)
+#    Unbound.Perks.HasteCapping.Max                     (perk 108) maximum damage bonus (%)
+#    Unbound.Perks.PetEncouragement.Percent             (perk 109) pet damage +%
+#    Unbound.Perks.RollingMomentum.Max                  (perk 110) maximum damage bonus (%)
+#    Unbound.Perks.TunnelVision.Bonus                   (perk 111) single-target damage +% (area -10% stays)
+#    Unbound.Perks.CollateralDamage.Bonus               (perk 112) area damage +% (single-target -10% stays)
+#    Unbound.Perks.GiantSlayer.Percent                  (perk 113) damage to bosses +%
+#    Unbound.Perks.Merciless.Percent                    (perk 114) damage-over-time +%
+#    Unbound.Perks.Pressure.Stacks                      (perk 115) maximum stacks (+1% each)
+#    Unbound.Perks.Chaos.Chance                         (perk 116) chance (%) for +50% damage
+#    Unbound.Perks.PowerConversion.Max                  (perk 117) maximum damage bonus (%)
+#    Unbound.Perks.HealingPowah.Percent                 (perk 118) healing done +%
+#    Unbound.Perks.ShadowMastery.Percent                (perk 119) Shadow damage +%
+#    Unbound.Perks.HolyMastery.Percent                  (perk 120) Holy damage +%
+#    Unbound.Perks.ArcaneMastery.Percent                (perk 121) Arcane damage +%
+#    Unbound.Perks.NatureMastery.Percent                (perk 122) Nature damage +%
+#    Unbound.Perks.FireMastery.Percent                  (perk 123) Fire damage +%
+#    Unbound.Perks.FrostMastery.Percent                 (perk 124) Frost damage +%
+#    Unbound.Perks.PhysicalMastery.Percent              (perk 125) Physical damage +%
+
+Unbound.Perks.CyclicPower.High = "10, 15, 20, 25, 30"
+Unbound.Perks.CyclicPower.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.CriticalUnderstanding.Max = "8, 14, 20, 26, 30"
+Unbound.Perks.CriticalUnderstanding.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.DefensiveSacrifice.StatPercent = "4, 7, 10, 13, 15"
+Unbound.Perks.DefensiveSacrifice.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.DesperatePower.Damage = "4, 7, 10, 13, 15"
+Unbound.Perks.DesperatePower.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.BlockCapping.Max = "4, 7, 10, 13, 15"
+Unbound.Perks.BlockCapping.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.DodgeCapping.Max = "4, 7, 10, 13, 15"
+Unbound.Perks.DodgeCapping.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.ParryCapping.Max = "4, 7, 10, 13, 15"
+Unbound.Perks.ParryCapping.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.HasteCapping.Max = "4, 7, 10, 13, 15"
+Unbound.Perks.HasteCapping.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.PetEncouragement.Percent = "6, 10, 15, 19, 22"
+Unbound.Perks.PetEncouragement.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.RollingMomentum.Max = "4, 7, 10, 13, 15"
+Unbound.Perks.RollingMomentum.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.TunnelVision.Bonus = "4, 7, 10, 13, 15"
+Unbound.Perks.TunnelVision.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.CollateralDamage.Bonus = "4, 7, 10, 13, 15"
+Unbound.Perks.CollateralDamage.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.GiantSlayer.Percent = "4, 7, 10, 13, 15"
+Unbound.Perks.GiantSlayer.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.Merciless.Percent = "6, 10, 15, 19, 22"
+Unbound.Perks.Merciless.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.Pressure.Stacks = "4, 7, 10, 13, 15"
+Unbound.Perks.Pressure.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.Chaos.Chance = "4, 7, 10, 13, 15"
+Unbound.Perks.Chaos.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.PowerConversion.Max = "4, 7, 10, 13, 15"
+Unbound.Perks.PowerConversion.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.HealingPowah.Percent = "4, 7, 10, 13, 15"
+Unbound.Perks.HealingPowah.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.ShadowMastery.Percent = "4, 7, 10, 13, 15"
+Unbound.Perks.ShadowMastery.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.HolyMastery.Percent = "4, 7, 10, 13, 15"
+Unbound.Perks.HolyMastery.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.ArcaneMastery.Percent = "4, 7, 10, 13, 15"
+Unbound.Perks.ArcaneMastery.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.NatureMastery.Percent = "4, 7, 10, 13, 15"
+Unbound.Perks.NatureMastery.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.FireMastery.Percent = "4, 7, 10, 13, 15"
+Unbound.Perks.FireMastery.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.FrostMastery.Percent = "4, 7, 10, 13, 15"
+Unbound.Perks.FrostMastery.RankLevels = "1, 30, 60, 255, 255"
+Unbound.Perks.PhysicalMastery.Percent = "4, 7, 10, 13, 15"
+Unbound.Perks.PhysicalMastery.RankLevels = "1, 30, 60, 255, 255"
+
 #    Unbound.Perks.IronWill.Percent
 #        Description: Iron Will utility perk: how much shorter enemy crowd control (stun, fear, root,
 #                     silence, sleep, polymorph, charm, disorient, sap) lasts on the player and their pets,
