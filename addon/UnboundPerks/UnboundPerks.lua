@@ -263,7 +263,7 @@ local function onServerRank(rest)
     local parsed = {}
     for entry in string.gmatch(values or "", "[^;]+") do
         local nums = {}
-        for n in string.gmatch(entry, "%d+") do table.insert(nums, tonumber(n)) end
+        for n in string.gmatch(entry, "[%d%.]+") do table.insert(nums, tonumber(n)) end
         table.insert(parsed, nums)
     end
     ranks[id] = { rank = rank, max = maxRank }
@@ -282,11 +282,19 @@ local function onServerState(list)
     if refresh then refresh() end
 end
 
+-- The perk this one is exclusive with, if that one is on (turning this one on swaps them).
+local function activePartner(perk)
+    return perk.excludes and db.active[perk.excludes] and perk.excludes or nil
+end
+
 local function togglePerk(perk)
     if perk.permanent then return end
     if not db.active[perk.id] then
         local cat = categoryOf(perk)
-        if cat and cat.limit and activeCount(cat.key) >= cat.limit then
+        local partner = activePartner(perk)
+        if partner then
+            db.active[partner] = nil  -- the server turns it off too
+        elseif cat and cat.limit and activeCount(cat.key) >= cat.limit then
             local msg = "You can only have " .. cat.limit .. " " .. cat.name .. " perks active. Turn one off first."
             UIErrorsFrame:AddMessage(msg, 1, 0.3, 0.3)
             setStatus(msg)
@@ -337,7 +345,7 @@ end
 local function canTurnOn(perk)
     if isOn(perk) or perk.permanent or not perk.works then return false end
     local cat = categoryOf(perk)
-    return not (cat and cat.limit and activeCount(cat.key) >= cat.limit)
+    return activePartner(perk) ~= nil or not (cat and cat.limit and activeCount(cat.key) >= cat.limit)
 end
 
 local function showPerkTooltip(button)

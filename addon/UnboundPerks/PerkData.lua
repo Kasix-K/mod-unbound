@@ -10,8 +10,10 @@
 --   pets       true = shows "This perk also works for your pets."
 --   note       optional grey line under the effect
 --   permanent  always on, can't be toggled
---   works      the server implements it (src/unbound_perks.cpp); others are listed but do nothing yet
+--   works      the server implements it (src/unbound_perks.cpp); every perk listed here should have it
 --   class      only shown to that class, e.g. "PALADIN"
+--   excludes   id of a perk that can't be active together with this one (turning this on turns it off)
+--   applyRank  ranked perks: rewrites desc/note from the rank numbers the server sends
 
 UnboundPerks = UnboundPerks or {}
 
@@ -19,7 +21,7 @@ UnboundPerks.CATEGORIES = {
     { key = "PERMANENT", name = "Permanent", color = { 1.00, 0.82, 0.30 } },
     { key = "OFFENSIVE", name = "Offensive", color = { 0.92, 0.38, 0.32 }, limit = 5 },  -- same limit as the server
     { key = "DEFENSIVE", name = "Defensive", color = { 0.38, 0.62, 0.98 } },
-    { key = "UTILITY",   name = "Utility",   color = { 0.72, 0.52, 0.98 } },
+    { key = "UTILITY",   name = "Utility",   color = { 0.72, 0.52, 0.98 }, limit = 3 },  -- same limit as the server
     { key = "CLASS",     name = nil,         color = nil },  -- name and colour come from the player's class
 }
 
@@ -75,6 +77,56 @@ end
 
 local PETS_TOO = true
 local ALWAYS = "Always active - cannot be turned off."
+
+local function pct(n) return string.format("%g%%", n) end
+
+-- Ranked perks: the server sends each rank's numbers (the stats of RANKED_PERKS in src/unbound_perks.cpp, in
+-- that order, then the level). describe(v) gives the EFFECT text for one rank, summary(v) a short rank line.
+local function ranked(describe, summary, extra)
+    return function(perk, rank, maxRank, values)
+        local cur = values[rank] or values[#values]
+        if not cur then return end
+        perk.desc = describe(cur)
+        local lines = { "Rank " .. rank .. " / " .. maxRank }
+        for i, v in ipairs(values) do
+            local line = string.format("Rank %d: %s  (level %d)", i, summary(v), v[#v])
+            table.insert(lines, i == rank and G(line) or line)
+        end
+        if extra then table.insert(lines, extra) end
+        perk.note = table.concat(lines, "\n")
+    end
+end
+
+local function longerLegs(v)
+    return "Increases your and your pet's running speed by " .. G(pct(v[1])) .. ". Your mount speed is increased by " ..
+           G(pct(v[2])) .. ", your swimming speed by " .. G(pct(v[3])) .. ", and your fall damage is reduced by " .. G(pct(v[4])) .. "."
+end
+local function plantedFeet(v)
+    return "Standing still for " .. string.format("%g", v[3]) .. " seconds restores " .. G(pct(v[1])) ..
+           " of your maximum health and " .. G(pct(v[2])) .. " of your maximum mana every second."
+end
+local function pursuit(v)
+    return "You and your pet gain " .. G(pct(v[1])) .. " movement speed for " .. string.format("%g", v[2]) ..
+           " seconds after you or your pet kill an enemy."
+end
+local function vampirism(v) return "Heal for " .. G(pct(v[1])) .. " of all damage you deal." end
+local function soulDrain(v)
+    return "Heal for " .. G(pct(v[1])) .. " of all damage you deal,\nbut direct healing received is reduced by " ..
+           B(pct(v[2])) .. ".\n -  Your |cff4dc3ffpet|r leeches the same way from its own damage, healing |cff4dc3ffitself|r"
+end
+local function petHealing(v) return "Increases your pet's healing taken by " .. G(pct(v[1])) .. "." end
+local function petThreat(v) return "Increases your pet's threat generation by " .. G(pct(v[1])) .. "." end
+local function silentKiller(v) return "Reduces threat you generate by " .. G(pct(v[1])) .. ". Your pet's threat is unchanged." end
+local function presence(v) return "Increases threat you generate by " .. G(pct(v[1])) .. "." end
+local function steadyHands(v)
+    return "Spell pushback reduced by " .. G(pct(v[1])) .. ".\nInterrupt lockouts and " .. G("silences") ..
+           " on you last " .. G(pct(v[2])) .. " shorter."
+end
+local function manaLeech(v)
+    return "Restore Mana equal to " .. G(pct(v[1])) .. " of all damage you deal."
+end
+local MANA_ONLY = "Requires a mana bar. It does nothing while you use Rage, Energy, Runic Power or Focus, " ..
+                  "including a druid in Cat, Bear or Dire Bear Form."
 
 UnboundPerks.PERKS = {
     -- Permanent -------------------------------------------------------------------------------------
@@ -211,19 +263,10 @@ UnboundPerks.PERKS = {
       icon = "Interface\\Icons\\Ability_MeleeDamage",
       desc = "Increases all Physical damage you deal by " .. G("10%") .. ".\nYour pet gains this too." },
 
-    -- Defensive (placeholders) -----------------------------------------------------------------------
-    { id = 201, name = "Thick Skin", category = "DEFENSIVE", icon = "Interface\\Icons\\INV_Misc_LeatherScrap_08",
-      desc = "Placeholder: +5% armor." },
-    { id = 202, name = "Second Wind", category = "DEFENSIVE", icon = "Interface\\Icons\\Ability_Warrior_DefensiveStance",
-      desc = "Placeholder: heal 10% of your health when you drop below 20% (once per minute)." },
-    { id = 203, name = "Steadfast", category = "DEFENSIVE", icon = "Interface\\Icons\\Ability_Defend",
-      desc = "Placeholder: +1% dodge chance." },
+    -- Defensive (ids 201-299; the tab is hidden while it has no perks. 201-203 were placeholders, removed:
+    -- never reuse them) ------------------------------------------------------------------------------
 
-    -- Utility (placeholders) -------------------------------------------------------------------------
-    { id = 301, name = "Fleet Foot", category = "UTILITY", icon = "Interface\\Icons\\Ability_Rogue_Sprint",
-      desc = "Placeholder: +5% run speed out of combat." },
-    { id = 302, name = "Treasure Sense", category = "UTILITY", icon = "Interface\\Icons\\INV_Misc_Coin_02",
-      desc = "Placeholder: creatures drop 10% more gold." },
+    -- Utility (ids 301 and 302 were placeholders, removed: never reuse them) ------------------------------
     { id = 303, name = "Iron Will", category = "UTILITY", pets = PETS_TOO, works = true,
       icon = "Interface\\Icons\\Spell_Magic_MageArmor",
       desc = "Crowd-control effects on you (and your pets) have their duration reduced by " .. G("30%") .. ".",
@@ -242,6 +285,67 @@ UnboundPerks.PERKS = {
           table.insert(lines, "Stuns, fears, roots, silences, sleeps, polymorphs, charms, disorients and saps.")
           perk.note = table.concat(lines, "\n")
       end },
+    { id = 304, name = "Longer Legs", category = "UTILITY", works = true,
+      icon = "Interface\\Icons\\Spell_Nature_Swiftness",
+      desc = longerLegs({ 10, 10, 50, 50 }),
+      applyRank = ranked(longerLegs, function(v)
+          return string.format("run +%g%%, mount +%g%%, swim +%g%%, fall -%g%%", v[1], v[2], v[3], v[4])
+      end) },
+    { id = 305, name = "Planting your legs", category = "UTILITY", works = true,
+      icon = "Interface\\Icons\\Spell_Nature_StoneSkinTotem",
+      desc = plantedFeet({ 1, 0.5, 3 }),
+      note = "Works in and out of combat.",
+      applyRank = ranked(plantedFeet, function(v)
+          return string.format("%g%% health, %g%% mana per second", v[1], v[2])
+      end, "Works in and out of combat.") },
+    { id = 306, name = "Relentless Pursuit", category = "UTILITY", works = true,
+      icon = "Interface\\Icons\\Ability_Rogue_Sprint",
+      desc = pursuit({ 35, 10 }),
+      applyRank = ranked(pursuit, function(v) return string.format("+%g%% for %g sec", v[1], v[2]) end) },
+    { id = 307, name = "Vampirism", category = "UTILITY", works = true, excludes = 308,
+      icon = "Interface\\Icons\\Spell_Shadow_LifeDrain02",
+      desc = vampirism({ 5 }),
+      note = "Can't be active together with Soul Drain.",
+      applyRank = ranked(vampirism, function(v) return string.format("%g%% of damage", v[1]) end,
+          "Can't be active together with Soul Drain.") },
+    { id = 308, name = "Soul Drain", category = "UTILITY", works = true, excludes = 307,
+      icon = "Interface\\Icons\\Spell_Shadow_LifeDrain",
+      desc = soulDrain({ 10, 20 }),
+      note = "Can't be active together with Vampirism.",
+      applyRank = ranked(soulDrain, function(v)
+          return string.format("%g%% of damage, healing received -%g%%", v[1], v[2])
+      end, "Can't be active together with Vampirism.") },
+    { id = 309, name = "Pets replenishment", category = "UTILITY", works = true,
+      icon = "Interface\\Icons\\Ability_Hunter_MendPet",
+      desc = petHealing({ 50 }),
+      applyRank = ranked(petHealing, function(v) return string.format("+%g%% healing taken", v[1]) end) },
+    { id = 310, name = "Pets Roar", category = "UTILITY", works = true,
+      icon = "Interface\\Icons\\Ability_Physical_Taunt",
+      desc = petThreat({ 300 }),
+      applyRank = ranked(petThreat, function(v) return string.format("+%g%% pet threat", v[1]) end) },
+    { id = 311, name = "Silent Killer", category = "UTILITY", works = true, excludes = 312,
+      icon = "Interface\\Icons\\Ability_Stealth",
+      desc = silentKiller({ 50 }),
+      note = "Can't be active together with Unbreakable Presence.",
+      applyRank = ranked(silentKiller, function(v) return string.format("-%g%% threat", v[1]) end,
+          "Can't be active together with Unbreakable Presence.") },
+    { id = 312, name = "Unbreakable Presence", category = "UTILITY", works = true, excludes = 311,
+      icon = "Interface\\Icons\\Ability_Warrior_DefensiveStance",
+      desc = presence({ 150 }),
+      note = "Can't be active together with Silent Killer.",
+      applyRank = ranked(presence, function(v) return string.format("+%g%% threat", v[1]) end,
+          "Can't be active together with Silent Killer.") },
+    { id = 313, name = "Spell-Protected Steady Hands", category = "UTILITY", works = true,
+      icon = "Interface\\Icons\\Spell_Holy_MindSooth",
+      desc = steadyHands({ 70, 30 }),
+      applyRank = ranked(steadyHands, function(v)
+          return string.format("pushback -%g%%, lockouts -%g%%", v[1], v[2])
+      end) },
+    { id = 314, name = "Mana Leech", category = "UTILITY", works = true,
+      icon = "Interface\\Icons\\Spell_Shadow_SiphonMana",
+      desc = manaLeech({ 2 }),
+      note = MANA_ONLY,
+      applyRank = ranked(manaLeech, function(v) return string.format("%g%% of damage as mana", v[1]) end, MANA_ONLY) },
 
     -- Class: Paladin ----------------------------------------------------------------------------------
     { id = 1001, name = "Retribution", category = "CLASS", class = "PALADIN", works = true,

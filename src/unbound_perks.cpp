@@ -22,8 +22,9 @@
  *   LOAD:<id>,<id>,...         exactly these perks on (a loadout)
  * and the server answers with "STATE:<id>,<id>,..." (the active perks it knows) or "ERR:<text>".
  * Perks can't be changed in combat. Active perks are saved in characters.character_unbound_perks.
- * At most MAX_ACTIVE_OFFENSIVE (5) Offensive perks (ids 101-199) can be active at once; the addon uses
- * the same limit (CATEGORIES in addon/UnboundPerks/PerkData.lua). Class perks (ids 1001+) only work for
+ * At most 5 Offensive perks (ids 101-199) and 3 Utility perks (ids 301-399) can be active at once
+ * (CATEGORY_LIMITS); the addon uses the same limits (CATEGORIES in addon/UnboundPerks/PerkData.lua).
+ * Exclusive pairs (EXCLUSIVE): turning one on turns the other off. Class perks (ids 1001+) only work for
  * their class (CLASS_PERKS); the server refuses them for any other class.
  *
  * Working toggled perks (ids match addon/UnboundPerks/PerkData.lua; all also work for pets):
@@ -68,6 +69,24 @@
  *                              stun, freeze, knockout, polymorph, horror, sap (by mechanic, or by aura type for
  *                              spells without one). Applied to the aura's base duration, so it stacks with
  *                              racials and talents (e.g. an Orc's 15% stun reduction) and diminishing returns.
+ *   304 Longer Legs            run speed +4/7/10% (you and your pet), mounted speed +4/7/10%, swim speed
+ *                              +20/35/50%, fall damage -20/35/50%
+ *   305 Planting your legs     after standing still for 3 seconds: 0.5/0.75/1% of maximum health and
+ *                              0.25/0.4/0.5% of maximum mana every second (in or out of combat)
+ *   306 Relentless Pursuit     after you or your pet kill an enemy, you and your pet run 15/25/35% faster
+ *                              for 10 seconds
+ *   307 Vampirism              heal for 3/4/5% of the damage you deal                     (exclusive with 308)
+ *   308 Soul Drain             heal for 6/8/10% of the damage you deal, your pet heals itself the same way
+ *                              from its damage; direct healing on you and your pet -20%  (exclusive with 307)
+ *   309 Pets replenishment     your pet takes 20/35/50% more healing
+ *   310 Pets Roar              your pet generates 100/200/300% more threat
+ *   311 Silent Killer          you generate 20/35/50% less threat (not your pet)          (exclusive with 312)
+ *   312 Unbreakable Presence   you generate 50/100/150% more threat                       (exclusive with 311)
+ *   313 Steady Hands           spell pushback -30/50/70%; interrupt lockouts and silences on you -10/20/30%
+ *   314 Mana Leech             restore mana equal to 1/1.5/2% of the damage you deal, while using mana
+ *   The numbers are Rank 1/2/3 (levels 1, 30, 60), all in mod_unbound.conf (RANKED_PERKS). Speed, threat
+ *   and Steady Hands are server-only passive auras (SPELL_PERK_*); the leech perks and fall damage use the
+ *   DealDamage hook (leech from damage actually dealt to another unit, capped at the victim's health).
  *
  * Class perks (ids 1001+):
  *  1001 Retribution (Paladin)  Improved Divine Storm: Divine Storm hits up to 6 enemies (normally 4), and every
@@ -82,11 +101,8 @@
  *                              The extra Crusader Strikes, Judgements and Exorcisms are free triggered casts.
  *
  * Settings (mod_unbound.conf): Unbound.Perks.RapidRecovery (on/off), .Delay (ms per rank), .Percent (per rank),
-<<<<<<< Updated upstream
- * .RankLevels (level per rank); Unbound.Perks.IronWill.Percent (per rank), .RankLevels (level per rank).
-=======
- * .RankLevels (level per rank).
->>>>>>> Stashed changes
+ * .RankLevels (level per rank); for every other ranked perk Unbound.Perks.<Key>.<Stat> (per rank) and
+ * Unbound.Perks.<Key>.RankLevels (RANKED_PERKS lists the keys, stats and defaults).
  */
 
 #include "Chat.h"
@@ -98,6 +114,7 @@
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 #include "ObjectAccessor.h"
+#include "Pet.h"
 #include "Player.h"
 #include "Random.h"
 #include "ScriptMgr.h"
@@ -112,6 +129,7 @@
 #include "WorldPacket.h"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <list>
 #include <map>
@@ -134,17 +152,17 @@ namespace
     constexpr uint32 RECOVERY_TICK_MS = 1000;
     constexpr uint32 PERK_ID_RAPID_RECOVERY = 3;
 
-<<<<<<< Updated upstream
-    // ------------------------------------------------------------------ Iron Will settings
-    struct IronWillRank
+    // ------------------------------------------------------------------ ranked perk settings
+    // Every ranked perk except Rapid Recovery: one or more numbers per rank plus the level that reaches each
+    // rank, read from mod_unbound.conf as Unbound.Perks.<Key>.<Stat> = "rank 1, rank 2, ..." and
+    // Unbound.Perks.<Key>.RankLevels (see RANKED_PERKS below).
+    struct PerkRanks
     {
-        uint32 percent; // crowd-control duration reduction
-        uint32 level;   // character level that reaches this rank
+        std::vector<std::vector<float>> values; // values[rank - 1][stat]
+        std::vector<uint32> levels;             // character level that reaches each rank
     };
-    std::vector<IronWillRank> sIronWillRanks = { { 10, 1 }, { 20, 30 }, { 30, 60 } };
+    std::map<uint32, PerkRanks> sPerkRanks;
 
-=======
->>>>>>> Stashed changes
     // "6000, 5000, 4000" -> { 6000, 5000, 4000 }
     std::vector<uint32> ParseList(std::string const& text)
     {
@@ -157,6 +175,22 @@ namespace
                 part.remove_suffix(1);
             if (Optional<uint32> value = Acore::StringTo<uint32>(part))
                 values.push_back(*value);
+        }
+        return values;
+    }
+
+    // "0.5, 0.75, 1" -> { 0.5, 0.75, 1 }
+    std::vector<float> ParseFloatList(std::string const& text)
+    {
+        std::vector<float> values;
+        for (std::string_view part : Acore::Tokenize(text, ',', false))
+        {
+            while (!part.empty() && part.front() == ' ')
+                part.remove_prefix(1);
+            while (!part.empty() && part.back() == ' ')
+                part.remove_suffix(1);
+            if (Optional<float> value = Acore::StringTo<float>(part))
+                values.push_back(std::max(0.0f, *value));
         }
         return values;
     }
@@ -190,6 +224,17 @@ namespace
         PERK_FROST_MASTERY          = 124,
         PERK_PHYSICAL_MASTERY       = 125,
         PERK_IRON_WILL              = 303,
+        PERK_LONGER_LEGS            = 304,
+        PERK_PLANTED_FEET           = 305,  // "Planting your legs"
+        PERK_RELENTLESS_PURSUIT     = 306,
+        PERK_VAMPIRISM              = 307,
+        PERK_SOUL_DRAIN             = 308,
+        PERK_PET_REPLENISHMENT      = 309,
+        PERK_PETS_ROAR              = 310,
+        PERK_SILENT_KILLER          = 311,
+        PERK_UNBREAKABLE_PRESENCE   = 312,
+        PERK_STEADY_HANDS           = 313,  // "Spell-Protected Steady Hands"
+        PERK_MANA_LEECH             = 314,
         PERK_RETRIBUTION            = 1001,  // Paladin
     };
 
@@ -201,7 +246,47 @@ namespace
         PERK_MERCILESS, PERK_PRESSURE, PERK_CHAOS, PERK_POWER_CONVERSION,
         PERK_HEALING_POWAH, PERK_SHADOW_MASTERY, PERK_HOLY_MASTERY, PERK_ARCANE_MASTERY,
         PERK_NATURE_MASTERY, PERK_FIRE_MASTERY, PERK_FROST_MASTERY, PERK_PHYSICAL_MASTERY,
-        PERK_IRON_WILL, PERK_RETRIBUTION };
+        PERK_IRON_WILL, PERK_LONGER_LEGS, PERK_PLANTED_FEET, PERK_RELENTLESS_PURSUIT, PERK_VAMPIRISM,
+        PERK_SOUL_DRAIN, PERK_PET_REPLENISHMENT, PERK_PETS_ROAR, PERK_SILENT_KILLER, PERK_UNBREAKABLE_PRESENCE,
+        PERK_STEADY_HANDS, PERK_MANA_LEECH, PERK_RETRIBUTION };
+
+    // Perks that can't be active together: turning one on turns the other off.
+    std::unordered_map<uint32, uint32> const EXCLUSIVE = {
+        { PERK_VAMPIRISM, PERK_SOUL_DRAIN }, { PERK_SOUL_DRAIN, PERK_VAMPIRISM },
+        { PERK_SILENT_KILLER, PERK_UNBREAKABLE_PRESENCE }, { PERK_UNBREAKABLE_PRESENCE, PERK_SILENT_KILLER },
+    };
+
+    // Ranked perks read from mod_unbound.conf: perk, config key, and each stat with its default per rank.
+    // All of them reach their ranks at the levels in Unbound.Perks.<Key>.RankLevels (default "1, 30, 60").
+    struct RankedPerkDef
+    {
+        uint32 perk;
+        char const* key;
+        std::vector<std::pair<char const*, char const*>> stats; // stat name, default "rank 1, rank 2, rank 3"
+    };
+    std::vector<RankedPerkDef> const RANKED_PERKS = {
+        { PERK_IRON_WILL,            "IronWill",            { { "Percent", "10, 20, 30" } } },
+        { PERK_LONGER_LEGS,          "LongerLegs",          { { "RunSpeed", "4, 7, 10" }, { "MountSpeed", "4, 7, 10" },
+                                                              { "SwimSpeed", "20, 35, 50" }, { "FallDamage", "20, 35, 50" } } },
+        { PERK_PLANTED_FEET,         "PlantedFeet",         { { "Health", "0.5, 0.75, 1" }, { "Mana", "0.25, 0.4, 0.5" },
+                                                              { "Delay", "3, 3, 3" } } },
+        { PERK_RELENTLESS_PURSUIT,   "RelentlessPursuit",   { { "Speed", "15, 25, 35" }, { "Duration", "10, 10, 10" } } },
+        { PERK_VAMPIRISM,            "Vampirism",           { { "Percent", "3, 4, 5" } } },
+        { PERK_SOUL_DRAIN,           "SoulDrain",           { { "Percent", "6, 8, 10" }, { "HealingTaken", "20, 20, 20" } } },
+        { PERK_PET_REPLENISHMENT,    "PetReplenishment",    { { "Percent", "20, 35, 50" } } },
+        { PERK_PETS_ROAR,            "PetsRoar",            { { "Percent", "100, 200, 300" } } },
+        { PERK_SILENT_KILLER,        "SilentKiller",        { { "Percent", "20, 35, 50" } } },
+        { PERK_UNBREAKABLE_PRESENCE, "UnbreakablePresence", { { "Percent", "50, 100, 150" } } },
+        { PERK_STEADY_HANDS,         "SteadyHands",         { { "Pushback", "30, 50, 70" }, { "Lockout", "10, 20, 30" } } },
+        { PERK_MANA_LEECH,           "ManaLeech",           { { "Percent", "1, 1.5, 2" } } },
+    };
+
+    // Server-only passive spells (data/sql/db-world/unbound_perks_utility_spells.sql). Passive auras are never
+    // sent to the client, so they need no client patch; the amounts are set here from the perk's rank.
+    constexpr uint32 SPELL_PERK_MOVEMENT     = 200210;  // run speed, mounted speed, swim speed (%)
+    constexpr uint32 SPELL_PERK_PURSUIT      = 200211;  // run speed (%), timed from the code
+    constexpr uint32 SPELL_PERK_THREAT       = 200212;  // threat (%), all schools
+    constexpr uint32 SPELL_PERK_STEADY_HANDS = 200213;  // pushback reduction (%), interrupt and silence duration (%)
 
     // Class perks: the class each one belongs to. The server refuses a class perk for any other class.
     std::unordered_map<uint32, uint8> const CLASS_PERKS = {
@@ -222,9 +307,39 @@ namespace
     constexpr float SWORD_LIGHT_PHYSICAL = 1.10f;     // +10%
 
     constexpr char const* PREFIX = "UBPERK";
-    constexpr uint32 MAX_ACTIVE_OFFENSIVE = 5;
+    // Categories with a limit on active perks (the addon uses the same limits, CATEGORIES in PerkData.lua).
+    struct CategoryLimit
+    {
+        uint32 first;
+        uint32 last;
+        uint32 max;
+        char const* name;
+    };
+    constexpr CategoryLimit CATEGORY_LIMITS[] = {
+        { 101, 199, 5, "Offensive" },
+        { 301, 399, 3, "Utility" },
+    };
 
-    bool IsOffensive(uint32 perk) { return perk >= 101 && perk <= 199; }
+    CategoryLimit const* LimitOf(uint32 perk)
+    {
+        for (CategoryLimit const& limit : CATEGORY_LIMITS)
+            if (perk >= limit.first && perk <= limit.last)
+                return &limit;
+        return nullptr;
+    }
+
+    uint32 CountIn(std::set<uint32> const& perks, CategoryLimit const& limit)
+    {
+        return uint32(std::count_if(perks.begin(), perks.end(),
+            [&limit](uint32 perk) { return perk >= limit.first && perk <= limit.last; }));
+    }
+
+    // The perk this one is exclusive with, if it is active.
+    uint32 ActivePartner(std::set<uint32> const& perks, uint32 perk)
+    {
+        auto itr = EXCLUSIVE.find(perk);
+        return itr != EXCLUSIVE.end() && perks.count(itr->second) ? itr->second : 0;
+    }
 
     // False for a class perk of another class.
     bool CanUsePerk(Player const* player, uint32 perk)
@@ -233,10 +348,6 @@ namespace
         return itr == CLASS_PERKS.end() || player->getClass() == itr->second;
     }
 
-    uint32 CountOffensive(std::set<uint32> const& perks)
-    {
-        return uint32(std::count_if(perks.begin(), perks.end(), IsOffensive));
-    }
     constexpr uint32 STAT_REFRESH_MS = 2000;
 
     constexpr uint32 CYCLE_MS = 25000;               // Cyclic Power period
@@ -301,6 +412,8 @@ namespace
         std::map<uint32, uint8> rankOverride;  // perk ranks set by a GM (.perk rank)
         int32 momentum = 0;         // Rolling Momentum bonus (%)
         uint32 momentumTimer = 0;
+        uint32 stillMs = 0;         // Planting your legs: time standing still
+        uint32 stillTickMs = 0;
     };
 
     std::unordered_map<ObjectGuid::LowType, PerkState> sStates;
@@ -626,6 +739,8 @@ namespace
         return std::min(AVOIDANCE_MAX_BONUS, int32(std::max(0.0f, chance - cap) / AVOIDANCE_STEP));
     }
 
+    void RefreshUtilityAuras(Player* player, PerkState const& state);
+
     void RefreshStatPerks(Player* player, PerkState& state)
     {
         // Desperate Power: remove 50% of each magic resistance (not counting what it already removed)
@@ -681,6 +796,8 @@ namespace
             sp = std::max(0, int32(currentSP * SACRIFICE_STAT_PCT));
         }
         SetSacrificeBonus(player, state, ap, sp);
+
+        RefreshUtilityAuras(player, state);
     }
 
     // ------------------------------------------------------------------ addon messages
@@ -704,26 +821,23 @@ namespace
     }
 
     // ------------------------------------------------------------------ perk ranks
-    // Ranked perks and their number of ranks (more perks get ranks later).
+    // Ranked perks and their number of ranks.
     std::map<uint32, uint8> RankedPerks()
     {
-<<<<<<< Updated upstream
-        return { { PERK_ID_RAPID_RECOVERY, uint8(sRecoveryRanks.size()) },
-                 { PERK_IRON_WILL, uint8(sIronWillRanks.size()) } };
+        std::map<uint32, uint8> ranked = { { PERK_ID_RAPID_RECOVERY, uint8(sRecoveryRanks.size()) } };
+        for (auto const& [perk, ranks] : sPerkRanks)
+            ranked[perk] = uint8(ranks.values.size());
+        return ranked;
     }
 
-    // The highest rank whose level the character has reached.
-    template <typename Rank>
-    uint8 RankForLevel(Player const* player, std::vector<Rank> const& ranks)
+    // The highest rank whose level the character has reached (levels[i] reaches rank i + 1).
+    uint8 RankForLevel(Player const* player, std::vector<uint32> const& levels)
     {
         uint8 rank = 1;
-        for (uint8 i = 0; i < ranks.size(); ++i)
-            if (player->GetLevel() >= ranks[i].level)
+        for (uint8 i = 0; i < levels.size(); ++i)
+            if (player->GetLevel() >= levels[i])
                 rank = i + 1;
         return rank;
-=======
-        return { { PERK_ID_RAPID_RECOVERY, uint8(sRecoveryRanks.size()) } };
->>>>>>> Stashed changes
     }
 
     uint8 MaxRank(uint32 perk)
@@ -741,19 +855,15 @@ namespace
         if (set != state.rankOverride.end())
             return std::clamp<uint8>(set->second, 1, maxRank);
         if (perk == PERK_ID_RAPID_RECOVERY)
-<<<<<<< Updated upstream
-            return RankForLevel(player, sRecoveryRanks);
-        if (perk == PERK_IRON_WILL)
-            return RankForLevel(player, sIronWillRanks);
-=======
         {
-            uint8 rank = 1;
-            for (uint8 i = 0; i < sRecoveryRanks.size(); ++i)
-                if (player->GetLevel() >= sRecoveryRanks[i].level)
-                    rank = i + 1;
-            return rank;
+            std::vector<uint32> levels;
+            for (RecoveryRank const& r : sRecoveryRanks)
+                levels.push_back(r.level);
+            return RankForLevel(player, levels);
         }
->>>>>>> Stashed changes
+        auto ranks = sPerkRanks.find(perk);
+        if (ranks != sPerkRanks.end())
+            return std::min<uint8>(RankForLevel(player, ranks->second.levels), maxRank);
         return 1;
     }
 
@@ -762,6 +872,25 @@ namespace
         return sRecoveryRanks[PerkRank(player, state, PERK_ID_RAPID_RECOVERY) - 1];
     }
 
+    // One number of a ranked perk at the character's rank (stat = its position in RANKED_PERKS).
+    float RankValue(Player const* player, PerkState const& state, uint32 perk, size_t stat)
+    {
+        auto ranks = sPerkRanks.find(perk);
+        if (ranks == sPerkRanks.end() || ranks->second.values.empty())
+            return 0.0f;
+        std::vector<float> const& values = ranks->second.values[PerkRank(player, state, perk) - 1];
+        return stat < values.size() ? values[stat] : 0.0f;
+    }
+
+    // The same for whoever's perks apply to a unit (the player, or the owner of a pet).
+    float OwnerRankValue(Unit const* unit, uint32 perk, size_t stat)
+    {
+        Player const* owner = unit ? unit->GetCharmerOrOwnerPlayerOrPlayerItself() : nullptr;
+        PerkState const* state = owner ? StateOf(owner) : nullptr;
+        return Has(state, perk) ? RankValue(owner, *state, perk, stat) : 0.0f;
+    }
+
+    // RANK:<perk>:<rank>:<max>:<values>, values "a,b,...,level;a,b,...,level" per rank
     void SendRanks(Player* player, PerkState const& state)
     {
         for (auto const& [perk, maxRank] : RankedPerks())
@@ -771,15 +900,83 @@ namespace
                 for (RecoveryRank const& r : sRecoveryRanks)
                     values += (values.empty() ? "" : ";") + std::to_string(r.delayMs) + "," +
                               std::to_string(r.percent) + "," + std::to_string(r.level);
-<<<<<<< Updated upstream
-            else if (perk == PERK_IRON_WILL)
-                for (IronWillRank const& r : sIronWillRanks)
-                    values += (values.empty() ? "" : ";") + std::to_string(r.percent) + "," + std::to_string(r.level);
-=======
->>>>>>> Stashed changes
+            else if (auto ranks = sPerkRanks.find(perk); ranks != sPerkRanks.end())
+                for (size_t i = 0; i < ranks->second.values.size(); ++i)
+                {
+                    values += values.empty() ? "" : ";";
+                    for (float value : ranks->second.values[i])
+                        values += Acore::StringFormat("{:g},", value);
+                    values += std::to_string(ranks->second.levels[i]);
+                }
             SendAddon(player, "RANK:" + std::to_string(perk) + ":" + std::to_string(PerkRank(player, state, perk)) +
                 ":" + std::to_string(maxRank) + ":" + values);
         }
+    }
+
+    // ------------------------------------------------------------------ utility perk auras
+    // Adds, updates or removes one of the server-only perk auras (all amounts 0 = remove).
+    Aura* SetPerkAura(Unit* unit, uint32 spellId, std::array<int32, MAX_SPELL_EFFECTS> const& amounts)
+    {
+        if (!unit)
+            return nullptr;
+        bool wanted = std::any_of(amounts.begin(), amounts.end(), [](int32 amount) { return amount != 0; });
+        Aura* aura = unit->GetAura(spellId);
+        if (!wanted)
+        {
+            if (aura)
+                unit->RemoveAurasDueToSpell(spellId);
+            return nullptr;
+        }
+        if (!aura)
+            aura = unit->AddAura(spellId, unit);
+        if (!aura)
+            return nullptr;
+        for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
+            if (AuraEffect* effect = aura->GetEffect(i))
+                if (effect->GetAmount() != amounts[i])
+                    effect->ChangeAmount(amounts[i]);
+        return aura;
+    }
+
+    // Longer Legs, Pets Roar, Silent Killer, Unbreakable Presence and Steady Hands, on the player and the pet.
+    // Called with the stat perks (every STAT_REFRESH_MS while perks are active, and on every change), which
+    // also picks up a newly summoned pet.
+    void RefreshUtilityAuras(Player* player, PerkState const& state)
+    {
+        auto value = [&](uint32 perk, size_t stat) {
+            return Has(&state, perk) ? int32(RankValue(player, state, perk, stat)) : 0;
+        };
+
+        int32 run = value(PERK_LONGER_LEGS, 0);
+        int32 swim = value(PERK_LONGER_LEGS, 2);
+        SetPerkAura(player, SPELL_PERK_MOVEMENT, { run, value(PERK_LONGER_LEGS, 1), swim });
+        int32 threat = value(PERK_UNBREAKABLE_PRESENCE, 0) - value(PERK_SILENT_KILLER, 0);
+        SetPerkAura(player, SPELL_PERK_THREAT, { threat, 0, 0 });
+        int32 lockout = -value(PERK_STEADY_HANDS, 1);
+        SetPerkAura(player, SPELL_PERK_STEADY_HANDS, { value(PERK_STEADY_HANDS, 0), lockout, lockout });
+
+        if (Pet* pet = player->GetPet())
+        {
+            SetPerkAura(pet, SPELL_PERK_MOVEMENT, { run, 0, swim });
+            SetPerkAura(pet, SPELL_PERK_THREAT, { value(PERK_PETS_ROAR, 0), 0, 0 });
+        }
+    }
+
+    // Relentless Pursuit: a burst of run speed for the player and the pet after a kill.
+    void StartPursuit(Player* player)
+    {
+        PerkState const* state = StateOf(player);
+        if (!Has(state, PERK_RELENTLESS_PURSUIT))
+            return;
+        int32 speed = int32(RankValue(player, *state, PERK_RELENTLESS_PURSUIT, 0));
+        int32 durationMs = int32(RankValue(player, *state, PERK_RELENTLESS_PURSUIT, 1) * IN_MILLISECONDS);
+        for (Unit* unit : { static_cast<Unit*>(player), static_cast<Unit*>(player->GetPet()) })
+            if (unit && unit->IsAlive())
+                if (Aura* aura = SetPerkAura(unit, SPELL_PERK_PURSUIT, { speed, 0, 0 }))
+                {
+                    aura->SetMaxDuration(durationMs);
+                    aura->SetDuration(durationMs);
+                }
     }
 
     void SavePerk(Player* player, uint32 perk, bool on)
@@ -797,6 +994,11 @@ namespace
             return;
         if (on)
         {
+            if (uint32 partner = ActivePartner(state.active, perk))
+            {
+                state.active.erase(partner);
+                SavePerk(player, partner, false);
+            }
             state.active.insert(perk);
             if (perk == PERK_CYCLIC_POWER)
                 state.cycleStartMs = getMSTime();
@@ -836,28 +1038,30 @@ namespace
                 if (Optional<uint32> perk = Acore::StringTo<uint32>(parts[1]))
                 {
                     bool on = parts[2] == "1";
+                    CategoryLimit const* limit = LimitOf(*perk);
                     if (on && !CanUsePerk(player, *perk))
                         SendAddon(player, "ERR:That perk belongs to another class.");
-                    else if (on && IsOffensive(*perk) && !state.active.count(*perk) &&
-                        CountOffensive(state.active) >= MAX_ACTIVE_OFFENSIVE)
-                        SendAddon(player, "ERR:You can only have " + std::to_string(MAX_ACTIVE_OFFENSIVE) +
-                            " Offensive perks active. Turn one off first.");
+                    else if (on && limit && !state.active.count(*perk) && !ActivePartner(state.active, *perk) &&
+                        CountIn(state.active, *limit) >= limit->max)
+                        SendAddon(player, "ERR:You can only have " + std::to_string(limit->max) + " " + limit->name +
+                            " perks active. Turn one off first.");
                     else
                         SetPerk(player, state, *perk, on);
                 }
         }
         else
         {
-            // a loadout: keep the first MAX_ACTIVE_OFFENSIVE Offensive perks in the order sent
+            // a loadout: in the order sent, keep perks until a category is full (and only the first of two
+            // exclusive perks)
             std::set<uint32> wanted;
-            uint32 offensive = 0;
             bool trimmed = false;
             std::string_view list = std::string_view(text).substr(5);
             for (std::string_view id : Acore::Tokenize(list, ',', false))
                 if (Optional<uint32> perk = Acore::StringTo<uint32>(id))
                     if (IMPLEMENTED.count(*perk) && CanUsePerk(player, *perk) && !wanted.count(*perk))
                     {
-                        if (IsOffensive(*perk) && ++offensive > MAX_ACTIVE_OFFENSIVE)
+                        CategoryLimit const* limit = LimitOf(*perk);
+                        if (ActivePartner(wanted, *perk) || (limit && CountIn(wanted, *limit) >= limit->max))
                         {
                             trimmed = true;
                             continue;
@@ -867,8 +1071,7 @@ namespace
             for (uint32 perk : IMPLEMENTED)
                 SetPerk(player, state, perk, wanted.count(perk) > 0);
             if (trimmed)
-                SendAddon(player, "ERR:Only the first " + std::to_string(MAX_ACTIVE_OFFENSIVE) +
-                    " Offensive perks of that loadout were turned on.");
+                SendAddon(player, "ERR:Not every perk of that loadout fit (Offensive at most 5, Utility at most 3).");
         }
 
         RefreshStatPerks(player, state);
@@ -942,7 +1145,6 @@ namespace
 
         state.tickMs = 0;
         RestoreTick(player, rank.percent);
-<<<<<<< Updated upstream
     }
 
     // ------------------------------------------------------------------ Iron Will
@@ -980,11 +1182,92 @@ namespace
         Unit* caster = aura->GetCaster();
         if (!caster || caster == target || !caster->IsHostileTo(target))
             return;
-        Player* owner = target->GetCharmerOrOwnerPlayerOrPlayerItself();
-        uint32 percent = sIronWillRanks[PerkRank(owner, *state, PERK_IRON_WILL) - 1].percent;
-        maxDuration = std::max<int32>(1, maxDuration - int32(int64(maxDuration) * percent / 100));
-=======
->>>>>>> Stashed changes
+        float percent = std::min(100.0f, OwnerRankValue(target, PERK_IRON_WILL, 0));
+        maxDuration = std::max<int32>(1, maxDuration - int32(maxDuration * percent / 100.0f));
+    }
+
+    // ------------------------------------------------------------------ Planting your legs
+    // After standing still for the delay, restore a percentage of maximum health and mana every second.
+    void UpdatePlantedFeet(Player* player, PerkState& state, uint32 diff)
+    {
+        if (!Has(&state, PERK_PLANTED_FEET) || !player->IsAlive() || player->isMoving())
+        {
+            state.stillMs = 0;
+            state.stillTickMs = 0;
+            return;
+        }
+        uint32 delayMs = uint32(RankValue(player, state, PERK_PLANTED_FEET, 2) * IN_MILLISECONDS);
+        if (state.stillMs < delayMs)
+        {
+            state.stillMs += diff;
+            if (state.stillMs < delayMs)
+                return;
+            state.stillTickMs = RECOVERY_TICK_MS; // first tick right at the delay mark
+        }
+        else
+            state.stillTickMs += diff;
+        if (state.stillTickMs < RECOVERY_TICK_MS)
+            return;
+        state.stillTickMs = 0;
+
+        float healthPct = RankValue(player, state, PERK_PLANTED_FEET, 0);
+        float manaPct = RankValue(player, state, PERK_PLANTED_FEET, 1);
+        if (player->GetHealth() < player->GetMaxHealth())
+            player->ModifyHealth(std::max<int32>(1, int32(player->GetMaxHealth() * healthPct / 100.0f)));
+        uint32 maxMana = player->GetMaxPower(POWER_MANA);
+        if (maxMana && player->GetPower(POWER_MANA) < maxMana)
+            player->ModifyPower(POWER_MANA, std::max<int32>(1, int32(maxMana * manaPct / 100.0f)));
+    }
+
+    // ------------------------------------------------------------------ leech perks
+    // Vampirism (the player heals), Soul Drain (the player and their pet heal from their own damage) and
+    // Mana Leech (the player, while using mana), from damage actually dealt to another unit.
+    void ApplyLeech(Unit* attacker, Unit* victim, uint32 damage)
+    {
+        if (!attacker || !victim || attacker == victim || !damage || !attacker->IsAlive())
+            return;
+        PerkState const* state = PerkOwnerState(attacker);
+        if (!state || state->active.empty())
+            return;
+        damage = std::min<uint32>(damage, victim->GetHealth());
+
+        float healPct = 0.0f;
+        if (attacker->IsPlayer())
+            healPct += OwnerRankValue(attacker, PERK_VAMPIRISM, 0);
+        if (attacker->IsPlayer() || attacker->IsPet())
+            healPct += OwnerRankValue(attacker, PERK_SOUL_DRAIN, 0);
+        if (healPct > 0.0f && attacker->GetHealth() < attacker->GetMaxHealth())
+            if (int32 heal = int32(damage * healPct / 100.0f))
+                attacker->ModifyHealth(heal);
+
+        if (attacker->IsPlayer() && attacker->getPowerType() == POWER_MANA)
+            if (int32 mana = int32(damage * OwnerRankValue(attacker, PERK_MANA_LEECH, 0) / 100.0f))
+                attacker->ModifyPower(POWER_MANA, mana);
+    }
+
+    // Pets replenishment (the pet takes more healing) and Soul Drain (direct healing on the player and their
+    // pet is reduced).
+    void ApplyHealingTaken(Unit* target, uint32& heal, bool isTick)
+    {
+        if (!target || !heal)
+            return;
+        if (!target->IsPlayer())
+            if (float bonus = OwnerRankValue(target, PERK_PET_REPLENISHMENT, 0))
+                heal = uint32(heal * (1.0f + bonus / 100.0f));
+        if (!isTick)
+            if (float penalty = OwnerRankValue(target, PERK_SOUL_DRAIN, 1))
+                heal = uint32(heal * std::max(0.0f, 1.0f - penalty / 100.0f));
+    }
+
+    // Longer Legs: less fall damage. Fall damage is the only self-damage dealt while the player still has the
+    // falling flag (the landing packet is handled before the new movement state is stored).
+    uint32 ApplyFallDamage(Unit* attacker, Unit* victim, uint32 damage, DamageEffectType damageType)
+    {
+        if (damageType != SELF_DAMAGE || attacker != victim || !victim->IsPlayer() ||
+            !victim->HasUnitMovementFlag(MOVEMENTFLAG_FALLING | MOVEMENTFLAG_FALLING_FAR))
+            return damage;
+        float reduction = std::min(100.0f, OwnerRankValue(victim, PERK_LONGER_LEGS, 3));
+        return uint32(damage * (1.0f - reduction / 100.0f));
     }
 }
 
@@ -1013,16 +1296,34 @@ public:
         for (size_t i = 0; i < count; ++i)
             sRecoveryRanks.push_back({ delays[i], std::clamp<uint32>(percents[i], 1, 100),
                                        i < levels.size() ? levels[i] : (i == 0 ? 1 : 255) });
-<<<<<<< Updated upstream
 
-        std::vector<uint32> willPercents = ParseList(sConfigMgr->GetOption<std::string>("Unbound.Perks.IronWill.Percent", "10, 20, 30"));
-        std::vector<uint32> willLevels = ParseList(sConfigMgr->GetOption<std::string>("Unbound.Perks.IronWill.RankLevels", "1, 30, 60"));
-        if (willPercents.empty())
-            willPercents = { 30 };
-        sIronWillRanks.clear();
-        for (size_t i = 0; i < willPercents.size(); ++i)
-            sIronWillRanks.push_back({ std::min<uint32>(willPercents[i], 100),
-                                       i < willLevels.size() ? willLevels[i] : (i == 0 ? 1 : 255) });
+        // the other ranked perks: the number of ranks is the shortest stat list
+        sPerkRanks.clear();
+        for (RankedPerkDef const& def : RANKED_PERKS)
+        {
+            std::string prefix = std::string("Unbound.Perks.") + def.key + ".";
+            std::vector<std::vector<float>> stats;
+            size_t rankCount = SIZE_MAX;
+            for (auto const& [stat, defaults] : def.stats)
+            {
+                std::vector<float> values = ParseFloatList(sConfigMgr->GetOption<std::string>(prefix + stat, defaults));
+                if (values.empty())
+                    values = ParseFloatList(defaults);
+                rankCount = std::min(rankCount, values.size());
+                stats.push_back(std::move(values));
+            }
+            std::vector<uint32> rankLevels = ParseList(sConfigMgr->GetOption<std::string>(prefix + "RankLevels", "1, 30, 60"));
+
+            PerkRanks& ranks = sPerkRanks[def.perk];
+            for (size_t rank = 0; rank < rankCount; ++rank)
+            {
+                std::vector<float> values;
+                for (std::vector<float> const& stat : stats)
+                    values.push_back(stat[rank]);
+                ranks.values.push_back(std::move(values));
+                ranks.levels.push_back(rank < rankLevels.size() ? rankLevels[rank] : (rank == 0 ? 1 : 255));
+            }
+        }
     }
 };
 
@@ -1036,8 +1337,6 @@ public:
     void OnCalcMaxDuration(Aura const* aura, int32& maxDuration) override
     {
         ApplyIronWill(aura, maxDuration);
-=======
->>>>>>> Stashed changes
     }
 };
 
@@ -1050,8 +1349,16 @@ public:
         PLAYERHOOK_ON_LOGOUT,
         PLAYERHOOK_ON_UPDATE,
         PLAYERHOOK_ON_DELETE,
-        PLAYERHOOK_CAN_PLAYER_USE_PRIVATE_CHAT
+        PLAYERHOOK_CAN_PLAYER_USE_PRIVATE_CHAT,
+        PLAYERHOOK_ON_CREATURE_KILL,
+        PLAYERHOOK_ON_CREATURE_KILLED_BY_PET,
+        PLAYERHOOK_ON_PVP_KILL
     }) { }
+
+    // Relentless Pursuit
+    void OnPlayerCreatureKill(Player* killer, Creature* /*killed*/) override { StartPursuit(killer); }
+    void OnPlayerCreatureKilledByPet(Player* owner, Creature* /*killed*/) override { StartPursuit(owner); }
+    void OnPlayerPVPKill(Player* killer, Player* /*killed*/) override { StartPursuit(killer); }
 
     void OnPlayerLogin(Player* player) override
     {
@@ -1080,14 +1387,22 @@ public:
                 state.rankOverride[(*result)[0].Get<uint32>()] = (*result)[1].Get<uint8>();
             while (result->NextRow());
         }
-        // saved before the Offensive limit existed: keep the lowest ids, switch the rest off
-        while (CountOffensive(state.active) > MAX_ACTIVE_OFFENSIVE)
-        {
-            auto last = std::find_if(state.active.rbegin(), state.active.rend(), IsOffensive);
-            uint32 perk = *last;
-            state.active.erase(perk);
-            SavePerk(player, perk, false);
-        }
+        // saved before a category limit (or an exclusive pair) existed: keep the lowest ids, switch the rest off
+        for (CategoryLimit const& limit : CATEGORY_LIMITS)
+            while (CountIn(state.active, limit) > limit.max)
+            {
+                auto last = std::find_if(state.active.rbegin(), state.active.rend(),
+                    [&limit](uint32 perk) { return perk >= limit.first && perk <= limit.last; });
+                uint32 perk = *last;
+                state.active.erase(perk);
+                SavePerk(player, perk, false);
+            }
+        for (auto const& [perk, partner] : EXCLUSIVE)
+            if (perk < partner && state.active.count(perk) && state.active.count(partner))
+            {
+                state.active.erase(partner);
+                SavePerk(player, partner, false);
+            }
         RefreshStatPerks(player, state);
     }
 
@@ -1114,6 +1429,7 @@ public:
         PerkState& state = sStates[player->GetGUID().GetCounter()];
         UpdateRapidRecovery(player, state, diff);
         UpdateMomentum(player, state, diff);
+        UpdatePlantedFeet(player, state, diff);
 
         if (state.active.empty() && !state.sacrificeAP && !state.sacrificeSP && !state.critBonus &&
             std::none_of(std::begin(state.desperateResist), std::end(state.desperateResist), [](int32 r) { return r != 0; }))
@@ -1157,7 +1473,9 @@ public:
         sPendingHealTick = PendingHealTick();
         bool isTick = tick.amount == &heal && tick.target == first && tick.spellInfo == spellInfo;
         Unit* healer = isTick ? second : first;
+        Unit* target = isTick ? first : second;
         ApplyHealingBonus(healer, heal);
+        ApplyHealingTaken(target, heal, isTick);
     }
 
     // Block/Dodge/Parry Capping: melee attacks against a capped player use at most 60% (chances are x100).
@@ -1193,9 +1511,14 @@ public:
     }
 
     // Retribution - Righteous Explosion: notice the killing blow while the dying enemy still has its auras.
-    uint32 DealDamage(Unit* /*attacker*/, Unit* victim, uint32 damage, DamageEffectType /*damagetype*/) override
+    // Also Longer Legs (fall damage) and the leech perks (Vampirism, Soul Drain, Mana Leech).
+    uint32 DealDamage(Unit* attacker, Unit* victim, uint32 damage, DamageEffectType damagetype) override
     {
-        if (victim && damage && victim->IsAlive() && damage >= victim->GetHealth() &&
+        if (!victim)
+            return damage;
+        damage = ApplyFallDamage(attacker, victim, damage, damagetype);
+        ApplyLeech(attacker, victim, damage);
+        if (damage && victim->IsAlive() && damage >= victim->GetHealth() &&
             victim->HasAura(SPELL_RIGHTEOUS_VENGEANCE_DOT))
             ScheduleRighteousExplosion(victim);
         return damage;
@@ -1303,11 +1626,7 @@ public:
         uint8 maxRank = MaxRank(perk);
         if (!RankedPerks().count(perk))
         {
-<<<<<<< Updated upstream
             handler->PSendSysMessage("Perk {} has no ranks. Ranked perks: 3 (Rapid Recovery), 303 (Iron Will).", perk);
-=======
-            handler->PSendSysMessage("Perk {} has no ranks. Ranked perks: 3 (Rapid Recovery).", perk);
->>>>>>> Stashed changes
             return true;
         }
         uint32 guid = target->GetGUID().GetCounter();

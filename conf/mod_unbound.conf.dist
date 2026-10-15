@@ -38,7 +38,6 @@ Unbound.Perks.RapidRecovery = 1
 Unbound.Perks.RapidRecovery.Delay = "6000, 5000, 4000"
 Unbound.Perks.RapidRecovery.Percent = "4, 6, 8"
 Unbound.Perks.RapidRecovery.RankLevels = "1, 30, 60"
-<<<<<<< Updated upstream
 
 #    Unbound.Perks.IronWill.Percent
 #        Description: Iron Will utility perk: how much shorter enemy crowd control (stun, fear, root,
@@ -53,6 +52,61 @@ Unbound.Perks.RapidRecovery.RankLevels = "1, 30, 60"
 
 Unbound.Perks.IronWill.Percent = "10, 20, 30"
 Unbound.Perks.IronWill.RankLevels = "1, 30, 60"
+
+#    Utility perks (src/unbound_perks.cpp). Every value list has one number per rank (Rank 1, 2, 3), and
+#    each perk's RankLevels is the character level that reaches each rank (default "1, 30, 60"; a GM can
+#    set a rank with ".perk rank <perk id> <rank>"). Decimals are allowed. At most 3 Utility perks can be
+#    active at once.
+#
+#    Unbound.Perks.LongerLegs.*            (perk 304)
+#        RunSpeed: run speed % (you and your pet); MountSpeed: mounted speed %; SwimSpeed: swim speed %
+#        (you and your pet); FallDamage: fall damage reduction %.
+#    Unbound.Perks.PlantedFeet.*           (perk 305, "Planting your legs")
+#        Health / Mana: % of maximum restored every second after standing still for Delay seconds.
+#    Unbound.Perks.RelentlessPursuit.*     (perk 306)
+#        Speed: run speed % for you and your pet for Duration seconds after a kill.
+#    Unbound.Perks.Vampirism.Percent       (perk 307) heal for this % of damage dealt.
+#    Unbound.Perks.SoulDrain.*             (perk 308)
+#        Percent: you and your pet heal for this % of your own damage; HealingTaken: direct healing on you
+#        and your pet is reduced by this %.
+#    Unbound.Perks.PetReplenishment.Percent  (perk 309) pet healing taken +%.
+#    Unbound.Perks.PetsRoar.Percent        (perk 310) pet threat +%.
+#    Unbound.Perks.SilentKiller.Percent    (perk 311) your threat -%.
+#    Unbound.Perks.UnbreakablePresence.Percent (perk 312) your threat +%.
+#    Unbound.Perks.SteadyHands.*           (perk 313)
+#        Pushback: spell pushback reduction %; Lockout: interrupt lockouts and silences on you shorter by %.
+#    Unbound.Perks.ManaLeech.Percent       (perk 314) mana restored as % of damage dealt (mana users only).
+
+Unbound.Perks.LongerLegs.RunSpeed = "4, 7, 10"
+Unbound.Perks.LongerLegs.MountSpeed = "4, 7, 10"
+Unbound.Perks.LongerLegs.SwimSpeed = "20, 35, 50"
+Unbound.Perks.LongerLegs.FallDamage = "20, 35, 50"
+Unbound.Perks.LongerLegs.RankLevels = "1, 30, 60"
+Unbound.Perks.PlantedFeet.Health = "0.5, 0.75, 1"
+Unbound.Perks.PlantedFeet.Mana = "0.25, 0.4, 0.5"
+Unbound.Perks.PlantedFeet.Delay = "3, 3, 3"
+Unbound.Perks.PlantedFeet.RankLevels = "1, 30, 60"
+Unbound.Perks.RelentlessPursuit.Speed = "15, 25, 35"
+Unbound.Perks.RelentlessPursuit.Duration = "10, 10, 10"
+Unbound.Perks.RelentlessPursuit.RankLevels = "1, 30, 60"
+Unbound.Perks.Vampirism.Percent = "3, 4, 5"
+Unbound.Perks.Vampirism.RankLevels = "1, 30, 60"
+Unbound.Perks.SoulDrain.Percent = "6, 8, 10"
+Unbound.Perks.SoulDrain.HealingTaken = "20, 20, 20"
+Unbound.Perks.SoulDrain.RankLevels = "1, 30, 60"
+Unbound.Perks.PetReplenishment.Percent = "20, 35, 50"
+Unbound.Perks.PetReplenishment.RankLevels = "1, 30, 60"
+Unbound.Perks.PetsRoar.Percent = "100, 200, 300"
+Unbound.Perks.PetsRoar.RankLevels = "1, 30, 60"
+Unbound.Perks.SilentKiller.Percent = "20, 35, 50"
+Unbound.Perks.SilentKiller.RankLevels = "1, 30, 60"
+Unbound.Perks.UnbreakablePresence.Percent = "50, 100, 150"
+Unbound.Perks.UnbreakablePresence.RankLevels = "1, 30, 60"
+Unbound.Perks.SteadyHands.Pushback = "30, 50, 70"
+Unbound.Perks.SteadyHands.Lockout = "10, 20, 30"
+Unbound.Perks.SteadyHands.RankLevels = "1, 30, 60"
+Unbound.Perks.ManaLeech.Percent = "1, 1.5, 2"
+Unbound.Perks.ManaLeech.RankLevels = "1, 30, 60"
 
 #    Unbound.Attunement.Enable
 #        Description: Gear attunement: attuned items permanently give the character a percentage of
@@ -102,5 +156,3 @@ Unbound.Attunement.HalfValueUntil = 200
 Unbound.Attunement.Kills = "50, 100, 200, 400"
 Unbound.Attunement.EliteKills = 2
 Unbound.Attunement.BossKills = 10
-=======
->>>>>>> Stashed changes

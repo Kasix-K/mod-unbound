@@ -35,6 +35,7 @@
 | Thing | Creature | Item | Spell |
 |---|---|---|---|
 | Transmogrify spell | (none) | (none) | 200200 |
+| Utility perk auras (server-only, invisible) | (none) | (none) | 200210-200213 |
 | Loot Goblin companion | 190100 | 910001 | 200201 |
 | Arcane Loot Scanner companion | 190102 (size 0.08) | 910002 | 200202 |
 | Heroic Deadmines loot | (heroic bosses: entry + 1000000) | 910100-910121 | (none) |
@@ -63,7 +64,6 @@ goes to him; `.respawn` next to his corpse brings him back early (for testing).
   and mana per second, 4 seconds after combat). Switch on up to 5 Offensive perks (about +10% each) and your class perk (so far: Paladin
   Retribution). Perks can't be changed in combat; save favourite sets as loadouts.
 
-<<<<<<< Updated upstream
 ## Gear attunement (GM commands for testing)
 
 Attuned items permanently give the character 20% of their stats, even after the item is gone. **Attuning:**
@@ -100,19 +100,23 @@ Iron Will is a Utility perk (turn it on in `/perks`). It shortens enemy stuns, f
 sleeps, polymorphs, charms, disorients and saps on you and your pets, on top of racials, talents and
 diminishing returns.
 
-=======
-## Perk ranks
+**Utility perks** (at most 3 active; Rank 1 / 2 / 3 at levels 1 / 30 / 60, values in `mod_unbound.conf`):
 
-Rank support is built; so far only **Rapid Recovery** (perk 3) has ranks. A character's rank comes from
-its level, values in `mod_unbound.conf`:
+| Id | Perk | Rank 1 / 2 / 3 |
+|---|---|---|
+| 303 | Iron Will | enemy crowd control 10 / 20 / 30% shorter (you and pet) |
+| 304 | Longer Legs | run and mount speed +4 / 7 / 10%, swim +20 / 35 / 50%, fall damage -20 / 35 / 50% |
+| 305 | Planting your legs | after 3 s standing still: 0.5 / 0.75 / 1% health, 0.25 / 0.4 / 0.5% mana per second |
+| 306 | Relentless Pursuit | +15 / 25 / 35% speed for 10 s after you or your pet kill something |
+| 307 | Vampirism | heal 3 / 4 / 5% of damage dealt (not with Soul Drain) |
+| 308 | Soul Drain | heal 6 / 8 / 10% of damage dealt, pet too; direct healing taken -20% (not with Vampirism) |
+| 309 | Pets replenishment | pet healing taken +20 / 35 / 50% |
+| 310 | Pets Roar | pet threat +100 / 200 / 300% |
+| 311 | Silent Killer | your threat -20 / 35 / 50% (not with Unbreakable Presence) |
+| 312 | Unbreakable Presence | your threat +50 / 100 / 150% (not with Silent Killer) |
+| 313 | Spell-Protected Steady Hands | pushback -30 / 50 / 70%, interrupt lockouts and silences -10 / 20 / 30% |
+| 314 | Mana Leech | 1 / 1.5 / 2% of damage dealt as mana (mana users only) |
 
-| Rank | Level | Delay after combat | Health and mana per second |
-|---|---|---|---|
-| 1 | 1 | 6 seconds | 4% |
-| 2 | 30 | 5 seconds | 6% |
-| 3 | 60 | 4 seconds | 8% |
-
->>>>>>> Stashed changes
 GM testing: target a player (or nobody, for yourself) and type `.perk rank 3 2` for Rank 2;
 `.perk rank 3` goes back to the rank the level gives. The perk window shows the rank as "2/3".
 Next: give other perks ranks (for example Masteries: Rank 1 +4% ... Rank 4 +10%) and decide how ranks

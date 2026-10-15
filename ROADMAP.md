@@ -135,8 +135,9 @@ changes, raid by raid (see Next up).
 - [ ] **Perk ranks** (moderate): rank support is built (rank table, per-rank values, "2/3" badges,
       `.perk rank`), so far for Rapid Recovery (3 ranks by level). Still to do: ranks for the other perks
       with a number (Masteries, Pressure, ...) and how ranks are earned (levels, Heroic currency, quests).
-- [ ] **Defensive and Utility perks** (moderate): Thick Skin, Second Wind, Steadfast, Fleet Foot,
-      Treasure Sense are listed in the window but do nothing yet.
+- [ ] **Defensive perks** (moderate): none yet; the Defensive tab stays hidden until the first one exists.
+      The old placeholders (Thick Skin, Second Wind, Steadfast, Fleet Foot, Treasure Sense) were removed
+      from the window; their ids 201-203 and 301-302 are not reused.
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
       +25-35% to its spec's single-target damage (the class perk target in the Power budget).
 - [ ] **Remaining classic Heroic dungeons** (moderate): 16 more (Stockades, Deadmines and Ragefire Chasm
