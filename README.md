@@ -4,10 +4,9 @@ Custom features for the WoW 3.3.5a Unbound server.
 
 ## Roadmap and changelog
 
-Planned and possible features are tracked in [ROADMAP.md](ROADMAP.md). 
-Every feature, with the
-date it was added and last changed, is in [CHANGELOG.md](CHANGELOG.md). 
-How each system is built and what to run after changing it is in [TECHNICAL_NOTES.md](TECHNICAL_NOTES.md).
+| [Roadmap](ROADMAP.md) | [Changelog](CHANGELOG.md) | [Technical notes](TECHNICAL_NOTES.md) |
+|---|---|---|
+| What's planned next, with rough effort | Every feature, with the date it was added and last changed | How each system is built and what to run after changing it |
 
 ## Custom spells, items and companions
 
