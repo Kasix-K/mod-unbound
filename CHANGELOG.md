@@ -180,6 +180,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   `Unbound.ExpansionUnlocked`).
 
 ### Changed
+- **Heroic Deadmines loot** brought in line with the other Heroic dungeons: its 22 hand-made items carried
+  40-80% more stats than the rest; they now use the same level 60 reference (stat points per slot, armour,
+  block, weapon damage). The Blackened Defias Garb set bonus stays.
 - **Classic Heroic levels:** the level spread now comes from the creatures with loot only, and every heroic
   creature stays within 60-62 (Uldaman's trainer and triggers were squeezing it). The dungeons already
   released are re-spread slightly too.
@@ -197,6 +200,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   server). Client-side only; see the README.
 
 ### Fixed
+- **Heroic bosses dropped no quest items** (Head of VanCleef, Theradric Crystal Carving, Head of Balnazzar,
+  ...): each Heroic boss now also drops its normal version's quest items at the same chances.
 - **Classic Heroic creatures summoned by spells or transformations** (Sneed in the Deadmines, boss adds, totems
   and wards, Veng and Maraudos in Maraudon, ...) came at their normal level in Heroic; they have Heroic versions
   now in all 19 dungeons.

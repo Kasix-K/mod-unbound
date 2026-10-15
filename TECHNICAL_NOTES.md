@@ -54,6 +54,10 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   boss (Wyrmthalak, Drakkisath, Alzzin, Tortheldrin, Gordok, Balnazzar, Rivendare). The Gordok guards share one
   pool; Lady Illucia shares Malicia's and Krastinov's items. Pusillin, Fras Siabi, Jarien and Sothos drop gold
   only. Dungeon Set 1 remakes keep the name but not the set bonus.
+  Each Heroic boss also gets its normal version's quest drops (item class 12, QuestRequired rows, items that
+  start a quest; ungrouped rows only), copied by an INSERT ... SELECT in unbound_heroic_loot.sql when it is
+  applied. The Deadmines items were hand-made first and rescaled on 2026-10-14 to the same reference as the
+  generated ones.
 - **World bosses:** `tools/world_bosses.py` (SmartAI fights, no C++; creatures 190110-190199, spawn guids
   9190110-9190199, loot 911000-911999). Hrimthar is creature 190110, adds 190111. After a change run
   `python tools/world_bosses.py` and `python tools/custom_dbc.py`, then restart the worldserver.

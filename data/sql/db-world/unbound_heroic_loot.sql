@@ -7,9 +7,9 @@ DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;
 CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `entry` = 13142;
 UPDATE `unbound_hl_tmp` SET `entry` = 910100, `name` = 'Foreman''s Plate Girdle', `description` = 'Heroic', `class` = 4, `subclass` = 4, `displayid` = 23628, `InventoryType` = 6, `Material` = 6, `sheath` = 0,
     `Quality` = 3, `ItemLevel` = 61, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
-    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 358, `block` = 0, `itemset` = 0,
+    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 369, `block` = 0, `itemset` = 0,
     `dmg_min1` = 0, `dmg_max1` = 0, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 4, `stat_value1` = 12, `stat_type2` = 7, `stat_value2` = 18, `stat_type3` = 12, `stat_value3` = 10, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 4, `stat_value1` = 8, `stat_type2` = 7, `stat_value2` = 12, `stat_type3` = 12, `stat_value3` = 6, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -22,9 +22,9 @@ DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;
 CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `entry` = 12589;
 UPDATE `unbound_hl_tmp` SET `entry` = 910101, `name` = 'Mine Overseer''s Cord', `description` = 'Heroic', `class` = 4, `subclass` = 1, `displayid` = 21796, `InventoryType` = 6, `Material` = 7, `sheath` = 0,
     `Quality` = 3, `ItemLevel` = 61, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
-    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 48, `block` = 0, `itemset` = 0,
+    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 55, `block` = 0, `itemset` = 0,
     `dmg_min1` = 0, `dmg_max1` = 0, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 5, `stat_value1` = 13, `stat_type2` = 6, `stat_value2` = 8, `stat_type3` = 7, `stat_value3` = 9, `stat_type4` = 45, `stat_value4` = 18, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 5, `stat_value1` = 7, `stat_type2` = 6, `stat_value2` = 4, `stat_type3` = 7, `stat_value3` = 5, `stat_type4` = 45, `stat_value4` = 10, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -38,8 +38,8 @@ CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `ent
 UPDATE `unbound_hl_tmp` SET `entry` = 910102, `name` = 'Rhahk''Zor''s Hammer', `description` = 'Heroic', `class` = 2, `subclass` = 5, `displayid` = 8600, `InventoryType` = 17, `Material` = 2, `sheath` = 1,
     `Quality` = 3, `ItemLevel` = 61, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
     `BuyPrice` = 180000, `SellPrice` = 45000, `armor` = 0, `block` = 0, `itemset` = 0,
-    `dmg_min1` = 131, `dmg_max1` = 205, `delay` = 3200, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 4, `stat_value1` = 24, `stat_type2` = 7, `stat_value2` = 16, `stat_type3` = 32, `stat_value3` = 14, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `dmg_min1` = 135, `dmg_max1` = 210, `delay` = 3200, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
+    `stat_type1` = 4, `stat_value1` = 15, `stat_type2` = 7, `stat_value2` = 10, `stat_type3` = 32, `stat_value3` = 9, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -52,9 +52,9 @@ DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;
 CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `entry` = 15648;
 UPDATE `unbound_hl_tmp` SET `entry` = 910103, `name` = 'Shredder Plating Shield', `description` = 'Heroic', `class` = 4, `subclass` = 6, `displayid` = 27179, `InventoryType` = 14, `Material` = 1, `sheath` = 4,
     `Quality` = 3, `ItemLevel` = 61, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
-    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 2090, `block` = 38, `itemset` = 0,
+    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 2153, `block` = 40, `itemset` = 0,
     `dmg_min1` = 0, `dmg_max1` = 0, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 7, `stat_value1` = 16, `stat_type2` = 12, `stat_value2` = 9, `stat_type3` = 48, `stat_value3` = 14, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 7, `stat_value1` = 8, `stat_type2` = 12, `stat_value2` = 5, `stat_type3` = 48, `stat_value3` = 7, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -67,9 +67,9 @@ DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;
 CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `entry` = 5195;
 UPDATE `unbound_hl_tmp` SET `entry` = 910104, `name` = 'Gold-flecked Gloves', `description` = 'Heroic', `class` = 4, `subclass` = 1, `displayid` = 16966, `InventoryType` = 10, `Material` = 7, `sheath` = 0,
     `Quality` = 3, `ItemLevel` = 61, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
-    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 54, `block` = 0, `itemset` = 0,
+    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 80, `block` = 0, `itemset` = 0,
     `dmg_min1` = 0, `dmg_max1` = 0, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 5, `stat_value1` = 12, `stat_type2` = 7, `stat_value2` = 8, `stat_type3` = 45, `stat_value3` = 18, `stat_type4` = 43, `stat_value4` = 4, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 5, `stat_value1` = 7, `stat_type2` = 7, `stat_value2` = 5, `stat_type3` = 45, `stat_value3` = 11, `stat_type4` = 43, `stat_value4` = 2, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -83,8 +83,8 @@ CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `ent
 UPDATE `unbound_hl_tmp` SET `entry` = 910105, `name` = 'Buzzer Blade', `description` = 'Heroic', `class` = 2, `subclass` = 15, `displayid` = 20347, `InventoryType` = 13, `Material` = 1, `sheath` = 3,
     `Quality` = 3, `ItemLevel` = 61, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
     `BuyPrice` = 120000, `SellPrice` = 30000, `armor` = 0, `block` = 0, `itemset` = 0,
-    `dmg_min1` = 47, `dmg_max1` = 74, `delay` = 1500, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 3, `stat_value1` = 9, `stat_type2` = 7, `stat_value2` = 8, `stat_type3` = 32, `stat_value3` = 14, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `dmg_min1` = 49, `dmg_max1` = 76, `delay` = 1500, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
+    `stat_type1` = 3, `stat_value1` = 5, `stat_type2` = 7, `stat_value2` = 5, `stat_type3` = 32, `stat_value3` = 8, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -97,9 +97,9 @@ DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;
 CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `entry` = 5199;
 UPDATE `unbound_hl_tmp` SET `entry` = 910106, `name` = 'Smelting Pants', `description` = 'Heroic', `class` = 4, `subclass` = 2, `displayid` = 1978, `InventoryType` = 7, `Material` = 8, `sheath` = 0,
     `Quality` = 3, `ItemLevel` = 62, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
-    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 152, `block` = 0, `itemset` = 0,
+    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 215, `block` = 0, `itemset` = 0,
     `dmg_min1` = 0, `dmg_max1` = 0, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 7, `stat_value1` = 22, `stat_type2` = 3, `stat_value2` = 15, `stat_type3` = 13, `stat_value3` = 12, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 7, `stat_value1` = 18, `stat_type2` = 3, `stat_value2` = 12, `stat_type3` = 13, `stat_value3` = 10, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -114,7 +114,7 @@ UPDATE `unbound_hl_tmp` SET `entry` = 910107, `name` = 'Lavishly Jeweled Ring', 
     `Quality` = 3, `ItemLevel` = 62, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
     `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 0, `block` = 0, `itemset` = 0,
     `dmg_min1` = 0, `dmg_max1` = 0, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 5, `stat_value1` = 9, `stat_type2` = 7, `stat_value2` = 6, `stat_type3` = 45, `stat_value3` = 15, `stat_type4` = 31, `stat_value4` = 8, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 5, `stat_value1` = 4, `stat_type2` = 7, `stat_value2` = 3, `stat_type3` = 45, `stat_value3` = 7, `stat_type4` = 31, `stat_value4` = 4, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -128,8 +128,8 @@ CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `ent
 UPDATE `unbound_hl_tmp` SET `entry` = 910108, `name` = 'Molten Edge', `description` = 'Heroic', `class` = 2, `subclass` = 7, `displayid` = 20030, `InventoryType` = 13, `Material` = 1, `sheath` = 3,
     `Quality` = 3, `ItemLevel` = 62, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
     `BuyPrice` = 120000, `SellPrice` = 30000, `armor` = 0, `block` = 0, `itemset` = 0,
-    `dmg_min1` = 77, `dmg_max1` = 120, `delay` = 2400, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 4, `stat_value1` = 10, `stat_type2` = 7, `stat_value2` = 9, `stat_type3` = 32, `stat_value3` = 14, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `dmg_min1` = 78, `dmg_max1` = 122, `delay` = 2400, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
+    `stat_type1` = 4, `stat_value1` = 5, `stat_type2` = 7, `stat_value2` = 5, `stat_type3` = 32, `stat_value3` = 8, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -142,9 +142,9 @@ DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;
 CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `entry` = 13166;
 UPDATE `unbound_hl_tmp` SET `entry` = 910109, `name` = 'Smite''s Bulwark', `description` = 'Heroic', `class` = 4, `subclass` = 4, `displayid` = 23704, `InventoryType` = 3, `Material` = 6, `sheath` = 0,
     `Quality` = 3, `ItemLevel` = 62, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
-    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 490, `block` = 0, `itemset` = 0,
+    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 552, `block` = 0, `itemset` = 0,
     `dmg_min1` = 0, `dmg_max1` = 0, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 4, `stat_value1` = 12, `stat_type2` = 7, `stat_value2` = 20, `stat_type3` = 12, `stat_value3` = 12, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 4, `stat_value1` = 8, `stat_type2` = 7, `stat_value2` = 14, `stat_type3` = 12, `stat_value3` = 8, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -157,9 +157,9 @@ DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;
 CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `entry` = 5202;
 UPDATE `unbound_hl_tmp` SET `entry` = 910110, `name` = 'Captain''s Vestments', `description` = 'Heroic', `class` = 4, `subclass` = 1, `displayid` = 12803, `InventoryType` = 5, `Material` = 7, `sheath` = 0,
     `Quality` = 3, `ItemLevel` = 62, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
-    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 88, `block` = 0, `itemset` = 0,
+    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 96, `block` = 0, `itemset` = 0,
     `dmg_min1` = 0, `dmg_max1` = 0, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 5, `stat_value1` = 18, `stat_type2` = 6, `stat_value2` = 14, `stat_type3` = 7, `stat_value3` = 13, `stat_type4` = 45, `stat_value4` = 24, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 5, `stat_value1` = 11, `stat_type2` = 6, `stat_value2` = 9, `stat_type3` = 7, `stat_value3` = 8, `stat_type4` = 45, `stat_value4` = 15, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -173,8 +173,8 @@ CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `ent
 UPDATE `unbound_hl_tmp` SET `entry` = 910111, `name` = 'Smite''s Mighty Hammer', `description` = 'Heroic', `class` = 2, `subclass` = 5, `displayid` = 19610, `InventoryType` = 17, `Material` = 2, `sheath` = 1,
     `Quality` = 3, `ItemLevel` = 62, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
     `BuyPrice` = 180000, `SellPrice` = 45000, `armor` = 0, `block` = 0, `itemset` = 0,
-    `dmg_min1` = 145, `dmg_max1` = 227, `delay` = 3500, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 4, `stat_value1` = 26, `stat_type2` = 3, `stat_value2` = 9, `stat_type3` = 7, `stat_value3` = 14, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `dmg_min1` = 147, `dmg_max1` = 230, `delay` = 3500, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
+    `stat_type1` = 4, `stat_value1` = 18, `stat_type2` = 3, `stat_value2` = 6, `stat_type3` = 7, `stat_value3` = 10, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -187,9 +187,9 @@ DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;
 CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `entry` = 10403;
 UPDATE `unbound_hl_tmp` SET `entry` = 910112, `name` = 'Blackened Defias Belt', `description` = 'Heroic', `class` = 4, `subclass` = 2, `displayid` = 14389, `InventoryType` = 6, `Material` = 8, `sheath` = 0,
     `Quality` = 3, `ItemLevel` = 62, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
-    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 99, `block` = 0, `itemset` = 950,
+    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 134, `block` = 0, `itemset` = 950,
     `dmg_min1` = 0, `dmg_max1` = 0, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 3, `stat_value1` = 14, `stat_type2` = 7, `stat_value2` = 11, `stat_type3` = 38, `stat_value3` = 20, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 3, `stat_value1` = 8, `stat_type2` = 7, `stat_value2` = 6, `stat_type3` = 38, `stat_value3` = 12, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -203,8 +203,8 @@ CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `ent
 UPDATE `unbound_hl_tmp` SET `entry` = 910113, `name` = 'Emberstone Staff', `description` = 'Heroic', `class` = 2, `subclass` = 10, `displayid` = 20340, `InventoryType` = 17, `Material` = 2, `sheath` = 2,
     `Quality` = 3, `ItemLevel` = 62, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
     `BuyPrice` = 180000, `SellPrice` = 45000, `armor` = 0, `block` = 0, `itemset` = 0,
-    `dmg_min1` = 123, `dmg_max1` = 193, `delay` = 3000, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 5, `stat_value1` = 20, `stat_type2` = 6, `stat_value2` = 12, `stat_type3` = 7, `stat_value3` = 14, `stat_type4` = 45, `stat_value4` = 30, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `dmg_min1` = 126, `dmg_max1` = 197, `delay` = 3000, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
+    `stat_type1` = 5, `stat_value1` = 9, `stat_type2` = 6, `stat_value2` = 5, `stat_type3` = 7, `stat_value3` = 6, `stat_type4` = 45, `stat_value4` = 13, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -218,8 +218,8 @@ CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `ent
 UPDATE `unbound_hl_tmp` SET `entry` = 910114, `name` = 'Impaling Harpoon', `description` = 'Heroic', `class` = 2, `subclass` = 6, `displayid` = 5949, `InventoryType` = 17, `Material` = 1, `sheath` = 2,
     `Quality` = 3, `ItemLevel` = 62, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
     `BuyPrice` = 180000, `SellPrice` = 45000, `armor` = 0, `block` = 0, `itemset` = 0,
-    `dmg_min1` = 97, `dmg_max1` = 152, `delay` = 2400, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 3, `stat_value1` = 22, `stat_type2` = 7, `stat_value2` = 14, `stat_type3` = 31, `stat_value3` = 10, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `dmg_min1` = 101, `dmg_max1` = 158, `delay` = 2400, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
+    `stat_type1` = 3, `stat_value1` = 16, `stat_type2` = 7, `stat_value2` = 10, `stat_type3` = 31, `stat_value3` = 7, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -232,9 +232,9 @@ DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;
 CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `entry` = 10401;
 UPDATE `unbound_hl_tmp` SET `entry` = 910115, `name` = 'Blackened Defias Gloves', `description` = 'Heroic', `class` = 4, `subclass` = 2, `displayid` = 27946, `InventoryType` = 10, `Material` = 8, `sheath` = 0,
     `Quality` = 3, `ItemLevel` = 62, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
-    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 110, `block` = 0, `itemset` = 950,
+    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 122, `block` = 0, `itemset` = 950,
     `dmg_min1` = 0, `dmg_max1` = 0, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 3, `stat_value1` = 13, `stat_type2` = 7, `stat_value2` = 10, `stat_type3` = 32, `stat_value3` = 14, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 3, `stat_value1` = 9, `stat_type2` = 7, `stat_value2` = 7, `stat_type3` = 32, `stat_value3` = 9, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -248,8 +248,8 @@ CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `ent
 UPDATE `unbound_hl_tmp` SET `entry` = 910116, `name` = 'Cookie''s Stirring Rod', `description` = 'Heroic', `class` = 2, `subclass` = 19, `displayid` = 21011, `InventoryType` = 26, `Material` = 2, `sheath` = 0,
     `Quality` = 3, `ItemLevel` = 62, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
     `BuyPrice` = 120000, `SellPrice` = 30000, `armor` = 0, `block` = 0, `itemset` = 0,
-    `dmg_min1` = 63, `dmg_max1` = 98, `delay` = 1300, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 5, `stat_value1` = 6, `stat_type2` = 7, `stat_value2` = 4, `stat_type3` = 45, `stat_value3` = 12, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `dmg_min1` = 65, `dmg_max1` = 101, `delay` = 1300, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
+    `stat_type1` = 5, `stat_value1` = 2, `stat_type2` = 7, `stat_value2` = 1, `stat_type3` = 45, `stat_value3` = 4, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -263,8 +263,8 @@ CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `ent
 UPDATE `unbound_hl_tmp` SET `entry` = 910117, `name` = 'Cookie''s Tenderizer', `description` = 'Heroic', `class` = 2, `subclass` = 4, `displayid` = 20953, `InventoryType` = 13, `Material` = 2, `sheath` = 7,
     `Quality` = 3, `ItemLevel` = 62, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
     `BuyPrice` = 120000, `SellPrice` = 30000, `armor` = 0, `block` = 0, `itemset` = 0,
-    `dmg_min1` = 89, `dmg_max1` = 139, `delay` = 2800, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 4, `stat_value1` = 10, `stat_type2` = 7, `stat_value2` = 9, `stat_type3` = 32, `stat_value3` = 14, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `dmg_min1` = 91, `dmg_max1` = 142, `delay` = 2800, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
+    `stat_type1` = 4, `stat_value1` = 5, `stat_type2` = 7, `stat_value2` = 5, `stat_type3` = 32, `stat_value3` = 8, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -277,9 +277,9 @@ DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;
 CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `entry` = 10399;
 UPDATE `unbound_hl_tmp` SET `entry` = 910118, `name` = 'Blackened Defias Armor', `description` = 'Heroic', `class` = 4, `subclass` = 2, `displayid` = 9123, `InventoryType` = 5, `Material` = 8, `sheath` = 0,
     `Quality` = 3, `ItemLevel` = 63, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
-    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 176, `block` = 0, `itemset` = 950,
+    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 181, `block` = 0, `itemset` = 950,
     `dmg_min1` = 0, `dmg_max1` = 0, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 3, `stat_value1` = 20, `stat_type2` = 7, `stat_value2` = 18, `stat_type3` = 32, `stat_value3` = 14, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 3, `stat_value1` = 16, `stat_type2` = 7, `stat_value2` = 15, `stat_type3` = 32, `stat_value3` = 11, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -292,9 +292,9 @@ DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;
 CREATE TEMPORARY TABLE `unbound_hl_tmp` SELECT * FROM `item_template` WHERE `entry` = 10400;
 UPDATE `unbound_hl_tmp` SET `entry` = 910119, `name` = 'Blackened Defias Leggings', `description` = 'Heroic', `class` = 4, `subclass` = 2, `displayid` = 27947, `InventoryType` = 7, `Material` = 8, `sheath` = 0,
     `Quality` = 3, `ItemLevel` = 63, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
-    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 154, `block` = 0, `itemset` = 950,
+    `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 215, `block` = 0, `itemset` = 950,
     `dmg_min1` = 0, `dmg_max1` = 0, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 3, `stat_value1` = 19, `stat_type2` = 7, `stat_value2` = 16, `stat_type3` = 31, `stat_value3` = 10, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 3, `stat_value1` = 17, `stat_type2` = 7, `stat_value2` = 14, `stat_type3` = 31, `stat_value3` = 9, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -309,7 +309,7 @@ UPDATE `unbound_hl_tmp` SET `entry` = 910120, `name` = 'Cape of the Brotherhood'
     `Quality` = 3, `ItemLevel` = 63, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
     `BuyPrice` = 100000, `SellPrice` = 25000, `armor` = 45, `block` = 0, `itemset` = 0,
     `dmg_min1` = 0, `dmg_max1` = 0, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 3, `stat_value1` = 10, `stat_type2` = 7, `stat_value2` = 9, `stat_type3` = 38, `stat_value3` = 16, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 3, `stat_value1` = 5, `stat_type2` = 7, `stat_value2` = 5, `stat_type3` = 38, `stat_value3` = 9, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -324,7 +324,7 @@ UPDATE `unbound_hl_tmp` SET `entry` = 910121, `name` = 'Cruel Barb', `descriptio
     `Quality` = 3, `ItemLevel` = 63, `RequiredLevel` = 60, `bonding` = 1, `Flags` = 0, `FlagsExtra` = 0, `AllowableClass` = -1, `AllowableRace` = -1, `maxcount` = 0, `stackable` = 1,
     `BuyPrice` = 120000, `SellPrice` = 30000, `armor` = 0, `block` = 0, `itemset` = 0,
     `dmg_min1` = 91, `dmg_max1` = 142, `delay` = 2800, `dmg_min2` = 0, `dmg_max2` = 0, `dmg_type2` = 0,
-    `stat_type1` = 4, `stat_value1` = 12, `stat_type2` = 7, `stat_value2` = 9, `stat_type3` = 32, `stat_value3` = 14, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
+    `stat_type1` = 4, `stat_value1` = 6, `stat_type2` = 7, `stat_value2` = 5, `stat_type3` = 32, `stat_value3` = 7, `stat_type4` = 0, `stat_value4` = 0, `stat_type5` = 0, `stat_value5` = 0, `stat_type6` = 0, `stat_value6` = 0, `stat_type7` = 0, `stat_value7` = 0, `stat_type8` = 0, `stat_value8` = 0, `stat_type9` = 0, `stat_value9` = 0, `stat_type10` = 0, `stat_value10` = 0,
     `ScalingStatDistribution` = 0, `ScalingStatValue` = 0, `RandomProperty` = 0, `RandomSuffix` = 0,
     `holy_res` = 0, `fire_res` = 0, `nature_res` = 0, `frost_res` = 0, `shadow_res` = 0, `arcane_res` = 0,
     `spellid_1` = 0, `spelltrigger_1` = 0, `spellcharges_1` = 0, `spellppmRate_1` = 0, `spellcooldown_1` = -1, `spellcategory_1` = 0, `spellcategorycooldown_1` = -1, `spellid_2` = 0, `spelltrigger_2` = 0, `spellcharges_2` = 0, `spellppmRate_2` = 0, `spellcooldown_2` = -1, `spellcategory_2` = 0, `spellcategorycooldown_2` = -1, `spellid_3` = 0, `spelltrigger_3` = 0, `spellcharges_3` = 0, `spellppmRate_3` = 0, `spellcooldown_3` = -1, `spellcategory_3` = 0, `spellcategorycooldown_3` = -1, `spellid_4` = 0, `spelltrigger_4` = 0, `spellcharges_4` = 0, `spellppmRate_4` = 0, `spellcooldown_4` = -1, `spellcategory_4` = 0, `spellcategorycooldown_4` = -1, `spellid_5` = 0, `spelltrigger_5` = 0, `spellcharges_5` = 0, `spellppmRate_5` = 0, `spellcooldown_5` = -1, `spellcategory_5` = 0, `spellcategorycooldown_5` = -1,
@@ -6760,24 +6760,40 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1000644, 910100, 0, 0, 0, 1, 1, 1, 1, 'Heroic Rhahk''Zor'),
 (1000644, 910101, 0, 0, 0, 1, 1, 1, 1, 'Heroic Rhahk''Zor'),
 (1000644, 910102, 0, 0, 0, 1, 1, 1, 1, 'Heroic Rhahk''Zor');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1000644, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Rhahk''Zor (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 644 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Sneed's Shredder (Heroic), map 36
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1000642;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1000642, 910103, 0, 0, 0, 1, 1, 1, 1, 'Heroic Sneed''s Shredder'),
 (1000642, 910104, 0, 0, 0, 1, 1, 1, 1, 'Heroic Sneed''s Shredder'),
 (1000642, 910105, 0, 0, 0, 1, 1, 1, 1, 'Heroic Sneed''s Shredder');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1000642, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Sneed''s Shredder (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 642 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Gilnid (Heroic), map 36
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1001763;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1001763, 910106, 0, 0, 0, 1, 1, 1, 1, 'Heroic Gilnid'),
 (1001763, 910107, 0, 0, 0, 1, 1, 1, 1, 'Heroic Gilnid'),
 (1001763, 910108, 0, 0, 0, 1, 1, 1, 1, 'Heroic Gilnid');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1001763, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Gilnid (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 1763 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Mr. Smite (Heroic), map 36
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1000646;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1000646, 910109, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mr. Smite'),
 (1000646, 910110, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mr. Smite'),
 (1000646, 910111, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mr. Smite');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1000646, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Mr. Smite (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 646 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Captain Greenskin (Heroic), map 36
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1000647;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -6785,12 +6801,20 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1000647, 910113, 0, 0, 0, 1, 1, 1, 1, 'Heroic Captain Greenskin'),
 (1000647, 910114, 0, 0, 0, 1, 1, 1, 1, 'Heroic Captain Greenskin'),
 (1000647, 8494, 0, 1, 0, 1, 0, 1, 1, 'Heroic Captain Greenskin (rare)');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1000647, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Captain Greenskin (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 647 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Cookie (Heroic), map 36
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1000645;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1000645, 910115, 0, 0, 0, 1, 1, 1, 1, 'Heroic Cookie'),
 (1000645, 910116, 0, 0, 0, 1, 1, 1, 1, 'Heroic Cookie'),
 (1000645, 910117, 0, 0, 0, 1, 1, 1, 1, 'Heroic Cookie');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1000645, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Cookie (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 645 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Edwin VanCleef (Heroic), map 36
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1000639;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -6798,192 +6822,344 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1000639, 910119, 0, 0, 0, 1, 1, 1, 1, 'Heroic Edwin VanCleef'),
 (1000639, 910120, 0, 0, 0, 1, 2, 1, 1, 'Heroic Edwin VanCleef'),
 (1000639, 910121, 0, 0, 0, 1, 2, 1, 1, 'Heroic Edwin VanCleef');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1000639, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Edwin VanCleef (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 639 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Lady Anacondra (Heroic), map 43
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003671;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003671, 910122, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lady Anacondra'),
 (1003671, 910123, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lady Anacondra');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003671, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Lady Anacondra (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3671 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Lord Cobrahn (Heroic), map 43
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003669;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003669, 910124, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Cobrahn'),
 (1003669, 910125, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Cobrahn'),
 (1003669, 910126, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Cobrahn');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003669, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Lord Cobrahn (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3669 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Kresh (Heroic), map 43
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003653;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003653, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Kresh (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3653 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Lord Pythas (Heroic), map 43
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003670;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003670, 910127, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Pythas');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003670, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Lord Pythas (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3670 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Skum (Heroic), map 43
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003674;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003674, 910128, 0, 0, 0, 1, 1, 1, 1, 'Heroic Skum'),
 (1003674, 910129, 0, 0, 0, 1, 1, 1, 1, 'Heroic Skum');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003674, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Skum (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3674 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Lord Serpentis (Heroic), map 43
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003673;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003673, 910130, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Serpentis'),
 (1003673, 910131, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Serpentis'),
 (1003673, 910132, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Serpentis');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003673, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Lord Serpentis (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3673 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Verdan the Everliving (Heroic), map 43
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1005775;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1005775, 910133, 0, 0, 0, 1, 1, 1, 1, 'Heroic Verdan the Everliving'),
 (1005775, 910134, 0, 0, 0, 1, 1, 1, 1, 'Heroic Verdan the Everliving'),
 (1005775, 910135, 0, 0, 0, 1, 1, 1, 1, 'Heroic Verdan the Everliving');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1005775, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Verdan the Everliving (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 5775 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Mutanus the Devourer (Heroic), map 43
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003654;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003654, 910136, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mutanus the Devourer'),
 (1003654, 910137, 0, 0, 0, 1, 2, 1, 1, 'Heroic Mutanus the Devourer');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003654, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Mutanus the Devourer (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3654 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Rethilgore (Heroic), map 33
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003914;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003914, 910138, 0, 0, 0, 1, 1, 1, 1, 'Heroic Rethilgore');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003914, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Rethilgore (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3914 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Razorclaw the Butcher (Heroic), map 33
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003886;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003886, 910139, 0, 0, 0, 1, 1, 1, 1, 'Heroic Razorclaw the Butcher'),
 (1003886, 910140, 0, 0, 0, 1, 1, 1, 1, 'Heroic Razorclaw the Butcher'),
 (1003886, 910141, 0, 0, 0, 1, 1, 1, 1, 'Heroic Razorclaw the Butcher');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003886, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Razorclaw the Butcher (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3886 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Baron Silverlaine (Heroic), map 33
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003887;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003887, 910142, 0, 0, 0, 1, 1, 1, 1, 'Heroic Baron Silverlaine'),
 (1003887, 910143, 0, 0, 0, 1, 1, 1, 1, 'Heroic Baron Silverlaine');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003887, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Baron Silverlaine (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3887 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Commander Springvale (Heroic), map 33
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004278;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004278, 910144, 0, 0, 0, 1, 1, 1, 1, 'Heroic Commander Springvale'),
 (1004278, 910145, 0, 0, 0, 1, 1, 1, 1, 'Heroic Commander Springvale');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004278, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Commander Springvale (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4278 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Odo the Blindwatcher (Heroic), map 33
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004279;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004279, 910146, 0, 0, 0, 1, 1, 1, 1, 'Heroic Odo the Blindwatcher'),
 (1004279, 910147, 0, 0, 0, 1, 1, 1, 1, 'Heroic Odo the Blindwatcher');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004279, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Odo the Blindwatcher (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4279 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Fenrus the Devourer (Heroic), map 33
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004274;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004274, 910148, 0, 0, 0, 1, 1, 1, 1, 'Heroic Fenrus the Devourer'),
 (1004274, 910149, 0, 0, 0, 1, 1, 1, 1, 'Heroic Fenrus the Devourer');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004274, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Fenrus the Devourer (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4274 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Wolf Master Nandos (Heroic), map 33
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003927;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003927, 910150, 0, 0, 0, 1, 1, 1, 1, 'Heroic Wolf Master Nandos'),
 (1003927, 910151, 0, 0, 0, 1, 1, 1, 1, 'Heroic Wolf Master Nandos');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003927, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Wolf Master Nandos (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3927 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Archmage Arugal (Heroic), map 33
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004275;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004275, 910152, 0, 0, 0, 1, 1, 1, 1, 'Heroic Archmage Arugal'),
 (1004275, 910153, 0, 0, 0, 1, 2, 1, 1, 'Heroic Archmage Arugal');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004275, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Archmage Arugal (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4275 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Ghamoo-ra (Heroic), map 48
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004887;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004887, 910154, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ghamoo-ra'),
 (1004887, 910155, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ghamoo-ra');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004887, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Ghamoo-ra (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4887 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Lady Sarevess (Heroic), map 48
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004831;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004831, 910156, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lady Sarevess'),
 (1004831, 910157, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lady Sarevess'),
 (1004831, 910158, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lady Sarevess');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004831, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Lady Sarevess (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4831 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Gelihast (Heroic), map 48
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1006243;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1006243, 910159, 0, 0, 0, 1, 1, 1, 1, 'Heroic Gelihast'),
 (1006243, 910160, 0, 0, 0, 1, 1, 1, 1, 'Heroic Gelihast');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1006243, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Gelihast (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 6243 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Baron Aquanis (Heroic), map 48
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1012876;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1012876, 910161, 0, 0, 0, 1, 1, 1, 1, 'Heroic Baron Aquanis'),
 (1012876, 910162, 0, 0, 0, 1, 1, 1, 1, 'Heroic Baron Aquanis'),
 (1012876, 910163, 0, 0, 0, 1, 1, 1, 1, 'Heroic Baron Aquanis');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1012876, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Baron Aquanis (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 12876 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Twilight Lord Kelris (Heroic), map 48
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004832;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004832, 910164, 0, 0, 0, 1, 1, 1, 1, 'Heroic Twilight Lord Kelris'),
 (1004832, 910165, 0, 0, 0, 1, 1, 1, 1, 'Heroic Twilight Lord Kelris');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004832, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Twilight Lord Kelris (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4832 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Old Serra'kis (Heroic), map 48
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004830;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004830, 910166, 0, 0, 0, 1, 1, 1, 1, 'Heroic Old Serra''kis'),
 (1004830, 910167, 0, 0, 0, 1, 1, 1, 1, 'Heroic Old Serra''kis');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004830, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Old Serra''kis (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4830 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Aku'mai (Heroic), map 48
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004829;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004829, 910168, 0, 0, 0, 1, 1, 1, 1, 'Heroic Aku''mai'),
 (1004829, 910169, 0, 0, 0, 1, 2, 1, 1, 'Heroic Aku''mai');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004829, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Aku''mai (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4829 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Grubbis (Heroic), map 90
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007361;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007361, 910170, 0, 0, 0, 1, 1, 1, 1, 'Heroic Grubbis');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007361, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Grubbis (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7361 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Viscous Fallout (Heroic), map 90
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007079;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007079, 910171, 0, 0, 0, 1, 1, 1, 1, 'Heroic Viscous Fallout'),
 (1007079, 910172, 0, 0, 0, 1, 1, 1, 1, 'Heroic Viscous Fallout'),
 (1007079, 910173, 0, 0, 0, 1, 1, 1, 1, 'Heroic Viscous Fallout');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007079, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Viscous Fallout (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7079 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Electrocutioner 6000 (Heroic), map 90
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1006235;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1006235, 910174, 0, 0, 0, 1, 1, 1, 1, 'Heroic Electrocutioner 6000'),
 (1006235, 910175, 0, 0, 0, 1, 1, 1, 1, 'Heroic Electrocutioner 6000');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1006235, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Electrocutioner 6000 (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 6235 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Crowd Pummeler 9-60 (Heroic), map 90
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1006229;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1006229, 910176, 0, 0, 0, 1, 1, 1, 1, 'Heroic Crowd Pummeler 9-60'),
 (1006229, 910177, 0, 0, 0, 1, 1, 1, 1, 'Heroic Crowd Pummeler 9-60');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1006229, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Crowd Pummeler 9-60 (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 6229 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Mekgineer Thermaplugg (Heroic), map 90
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007800;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007800, 910178, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mekgineer Thermaplugg'),
 (1007800, 910179, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mekgineer Thermaplugg'),
 (1007800, 910180, 0, 0, 0, 1, 2, 1, 1, 'Heroic Mekgineer Thermaplugg');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007800, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Mekgineer Thermaplugg (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7800 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Roogug (Heroic), map 47
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1006168;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1006168, 910181, 0, 0, 0, 1, 1, 1, 1, 'Heroic Roogug'),
 (1006168, 910182, 0, 0, 0, 1, 1, 1, 1, 'Heroic Roogug'),
 (1006168, 910183, 0, 0, 0, 1, 1, 1, 1, 'Heroic Roogug');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1006168, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Roogug (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 6168 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Aggem Thorncurse (Heroic), map 47
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004424;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004424, 910184, 0, 0, 0, 1, 1, 1, 1, 'Heroic Aggem Thorncurse');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004424, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Aggem Thorncurse (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4424 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Death Speaker Jargba (Heroic), map 47
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004428;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004428, 910185, 0, 0, 0, 1, 1, 1, 1, 'Heroic Death Speaker Jargba'),
 (1004428, 910186, 0, 0, 0, 1, 1, 1, 1, 'Heroic Death Speaker Jargba'),
 (1004428, 910187, 0, 0, 0, 1, 1, 1, 1, 'Heroic Death Speaker Jargba');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004428, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Death Speaker Jargba (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4428 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Overlord Ramtusk (Heroic), map 47
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004420;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004420, 910188, 0, 0, 0, 1, 1, 1, 1, 'Heroic Overlord Ramtusk'),
 (1004420, 910189, 0, 0, 0, 1, 1, 1, 1, 'Heroic Overlord Ramtusk');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004420, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Overlord Ramtusk (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4420 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Agathelos the Raging (Heroic), map 47
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004422;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004422, 910190, 0, 0, 0, 1, 1, 1, 1, 'Heroic Agathelos the Raging'),
 (1004422, 910191, 0, 0, 0, 1, 1, 1, 1, 'Heroic Agathelos the Raging');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004422, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Agathelos the Raging (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4422 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Charlga Razorflank (Heroic), map 47
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004421;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004421, 910192, 0, 0, 0, 1, 1, 1, 1, 'Heroic Charlga Razorflank'),
 (1004421, 910193, 0, 0, 0, 1, 1, 1, 1, 'Heroic Charlga Razorflank'),
 (1004421, 910194, 0, 0, 0, 1, 2, 1, 1, 'Heroic Charlga Razorflank');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004421, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Charlga Razorflank (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4421 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Interrogator Vishas (Heroic), map 189
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003983;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003983, 910195, 0, 0, 0, 1, 1, 1, 1, 'Heroic Interrogator Vishas');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003983, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Interrogator Vishas (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3983 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Bloodmage Thalnos (Heroic), map 189
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004543;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004543, 910196, 0, 0, 0, 1, 1, 1, 1, 'Heroic Bloodmage Thalnos');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004543, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Bloodmage Thalnos (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4543 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Houndmaster Loksey (Heroic), map 189
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003974;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003974, 910197, 0, 0, 0, 1, 1, 1, 1, 'Heroic Houndmaster Loksey');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003974, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Houndmaster Loksey (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3974 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Arcanist Doan (Heroic), map 189
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1006487;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -6992,49 +7168,85 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1006487, 910200, 0, 0, 0, 1, 1, 1, 1, 'Heroic Arcanist Doan'),
 (1006487, 910201, 0, 0, 0, 1, 2, 1, 1, 'Heroic Arcanist Doan'),
 (1006487, 910202, 0, 0, 0, 1, 2, 1, 1, 'Heroic Arcanist Doan');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1006487, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Arcanist Doan (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 6487 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Herod (Heroic), map 189
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003975;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003975, 910203, 0, 0, 0, 1, 1, 1, 1, 'Heroic Herod'),
 (1003975, 910204, 0, 0, 0, 1, 1, 1, 1, 'Heroic Herod'),
 (1003975, 910205, 0, 0, 0, 1, 2, 1, 1, 'Heroic Herod');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003975, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Herod (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3975 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- High Inquisitor Fairbanks (Heroic), map 189
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004542;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004542, 910206, 0, 0, 0, 1, 1, 1, 1, 'Heroic High Inquisitor Fairbanks'),
 (1004542, 910207, 0, 0, 0, 1, 1, 1, 1, 'Heroic High Inquisitor Fairbanks'),
 (1004542, 910208, 0, 0, 0, 1, 1, 1, 1, 'Heroic High Inquisitor Fairbanks');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004542, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic High Inquisitor Fairbanks (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4542 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Scarlet Commander Mograine (Heroic), map 189
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003976;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003976, 910209, 0, 0, 0, 1, 1, 1, 1, 'Heroic Scarlet Commander Mograine'),
 (1003976, 910210, 0, 0, 0, 1, 1, 1, 1, 'Heroic Scarlet Commander Mograine'),
 (1003976, 910211, 0, 0, 0, 1, 1, 1, 1, 'Heroic Scarlet Commander Mograine');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003976, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Scarlet Commander Mograine (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3976 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- High Inquisitor Whitemane (Heroic), map 189
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1003977;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1003977, 910212, 0, 0, 0, 1, 1, 1, 1, 'Heroic High Inquisitor Whitemane'),
 (1003977, 910213, 0, 0, 0, 1, 1, 1, 1, 'Heroic High Inquisitor Whitemane'),
 (1003977, 910214, 0, 0, 0, 1, 2, 1, 1, 'Heroic High Inquisitor Whitemane');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1003977, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic High Inquisitor Whitemane (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 3977 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Tuten'kash (Heroic), map 129
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007355;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007355, 910215, 0, 0, 0, 1, 1, 1, 1, 'Heroic Tuten''kash'),
 (1007355, 910216, 0, 0, 0, 1, 1, 1, 1, 'Heroic Tuten''kash');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007355, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Tuten''kash (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7355 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Mordresh Fire Eye (Heroic), map 129
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007357;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007357, 910217, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mordresh Fire Eye'),
 (1007357, 910218, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mordresh Fire Eye'),
 (1007357, 910219, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mordresh Fire Eye');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007357, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Mordresh Fire Eye (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7357 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Glutton (Heroic), map 129
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1008567;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1008567, 910220, 0, 0, 0, 1, 1, 1, 1, 'Heroic Glutton');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1008567, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Glutton (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 8567 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Plaguemaw the Rotting (Heroic), map 129
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007356;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007356, 910221, 0, 0, 0, 1, 1, 1, 1, 'Heroic Plaguemaw the Rotting');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007356, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Plaguemaw the Rotting (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7356 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Amnennar the Coldbringer (Heroic), map 129
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007358;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -7044,143 +7256,251 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1007358, 910225, 0, 0, 0, 1, 2, 1, 1, 'Heroic Amnennar the Coldbringer'),
 (1007358, 910226, 0, 0, 0, 1, 2, 1, 1, 'Heroic Amnennar the Coldbringer'),
 (1007358, 910227, 0, 0, 0, 1, 2, 1, 1, 'Heroic Amnennar the Coldbringer');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007358, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Amnennar the Coldbringer (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7358 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Revelosh (Heroic), map 70
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1006910;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1006910, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Revelosh (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 6910 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Baelog (Heroic), map 70
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1006906;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1006906, 910228, 0, 0, 0, 1, 1, 1, 1, 'Heroic Baelog'),
 (1006906, 910229, 0, 0, 0, 1, 1, 1, 1, 'Heroic Baelog');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1006906, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Baelog (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 6906 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Eric "The Swift" (Heroic), map 70
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1006907;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1006907, 910230, 0, 0, 0, 1, 1, 1, 1, 'Heroic Eric "The Swift"'),
 (1006907, 910231, 0, 0, 0, 1, 1, 1, 1, 'Heroic Eric "The Swift"');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1006907, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Eric "The Swift" (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 6907 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Olaf (Heroic), map 70
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1006908;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1006908, 910232, 0, 0, 0, 1, 1, 1, 1, 'Heroic Olaf'),
 (1006908, 910233, 0, 0, 0, 1, 1, 1, 1, 'Heroic Olaf');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1006908, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Olaf (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 6908 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Ironaya (Heroic), map 70
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007228;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007228, 910234, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ironaya'),
 (1007228, 910235, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ironaya');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007228, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Ironaya (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7228 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Obsidian Sentinel (Heroic), map 70
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007023;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007023, 910236, 0, 0, 0, 1, 1, 1, 1, 'Heroic Obsidian Sentinel'),
 (1007023, 910237, 0, 0, 0, 1, 1, 1, 1, 'Heroic Obsidian Sentinel'),
 (1007023, 910238, 0, 0, 0, 1, 1, 1, 1, 'Heroic Obsidian Sentinel');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007023, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Obsidian Sentinel (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7023 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Ancient Stone Keeper (Heroic), map 70
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007206;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007206, 910239, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ancient Stone Keeper'),
 (1007206, 910240, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ancient Stone Keeper'),
 (1007206, 910241, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ancient Stone Keeper');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007206, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Ancient Stone Keeper (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7206 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Galgann Firehammer (Heroic), map 70
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007291;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007291, 910242, 0, 0, 0, 1, 1, 1, 1, 'Heroic Galgann Firehammer'),
 (1007291, 910243, 0, 0, 0, 1, 1, 1, 1, 'Heroic Galgann Firehammer'),
 (1007291, 910244, 0, 0, 0, 1, 1, 1, 1, 'Heroic Galgann Firehammer');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007291, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Galgann Firehammer (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7291 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Grimlok (Heroic), map 70
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1004854;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1004854, 910245, 0, 0, 0, 1, 1, 1, 1, 'Heroic Grimlok'),
 (1004854, 910246, 0, 0, 0, 1, 1, 1, 1, 'Heroic Grimlok'),
 (1004854, 910247, 0, 0, 0, 1, 1, 1, 1, 'Heroic Grimlok');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1004854, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Grimlok (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 4854 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Archaedas (Heroic), map 70
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1002748;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1002748, 910248, 0, 0, 0, 1, 1, 1, 1, 'Heroic Archaedas');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1002748, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Archaedas (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 2748 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Antu'sul (Heroic), map 209
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1008127;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1008127, 910249, 0, 0, 0, 1, 1, 1, 1, 'Heroic Antu''sul'),
 (1008127, 910250, 0, 0, 0, 1, 1, 1, 1, 'Heroic Antu''sul');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1008127, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Antu''sul (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 8127 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Theka the Martyr (Heroic), map 209
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007272;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007272, 910251, 0, 0, 0, 1, 1, 1, 1, 'Heroic Theka the Martyr'),
 (1007272, 910252, 0, 0, 0, 1, 1, 1, 1, 'Heroic Theka the Martyr'),
 (1007272, 910253, 0, 0, 0, 1, 1, 1, 1, 'Heroic Theka the Martyr');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007272, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Theka the Martyr (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7272 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Witch Doctor Zum'rah (Heroic), map 209
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007271;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007271, 910254, 0, 0, 0, 1, 1, 1, 1, 'Heroic Witch Doctor Zum''rah'),
 (1007271, 910255, 0, 0, 0, 1, 1, 1, 1, 'Heroic Witch Doctor Zum''rah');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007271, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Witch Doctor Zum''rah (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7271 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Nekrum Gutchewer (Heroic), map 209
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007796;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007796, 910256, 0, 0, 0, 1, 1, 1, 1, 'Heroic Nekrum Gutchewer'),
 (1007796, 910252, 0, 0, 0, 1, 1, 1, 1, 'Heroic Nekrum Gutchewer'),
 (1007796, 910253, 0, 0, 0, 1, 1, 1, 1, 'Heroic Nekrum Gutchewer');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007796, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Nekrum Gutchewer (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7796 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Shadowpriest Sezz'ziz (Heroic), map 209
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007275;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007275, 910257, 0, 0, 0, 1, 1, 1, 1, 'Heroic Shadowpriest Sezz''ziz'),
 (1007275, 910258, 0, 0, 0, 1, 1, 1, 1, 'Heroic Shadowpriest Sezz''ziz'),
 (1007275, 910259, 0, 0, 0, 1, 1, 1, 1, 'Heroic Shadowpriest Sezz''ziz');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007275, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Shadowpriest Sezz''ziz (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7275 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Sergeant Bly (Heroic), map 209
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007604;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007604, 910260, 0, 0, 0, 1, 1, 1, 1, 'Heroic Sergeant Bly'),
 (1007604, 910261, 0, 0, 0, 1, 1, 1, 1, 'Heroic Sergeant Bly'),
 (1007604, 910262, 0, 0, 0, 1, 1, 1, 1, 'Heroic Sergeant Bly');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007604, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Sergeant Bly (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7604 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Hydromancer Velratha (Heroic), map 209
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007795;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007795, 910256, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hydromancer Velratha'),
 (1007795, 910263, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hydromancer Velratha'),
 (1007795, 910264, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hydromancer Velratha');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007795, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Hydromancer Velratha (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7795 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Gahz'rilla (Heroic), map 209
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007273;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007273, 910265, 0, 0, 0, 1, 1, 1, 1, 'Heroic Gahz''rilla');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007273, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Gahz''rilla (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7273 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Chief Ukorz Sandscalp (Heroic), map 209
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1007267;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1007267, 910249, 0, 0, 0, 1, 1, 1, 1, 'Heroic Chief Ukorz Sandscalp'),
 (1007267, 910266, 0, 0, 0, 1, 1, 1, 1, 'Heroic Chief Ukorz Sandscalp'),
 (1007267, 910267, 0, 0, 0, 1, 2, 1, 1, 'Heroic Chief Ukorz Sandscalp');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1007267, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Chief Ukorz Sandscalp (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 7267 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Noxxion (Heroic), map 349
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1013282;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1013282, 910268, 0, 0, 0, 1, 1, 1, 1, 'Heroic Noxxion'),
 (1013282, 910269, 0, 0, 0, 1, 1, 1, 1, 'Heroic Noxxion');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1013282, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Noxxion (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 13282 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Razorlash (Heroic), map 349
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1012258;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1012258, 910270, 0, 0, 0, 1, 1, 1, 1, 'Heroic Razorlash'),
 (1012258, 910271, 0, 0, 0, 1, 1, 1, 1, 'Heroic Razorlash'),
 (1012258, 910272, 0, 0, 0, 1, 1, 1, 1, 'Heroic Razorlash');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1012258, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Razorlash (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 12258 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Lord Vyletongue (Heroic), map 349
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1012236;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1012236, 910273, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Vyletongue'),
 (1012236, 910274, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Vyletongue');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1012236, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Lord Vyletongue (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 12236 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Celebras the Cursed (Heroic), map 349
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1012225;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1012225, 910275, 0, 0, 0, 1, 1, 1, 1, 'Heroic Celebras the Cursed'),
 (1012225, 910276, 0, 0, 0, 1, 1, 1, 1, 'Heroic Celebras the Cursed');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1012225, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Celebras the Cursed (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 12225 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Landslide (Heroic), map 349
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1012203;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1012203, 910277, 0, 0, 0, 1, 1, 1, 1, 'Heroic Landslide'),
 (1012203, 910278, 0, 0, 0, 1, 1, 1, 1, 'Heroic Landslide'),
 (1012203, 910279, 0, 0, 0, 1, 1, 1, 1, 'Heroic Landslide');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1012203, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Landslide (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 12203 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Tinkerer Gizlock (Heroic), map 349
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1013601;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1013601, 910280, 0, 0, 0, 1, 1, 1, 1, 'Heroic Tinkerer Gizlock'),
 (1013601, 910281, 0, 0, 0, 1, 1, 1, 1, 'Heroic Tinkerer Gizlock');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1013601, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Tinkerer Gizlock (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 13601 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Rotgrip (Heroic), map 349
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1013596;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1013596, 910282, 0, 0, 0, 1, 1, 1, 1, 'Heroic Rotgrip'),
 (1013596, 910283, 0, 0, 0, 1, 1, 1, 1, 'Heroic Rotgrip');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1013596, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Rotgrip (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 13596 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Princess Theradras (Heroic), map 349
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1012201;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -7190,52 +7510,88 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1012201, 910287, 0, 0, 0, 1, 2, 1, 1, 'Heroic Princess Theradras'),
 (1012201, 910288, 0, 0, 0, 1, 2, 1, 1, 'Heroic Princess Theradras'),
 (1012201, 910289, 0, 0, 0, 1, 2, 1, 1, 'Heroic Princess Theradras');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1012201, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Princess Theradras (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 12201 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Atal'alarion (Heroic), map 109
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1008580;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1008580, 910290, 0, 0, 0, 1, 1, 1, 1, 'Heroic Atal''alarion'),
 (1008580, 910291, 0, 0, 0, 1, 1, 1, 1, 'Heroic Atal''alarion');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1008580, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Atal''alarion (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 8580 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Dreamscythe (Heroic), map 109
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1005721;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1005721, 910292, 0, 0, 0, 1, 1, 1, 1, 'Heroic Dreamscythe'),
 (1005721, 910293, 0, 0, 0, 1, 1, 1, 1, 'Heroic Dreamscythe'),
 (1005721, 910294, 0, 0, 0, 1, 1, 1, 1, 'Heroic Dreamscythe');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1005721, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Dreamscythe (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 5721 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Weaver (Heroic), map 109
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1005720;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1005720, 910292, 0, 0, 0, 1, 1, 1, 1, 'Heroic Weaver'),
 (1005720, 910293, 0, 0, 0, 1, 1, 1, 1, 'Heroic Weaver'),
 (1005720, 910294, 0, 0, 0, 1, 1, 1, 1, 'Heroic Weaver');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1005720, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Weaver (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 5720 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Avatar of Hakkar (Heroic), map 109
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1008443;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1008443, 910295, 0, 0, 0, 1, 1, 1, 1, 'Heroic Avatar of Hakkar'),
 (1008443, 910296, 0, 0, 0, 1, 1, 1, 1, 'Heroic Avatar of Hakkar'),
 (1008443, 910297, 0, 0, 0, 1, 1, 1, 1, 'Heroic Avatar of Hakkar');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1008443, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Avatar of Hakkar (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 8443 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Jammal'an the Prophet (Heroic), map 109
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1005710;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1005710, 910298, 0, 0, 0, 1, 1, 1, 1, 'Heroic Jammal''an the Prophet'),
 (1005710, 910299, 0, 0, 0, 1, 1, 1, 1, 'Heroic Jammal''an the Prophet'),
 (1005710, 910300, 0, 0, 0, 1, 1, 1, 1, 'Heroic Jammal''an the Prophet');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1005710, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Jammal''an the Prophet (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 5710 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Ogom the Wretched (Heroic), map 109
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1005711;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1005711, 910301, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ogom the Wretched'),
 (1005711, 910302, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ogom the Wretched');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1005711, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Ogom the Wretched (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 5711 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Morphaz (Heroic), map 109
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1005719;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1005719, 910292, 0, 0, 0, 1, 1, 1, 1, 'Heroic Morphaz'),
 (1005719, 910293, 0, 0, 0, 1, 1, 1, 1, 'Heroic Morphaz'),
 (1005719, 910294, 0, 0, 0, 1, 1, 1, 1, 'Heroic Morphaz');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1005719, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Morphaz (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 5719 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Hazzas (Heroic), map 109
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1005722;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1005722, 910292, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hazzas'),
 (1005722, 910293, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hazzas'),
 (1005722, 910294, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hazzas');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1005722, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Hazzas (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 5722 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Shade of Eranikus (Heroic), map 109
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1005709;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -7244,122 +7600,210 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1005709, 910305, 0, 0, 0, 1, 1, 1, 1, 'Heroic Shade of Eranikus'),
 (1005709, 910306, 0, 0, 0, 1, 2, 1, 1, 'Heroic Shade of Eranikus'),
 (1005709, 910307, 0, 0, 0, 1, 2, 1, 1, 'Heroic Shade of Eranikus');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1005709, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Shade of Eranikus (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 5709 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Lord Roccor (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009025;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009025, 910308, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Roccor'),
 (1009025, 910309, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Roccor'),
 (1009025, 910310, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Roccor');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009025, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Lord Roccor (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9025 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- High Interrogator Gerstahn (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009018;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009018, 910311, 0, 0, 0, 1, 1, 1, 1, 'Heroic High Interrogator Gerstahn'),
 (1009018, 910312, 0, 0, 0, 1, 1, 1, 1, 'Heroic High Interrogator Gerstahn'),
 (1009018, 910313, 0, 0, 0, 1, 1, 1, 1, 'Heroic High Interrogator Gerstahn');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009018, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic High Interrogator Gerstahn (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9018 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Houndmaster Grebmar (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009319;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009319, 910314, 0, 0, 0, 1, 1, 1, 1, 'Heroic Houndmaster Grebmar'),
 (1009319, 910315, 0, 0, 0, 1, 1, 1, 1, 'Heroic Houndmaster Grebmar'),
 (1009319, 910316, 0, 0, 0, 1, 1, 1, 1, 'Heroic Houndmaster Grebmar');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009319, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Houndmaster Grebmar (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9319 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Gorosh the Dervish (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009027;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009027, 910317, 0, 0, 0, 1, 1, 1, 1, 'Heroic Gorosh the Dervish'),
 (1009027, 910318, 0, 0, 0, 1, 1, 1, 1, 'Heroic Gorosh the Dervish'),
 (1009027, 910319, 0, 0, 0, 1, 1, 1, 1, 'Heroic Gorosh the Dervish');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009027, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Gorosh the Dervish (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9027 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Grizzle (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009028;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009028, 910320, 0, 0, 0, 1, 1, 1, 1, 'Heroic Grizzle'),
 (1009028, 910321, 0, 0, 0, 1, 1, 1, 1, 'Heroic Grizzle'),
 (1009028, 910322, 0, 0, 0, 1, 1, 1, 1, 'Heroic Grizzle');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009028, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Grizzle (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9028 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Eviscerator (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009029;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009029, 910323, 0, 0, 0, 1, 1, 1, 1, 'Heroic Eviscerator'),
 (1009029, 910324, 0, 0, 0, 1, 1, 1, 1, 'Heroic Eviscerator'),
 (1009029, 910325, 0, 0, 0, 1, 1, 1, 1, 'Heroic Eviscerator');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009029, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Eviscerator (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9029 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Ok'thor the Breaker (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009030;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009030, 910326, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ok''thor the Breaker'),
 (1009030, 910327, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ok''thor the Breaker'),
 (1009030, 910328, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ok''thor the Breaker');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009030, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Ok''thor the Breaker (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9030 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Anub'shiah (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009031;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009031, 910329, 0, 0, 0, 1, 1, 1, 1, 'Heroic Anub''shiah'),
 (1009031, 910330, 0, 0, 0, 1, 1, 1, 1, 'Heroic Anub''shiah'),
 (1009031, 910331, 0, 0, 0, 1, 1, 1, 1, 'Heroic Anub''shiah');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009031, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Anub''shiah (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9031 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Hedrum the Creeper (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009032;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009032, 910332, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hedrum the Creeper'),
 (1009032, 910333, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hedrum the Creeper'),
 (1009032, 910334, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hedrum the Creeper');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009032, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Hedrum the Creeper (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9032 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Lord Incendius (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009017;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009017, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Lord Incendius (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9017 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Fineous Darkvire (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009056;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009056, 910335, 0, 0, 0, 1, 1, 1, 1, 'Heroic Fineous Darkvire'),
 (1009056, 910336, 0, 0, 0, 1, 1, 1, 1, 'Heroic Fineous Darkvire'),
 (1009056, 910337, 0, 0, 0, 1, 1, 1, 1, 'Heroic Fineous Darkvire');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009056, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Fineous Darkvire (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9056 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Bael'Gar (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009016;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009016, 910338, 0, 0, 0, 1, 1, 1, 1, 'Heroic Bael''Gar'),
 (1009016, 910339, 0, 0, 0, 1, 1, 1, 1, 'Heroic Bael''Gar'),
 (1009016, 910340, 0, 0, 0, 1, 1, 1, 1, 'Heroic Bael''Gar');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009016, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Bael''Gar (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9016 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- General Angerforge (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009033;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009033, 910341, 0, 0, 0, 1, 1, 1, 1, 'Heroic General Angerforge'),
 (1009033, 910342, 0, 0, 0, 1, 1, 1, 1, 'Heroic General Angerforge'),
 (1009033, 910343, 0, 0, 0, 1, 1, 1, 1, 'Heroic General Angerforge');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009033, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic General Angerforge (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9033 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Golem Lord Argelmach (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1008983;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1008983, 910344, 0, 0, 0, 1, 1, 1, 1, 'Heroic Golem Lord Argelmach'),
 (1008983, 910345, 0, 0, 0, 1, 1, 1, 1, 'Heroic Golem Lord Argelmach'),
 (1008983, 910346, 0, 0, 0, 1, 1, 1, 1, 'Heroic Golem Lord Argelmach');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1008983, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Golem Lord Argelmach (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 8983 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Hurley Blackbreath (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009537;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009537, 910347, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hurley Blackbreath'),
 (1009537, 910348, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hurley Blackbreath'),
 (1009537, 910349, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hurley Blackbreath');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009537, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Hurley Blackbreath (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9537 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Phalanx (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009502;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009502, 910350, 0, 0, 0, 1, 1, 1, 1, 'Heroic Phalanx'),
 (1009502, 910351, 0, 0, 0, 1, 1, 1, 1, 'Heroic Phalanx'),
 (1009502, 910352, 0, 0, 0, 1, 1, 1, 1, 'Heroic Phalanx');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009502, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Phalanx (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9502 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Ribbly Screwspigot (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009543;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009543, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Ribbly Screwspigot (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9543 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Plugger Spazzring (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009499;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009499, 910353, 0, 0, 0, 1, 1, 1, 1, 'Heroic Plugger Spazzring');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009499, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Plugger Spazzring (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9499 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Ambassador Flamelash (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009156;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009156, 910354, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ambassador Flamelash'),
 (1009156, 910355, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ambassador Flamelash'),
 (1009156, 910356, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ambassador Flamelash');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009156, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Ambassador Flamelash (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9156 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Magmus (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009938;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009938, 910357, 0, 0, 0, 1, 1, 1, 1, 'Heroic Magmus'),
 (1009938, 910358, 0, 0, 0, 1, 1, 1, 1, 'Heroic Magmus'),
 (1009938, 910359, 0, 0, 0, 1, 1, 1, 1, 'Heroic Magmus');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009938, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Magmus (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9938 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Princess Moira Bronzebeard (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1008929;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1008929, 910360, 0, 0, 0, 1, 1, 1, 1, 'Heroic Princess Moira Bronzebeard'),
 (1008929, 910361, 0, 0, 0, 1, 1, 1, 1, 'Heroic Princess Moira Bronzebeard'),
 (1008929, 910362, 0, 0, 0, 1, 1, 1, 1, 'Heroic Princess Moira Bronzebeard');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1008929, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Princess Moira Bronzebeard (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 8929 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Emperor Dagran Thaurissan (Heroic), map 230
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009019;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -7369,51 +7813,87 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1009019, 910366, 0, 0, 0, 1, 2, 1, 1, 'Heroic Emperor Dagran Thaurissan'),
 (1009019, 910367, 0, 0, 0, 1, 2, 1, 1, 'Heroic Emperor Dagran Thaurissan'),
 (1009019, 910368, 0, 0, 0, 1, 2, 1, 1, 'Heroic Emperor Dagran Thaurissan');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009019, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Emperor Dagran Thaurissan (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9019 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Highlord Omokk (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009196;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009196, 910369, 0, 0, 0, 1, 1, 1, 1, 'Heroic Highlord Omokk'),
 (1009196, 910370, 0, 0, 0, 1, 1, 1, 1, 'Heroic Highlord Omokk'),
 (1009196, 910371, 0, 0, 0, 1, 1, 1, 1, 'Heroic Highlord Omokk');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009196, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Highlord Omokk (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9196 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Shadow Hunter Vosh'gajin (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009236;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009236, 910372, 0, 0, 0, 1, 1, 1, 1, 'Heroic Shadow Hunter Vosh''gajin'),
 (1009236, 910373, 0, 0, 0, 1, 1, 1, 1, 'Heroic Shadow Hunter Vosh''gajin'),
 (1009236, 910374, 0, 0, 0, 1, 1, 1, 1, 'Heroic Shadow Hunter Vosh''gajin');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009236, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Shadow Hunter Vosh''gajin (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9236 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- War Master Voone (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009237;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009237, 910375, 0, 0, 0, 1, 1, 1, 1, 'Heroic War Master Voone'),
 (1009237, 910376, 0, 0, 0, 1, 1, 1, 1, 'Heroic War Master Voone'),
 (1009237, 910377, 0, 0, 0, 1, 1, 1, 1, 'Heroic War Master Voone');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009237, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic War Master Voone (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9237 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Mother Smolderweb (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010596;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010596, 910378, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mother Smolderweb'),
 (1010596, 910379, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mother Smolderweb');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010596, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Mother Smolderweb (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10596 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Urok Doomhowl (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010584;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010584, 910380, 0, 0, 0, 1, 1, 1, 1, 'Heroic Urok Doomhowl'),
 (1010584, 910381, 0, 0, 0, 1, 1, 1, 1, 'Heroic Urok Doomhowl');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010584, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Urok Doomhowl (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10584 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Quartermaster Zigris (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009736;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009736, 910382, 0, 0, 0, 1, 1, 1, 1, 'Heroic Quartermaster Zigris'),
 (1009736, 910383, 0, 0, 0, 1, 1, 1, 1, 'Heroic Quartermaster Zigris');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009736, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Quartermaster Zigris (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9736 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Halycon (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010220;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010220, 910384, 0, 0, 0, 1, 1, 1, 1, 'Heroic Halycon'),
 (1010220, 910385, 0, 0, 0, 1, 1, 1, 1, 'Heroic Halycon'),
 (1010220, 910386, 0, 0, 0, 1, 1, 1, 1, 'Heroic Halycon');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010220, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Halycon (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10220 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Gizrul the Slavener (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010268;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010268, 910387, 0, 0, 0, 1, 1, 1, 1, 'Heroic Gizrul the Slavener'),
 (1010268, 910388, 0, 0, 0, 1, 1, 1, 1, 'Heroic Gizrul the Slavener'),
 (1010268, 910389, 0, 0, 0, 1, 1, 1, 1, 'Heroic Gizrul the Slavener');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010268, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Gizrul the Slavener (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10268 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Overlord Wyrmthalak (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009568;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -7421,51 +7901,87 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1009568, 910391, 0, 0, 0, 1, 1, 1, 1, 'Heroic Overlord Wyrmthalak'),
 (1009568, 910392, 0, 0, 0, 1, 1, 1, 1, 'Heroic Overlord Wyrmthalak'),
 (1009568, 910393, 0, 0, 0, 1, 2, 1, 1, 'Heroic Overlord Wyrmthalak');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009568, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Overlord Wyrmthalak (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9568 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Pyroguard Emberseer (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1009816;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1009816, 910394, 0, 0, 0, 1, 1, 1, 1, 'Heroic Pyroguard Emberseer'),
 (1009816, 910395, 0, 0, 0, 1, 1, 1, 1, 'Heroic Pyroguard Emberseer');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1009816, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Pyroguard Emberseer (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 9816 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Solakar Flamewreath (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010264;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010264, 910396, 0, 0, 0, 1, 1, 1, 1, 'Heroic Solakar Flamewreath'),
 (1010264, 910397, 0, 0, 0, 1, 1, 1, 1, 'Heroic Solakar Flamewreath'),
 (1010264, 910398, 0, 0, 0, 1, 1, 1, 1, 'Heroic Solakar Flamewreath');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010264, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Solakar Flamewreath (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10264 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Goraluk Anvilcrack (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010899;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010899, 910399, 0, 0, 0, 1, 1, 1, 1, 'Heroic Goraluk Anvilcrack'),
 (1010899, 910400, 0, 0, 0, 1, 1, 1, 1, 'Heroic Goraluk Anvilcrack'),
 (1010899, 910401, 0, 0, 0, 1, 1, 1, 1, 'Heroic Goraluk Anvilcrack');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010899, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Goraluk Anvilcrack (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10899 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Gyth (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010339;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010339, 910402, 0, 0, 0, 1, 1, 1, 1, 'Heroic Gyth');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010339, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Gyth (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10339 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Warchief Rend Blackhand (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010429;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010429, 910403, 0, 0, 0, 1, 1, 1, 1, 'Heroic Warchief Rend Blackhand'),
 (1010429, 910404, 0, 0, 0, 1, 1, 1, 1, 'Heroic Warchief Rend Blackhand'),
 (1010429, 910405, 0, 0, 0, 1, 1, 1, 1, 'Heroic Warchief Rend Blackhand');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010429, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Warchief Rend Blackhand (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10429 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- The Beast (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010430;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010430, 910406, 0, 0, 0, 1, 1, 1, 1, 'Heroic The Beast'),
 (1010430, 910407, 0, 0, 0, 1, 1, 1, 1, 'Heroic The Beast'),
 (1010430, 910408, 0, 0, 0, 1, 1, 1, 1, 'Heroic The Beast');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010430, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic The Beast (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10430 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Mor Grayhoof (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1016080;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1016080, 910409, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mor Grayhoof'),
 (1016080, 910410, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mor Grayhoof'),
 (1016080, 910411, 0, 0, 0, 1, 1, 1, 1, 'Heroic Mor Grayhoof');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1016080, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Mor Grayhoof (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 16080 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Lord Valthalak (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1016042;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1016042, 910412, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Valthalak'),
 (1016042, 910413, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Valthalak'),
 (1016042, 910414, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Valthalak');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1016042, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Lord Valthalak (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 16042 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- General Drakkisath (Heroic), map 229
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010363;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -7475,32 +7991,56 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1010363, 910418, 0, 0, 0, 1, 2, 1, 1, 'Heroic General Drakkisath'),
 (1010363, 910419, 0, 0, 0, 1, 2, 1, 1, 'Heroic General Drakkisath'),
 (1010363, 910420, 0, 0, 0, 1, 2, 1, 1, 'Heroic General Drakkisath');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010363, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic General Drakkisath (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10363 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Pusillin (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1014354;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1014354, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Pusillin (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 14354 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Lethtendris (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1014327;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1014327, 910421, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lethtendris'),
 (1014327, 910422, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lethtendris'),
 (1014327, 910423, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lethtendris');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1014327, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Lethtendris (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 14327 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Hydrospawn (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1013280;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1013280, 910424, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hydrospawn'),
 (1013280, 910425, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hydrospawn'),
 (1013280, 910426, 0, 0, 0, 1, 1, 1, 1, 'Heroic Hydrospawn');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1013280, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Hydrospawn (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 13280 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Zevrim Thornhoof (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011490;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1011490, 910427, 0, 0, 0, 1, 1, 1, 1, 'Heroic Zevrim Thornhoof'),
 (1011490, 910428, 0, 0, 0, 1, 1, 1, 1, 'Heroic Zevrim Thornhoof'),
 (1011490, 910429, 0, 0, 0, 1, 1, 1, 1, 'Heroic Zevrim Thornhoof');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011490, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Zevrim Thornhoof (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11490 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Isalien (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1016097;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1016097, 910430, 0, 0, 0, 1, 1, 1, 1, 'Heroic Isalien'),
 (1016097, 910431, 0, 0, 0, 1, 1, 1, 1, 'Heroic Isalien'),
 (1016097, 910432, 0, 0, 0, 1, 1, 1, 1, 'Heroic Isalien');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1016097, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Isalien (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 16097 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Alzzin the Wildshaper (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011492;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -7510,29 +8050,49 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1011492, 910436, 0, 0, 0, 1, 2, 1, 1, 'Heroic Alzzin the Wildshaper'),
 (1011492, 910437, 0, 0, 0, 1, 2, 1, 1, 'Heroic Alzzin the Wildshaper'),
 (1011492, 910438, 0, 0, 0, 1, 2, 1, 1, 'Heroic Alzzin the Wildshaper');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011492, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Alzzin the Wildshaper (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11492 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Tendris Warpwood (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011489;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1011489, 910439, 0, 0, 0, 1, 1, 1, 1, 'Heroic Tendris Warpwood'),
 (1011489, 910440, 0, 0, 0, 1, 1, 1, 1, 'Heroic Tendris Warpwood'),
 (1011489, 910441, 0, 0, 0, 1, 1, 1, 1, 'Heroic Tendris Warpwood');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011489, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Tendris Warpwood (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11489 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Illyanna Ravenoak (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011488;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1011488, 910442, 0, 0, 0, 1, 1, 1, 1, 'Heroic Illyanna Ravenoak'),
 (1011488, 910443, 0, 0, 0, 1, 1, 1, 1, 'Heroic Illyanna Ravenoak'),
 (1011488, 910444, 0, 0, 0, 1, 1, 1, 1, 'Heroic Illyanna Ravenoak');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011488, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Illyanna Ravenoak (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11488 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Magister Kalendris (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011487;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1011487, 910445, 0, 0, 0, 1, 1, 1, 1, 'Heroic Magister Kalendris'),
 (1011487, 910446, 0, 0, 0, 1, 1, 1, 1, 'Heroic Magister Kalendris');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011487, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Magister Kalendris (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11487 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Immol'thar (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011496;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1011496, 910447, 0, 0, 0, 1, 1, 1, 1, 'Heroic Immol''thar'),
 (1011496, 910448, 0, 0, 0, 1, 1, 1, 1, 'Heroic Immol''thar'),
 (1011496, 910449, 0, 0, 0, 1, 1, 1, 1, 'Heroic Immol''thar');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011496, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Immol''thar (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11496 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Prince Tortheldrin (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011486;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -7542,39 +8102,67 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1011486, 910453, 0, 0, 0, 1, 2, 1, 1, 'Heroic Prince Tortheldrin'),
 (1011486, 910454, 0, 0, 0, 1, 2, 1, 1, 'Heroic Prince Tortheldrin'),
 (1011486, 910455, 0, 0, 0, 1, 2, 1, 1, 'Heroic Prince Tortheldrin');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011486, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Prince Tortheldrin (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11486 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Guard Mol'dar (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1014326;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1014326, 910456, 0, 0, 0, 1, 1, 1, 1, 'Heroic Guard Mol''dar'),
 (1014326, 910457, 0, 0, 0, 1, 1, 1, 1, 'Heroic Guard Mol''dar'),
 (1014326, 910458, 0, 0, 0, 1, 1, 1, 1, 'Heroic Guard Mol''dar');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1014326, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Guard Mol''dar (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 14326 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Stomper Kreeg (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1014322;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1014322, 910459, 0, 0, 0, 1, 1, 1, 1, 'Heroic Stomper Kreeg');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1014322, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Stomper Kreeg (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 14322 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Guard Fengus (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1014321;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1014321, 910456, 0, 0, 0, 1, 1, 1, 1, 'Heroic Guard Fengus'),
 (1014321, 910457, 0, 0, 0, 1, 1, 1, 1, 'Heroic Guard Fengus'),
 (1014321, 910458, 0, 0, 0, 1, 1, 1, 1, 'Heroic Guard Fengus');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1014321, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Guard Fengus (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 14321 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Guard Slip'kik (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1014323;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1014323, 910456, 0, 0, 0, 1, 1, 1, 1, 'Heroic Guard Slip''kik'),
 (1014323, 910457, 0, 0, 0, 1, 1, 1, 1, 'Heroic Guard Slip''kik'),
 (1014323, 910458, 0, 0, 0, 1, 1, 1, 1, 'Heroic Guard Slip''kik');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1014323, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Guard Slip''kik (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 14323 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Captain Kromcrush (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1014325;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1014325, 910460, 0, 0, 0, 1, 1, 1, 1, 'Heroic Captain Kromcrush'),
 (1014325, 910461, 0, 0, 0, 1, 1, 1, 1, 'Heroic Captain Kromcrush'),
 (1014325, 910462, 0, 0, 0, 1, 1, 1, 1, 'Heroic Captain Kromcrush');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1014325, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Captain Kromcrush (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 14325 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Cho'Rush the Observer (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1014324;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1014324, 910463, 0, 0, 0, 1, 1, 1, 1, 'Heroic Cho''Rush the Observer'),
 (1014324, 910464, 0, 0, 0, 1, 1, 1, 1, 'Heroic Cho''Rush the Observer');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1014324, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Cho''Rush the Observer (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 14324 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- King Gordok (Heroic), map 429
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011501;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -7584,81 +8172,137 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1011501, 910468, 0, 0, 0, 1, 2, 1, 1, 'Heroic King Gordok'),
 (1011501, 910469, 0, 0, 0, 1, 2, 1, 1, 'Heroic King Gordok'),
 (1011501, 910470, 0, 0, 0, 1, 2, 1, 1, 'Heroic King Gordok');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011501, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic King Gordok (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11501 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Kirtonos the Herald (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010506;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010506, 910471, 0, 0, 0, 1, 1, 1, 1, 'Heroic Kirtonos the Herald'),
 (1010506, 910472, 0, 0, 0, 1, 1, 1, 1, 'Heroic Kirtonos the Herald'),
 (1010506, 910473, 0, 0, 0, 1, 1, 1, 1, 'Heroic Kirtonos the Herald');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010506, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Kirtonos the Herald (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10506 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Jandice Barov (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010503;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010503, 910474, 0, 0, 0, 1, 1, 1, 1, 'Heroic Jandice Barov'),
 (1010503, 910475, 0, 0, 0, 1, 1, 1, 1, 'Heroic Jandice Barov'),
 (1010503, 910476, 0, 0, 0, 1, 1, 1, 1, 'Heroic Jandice Barov');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010503, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Jandice Barov (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10503 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Rattlegore (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011622;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1011622, 910477, 0, 0, 0, 1, 1, 1, 1, 'Heroic Rattlegore'),
 (1011622, 910478, 0, 0, 0, 1, 1, 1, 1, 'Heroic Rattlegore'),
 (1011622, 910479, 0, 0, 0, 1, 1, 1, 1, 'Heroic Rattlegore');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011622, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Rattlegore (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11622 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Marduk Blackpool (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010433;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010433, 910480, 0, 0, 0, 1, 1, 1, 1, 'Heroic Marduk Blackpool');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010433, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Marduk Blackpool (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10433 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Vectus (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010432;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010432, 910481, 0, 0, 0, 1, 1, 1, 1, 'Heroic Vectus'),
 (1010432, 910482, 0, 0, 0, 1, 1, 1, 1, 'Heroic Vectus');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010432, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Vectus (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10432 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Ras Frostwhisper (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010508;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010508, 910483, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ras Frostwhisper'),
 (1010508, 910484, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ras Frostwhisper'),
 (1010508, 910485, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ras Frostwhisper');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010508, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Ras Frostwhisper (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10508 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Instructor Malicia (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010505;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010505, 910486, 0, 0, 0, 1, 1, 1, 1, 'Heroic Instructor Malicia'),
 (1010505, 910487, 0, 0, 0, 1, 1, 1, 1, 'Heroic Instructor Malicia'),
 (1010505, 910488, 0, 0, 0, 1, 1, 1, 1, 'Heroic Instructor Malicia');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010505, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Instructor Malicia (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10505 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Doctor Theolen Krastinov (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011261;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1011261, 910489, 0, 0, 0, 1, 1, 1, 1, 'Heroic Doctor Theolen Krastinov'),
 (1011261, 910490, 0, 0, 0, 1, 1, 1, 1, 'Heroic Doctor Theolen Krastinov'),
 (1011261, 910486, 0, 0, 0, 1, 1, 1, 1, 'Heroic Doctor Theolen Krastinov');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011261, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Doctor Theolen Krastinov (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11261 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Lorekeeper Polkelt (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010901;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010901, 910491, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lorekeeper Polkelt'),
 (1010901, 910490, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lorekeeper Polkelt'),
 (1010901, 910486, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lorekeeper Polkelt');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010901, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Lorekeeper Polkelt (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10901 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- The Ravenian (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010507;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010507, 910492, 0, 0, 0, 1, 1, 1, 1, 'Heroic The Ravenian'),
 (1010507, 910490, 0, 0, 0, 1, 1, 1, 1, 'Heroic The Ravenian'),
 (1010507, 910486, 0, 0, 0, 1, 1, 1, 1, 'Heroic The Ravenian');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010507, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic The Ravenian (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10507 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Lord Alexei Barov (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010504;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010504, 910493, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Alexei Barov'),
 (1010504, 910494, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Alexei Barov'),
 (1010504, 910495, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lord Alexei Barov');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010504, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Lord Alexei Barov (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10504 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Lady Illucia Barov (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010502;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010502, 910486, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lady Illucia Barov'),
 (1010502, 910490, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lady Illucia Barov'),
 (1010502, 910488, 0, 0, 0, 1, 1, 1, 1, 'Heroic Lady Illucia Barov');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010502, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Lady Illucia Barov (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10502 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Kormok (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1016118;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1016118, 910496, 0, 0, 0, 1, 1, 1, 1, 'Heroic Kormok'),
 (1016118, 910497, 0, 0, 0, 1, 1, 1, 1, 'Heroic Kormok'),
 (1016118, 910498, 0, 0, 0, 1, 1, 1, 1, 'Heroic Kormok');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1016118, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Kormok (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 16118 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Darkmaster Gandling (Heroic), map 289
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1001853;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -7668,53 +8312,97 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1001853, 910502, 0, 0, 0, 1, 2, 1, 1, 'Heroic Darkmaster Gandling'),
 (1001853, 910503, 0, 0, 0, 1, 2, 1, 1, 'Heroic Darkmaster Gandling'),
 (1001853, 910504, 0, 0, 0, 1, 2, 1, 1, 'Heroic Darkmaster Gandling');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1001853, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Darkmaster Gandling (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 1853 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- The Unforgiven (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010516;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010516, 910505, 0, 0, 0, 1, 1, 1, 1, 'Heroic The Unforgiven'),
 (1010516, 910506, 0, 0, 0, 1, 1, 1, 1, 'Heroic The Unforgiven');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010516, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic The Unforgiven (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10516 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Timmy the Cruel (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010808;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010808, 910507, 0, 0, 0, 1, 1, 1, 1, 'Heroic Timmy the Cruel'),
 (1010808, 910508, 0, 0, 0, 1, 1, 1, 1, 'Heroic Timmy the Cruel'),
 (1010808, 910509, 0, 0, 0, 1, 1, 1, 1, 'Heroic Timmy the Cruel');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010808, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Timmy the Cruel (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10808 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Malor the Zealous (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011032;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1011032, 910510, 0, 0, 0, 1, 1, 1, 1, 'Heroic Malor the Zealous'),
 (1011032, 910511, 0, 0, 0, 1, 1, 1, 1, 'Heroic Malor the Zealous'),
 (1011032, 910512, 0, 0, 0, 1, 1, 1, 1, 'Heroic Malor the Zealous');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011032, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Malor the Zealous (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11032 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Cannon Master Willey (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010997;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010997, 910513, 0, 0, 0, 1, 1, 1, 1, 'Heroic Cannon Master Willey'),
 (1010997, 910514, 0, 0, 0, 1, 1, 1, 1, 'Heroic Cannon Master Willey'),
 (1010997, 910515, 0, 0, 0, 1, 1, 1, 1, 'Heroic Cannon Master Willey');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010997, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Cannon Master Willey (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10997 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Archivist Galford (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010811;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010811, 910516, 0, 0, 0, 1, 1, 1, 1, 'Heroic Archivist Galford'),
 (1010811, 910517, 0, 0, 0, 1, 1, 1, 1, 'Heroic Archivist Galford'),
 (1010811, 910518, 0, 0, 0, 1, 1, 1, 1, 'Heroic Archivist Galford');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010811, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Archivist Galford (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10811 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Crimson Hammersmith (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011120;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1011120, 910510, 0, 0, 0, 1, 1, 1, 1, 'Heroic Crimson Hammersmith'),
 (1011120, 910519, 0, 0, 0, 1, 1, 1, 1, 'Heroic Crimson Hammersmith'),
 (1011120, 910520, 0, 0, 0, 1, 1, 1, 1, 'Heroic Crimson Hammersmith');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011120, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Crimson Hammersmith (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11120 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Fras Siabi (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011058;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011058, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Fras Siabi (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11058 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Postmaster Malown (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1011143;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1011143, 910521, 0, 0, 0, 1, 1, 1, 1, 'Heroic Postmaster Malown'),
 (1011143, 910522, 0, 0, 0, 1, 1, 1, 1, 'Heroic Postmaster Malown'),
 (1011143, 910523, 0, 0, 0, 1, 1, 1, 1, 'Heroic Postmaster Malown');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1011143, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Postmaster Malown (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 11143 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Jarien (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1016101;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1016101, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Jarien (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 16101 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Sothos (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1016102;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1016102, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Sothos (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 16102 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Balnazzar (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010813;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -7724,36 +8412,60 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1010813, 910527, 0, 0, 0, 1, 2, 1, 1, 'Heroic Balnazzar'),
 (1010813, 910528, 0, 0, 0, 1, 2, 1, 1, 'Heroic Balnazzar'),
 (1010813, 910529, 0, 0, 0, 1, 2, 1, 1, 'Heroic Balnazzar');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010813, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Balnazzar (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10813 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Magistrate Barthilas (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010435;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010435, 910530, 0, 0, 0, 1, 1, 1, 1, 'Heroic Magistrate Barthilas'),
 (1010435, 910531, 0, 0, 0, 1, 1, 1, 1, 'Heroic Magistrate Barthilas'),
 (1010435, 910532, 0, 0, 0, 1, 1, 1, 1, 'Heroic Magistrate Barthilas');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010435, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Magistrate Barthilas (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10435 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Baroness Anastari (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010436;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010436, 910533, 0, 0, 0, 1, 1, 1, 1, 'Heroic Baroness Anastari'),
 (1010436, 910534, 0, 0, 0, 1, 1, 1, 1, 'Heroic Baroness Anastari'),
 (1010436, 910535, 0, 0, 0, 1, 1, 1, 1, 'Heroic Baroness Anastari');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010436, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Baroness Anastari (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10436 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Nerub'enkan (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010437;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010437, 910536, 0, 0, 0, 1, 1, 1, 1, 'Heroic Nerub''enkan'),
 (1010437, 910537, 0, 0, 0, 1, 1, 1, 1, 'Heroic Nerub''enkan'),
 (1010437, 910538, 0, 0, 0, 1, 1, 1, 1, 'Heroic Nerub''enkan');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010437, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Nerub''enkan (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10437 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Maleki the Pallid (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010438;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010438, 910539, 0, 0, 0, 1, 1, 1, 1, 'Heroic Maleki the Pallid'),
 (1010438, 910540, 0, 0, 0, 1, 1, 1, 1, 'Heroic Maleki the Pallid'),
 (1010438, 910541, 0, 0, 0, 1, 1, 1, 1, 'Heroic Maleki the Pallid');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010438, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Maleki the Pallid (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10438 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Ramstein the Gorger (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010439;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
 (1010439, 910510, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ramstein the Gorger'),
 (1010439, 910542, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ramstein the Gorger'),
 (1010439, 910543, 0, 0, 0, 1, 1, 1, 1, 'Heroic Ramstein the Gorger');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010439, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Ramstein the Gorger (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10439 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);
 -- Baron Rivendare (Heroic), map 329
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1010440;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES
@@ -7763,3 +8475,7 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (1010440, 910547, 0, 0, 0, 1, 2, 1, 1, 'Heroic Baron Rivendare'),
 (1010440, 910548, 0, 0, 0, 1, 2, 1, 1, 'Heroic Baron Rivendare'),
 (1010440, 910549, 0, 0, 0, 1, 2, 1, 1, 'Heroic Baron Rivendare');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)
+SELECT 1010440, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, `l`.`MaxCount`, 'Heroic Baron Rivendare (quest)'
+FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`
+WHERE `ct`.`entry` = 10440 AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);

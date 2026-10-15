@@ -62,58 +62,58 @@ HEROIC_ITEMS = [
     # --- Deadmines (heroic) --------------------------------------------------------------------
     # Rhahk'Zor
     dict(id=910100, base=13142, name="Foreman's Plate Girdle", ilvl=61, cls=CLS_ARMOR, sub=PLATE, inv=WAIST,
-         mat=6, sheath=0, display=23628, armor=358, stats=[(STR, 12), (STA, 18), (DEFENSE, 10)]),
+         mat=6, sheath=0, display=23628, armor=369, stats=[(STR, 8), (STA, 12), (DEFENSE, 6)]),
     dict(id=910101, base=12589, name="Mine Overseer's Cord", ilvl=61, cls=CLS_ARMOR, sub=CLOTH, inv=WAIST,
-         mat=7, sheath=0, display=21796, armor=48, stats=[(INT, 13), (SPI, 8), (STA, 9), (SPELL_POWER, 18)]),
+         mat=7, sheath=0, display=21796, armor=55, stats=[(INT, 7), (SPI, 4), (STA, 5), (SPELL_POWER, 10)]),
     dict(id=910102, base=5187, name="Rhahk'Zor's Hammer", ilvl=61, cls=CLS_WEAPON, sub=MACE_2H, inv=TWO_HAND,
-         mat=2, sheath=1, display=8600, dps=52.5, delay=3200, stats=[(STR, 24), (STA, 16), (CRIT, 14)]),
-    # Sneed's Shredder (Sneed himself only appears when the Shredder dies and has no heroic copy)
+         mat=2, sheath=1, display=8600, dps=53.9, delay=3200, stats=[(STR, 15), (STA, 10), (CRIT, 9)]),
+    # Sneed's Shredder (Sneed, who jumps out when the Shredder dies, keeps his normal loot)
     dict(id=910103, base=15648, name="Shredder Plating Shield", ilvl=61, cls=CLS_ARMOR, sub=SHIELD,
-         inv=SHIELD_SLOT, mat=1, sheath=4, display=27179, armor=2090, block=38,
-         stats=[(STA, 16), (DEFENSE, 9), (BLOCK_VALUE, 14)]),
+         inv=SHIELD_SLOT, mat=1, sheath=4, display=27179, armor=2153, block=40,
+         stats=[(STA, 8), (DEFENSE, 5), (BLOCK_VALUE, 7)]),
     dict(id=910104, base=5195, name="Gold-flecked Gloves", ilvl=61, cls=CLS_ARMOR, sub=CLOTH, inv=HANDS,
-         mat=7, sheath=0, display=16966, armor=54, stats=[(INT, 12), (STA, 8), (SPELL_POWER, 18), (MP5, 4)]),
+         mat=7, sheath=0, display=16966, armor=80, stats=[(INT, 7), (STA, 5), (SPELL_POWER, 11), (MP5, 2)]),
     dict(id=910105, base=2169, name="Buzzer Blade", ilvl=61, cls=CLS_WEAPON, sub=DAGGER, inv=ONE_HAND,
-         mat=1, sheath=3, display=20347, dps=40.4, delay=1500, stats=[(AGI, 9), (STA, 8), (CRIT, 14)]),
+         mat=1, sheath=3, display=20347, dps=41.5, delay=1500, stats=[(AGI, 5), (STA, 5), (CRIT, 8)]),
     # Gilnid
     dict(id=910106, base=5199, name="Smelting Pants", ilvl=62, cls=CLS_ARMOR, sub=LEATHER, inv=LEGS,
-         mat=8, sheath=0, display=1978, armor=152, stats=[(STA, 22), (AGI, 15), (DODGE, 12)]),
+         mat=8, sheath=0, display=1978, armor=215, stats=[(STA, 18), (AGI, 12), (DODGE, 10)]),
     dict(id=910107, base=1156, name="Lavishly Jeweled Ring", ilvl=62, cls=CLS_ARMOR, sub=MISC, inv=FINGER,
-         mat=1, sheath=0, display=9839, stats=[(INT, 9), (STA, 6), (SPELL_POWER, 15), (HIT, 8)]),
+         mat=1, sheath=0, display=9839, stats=[(INT, 4), (STA, 3), (SPELL_POWER, 7), (HIT, 4)]),
     dict(id=910108, base=10797, name="Molten Edge", ilvl=62, cls=CLS_WEAPON, sub=SWORD_1H, inv=ONE_HAND,
-         mat=1, sheath=3, display=20030, dps=40.9, delay=2400, stats=[(STR, 10), (STA, 9), (CRIT, 14)]),
+         mat=1, sheath=3, display=20030, dps=41.5, delay=2400, stats=[(STR, 5), (STA, 5), (CRIT, 8)]),
     # Mr. Smite
     dict(id=910109, base=13166, name="Smite's Bulwark", ilvl=62, cls=CLS_ARMOR, sub=PLATE, inv=SHOULDERS,
-         mat=6, sheath=0, display=23704, armor=490, stats=[(STR, 12), (STA, 20), (DEFENSE, 12)]),
+         mat=6, sheath=0, display=23704, armor=552, stats=[(STR, 8), (STA, 14), (DEFENSE, 8)]),
     dict(id=910110, base=5202, name="Captain's Vestments", ilvl=62, cls=CLS_ARMOR, sub=CLOTH, inv=CHEST,
-         mat=7, sheath=0, display=12803, armor=88, stats=[(INT, 18), (SPI, 14), (STA, 13), (SPELL_POWER, 24)]),
+         mat=7, sheath=0, display=12803, armor=96, stats=[(INT, 11), (SPI, 9), (STA, 8), (SPELL_POWER, 15)]),
     dict(id=910111, base=7230, name="Smite's Mighty Hammer", ilvl=62, cls=CLS_WEAPON, sub=MACE_2H, inv=TWO_HAND,
-         mat=2, sheath=1, display=19610, dps=53.2, delay=3500, stats=[(STR, 26), (AGI, 9), (STA, 14)]),
+         mat=2, sheath=1, display=19610, dps=53.9, delay=3500, stats=[(STR, 18), (AGI, 6), (STA, 10)]),
     # Captain Greenskin
     dict(id=910112, base=10403, name="Blackened Defias Belt", ilvl=62, cls=CLS_ARMOR, sub=LEATHER, inv=WAIST,
-         mat=8, sheath=0, display=14389, armor=99, set=950, stats=[(AGI, 14), (STA, 11), (AP, 20)]),
+         mat=8, sheath=0, display=14389, armor=134, set=950, stats=[(AGI, 8), (STA, 6), (AP, 12)]),
     dict(id=910113, base=5201, name="Emberstone Staff", ilvl=62, cls=CLS_WEAPON, sub=STAFF, inv=TWO_HAND,
-         mat=2, sheath=2, display=20340, dps=52.6, delay=3000,
-         stats=[(INT, 20), (SPI, 12), (STA, 14), (SPELL_POWER, 30)]),
+         mat=2, sheath=2, display=20340, dps=53.9, delay=3000,
+         stats=[(INT, 9), (SPI, 5), (STA, 6), (SPELL_POWER, 13)]),
     dict(id=910114, base=5200, name="Impaling Harpoon", ilvl=62, cls=CLS_WEAPON, sub=POLEARM, inv=TWO_HAND,
-         mat=1, sheath=2, display=5949, dps=52.0, delay=2400, stats=[(AGI, 22), (STA, 14), (HIT, 10)]),
+         mat=1, sheath=2, display=5949, dps=53.9, delay=2400, stats=[(AGI, 16), (STA, 10), (HIT, 7)]),
     # Cookie
     dict(id=910115, base=10401, name="Blackened Defias Gloves", ilvl=62, cls=CLS_ARMOR, sub=LEATHER, inv=HANDS,
-         mat=8, sheath=0, display=27946, armor=110, set=950, stats=[(AGI, 13), (STA, 10), (CRIT, 14)]),
+         mat=8, sheath=0, display=27946, armor=122, set=950, stats=[(AGI, 9), (STA, 7), (CRIT, 9)]),
     dict(id=910116, base=5198, name="Cookie's Stirring Rod", ilvl=62, cls=CLS_WEAPON, sub=WAND,
-         inv=RANGED_RIGHT, mat=2, sheath=0, display=21011, dps=62.0, delay=1300,
-         stats=[(INT, 6), (STA, 4), (SPELL_POWER, 12)]),
+         inv=RANGED_RIGHT, mat=2, sheath=0, display=21011, dps=63.8, delay=1300,
+         stats=[(INT, 2), (STA, 1), (SPELL_POWER, 4)]),
     dict(id=910117, base=5197, name="Cookie's Tenderizer", ilvl=62, cls=CLS_WEAPON, sub=MACE_1H, inv=ONE_HAND,
-         mat=2, sheath=7, display=20953, dps=40.6, delay=2800, stats=[(STR, 10), (STA, 9), (CRIT, 14)]),
+         mat=2, sheath=7, display=20953, dps=41.5, delay=2800, stats=[(STR, 5), (STA, 5), (CRIT, 8)]),
     # Edwin VanCleef
     dict(id=910118, base=10399, name="Blackened Defias Armor", ilvl=63, cls=CLS_ARMOR, sub=LEATHER, inv=CHEST,
-         mat=8, sheath=0, display=9123, armor=176, set=950, stats=[(AGI, 20), (STA, 18), (CRIT, 14)]),
+         mat=8, sheath=0, display=9123, armor=181, set=950, stats=[(AGI, 16), (STA, 15), (CRIT, 11)]),
     dict(id=910119, base=10400, name="Blackened Defias Leggings", ilvl=63, cls=CLS_ARMOR, sub=LEATHER, inv=LEGS,
-         mat=8, sheath=0, display=27947, armor=154, set=950, stats=[(AGI, 19), (STA, 16), (HIT, 10)]),
+         mat=8, sheath=0, display=27947, armor=215, set=950, stats=[(AGI, 17), (STA, 14), (HIT, 9)]),
     dict(id=910120, base=5193, name="Cape of the Brotherhood", ilvl=63, cls=CLS_ARMOR, sub=CLOTH, inv=BACK,
-         mat=7, sheath=0, display=22998, armor=45, stats=[(AGI, 10), (STA, 9), (AP, 16)]),
+         mat=7, sheath=0, display=22998, armor=45, stats=[(AGI, 5), (STA, 5), (AP, 9)]),
     dict(id=910121, base=5191, name="Cruel Barb", ilvl=63, cls=CLS_WEAPON, sub=SWORD_1H, inv=ONE_HAND,
-         mat=1, sheath=3, display=7311, dps=41.5, delay=2800, stats=[(STR, 12), (STA, 9), (CRIT, 14)]),
+         mat=1, sheath=3, display=7311, dps=41.5, delay=2800, stats=[(STR, 6), (STA, 5), (CRIT, 7)]),
     # --- Wailing Caverns (heroic) -----------------------------------------------------------------------
     # Lady Anacondra
     dict(id=910122, base=5404, name="Serpent's Shoulders", ilvl=61, cls=CLS_ARMOR, sub=2, inv=3, mat=8, sheath=0,
@@ -1912,6 +1912,15 @@ def loot_sql():
                 lines.append('INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, '
                              '`QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES')
                 lines.append(',\n'.join(rows) + ';')
+            # the normal boss's quest drops (quest items, items that start a quest, quest-only drops), same chances
+            lines.append('INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, '
+                         '`QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)')
+            lines.append(f"SELECT {h}, `l`.`Item`, 0, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, 0, `l`.`MinCount`, "
+                         f"`l`.`MaxCount`, {sql_str('Heroic ' + boss['name'] + ' (quest)')}")
+            lines.append('FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` '
+                         'JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`')
+            lines.append(f'WHERE `ct`.`entry` = {entry} AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 '
+                         'AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);')
     return '\n'.join(lines)
 
 
