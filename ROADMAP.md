@@ -1,7 +1,7 @@
 # Roadmap
 
 Work-on list for the Unbound server. Tick a box (`- [x]`) when a feature is done and add it to the
-Features list in [README.md](README.md). Effort is a rough guess: **easy** (a config or ready-made
+Changelog in [README.md](README.md) under that day's date. Effort is a rough guess: **easy** (a config or ready-made
 module), **moderate** (custom code or data), **large** (several parts, client changes).
 
 Guiding idea: inspired by Peloria, not a copy. Stats stay in normal WoW ranges (no huge numbers).

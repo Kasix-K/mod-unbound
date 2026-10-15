@@ -2,86 +2,172 @@
 
 Custom features for the WoW 3.3.5a Unbound server.
 
-## Features
+## Changelog
 
-- **Transmogrify spell (200200)**: every character learns it on login. Casting it opens the
-  mod-transmog-plus Transmogrify window anywhere (5 s cooldown, usable while mounted, not in combat).
-  Requires mod-transmog-plus with `Transmog.OpenAnywhere = 1` and its `Transmog` addon in the client.
-- **Loot Goblin companion (item 910001, spell 200201, creature 190100)**: sold for 10 gold by
-  Grizzle Lootsnatch (vendor 190101, place with `.npc add 190101`). While the character's Loot Goblin
-  is summoned, it auto-loots every corpse they may loot within `AOELoot.Range` once a second (gold is
-  shared with the group; items needing a roll or the master looter, and anything that doesn't fit in
-  the bags, stay on the corpse), and AoE looting (mod-aoe-loot) is on for corpses opened by hand.
-  Without the goblin, both are off. Price/currency:
+Planned and possible features are in [ROADMAP.md](ROADMAP.md).
+
+All features of the Unbound server, with the date each one was added. Dates are Pacific time. Features
+from before this repository existed (2026-10-12 and 2026-10-13, before the first commit) are dated from
+the work log. Newest first. Add every new or changed feature here under today's date, and update its row in the index.
+
+### Feature index
+
+| Feature | Added | Last changed | By |
+|---|---|---|---|
+| Perks tab on the character sheet (ElvUI skinned) | 2026-10-14 | 2026-10-14 | Kasix-K |
+| Perk window: talent-tree style | 2026-10-14 | 2026-10-14 | Kasix-K |
+| Chat window load-error guard (Unbound addon) | 2026-10-14 | 2026-10-14 | Kasix-K |
+| Paladin Retribution class perk | 2026-10-14 | 2026-10-14 | SaucyHobo54, Kasix-K |
+| Offensive perks (25, at most 5 active) | 2026-10-14 | 2026-10-14 | SaucyHobo54, Kasix-K |
+| Permanent perks: No Resurrection Sickness, No Daze, Rapid Recovery | 2026-10-14 | 2026-10-14 | SaucyHobo54, Kasix-K |
+| Unbound Perks window (`/perks`) and loadouts | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
+| World boss: Hrimthar the Frostbound | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
+| Heroic loot for The Deadmines (Blackened Defias Garb set) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
+| Heroic The Deadmines and Ragefire Chasm | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
+| Collaborator setup script and server settings script | 2026-10-13 | 2026-10-14 | Kasix-K |
+| Roadmap (work-on list) | 2026-10-13 | 2026-10-14 | Kasix-K |
+| Expansion content lock (classic only) | 2026-10-13 | 2026-10-13 | Kasix-K |
+| Death Knights limited to GM accounts | 2026-10-13 | 2026-10-13 | Kasix-K |
+| Unbound addon: difficulty menu from level 60, `/heroic`, `/normal` | 2026-10-13 | 2026-10-14 | Kasix-K |
+| Classic Heroic dungeons (Stormwind Stockades) | 2026-10-13 | 2026-10-14 | Kasix-K |
+| Arcane Loot Scanner companion | 2026-10-13 | 2026-10-13 | Kasix-K |
+| Solo dungeon finder (bots stay out of it) | 2026-10-13 | 2026-10-13 | Kasix-K |
+| Reset all instances resets raids and heroics too | 2026-10-13 | 2026-10-13 | Kasix-K |
+| No raid lockouts, no instances-per-hour limit | 2026-10-13 | 2026-10-13 | Kasix-K |
+| Raids without a raid group | 2026-10-13 | 2026-10-13 | Kasix-K |
+| Solo dungeon and raid scaling (floor 0.4) | 2026-10-13 | 2026-10-13 | Kasix-K |
+| Cross-faction play (everything except battlegrounds) | 2026-10-13 | 2026-10-13 | Kasix-K |
+| Loot Goblin companion with auto-loot (55 yards) | 2026-10-13 | 2026-10-13 | Kasix-K |
+| AoE looting | 2026-10-13 | 2026-10-13 | Kasix-K |
+| Transmog window (mod-transmog-plus), Warpweaver NPC kept | 2026-10-13 | 2026-10-13 | Kasix-K |
+| Transmogrify spell | 2026-10-13 | 2026-10-13 | Kasix-K |
+| Transmog (first version, mod-transmog) | 2026-10-12 | 2026-10-13 (replaced) | Kasix-K |
+
+### 2026-10-14
+
+#### Added
+- **Perks tab on the character sheet.** A "Perks" tab after Character, Pet, Reputation, Skills and
+  Currency, built from the game's own tab template. It opens the perk window beside the character sheet.
+  With ElvUI's character skin on, ElvUI skins it like its other tabs.
+- **Perk window: talent-tree style** (chosen look). Perk icons in a grid with action-button frames and
+  talent-style rank badges (0/1, 1/1), a gold glow on active perks, greyed icons when a category is full,
+  tooltips, right-click or double-click to toggle. Uses the game's own frame art (dialog border, title
+  banner, red buttons). A Blizzard-style list version came first the same day and was replaced.
+- **Paladin Retribution class perk:** Divine Storm hits up to 6 enemies, each also taking a Crusader
+  Strike; Judgements spread to up to 4 more enemies with a free Exorcism on each; Exorcism scales with 30%
+  of attack power and spell power; Righteous Vengeance explosions on up to 5 enemies; Holy damage +15%,
+  Physical +10%.
+- **All 25 Offensive perks**, at most 5 active at once: Cyclic Power, Critical Understanding, Defensive
+  Sacrifice, Desperate Power, Block/Dodge/Parry/Haste Capping, Pet Encouragement, Rolling Momentum,
+  Tunnel Vision, Collateral Damage, Giant Slayer, Merciless, Pressure, Chaos, Power Conversion, Healing
+  Powah and the seven school Masteries.
+- **Permanent perks** for every player: No Resurrection Sickness, No Daze, Rapid Recovery (8% health and
+  mana per second, 4 seconds after combat).
+- **Unbound Perks window** (`/perks`): categories, search, saved loadouts; the server keeps each
+  character's perks. Defensive and Utility perks are listed but don't work yet.
+- **World boss: Hrimthar the Frostbound**, a level 63 frost giant on Lake Kel'Theril in Winterspring,
+  tuned for about 10 players, with six level 60 epics and a 3% Winterspring Frostsaber.
+- **Heroic loot for The Deadmines:** one level 60 blue per boss from a tank/healer/damage pool, two from
+  Edwin VanCleef, the Blackened Defias Garb set, level 60 gold, a 1% Hyacinth Macaw from Captain Greenskin.
+- **Heroic The Deadmines and Ragefire Chasm.**
+- **Chat window guard** in the Unbound addon: stops a load-time chat error
+  (`FloatingChatFrame.lua:1281`, seen with ElvUI's chat).
+
+#### Changed
+- **Perk numbers scaled to normal WoW ranges** (about +10% per perk) instead of Peloria-sized values;
+  Retribution went from Holy x59 / Physical x27 to +15% / +10%; Rapid Recovery from 15% after 3 seconds
+  to 8% after 4 seconds; the stat-based perks now work with level 60 stats.
+- **The client uses the official ElvUI 6.09** instead of Synastria's build (which errored on this
+  server). Client-side only; see the README.
+
+#### Fixed
+- **Class perks only work for their own class**: the server refuses them for any other class (the window
+  hid them, but a `/script` command could turn them on).
+
+### 2026-10-13
+
+#### Added
+- **Collaborator setup:** one script installs a complete copy of the server (pinned AzerothCore and
+  module versions, all server settings, start/stop/rebuild scripts, client addons and patch), plus a
+  script with every changed server setting. Step-by-step setup in the README.
+- **Roadmap** (`ROADMAP.md`): the work-on list.
+- **Expansion content lock:** classic only for now. The Burning Crusade and Wrath of the Lich King
+  dungeons, raids, dungeon finder entries and zones are closed; level cap 60; playerbots stay in classic
+  content. Blood Elf and Draenei starting zones stay open.
+- **Death Knights limited to GM accounts** while Wrath is locked (Ebon Hold stays open for them).
+- **Unbound addon:** Dungeon and Raid Difficulty in the portrait menu from level 60 (the game's own limit
+  is 65), plus `/heroic` and `/normal`.
+- **Classic Heroic dungeons**, starting with Stormwind Stockades: level 60 (any level above too), 60-62
+  creatures with 1.5x health and damage, normal loot.
+- **Arcane Loot Scanner companion:** a shrunken Arcane Protector with the Loot Goblin's loot powers, 10 gold
+  from Grizzle Lootsnatch.
+- **Solo dungeon finder**: queue alone or with bots and go straight in. Random playerbots no longer join
+  the dungeon finder.
+- **Reset all instances** (portrait menu) also resets raid and heroic saves.
+- **No raid lockouts and no instances-per-hour limit.**
+- **Raids can be entered without a raid group.**
+- **Solo dungeon and raid scaling** (mod-autobalance), never below 40% strength; creature levels, XP and
+  gold stay normal.
+- **Cross-faction play:** groups, raids, guilds, chat, channels, trade, auction house and calendar
+  (battlegrounds stay separate).
+- **Loot Goblin companion** (10 gold from Grizzle Lootsnatch): while it's out, corpses within 55 yards are
+  looted automatically and AoE looting is on.
+- **AoE looting** (mod-aoe-loot), later tied to the loot companions.
+- **Transmog window** from mod-transmog-plus (free, mixed armour types allowed), keeping the Warpweaver
+  NPC (190010).
+- **Transmogrify spell:** every character can open the transmog window from anywhere.
+
+#### Changed
+- **Transmog:** mod-transmog replaced by mod-transmog-plus.
+
+### 2026-10-12
+
+#### Added
+- **Transmog** (first version, mod-transmog with the Warpweaver NPC). Replaced on 2026-10-13.
+- **Client:** the Unbound client set up with Peloria's visual patch packs.
+
+## Technical notes
+
+How each system is built and what to run after changing it (what the features do and when they were
+added is in the Changelog above).
+
+- **Transmogrify spell (200200):** learned on login; opens the mod-transmog-plus window (5 s cooldown,
+  usable while mounted, not in combat). Needs `Transmog.OpenAnywhere = 1` and the `Transmog` addon.
+- **Loot companions:** Loot Goblin (item 910001, spell 200201, creature 190100) and Arcane Loot Scanner
+  (item 910002, spell 200202, creature 190102, the Arcane Protector 16504 shrunk), sold by Grizzle
+  Lootsnatch (vendor 190101, `.npc add 190101`). While one is out, corpses within `AOELoot.Range` are
+  auto-looted once a second (gold shared with the group; items needing a roll or the master looter, and
+  anything that doesn't fit in the bags, stay on the corpse) and mod-aoe-loot is on. Price/currency:
   `data/sql/db-world/unbound_loot_goblin.sql`.
-- **Arcane Loot Scanner companion (item 910002, spell 200202, creature 190102)**: the Arcane Protector
-  (16504) shrunk to companion size, also sold by Grizzle for 10 gold, with the same loot powers as the
-  Loot Goblin.
-- **Reset all instances resets everything**: the portrait menu's Reset all instances resets all of the
-  player's raid saves (any difficulty) and heroic and normal dungeon saves, whatever the dungeon
-  difficulty is set to. In a group only the leader can, and it resets the group's instances; an
-  instance with players still inside isn't reset.
-- **Classic heroic dungeons**: `tools/classic_heroics.py` lists the classic dungeons with a heroic mode
-  (so far: Stormwind Stockades, The Deadmines, Ragefire Chasm). Heroic needs level 60; creatures are
-  heroic copies (entry + 1000000) at level 60-62 with 1.5x health and damage. Loot is the normal loot
-  unless the dungeon has heroic loot (below). Add a dungeon to `HEROIC_DUNGEONS`, then run
-  `python tools/classic_heroics.py` and `python tools/custom_dbc.py`.
-- **Heroic loot** (`tools/heroic_loot.py`): heroic bosses get their own loot tables and level 60 gold
-  (20-40 silver, final boss 50 silver-1 gold). So far: The Deadmines. Every boss drops one item from a
-  pool of three (tank, healer/caster, damage), and Edwin VanCleef drops two: level 60 blue remakes of the
-  classic drops plus new pieces (items 910100-910121, item level 61-63, "Heroic" in the tooltip). The
-  leather pieces form the **Blackened Defias Garb** set (item set 950: 2 pieces +12 Agility, 4 pieces
-  +30 Attack Power), and Captain Greenskin has a 1% chance to drop the Hyacinth Macaw companion. Items,
-  sets and loot are defined once in `heroic_loot.py`; after a change run `python tools/heroic_loot.py`,
-  `python tools/classic_heroics.py` and `python tools/custom_dbc.py` (rebuilds the client patch), then
-  restart the worldserver. Never delete an item that has dropped: take it out of `LOOT` instead.
-- **World bosses** (`tools/world_bosses.py`): open-world bosses with a SmartAI fight (no C++), yells
-  every player online hears, and their own loot. So far: **Hrimthar the Frostbound** (creature 190110),
-  a level 63 frost giant on the ice of Lake Kel'Theril in Winterspring, tuned for about 10 players
-  (one player plus bots), about 283k health, 3-day respawn. Neutral like Azuregos, so he only fights
-  those who attack him. Frostbolt Volley, Frost Breath (frontal cone) and Frost Nova; at 50% he
-  summons four Frostbound Shards (190111), at 20% he enrages. Drops one of six level 60 epics (items
-  911000-911005, item level 66-68), 5-8 gold, and a 3% chance at the Reins of the Winterspring
-  Frostsaber. After a change run `python tools/world_bosses.py` and `python tools/custom_dbc.py`, then
-  restart the worldserver.
-- **Unbound Perks** (`addon/UnboundPerks`, copy to `Interface/AddOns`, open with `/perks` or the **Perks** tab on the character sheet, which ElvUI skins like its other tabs): the Character
-  Perks window (drawn with the game's own Blizzard frame art: dialog border and title banner, red buttons,
-  a talent-tree grid of perk icons with 0/1 and 1/1 rank badges, a gold glow on active perks and greyed icons when a category is full; right-click or double-click toggles) with categories, search and saved loadouts. The three Permanent perks work for everyone:
-  No Resurrection Sickness (`Death.SicknessLevel = 255`), No Daze (`Daze.Enabled = 0`), both set by
-  `apply-unbound-settings.ps1`, and Rapid Recovery (`src/unbound_perks.cpp`: 4 seconds after leaving
-  combat, 8% of maximum health and mana every second until full; `Unbound.Perks.RapidRecovery*` in
-  `mod_unbound.conf`). Toggled perks are kept by the server (whispered addon messages, prefix `UBPERK`;
-  saved in `characters.character_unbound_perks`; no changes in combat; at most 5 Offensive perks
-  active at once; class perks only for their own class, checked by the server). Working so far: Cyclic Power,
-  Critical Understanding, Defensive Sacrifice, Desperate Power, Block/Dodge/Parry/Haste
-  Capping, Pet Encouragement, Rolling Momentum, Tunnel Vision, Collateral Damage, Giant Slayer, Merciless,
-  Pressure, Chaos, Power Conversion, Healing Powah, and the seven school Masteries
-  (Physical, Holy, Fire, Nature, Frost, Shadow, Arcane): all 25 Offensive perks.
-  Class perks: Paladin **Retribution** (Divine Storm hits up to 6 enemies, each also taking a Crusader
-  Strike; Judgements spread to up to 4 more enemies with free Exorcisms; Exorcism at 30% AP/SP; Righteous
-  Vengeance explosions on up to 5 enemies; Holy damage +15% and Physical +10%; spell scripts in
-  `data/sql/db-world/unbound_perks_spells.sql`). The other perks are listed but have no effect yet.
-  **Perk numbers stay in normal WoW ranges** (no Peloria-sized scaling): one perk is worth about +10%
-  (Masteries, Giant Slayer, Tunnel Vision, Healing Powah +10%, Merciless +15%, Pet Encouragement +15%,
-  stat-based perks up to +10% with level-60 stats), so five Offensive perks together add roughly +50-60%.
-  The numbers are constants at the top of `src/unbound_perks.cpp` and must match the descriptions in
-  `addon/UnboundPerks/PerkData.lua`.
-- **Unbound addon** (`addon/Unbound`, copy to the client's `Interface/AddOns`): shows Dungeon/Raid
-  Difficulty in the portrait menu from level 60 (the client's own limit is 65) and adds `/heroic` and
-  `/normal`.
-- **Expansion content lock** (`Unbound.ExpansionUnlocked` in `mod_unbound.conf`, 0/1/2): locked expansions'
-  dungeons, raids, dungeon finder entries and zones (Northrend, the Outland zones of map 530) are
-  blocked; players there are sent to their hearthstone (or race start if that is locked too, or else
-  their faction's capital). Blood Elf and Draenei starting zones stay open, and so does Ebon Hold for
-  Death Knights; battlegrounds/arenas and GMs are exempt. While Wrath is locked, only GM accounts can
-  create Death Knights (`CharacterCreating.Disabled.ClassMask = 32` in `worldserver.conf`). Releasing an
-  expansion: raise `Unbound.ExpansionUnlocked`, `MaxPlayerLevel` (70/80) and, for Wrath, clear the class
-  mask.
-
-## Roadmap and changelog
-
-Planned and possible features are tracked in [ROADMAP.md](ROADMAP.md). Every feature, with the date it
-was added and last changed, is in [CHANGELOG.md](CHANGELOG.md).
+- **Reset all instances:** resets all raid saves (any difficulty) and heroic and normal dungeon saves,
+  whatever the difficulty setting. In a group only the leader can, for the group's instances; an instance
+  with players still inside isn't reset.
+- **Classic heroics:** `tools/classic_heroics.py` lists them (`HEROIC_DUNGEONS`, only append: the order
+  sets access ids). Heroic creatures are copies (entry + 1000000) at level 60-62 with 1.5x health and
+  damage. After a change run `python tools/classic_heroics.py` and `python tools/custom_dbc.py`.
+- **Heroic loot:** `tools/heroic_loot.py` defines heroic items (910100-910999), sets (950-999) and boss
+  loot. After a change run `python tools/heroic_loot.py`, `python tools/classic_heroics.py` and
+  `python tools/custom_dbc.py`, then restart the worldserver. Never delete an item that has dropped: take
+  it out of `LOOT` instead.
+- **World bosses:** `tools/world_bosses.py` (SmartAI fights, no C++; creatures 190110-190199, spawn guids
+  9190110-9190199, loot 911000-911999). Hrimthar is creature 190110, adds 190111. After a change run
+  `python tools/world_bosses.py` and `python tools/custom_dbc.py`, then restart the worldserver.
+- **Perks:** window in `addon/UnboundPerks` (`PerkData.lua` = perk list and descriptions); server side in
+  `src/unbound_perks.cpp`. The addon whispers its own character (prefix `UBPERK`: `SYNC`, `SET:<id>:<0|1>`,
+  `LOAD:<ids>`; the server answers `STATE:<ids>` or `ERR:<text>`); active perks are saved in
+  `characters.character_unbound_perks`. No changes in combat, at most 5 Offensive perks, class perks only
+  for their class (`CLASS_PERKS`). No Resurrection Sickness and No Daze are `Death.SicknessLevel = 255` and
+  `Daze.Enabled = 0` (set by `apply-unbound-settings.ps1`); Rapid Recovery is `Unbound.Perks.RapidRecovery*`
+  in `mod_unbound.conf`. Retribution's spell scripts: `data/sql/db-world/unbound_perks_spells.sql`. Perk
+  numbers stay in normal WoW ranges (about +10% per perk); they are constants at the top of
+  `unbound_perks.cpp` and must match `PerkData.lua`. The perk code assumes `MapUpdate.Threads = 1`.
+- **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
+  chat-window load-error guard.
+- **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Players in a
+  locked zone go to their hearthstone, else their race's start, else their faction's capital; GMs with GM
+  mode on, battlegrounds and arenas are exempt. Death Knights are GM-only through
+  `CharacterCreating.Disabled.ClassMask = 32`. Releasing an expansion: raise `Unbound.ExpansionUnlocked`
+  and `MaxPlayerLevel` (70/80) and, for Wrath, clear the class mask (see the cheat sheet for playerbots).
 
 ## Custom spells, items and companions
 
@@ -192,10 +278,10 @@ powershell -ExecutionPolicy Bypass -File server-setup\apply-unbound-settings.ps1
   - `server-setup/apply-unbound-settings.ps1` changed: run it on your configs, restart the worldserver.
   - `addon/` changed: copy the addon into your client's `Interface\AddOns` again.
 - Keep `server-setup/Server Cheat Sheet.md` and `ROADMAP.md` up to date with your changes, and add every
-  new or changed feature to `CHANGELOG.md` under today's date (and to its feature index, with the date
-  added or last changed).
+  new or changed feature to the README's Changelog under today's date (and update its row in the feature
+  index).
 - New features go in their own `src/unbound_<feature>.cpp`, registered in `src/unbound_loader.cpp`, and get
-  a line under Features above.
+  an entry in the Changelog above (plus Technical notes if others need to know how it works).
 - Custom IDs are shared, so pick new ones next to the existing ones and say so in the commit: spells
   2002xx, items 9100xx (heroic loot 910100-910999, world boss loot 911000-911999), item sets 950-999,
   creatures 1901xx (world bosses 190110-190199, spawn guids 9190110-9190199),
