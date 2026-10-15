@@ -12,7 +12,8 @@
 --   permanent  always on, can't be toggled
 --   works      the server implements it (src/unbound_perks.cpp); every perk listed here should have it
 --   class      only shown to that class, e.g. "PALADIN"
---   excludes   id of a perk that can't be active together with this one (turning this on turns it off)
+--   excludes   id (or list of ids) of perks that can't be active together with this one (turning this on
+--              turns them off)
 --   applyRank  ranked perks: rewrites desc/note from the rank numbers the server sends
 
 UnboundPerks = UnboundPerks or {}
@@ -20,7 +21,7 @@ UnboundPerks = UnboundPerks or {}
 UnboundPerks.CATEGORIES = {
     { key = "PERMANENT", name = "Permanent", color = { 1.00, 0.82, 0.30 } },
     { key = "OFFENSIVE", name = "Offensive", color = { 0.92, 0.38, 0.32 }, limit = 5 },  -- same limit as the server
-    { key = "DEFENSIVE", name = "Defensive", color = { 0.38, 0.62, 0.98 } },
+    { key = "DEFENSIVE", name = "Defensive", color = { 0.38, 0.62, 0.98 }, limit = 3 },  -- same limit as the server
     { key = "UTILITY",   name = "Utility",   color = { 0.72, 0.52, 0.98 }, limit = 3 },  -- same limit as the server
     { key = "CLASS",     name = nil,         color = nil },  -- name and colour come from the player's class
 }
@@ -125,7 +126,51 @@ end
 local function manaLeech(v)
     return "Restore Mana equal to " .. G(pct(v[1])) .. " of all damage you deal."
 end
-local MANA_ONLY = "Requires a mana bar. It does nothing while you use Rage, Energy, Runic Power or Focus, " ..
+-- Defensive
+local function chance(kind)
+    if kind == "Block" then return GetBlockChance() or 0 end
+    if kind == "Dodge" then return GetDodgeChance() or 0 end
+    return GetParryChance() or 0
+end
+-- Greater Bulwark / Evasive Maneuvers / Parry King: into = the chance that gets the other two.
+local function conversion(into, a, b, extra)
+    local efficiency = 120  -- the current rank's, once the server sends it
+    local function describe(v)
+        return "Converts all your " .. a .. " and " .. b .. " into " .. into .. " chance at " .. G(pct(v[1])) ..
+               " efficiency (melee attacks)." .. (extra and ("\n" .. extra) or "")
+    end
+    local function live()
+        local ca, cb = chance(a), chance(b)
+        local total = (ca + cb) * efficiency / 100 + chance(into)
+        return string.format("%s %.0f%% + %s %.0f%%  ->  %s %s.", a, ca, b, cb, G(string.format("%.0f%%", total)), into)
+    end
+    return describe, live, function(p, rank, maxRank, values)
+        local cur = values[rank] or values[#values]
+        if cur then efficiency = cur[1] end
+        ranked(describe, function(v) return string.format("%g%% efficiency", v[1]) end,
+            "Only one of Greater Bulwark, Evasive Maneuvers and Parry King can be active.")(p, rank, maxRank, values)
+    end
+end
+local bulwarkDesc, bulwarkLive, bulwarkRank = conversion("Block", "Dodge", "Parry",
+    B("Needs a shield") .. " (a block without one stops no damage).")
+local evasiveDesc, evasiveLive, evasiveRank = conversion("Dodge", "Block", "Parry")
+local parryDesc, parryLive, parryRank = conversion("Parry", "Block", "Dodge")
+
+local function reinforced(v) return "Reduces |cffffffffphysical|r damage taken by " .. G(pct(v[1])) .. "." end
+local function spellwarded(v) return "Reduces all |cff4dc3ffmagic|r damage taken by " .. G(pct(v[1])) .. "." end
+local function stoicism(v)
+    return "Damage-over-time effects deal " .. G(pct(v[1])) .. " less damage to you and your pet."
+end
+local function momentum(v)
+    return "You and your pet each gain " .. G(pct(v[1] / 10)) .. " damage reduction for every second spent moving, up to " ..
+           G(pct(v[1])) .. ". Standing still removes the bonus after " .. string.format("%g", v[2]) .. " seconds."
+end
+local function fortress(v)
+    return "You and your pet each gain " .. G(pct(v[1] / 10)) .. " damage reduction for every second spent standing still, up to " ..
+           G(pct(v[1])) .. " (10 stacks). Moving for over " .. string.format("%g", v[2]) .. " seconds removes the stacks."
+end
+
+local MANA_ONLY ="Requires a mana bar. It does nothing while you use Rage, Energy, Runic Power or Focus, " ..
                   "including a druid in Cat, Bear or Dire Bear Form."
 
 UnboundPerks.PERKS = {
@@ -263,8 +308,40 @@ UnboundPerks.PERKS = {
       icon = "Interface\\Icons\\Ability_MeleeDamage",
       desc = "Increases all Physical damage you deal by " .. G("10%") .. ".\nYour pet gains this too." },
 
-    -- Defensive (ids 201-299; the tab is hidden while it has no perks. 201-203 were placeholders, removed:
-    -- never reuse them) ------------------------------------------------------------------------------
+    -- Defensive (ids 201-299, at most 3 active; 201-203 were placeholders, removed: never reuse them) --------
+    { id = 204, name = "Greater Bulwark", category = "DEFENSIVE", works = true, excludes = { 205, 206 },
+      icon = "Interface\\Icons\\Ability_Warrior_ShieldWall",
+      desc = bulwarkDesc({ 120 }), live = bulwarkLive, applyRank = bulwarkRank },
+    { id = 205, name = "Evasive Maneuvers", category = "DEFENSIVE", works = true, excludes = { 204, 206 },
+      icon = "Interface\\Icons\\Spell_Shadow_ShadowWard",
+      desc = evasiveDesc({ 120 }), live = evasiveLive, applyRank = evasiveRank },
+    { id = 206, name = "Parry King", category = "DEFENSIVE", works = true, excludes = { 204, 205 },
+      icon = "Interface\\Icons\\Ability_Warrior_Riposte",
+      desc = parryDesc({ 120 }), live = parryLive, applyRank = parryRank },
+    { id = 207, name = "Reinforced Armor", category = "DEFENSIVE", works = true,
+      icon = "Interface\\Icons\\INV_Chest_Plate16",
+      desc = reinforced({ 10 }),
+      applyRank = ranked(reinforced, function(v) return string.format("-%g%% physical damage", v[1]) end) },
+    { id = 208, name = "Spellwarded", category = "DEFENSIVE", works = true,
+      icon = "Interface\\Icons\\Spell_Holy_SpellWarding",
+      desc = spellwarded({ 10 }),
+      applyRank = ranked(spellwarded, function(v) return string.format("-%g%% magic damage", v[1]) end) },
+    { id = 209, name = "Stoicism", category = "DEFENSIVE", works = true,
+      icon = "Interface\\Icons\\Spell_Holy_DevotionAura",
+      desc = stoicism({ 20 }),
+      applyRank = ranked(stoicism, function(v) return string.format("-%g%% damage-over-time damage", v[1]) end) },
+    { id = 210, name = "Defensive Momentum", category = "DEFENSIVE", works = true, excludes = 211,
+      icon = "Interface\\Icons\\Ability_Rogue_FleetFooted",
+      desc = momentum({ 10, 2 }),
+      note = "Can't be active together with Fortress.",
+      applyRank = ranked(momentum, function(v) return string.format("up to %g%% damage reduction", v[1]) end,
+          "Can't be active together with Fortress.") },
+    { id = 211, name = "Fortress", category = "DEFENSIVE", works = true, excludes = 210,
+      icon = "Interface\\Icons\\Ability_Warrior_DefensiveStance",
+      desc = fortress({ 10, 3 }),
+      note = "Can't be active together with Defensive Momentum.",
+      applyRank = ranked(fortress, function(v) return string.format("up to %g%% damage reduction", v[1]) end,
+          "Can't be active together with Defensive Momentum.") },
 
     -- Utility (ids 301 and 302 were placeholders, removed: never reuse them) ------------------------------
     { id = 303, name = "Iron Will", category = "UTILITY", pets = PETS_TOO, works = true,

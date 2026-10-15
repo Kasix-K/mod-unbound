@@ -108,6 +108,40 @@ Unbound.Perks.SteadyHands.RankLevels = "1, 30, 60"
 Unbound.Perks.ManaLeech.Percent = "1, 1.5, 2"
 Unbound.Perks.ManaLeech.RankLevels = "1, 30, 60"
 
+#    Defensive perks (src/unbound_perks.cpp). One number per rank (Rank 1, 2, 3), RankLevels as above
+#    (default "1, 30, 60"). At most 3 Defensive perks can be active at once.
+#
+#    Unbound.Perks.GreaterBulwark.Efficiency    (perk 204) Dodge + Parry become Block at this % (needs a shield)
+#    Unbound.Perks.EvasiveManeuvers.Efficiency  (perk 205) Block + Parry become Dodge at this %
+#    Unbound.Perks.ParryKing.Efficiency         (perk 206) Block + Dodge become Parry at this %
+#    Unbound.Perks.ReinforcedArmor.Percent      (perk 207) physical damage taken -%
+#    Unbound.Perks.Spellwarded.Percent          (perk 208) magic damage taken -%
+#    Unbound.Perks.Stoicism.Percent             (perk 209) damage-over-time damage taken -% (you and your pet)
+#    Unbound.Perks.DefensiveMomentum.*          (perk 210) Max: damage reduction % at 10 stacks (one stack
+#                                               per second moving); ResetAfter: seconds standing still that
+#                                               remove the stacks
+#    Unbound.Perks.Fortress.*                   (perk 211) Max: the same per second standing still;
+#                                               ResetAfter: seconds moving that remove the stacks
+
+Unbound.Perks.GreaterBulwark.Efficiency = "100, 110, 120"
+Unbound.Perks.GreaterBulwark.RankLevels = "1, 30, 60"
+Unbound.Perks.EvasiveManeuvers.Efficiency = "100, 110, 120"
+Unbound.Perks.EvasiveManeuvers.RankLevels = "1, 30, 60"
+Unbound.Perks.ParryKing.Efficiency = "100, 110, 120"
+Unbound.Perks.ParryKing.RankLevels = "1, 30, 60"
+Unbound.Perks.ReinforcedArmor.Percent = "4, 7, 10"
+Unbound.Perks.ReinforcedArmor.RankLevels = "1, 30, 60"
+Unbound.Perks.Spellwarded.Percent = "4, 7, 10"
+Unbound.Perks.Spellwarded.RankLevels = "1, 30, 60"
+Unbound.Perks.Stoicism.Percent = "8, 14, 20"
+Unbound.Perks.Stoicism.RankLevels = "1, 30, 60"
+Unbound.Perks.DefensiveMomentum.Max = "5, 7.5, 10"
+Unbound.Perks.DefensiveMomentum.ResetAfter = "2, 2, 2"
+Unbound.Perks.DefensiveMomentum.RankLevels = "1, 30, 60"
+Unbound.Perks.Fortress.Max = "5, 7.5, 10"
+Unbound.Perks.Fortress.ResetAfter = "3, 3, 3"
+Unbound.Perks.Fortress.RankLevels = "1, 30, 60"
+
 #    Unbound.Attunement.Enable
 #        Description: Gear attunement: attuned items permanently give the character a percentage of
 #                     their fixed stats (src/unbound_attunement.cpp, ROADMAP.md Power budget).

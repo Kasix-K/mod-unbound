@@ -22,9 +22,9 @@
  *   LOAD:<id>,<id>,...         exactly these perks on (a loadout)
  * and the server answers with "STATE:<id>,<id>,..." (the active perks it knows) or "ERR:<text>".
  * Perks can't be changed in combat. Active perks are saved in characters.character_unbound_perks.
- * At most 5 Offensive perks (ids 101-199) and 3 Utility perks (ids 301-399) can be active at once
- * (CATEGORY_LIMITS); the addon uses the same limits (CATEGORIES in addon/UnboundPerks/PerkData.lua).
- * Exclusive pairs (EXCLUSIVE): turning one on turns the other off. Class perks (ids 1001+) only work for
+ * At most 5 Offensive perks (ids 101-199), 3 Defensive (201-299) and 3 Utility (301-399) can be active at
+ * once (CATEGORY_LIMITS); the addon uses the same limits (CATEGORIES in addon/UnboundPerks/PerkData.lua).
+ * Exclusive groups (EXCLUSIVE_GROUPS): turning one on turns the others off. Class perks (ids 1001+) only work for
  * their class (CLASS_PERKS); the server refuses them for any other class.
  *
  * Working toggled perks (ids match addon/UnboundPerks/PerkData.lua; all also work for pets):
@@ -62,7 +62,21 @@
  *                              spells and bleeds)
  *                              (a spell counts for a school if that school is part of it, e.g. Shadowfrost)
  *
- * Utility perks (ids 301-399, no active limit):
+ * Defensive perks (ids 201-299, at most 3 active; 201-203 were placeholders, never reuse them). Rank 1/2/3:
+ *   204 Greater Bulwark        all your Dodge and Parry become Block, at 100/110/120%  (needs a shield)
+ *   205 Evasive Maneuvers      all your Block and Parry become Dodge, at 100/110/120%
+ *   206 Parry King             all your Block and Dodge become Parry, at 100/110/120%
+ *                              (204-206 are exclusive; melee attacks only, the character sheet shows the
+ *                              unconverted chances)
+ *   207 Reinforced Armor       physical damage taken -4/7/10%
+ *   208 Spellwarded            magic damage taken -4/7/10%
+ *   209 Stoicism               damage-over-time damage taken -8/14/20% (you and your pet)
+ *   210 Defensive Momentum     each second moving: a stack of max/10, up to 5/7.5/10% damage reduction; all
+ *                              stacks lost after 2 s standing still (you and your pet, each their own)
+ *   211 Fortress               each second standing still: a stack of max/10, up to 5/7.5/10%; all stacks
+ *                              lost after 3 s moving (you and your pet)          (210 and 211 are exclusive)
+ *
+ * Utility perks (ids 301-399, at most 3 active):
  *   303 Iron Will              crowd-control effects from enemies on you (and your pets) last shorter. Ranked
  *                              (mod_unbound.conf): Rank 1 -10% from level 1, Rank 2 -20% from level 30, Rank 3
  *                              -30% from level 60. Crowd control = charm, disorient, fear, root, silence, sleep,
@@ -114,6 +128,7 @@
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
 #include "ObjectAccessor.h"
+#include "MoveSpline.h"
 #include "Pet.h"
 #include "Player.h"
 #include "Random.h"
@@ -223,6 +238,14 @@ namespace
         PERK_FIRE_MASTERY           = 123,
         PERK_FROST_MASTERY          = 124,
         PERK_PHYSICAL_MASTERY       = 125,
+        PERK_GREATER_BULWARK        = 204,  // 201-203 were placeholders: never reuse them
+        PERK_EVASIVE_MANEUVERS      = 205,
+        PERK_PARRY_KING             = 206,
+        PERK_REINFORCED_ARMOR       = 207,
+        PERK_SPELLWARDED            = 208,
+        PERK_STOICISM               = 209,
+        PERK_DEFENSIVE_MOMENTUM     = 210,
+        PERK_FORTRESS               = 211,
         PERK_IRON_WILL              = 303,
         PERK_LONGER_LEGS            = 304,
         PERK_PLANTED_FEET           = 305,  // "Planting your legs"
@@ -248,12 +271,16 @@ namespace
         PERK_NATURE_MASTERY, PERK_FIRE_MASTERY, PERK_FROST_MASTERY, PERK_PHYSICAL_MASTERY,
         PERK_IRON_WILL, PERK_LONGER_LEGS, PERK_PLANTED_FEET, PERK_RELENTLESS_PURSUIT, PERK_VAMPIRISM,
         PERK_SOUL_DRAIN, PERK_PET_REPLENISHMENT, PERK_PETS_ROAR, PERK_SILENT_KILLER, PERK_UNBREAKABLE_PRESENCE,
-        PERK_STEADY_HANDS, PERK_MANA_LEECH, PERK_RETRIBUTION };
+        PERK_STEADY_HANDS, PERK_MANA_LEECH, PERK_GREATER_BULWARK, PERK_EVASIVE_MANEUVERS, PERK_PARRY_KING,
+        PERK_REINFORCED_ARMOR, PERK_SPELLWARDED, PERK_STOICISM, PERK_DEFENSIVE_MOMENTUM, PERK_FORTRESS,
+        PERK_RETRIBUTION };
 
-    // Perks that can't be active together: turning one on turns the other off.
-    std::unordered_map<uint32, uint32> const EXCLUSIVE = {
-        { PERK_VAMPIRISM, PERK_SOUL_DRAIN }, { PERK_SOUL_DRAIN, PERK_VAMPIRISM },
-        { PERK_SILENT_KILLER, PERK_UNBREAKABLE_PRESENCE }, { PERK_UNBREAKABLE_PRESENCE, PERK_SILENT_KILLER },
+    // Groups of perks that can't be active together: turning one on turns the others in its group off.
+    std::vector<std::vector<uint32>> const EXCLUSIVE_GROUPS = {
+        { PERK_VAMPIRISM, PERK_SOUL_DRAIN },
+        { PERK_SILENT_KILLER, PERK_UNBREAKABLE_PRESENCE },
+        { PERK_GREATER_BULWARK, PERK_EVASIVE_MANEUVERS, PERK_PARRY_KING },
+        { PERK_DEFENSIVE_MOMENTUM, PERK_FORTRESS },
     };
 
     // Ranked perks read from mod_unbound.conf: perk, config key, and each stat with its default per rank.
@@ -279,6 +306,14 @@ namespace
         { PERK_UNBREAKABLE_PRESENCE, "UnbreakablePresence", { { "Percent", "50, 100, 150" } } },
         { PERK_STEADY_HANDS,         "SteadyHands",         { { "Pushback", "30, 50, 70" }, { "Lockout", "10, 20, 30" } } },
         { PERK_MANA_LEECH,           "ManaLeech",           { { "Percent", "1, 1.5, 2" } } },
+        { PERK_GREATER_BULWARK,      "GreaterBulwark",      { { "Efficiency", "100, 110, 120" } } },
+        { PERK_EVASIVE_MANEUVERS,    "EvasiveManeuvers",    { { "Efficiency", "100, 110, 120" } } },
+        { PERK_PARRY_KING,           "ParryKing",           { { "Efficiency", "100, 110, 120" } } },
+        { PERK_REINFORCED_ARMOR,     "ReinforcedArmor",     { { "Percent", "4, 7, 10" } } },
+        { PERK_SPELLWARDED,          "Spellwarded",         { { "Percent", "4, 7, 10" } } },
+        { PERK_STOICISM,             "Stoicism",            { { "Percent", "8, 14, 20" } } },
+        { PERK_DEFENSIVE_MOMENTUM,   "DefensiveMomentum",   { { "Max", "5, 7.5, 10" }, { "ResetAfter", "2, 2, 2" } } },
+        { PERK_FORTRESS,             "Fortress",            { { "Max", "5, 7.5, 10" }, { "ResetAfter", "3, 3, 3" } } },
     };
 
     // Server-only passive spells (data/sql/db-world/unbound_perks_utility_spells.sql). Passive auras are never
@@ -317,6 +352,7 @@ namespace
     };
     constexpr CategoryLimit CATEGORY_LIMITS[] = {
         { 101, 199, 5, "Offensive" },
+        { 201, 299, 3, "Defensive" },
         { 301, 399, 3, "Utility" },
     };
 
@@ -334,11 +370,15 @@ namespace
             [&limit](uint32 perk) { return perk >= limit.first && perk <= limit.last; }));
     }
 
-    // The perk this one is exclusive with, if it is active.
+    // An active perk from this one's exclusive group (at most one can be active), or 0.
     uint32 ActivePartner(std::set<uint32> const& perks, uint32 perk)
     {
-        auto itr = EXCLUSIVE.find(perk);
-        return itr != EXCLUSIVE.end() && perks.count(itr->second) ? itr->second : 0;
+        for (std::vector<uint32> const& group : EXCLUSIVE_GROUPS)
+            if (std::find(group.begin(), group.end(), perk) != group.end())
+                for (uint32 other : group)
+                    if (other != perk && perks.count(other))
+                        return other;
+        return 0;
     }
 
     // False for a class perk of another class.
@@ -391,6 +431,18 @@ namespace
     constexpr uint8 MAGIC_SCHOOLS[] = { SPELL_SCHOOL_FIRE, SPELL_SCHOOL_NATURE, SPELL_SCHOOL_FROST,
                                         SPELL_SCHOOL_SHADOW, SPELL_SCHOOL_ARCANE };
 
+    // Defensive Momentum / Fortress: stacks of one unit (the player, or their pet), one per second of moving
+    // (Momentum) or standing still (Fortress), up to STANCE_MAX_STACKS.
+    constexpr uint32 STANCE_MAX_STACKS = 10;
+    struct StanceTrack
+    {
+        ObjectGuid unit;
+        uint32 movingMs = 0;    // time moving without a stop
+        uint32 stillMs = 0;     // time standing still without moving
+        uint32 tickMs = 0;
+        uint32 stacks = 0;
+    };
+
     struct PerkState
     {
         std::set<uint32> active;
@@ -414,6 +466,8 @@ namespace
         uint32 momentumTimer = 0;
         uint32 stillMs = 0;         // Planting your legs: time standing still
         uint32 stillTickMs = 0;
+        StanceTrack selfStance;     // Defensive Momentum / Fortress
+        StanceTrack petStance;
     };
 
     std::unordered_map<ObjectGuid::LowType, PerkState> sStates;
@@ -603,7 +657,15 @@ namespace
             heal = uint32(std::round(float(heal) * HEALING_POWAH_BONUS));
     }
 
-    float DamageTakenMultiplier(Unit const* victim)
+    float OwnerRankValue(Unit const* unit, uint32 perk, size_t stat);
+
+    // "-x%" as a multiplier (never below 0)
+    float Reduction(float percent)
+    {
+        return std::max(0.0f, 1.0f - percent / 100.0f);
+    }
+
+    float DamageTakenMultiplier(Unit const* victim, SpellInfo const* spellInfo, HitKind kind)
     {
         PerkState const* state = PerkOwnerState(victim);
         if (!state)
@@ -613,6 +675,25 @@ namespace
             mult *= SACRIFICE_DAMAGE_TAKEN;
         if (Has(state, PERK_HASTE_CAPPING))
             mult *= HASTE_DAMAGE_TAKEN;
+
+        // Reinforced Armor (physical) / Spellwarded (magic): melee swings are physical, a spell is physical if
+        // its school includes Physical
+        bool physical = !spellInfo || (spellInfo->GetSchoolMask() & SPELL_SCHOOL_MASK_NORMAL);
+        if (physical && Has(state, PERK_REINFORCED_ARMOR))
+            mult *= Reduction(OwnerRankValue(victim, PERK_REINFORCED_ARMOR, 0));
+        if (!physical && Has(state, PERK_SPELLWARDED))
+            mult *= Reduction(OwnerRankValue(victim, PERK_SPELLWARDED, 0));
+        if (kind == HitKind::Periodic && Has(state, PERK_STOICISM))
+            mult *= Reduction(OwnerRankValue(victim, PERK_STOICISM, 0));
+
+        // Defensive Momentum / Fortress: the victim's own stacks
+        for (uint32 perk : { PERK_DEFENSIVE_MOMENTUM, PERK_FORTRESS })
+            if (Has(state, perk))
+            {
+                StanceTrack const& track = victim->IsPlayer() ? state->selfStance : state->petStance;
+                if (track.unit == victim->GetGUID() && track.stacks)
+                    mult *= Reduction(OwnerRankValue(victim, perk, 0) * track.stacks / STANCE_MAX_STACKS);
+            }
         return mult;
     }
 
@@ -654,7 +735,7 @@ namespace
         if (damage <= 0 || !attacker || !victim || attacker == victim)
             return;
         float mult = DamageDoneMultiplier(attacker, victim, spellInfo) * HitMultiplier(attacker, victim, kind) *
-                     DamageTakenMultiplier(victim);
+                     DamageTakenMultiplier(victim, spellInfo, kind);
         if (mult != 1.0f)
             damage = T(std::max(0.0f, std::round(float(damage) * mult)));
     }
@@ -1071,7 +1152,7 @@ namespace
             for (uint32 perk : IMPLEMENTED)
                 SetPerk(player, state, perk, wanted.count(perk) > 0);
             if (trimmed)
-                SendAddon(player, "ERR:Not every perk of that loadout fit (Offensive at most 5, Utility at most 3).");
+                SendAddon(player, "ERR:Not every perk of that loadout fit (Offensive at most 5, Defensive and Utility at most 3).");
         }
 
         RefreshStatPerks(player, state);
@@ -1217,6 +1298,72 @@ namespace
         uint32 maxMana = player->GetMaxPower(POWER_MANA);
         if (maxMana && player->GetPower(POWER_MANA) < maxMana)
             player->ModifyPower(POWER_MANA, std::max<int32>(1, int32(maxMana * manaPct / 100.0f)));
+    }
+
+    // ------------------------------------------------------------------ Defensive Momentum / Fortress
+    bool IsUnitMoving(Unit const* unit)
+    {
+        return unit->IsPlayer() ? unit->isMoving() : !unit->movespline->Finalized();
+    }
+
+    // Once a second: Momentum gains a stack while moving and loses them all after ResetAfter seconds standing
+    // still; Fortress gains a stack while standing still and loses them all after ResetAfter seconds moving.
+    void UpdateStance(Unit* unit, PerkState const& state, StanceTrack& track, uint32 diff)
+    {
+        uint32 perk = Has(&state, PERK_DEFENSIVE_MOMENTUM) ? PERK_DEFENSIVE_MOMENTUM :
+                      Has(&state, PERK_FORTRESS) ? PERK_FORTRESS : 0;
+        if (!unit || !perk || !unit->IsAlive())
+        {
+            track = StanceTrack();
+            return;
+        }
+        if (track.unit != unit->GetGUID())
+        {
+            track = StanceTrack();
+            track.unit = unit->GetGUID();
+        }
+        bool moving = IsUnitMoving(unit);
+        track.movingMs = moving ? track.movingMs + diff : 0;
+        track.stillMs = moving ? 0 : track.stillMs + diff;
+
+        uint32 resetMs = uint32(OwnerRankValue(unit, perk, 1) * IN_MILLISECONDS);
+        bool building = perk == PERK_DEFENSIVE_MOMENTUM ? moving : !moving;
+        if ((perk == PERK_DEFENSIVE_MOMENTUM ? track.stillMs : track.movingMs) >= std::max<uint32>(resetMs, 1))
+            track.stacks = 0;
+
+        track.tickMs += diff;
+        if (track.tickMs < 1000)
+            return;
+        track.tickMs -= 1000;
+        if (building)
+            track.stacks = std::min(STANCE_MAX_STACKS, track.stacks + 1);
+    }
+
+    // ------------------------------------------------------------------ avoidance conversion
+    // Greater Bulwark / Evasive Maneuvers / Parry King: move the other two avoidance chances into one (melee
+    // attacks; chances are x100), times the rank's efficiency. Greater Bulwark needs a shield, since a block
+    // without one stops no damage.
+    void ConvertAvoidance(Unit const* victim, int32& dodge, int32& parry, int32& block)
+    {
+        PerkState const* state = PerkOwnerState(victim);
+        if (!state || state->active.empty())
+            return;
+        auto efficiency = [victim](uint32 perk) { return OwnerRankValue(victim, perk, 0) / 100.0f; };
+        if (Has(state, PERK_GREATER_BULWARK) && victim->IsPlayer() && victim->ToPlayer()->GetShield())
+        {
+            block += int32((std::max(0, dodge) + std::max(0, parry)) * efficiency(PERK_GREATER_BULWARK));
+            dodge = parry = 0;
+        }
+        else if (Has(state, PERK_EVASIVE_MANEUVERS))
+        {
+            dodge += int32((std::max(0, block) + std::max(0, parry)) * efficiency(PERK_EVASIVE_MANEUVERS));
+            block = parry = 0;
+        }
+        else if (Has(state, PERK_PARRY_KING))
+        {
+            parry += int32((std::max(0, block) + std::max(0, dodge)) * efficiency(PERK_PARRY_KING));
+            block = dodge = 0;
+        }
     }
 
     // ------------------------------------------------------------------ leech perks
@@ -1397,12 +1544,20 @@ public:
                 state.active.erase(perk);
                 SavePerk(player, perk, false);
             }
-        for (auto const& [perk, partner] : EXCLUSIVE)
-            if (perk < partner && state.active.count(perk) && state.active.count(partner))
-            {
-                state.active.erase(partner);
-                SavePerk(player, partner, false);
-            }
+        for (std::vector<uint32> const& group : EXCLUSIVE_GROUPS)
+        {
+            bool kept = false;
+            for (uint32 perk : group)
+                if (state.active.count(perk))
+                {
+                    if (kept)
+                    {
+                        state.active.erase(perk);
+                        SavePerk(player, perk, false);
+                    }
+                    kept = true;
+                }
+        }
         RefreshStatPerks(player, state);
     }
 
@@ -1430,6 +1585,8 @@ public:
         UpdateRapidRecovery(player, state, diff);
         UpdateMomentum(player, state, diff);
         UpdatePlantedFeet(player, state, diff);
+        UpdateStance(player, state, state.selfStance, diff);
+        UpdateStance(player->GetPet(), state, state.petStance, diff);
 
         if (state.active.empty() && !state.sacrificeAP && !state.sacrificeSP && !state.critBonus &&
             std::none_of(std::begin(state.desperateResist), std::end(state.desperateResist), [](int32 r) { return r != 0; }))
@@ -1478,7 +1635,8 @@ public:
         ApplyHealingTaken(target, heal, isTick);
     }
 
-    // Block/Dodge/Parry Capping: melee attacks against a capped player use at most 60% (chances are x100).
+    // Greater Bulwark / Evasive Maneuvers / Parry King convert avoidance first; then Block/Dodge/Parry Capping:
+    // melee attacks against a capped player use at most the cap (chances are x100).
     void OnBeforeRollMeleeOutcomeAgainst(Unit const* /*attacker*/, Unit const* victim, WeaponAttackType /*attType*/,
         int32& /*attackerMaxSkillValueForLevel*/, int32& /*victimMaxSkillValueForLevel*/, int32& /*attackerWeaponSkill*/,
         int32& /*victimDefenseSkill*/, int32& /*crit_chance*/, int32& /*miss_chance*/, int32& dodge_chance,
@@ -1487,6 +1645,7 @@ public:
         PerkState const* state = PerkOwnerState(victim);
         if (!state || state->active.empty())
             return;
+        ConvertAvoidance(victim, dodge_chance, parry_chance, block_chance);  // before the caps below
         int32 const cap = int32(AVOIDANCE_CAP * 100);
         if (Has(state, PERK_BLOCK_CAPPING))
             block_chance = std::min(block_chance, cap);

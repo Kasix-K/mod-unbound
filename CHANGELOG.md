@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| 8 Defensive perks (Greater Bulwark to Fortress), Defensive limited to 3 active | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | 11 Utility perks (Longer Legs to Mana Leech), Utility limited to 3 active | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Iron Will utility perk (shorter crowd control, 3 ranks by level) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Perk ranks (first: Rapid Recovery, 3 ranks by level; `.perk rank`) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
@@ -53,6 +54,13 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   Talking to it lists the items in your bags that count and aren't attuned yet; picking one shows the game's
   confirmation box with the gold price (2 / 10 / 50 / 250 for green / blue / epic / legendary, double for gear you
   could attune by wearing it). The item is destroyed and attuned at once, at full value.
+- **8 Defensive perks**, all with 3 ranks (levels 1 / 30 / 60, values in `mod_unbound.conf`): Greater
+  Bulwark, Evasive Maneuvers and Parry King (all your other two melee avoidance chances become Block, Dodge
+  or Parry at 100/110/120%; Bulwark needs a shield; only one of the three at a time), Reinforced Armor
+  (physical damage taken -4/7/10%), Spellwarded (magic damage taken -4/7/10%), Stoicism (damage-over-time
+  taken -8/14/20%, pet too), Defensive Momentum (up to 5/7.5/10% damage reduction built by moving, lost
+  after 2 s still) and Fortress (the same built by standing still, lost after 3 s moving; exclusive with
+  Momentum). **At most 3 Defensive perks can be active.** Exclusive pairs became exclusive groups.
 - **Gear attunement, stage 2 of 4: attuning.** Equipped items that count progress with every kill of a creature
   that would give experience (1 kill, elites 2, bosses 10; group members in range get it too) and are attuned
   for good at 50 kills (green), 100 (blue), 200 (epic) or 400 (legendary). Progress is kept per item

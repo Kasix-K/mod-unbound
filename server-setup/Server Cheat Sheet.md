@@ -103,6 +103,21 @@ Iron Will is a Utility perk (turn it on in `/perks`). It shortens enemy stuns, f
 sleeps, polymorphs, charms, disorients and saps on you and your pets, on top of racials, talents and
 diminishing returns.
 
+**Defensive perks** (at most 3 active; Rank 1 / 2 / 3 at levels 1 / 30 / 60, values in `mod_unbound.conf`):
+
+| Id | Perk | Rank 1 / 2 / 3 |
+|---|---|---|
+| 204 | Greater Bulwark | Dodge + Parry become Block at 100 / 110 / 120% (needs a shield) |
+| 205 | Evasive Maneuvers | Block + Parry become Dodge at 100 / 110 / 120% |
+| 206 | Parry King | Block + Dodge become Parry at 100 / 110 / 120% (only one of 204-206) |
+| 207 | Reinforced Armor | physical damage taken -4 / 7 / 10% |
+| 208 | Spellwarded | magic damage taken -4 / 7 / 10% |
+| 209 | Stoicism | damage-over-time taken -8 / 14 / 20% (you and pet) |
+| 210 | Defensive Momentum | up to 5 / 7.5 / 10% damage reduction built by moving, lost after 2 s still |
+| 211 | Fortress | up to 5 / 7.5 / 10% built by standing still, lost after 3 s moving (not with 210) |
+
+The avoidance conversions work on melee attacks; the character sheet still shows the unconverted chances.
+
 **Utility perks** (at most 3 active; Rank 1 / 2 / 3 at levels 1 / 30 / 60, values in `mod_unbound.conf`):
 
 | Id | Perk | Rank 1 / 2 / 3 |

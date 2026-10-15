@@ -282,9 +282,14 @@ local function onServerState(list)
     if refresh then refresh() end
 end
 
--- The perk this one is exclusive with, if that one is on (turning this one on swaps them).
+-- A perk this one is exclusive with that is on (turning this one on swaps them). excludes is an id or a
+-- list of ids.
 local function activePartner(perk)
-    return perk.excludes and db.active[perk.excludes] and perk.excludes or nil
+    local ex = perk.excludes
+    if type(ex) == "number" then ex = { ex } end
+    for _, id in ipairs(ex or {}) do
+        if db.active[id] then return id end
+    end
 end
 
 local function togglePerk(perk)
