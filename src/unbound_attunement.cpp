@@ -16,18 +16,31 @@
  * Unbound.ExpansionUnlocked); with fixed stats (random-stat items such as "of the Bear" have none). Each item
  * counts once.
  *
- * Stage 1 adds the collection through GM commands only (.attune); attuning by kills (stage 2) and sacrifice
- * at an altar (stage 3) come next. See ROADMAP.md (Power budget, Attunement and sacrifice rules).
+ * Stage 2, attuning: every creature that would give experience (not grey, not a critter, totem, pet or
+ * no-experience creature) gives progress to each equipped item that counts and isn't attuned yet, for every
+ * player who gets credit for the kill (group members in range too). A normal creature counts as 1 kill, an
+ * elite as Unbound.Attunement.EliteKills (2), a boss as BossKills (10). An item needs Unbound.Attunement.Kills
+ * kills by quality (50 green, 100 blue, 200 epic, 400 legendary); at that point it is attuned for good.
+ * Progress is kept per item (unequipping pauses it) and saved with the character; completing an item saves
+ * at once. Players see their equipped items' progress with .attune progress.
+ *
+ * Stage 3 (sacrifice at an altar) and stage 4 (tooltips, collection window) come next. See ROADMAP.md (Power
+ * budget, Attunement and sacrifice rules).
  */
 
 #include "Chat.h"
 #include "CommandScript.h"
 #include "Config.h"
+#include "Creature.h"
 #include "DatabaseEnv.h"
+#include "Formulas.h"
+#include "KillRewarder.h"
 #include "ObjectMgr.h"
 #include "Player.h"
 #include "ScriptMgr.h"
+#include "StringConvert.h"
 #include "StringFormat.h"
+#include "Tokenize.h"
 #include "World.h"
 
 #include <algorithm>
@@ -35,6 +48,7 @@
 #include <map>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 using namespace Acore::ChatCommands;
 
@@ -48,6 +62,10 @@ namespace
     float sFullValueUntil = 100.0f;        // % of the reference set: full value until here
     float sHalfValueUntil = 200.0f;        // half value until here, a quarter beyond
     uint32 sExpansionUnlocked = 0;         // Unbound.ExpansionUnlocked (the content lock's setting)
+    std::vector<uint32> sKillsByQuality = { 50, 100, 200, 400 }; // kills to attune: green, blue, epic, legendary
+    uint32 sEliteKills = 2;                // an elite counts as this many kills
+    uint32 sBossKills = 10;                // a boss counts as this many kills
+    uint32 constexpr SOUND_ATTUNED = 12891; // the achievement sound
 
     std::unordered_map<uint32, uint8> sItemExpansion;   // world.unbound_item_expansion
 
@@ -210,7 +228,8 @@ namespace
     struct AttunementState : public DataMap::Base
     {
         std::unordered_set<uint32> attuned;            // item entries, 100% attuned
-        std::unordered_map<uint32, uint32> progress;   // item entry -> progress (stage 2)
+        std::unordered_map<uint32, uint32> progress;   // item entry -> kills so far (not attuned yet)
+        std::unordered_set<uint32> unsaved;            // items whose progress changed since the last save
         std::map<uint32, int32> applied;               // stat key -> amount currently applied
         float rawPercent = 0.0f;                       // collected stats as % of the reference set, before
         float effectivePercent = 0.0f;                 // and after the diminishing returns
@@ -362,6 +381,7 @@ namespace
         AttunementState* state = StateOf(player);
         state->attuned.clear();
         state->progress.clear();
+        state->unsaved.clear();
         if (QueryResult result = CharacterDatabase.Query(
             "SELECT `item`, `progress`, `attuned` FROM `character_unbound_attunement` WHERE `guid` = {}",
             player->GetGUID().GetCounter()))
@@ -395,6 +415,89 @@ namespace
         return Acore::StringFormat("|c{:08x}|Hitem:{}:0:0:0:0:0:0:0:0|h[{}]|h|r", ItemQualityColors[proto->Quality],
             proto->ItemId, proto->Name1);
     }
+
+    // ------------------------------------------------------------------ attuning (stage 2)
+    char const* const PREFIX = "|cff4dc3ff[Attunement]|r ";
+
+    // Kills an item needs, by quality.
+    uint32 KillsNeeded(ItemTemplate const* proto)
+    {
+        if (sKillsByQuality.empty())
+            return 100;
+        uint32 index = proto->Quality > ITEM_QUALITY_UNCOMMON ? proto->Quality - ITEM_QUALITY_UNCOMMON : 0;
+        return std::max<uint32>(1, sKillsByQuality[std::min<size_t>(index, sKillsByQuality.size() - 1)]);
+    }
+
+    // How many kills a creature is worth (0 = doesn't count: it wouldn't give experience).
+    uint32 KillValue(Player* player, Creature* creature)
+    {
+        if (!creature || !Acore::XP::Gain(player, creature))
+            return 0;
+        if (creature->IsDungeonBoss() || creature->isWorldBoss())
+            return sBossKills;
+        if (creature->isElite())
+            return sEliteKills;
+        return 1;
+    }
+
+    // Attune an item for good: the collection, the database, the stats, a message.
+    void CompleteAttunement(Player* player, AttunementState* state, ItemTemplate const* proto)
+    {
+        state->progress.erase(proto->ItemId);
+        state->unsaved.erase(proto->ItemId);
+        state->attuned.insert(proto->ItemId);
+        CharacterDatabase.Execute("REPLACE INTO `character_unbound_attunement` (`guid`, `item`, `progress`, `attuned`) "
+            "VALUES ({}, {}, 0, 1)", player->GetGUID().GetCounter(), proto->ItemId);
+        Recalculate(player);
+        ChatHandler(player->GetSession()).PSendSysMessage("{}{} is fully attuned! Its stats are yours for good, even "
+            "without the item ({} items attuned).", PREFIX, ItemLink(proto), state->attuned.size());
+        player->PlayDirectSound(SOUND_ATTUNED, player);
+    }
+
+    // A kill: progress for every equipped item that counts and isn't attuned yet.
+    void AddKill(Player* player, uint32 value)
+    {
+        AttunementState* state = StateOf(player);
+        for (uint8 slot = EQUIPMENT_SLOT_START; slot < EQUIPMENT_SLOT_END; ++slot)
+        {
+            Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
+            ItemTemplate const* proto = item ? item->GetTemplate() : nullptr;
+            if (!proto || state->attuned.count(proto->ItemId) || CheckItem(proto) != ItemCheck::Counts)
+                continue;
+            uint32 needed = KillsNeeded(proto);
+            uint32& progress = state->progress[proto->ItemId];
+            uint32 before = progress;
+            progress = std::min(needed, progress + value);
+            if (progress >= needed)
+            {
+                CompleteAttunement(player, state, proto);
+                continue;
+            }
+            state->unsaved.insert(proto->ItemId);
+            // a message at 25%, 50% and 75%
+            if (before * 4 / needed != progress * 4 / needed)
+                ChatHandler(player->GetSession()).PSendSysMessage("{}{} {}% ({}/{} kills).", PREFIX, ItemLink(proto),
+                    progress * 100 / needed, progress, needed);
+        }
+    }
+
+    // Save the progress that changed since the last save (with the character's own save).
+    void SaveProgress(Player* player)
+    {
+        AttunementState* state = StateOf(player);
+        if (state->unsaved.empty())
+            return;
+        CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
+        for (uint32 entry : state->unsaved)
+        {
+            auto itr = state->progress.find(entry);
+            if (itr != state->progress.end())
+                trans->Append("REPLACE INTO `character_unbound_attunement` (`guid`, `item`, `progress`, `attuned`) "
+                    "VALUES ({}, {}, {}, 0)", player->GetGUID().GetCounter(), entry, itr->second);
+        }
+        CharacterDatabase.CommitTransaction(trans);
+        state->unsaved.clear();
+    }
 }
 
 class unbound_attunement_world : public WorldScript
@@ -414,6 +517,23 @@ public:
         sFullValueUntil = sConfigMgr->GetOption<float>("Unbound.Attunement.FullValueUntil", 100.0f);
         sHalfValueUntil = std::max(sFullValueUntil, sConfigMgr->GetOption<float>("Unbound.Attunement.HalfValueUntil", 200.0f));
         sExpansionUnlocked = sConfigMgr->GetOption<uint32>("Unbound.ExpansionUnlocked", 0);
+
+        // "50, 100, 200, 400" -> kills for green, blue, epic, legendary
+        sKillsByQuality.clear();
+        std::string const kills = sConfigMgr->GetOption<std::string>("Unbound.Attunement.Kills", "50, 100, 200, 400");
+        for (std::string_view part : Acore::Tokenize(kills, ',', false))
+        {
+            while (!part.empty() && part.front() == ' ')
+                part.remove_prefix(1);
+            while (!part.empty() && part.back() == ' ')
+                part.remove_suffix(1);
+            if (Optional<uint32> value = Acore::StringTo<uint32>(part))
+                sKillsByQuality.push_back(*value);
+        }
+        if (sKillsByQuality.empty())
+            sKillsByQuality = { 50, 100, 200, 400 };
+        sEliteKills = sConfigMgr->GetOption<uint32>("Unbound.Attunement.EliteKills", 2);
+        sBossKills = sConfigMgr->GetOption<uint32>("Unbound.Attunement.BossKills", 10);
     }
 
     void OnStartup() override
@@ -435,13 +555,30 @@ class unbound_attunement_player : public PlayerScript
 public:
     unbound_attunement_player() : PlayerScript("unbound_attunement_player", {
         PLAYERHOOK_ON_LOGIN,
-        PLAYERHOOK_ON_DELETE
+        PLAYERHOOK_ON_DELETE,
+        PLAYERHOOK_ON_SAVE,
+        PLAYERHOOK_ON_REWARD_KILL_REWARDER
     }) { }
 
     void OnPlayerLogin(Player* player) override
     {
         LoadCollection(player);
         Recalculate(player);
+    }
+
+    void OnPlayerSave(Player* player) override
+    {
+        SaveProgress(player);
+    }
+
+    // Called for every player who gets credit for a kill (the killer, or each group member in range).
+    void OnPlayerRewardKillRewarder(Player* player, KillRewarder* rewarder, bool /*isDungeon*/, float& /*rate*/) override
+    {
+        if (!sEnabled)
+            return;
+        Unit* victim = rewarder->GetVictim();
+        if (uint32 value = KillValue(player, victim ? victim->ToCreature() : nullptr))
+            AddKill(player, value);
     }
 
     void OnPlayerDelete(ObjectGuid guid, uint32 /*accountId*/) override
@@ -464,6 +601,7 @@ public:
             { "check",  HandleCheck,  SEC_GAMEMASTER, Console::No },
             { "info",   HandleInfo,   SEC_GAMEMASTER, Console::No },
             { "reset",  HandleReset,  SEC_GAMEMASTER, Console::No },
+            { "progress", HandleProgress, SEC_PLAYER, Console::No },
         };
         static ChatCommandTable commandTable =
         {
@@ -544,6 +682,36 @@ public:
         return true;
     }
 
+    // .attune progress (any player): your equipped items' attunement
+    static bool HandleProgress(ChatHandler* handler)
+    {
+        Player* player = handler->GetSession() ? handler->GetSession()->GetPlayer() : nullptr;
+        if (!player)
+            return false;
+        AttunementState* state = StateOf(player);
+        handler->PSendSysMessage("{}{} items attuned, {:.0f}% of a full set's stats (after diminishing returns). "
+            "Equipped:", PREFIX, state->attuned.size(), state->effectivePercent);
+        for (uint8 slot = EQUIPMENT_SLOT_START; slot < EQUIPMENT_SLOT_END; ++slot)
+        {
+            Item* item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, slot);
+            if (!item)
+                continue;
+            ItemTemplate const* proto = item->GetTemplate();
+            if (state->attuned.count(proto->ItemId))
+                handler->PSendSysMessage("  {}: attuned", ItemLink(proto));
+            else if (ItemCheck check = CheckItem(proto); check != ItemCheck::Counts)
+                handler->PSendSysMessage("  {}: {}", ItemLink(proto), CheckText(check));
+            else
+            {
+                uint32 needed = KillsNeeded(proto);
+                auto itr = state->progress.find(proto->ItemId);
+                uint32 done = itr != state->progress.end() ? itr->second : 0;
+                handler->PSendSysMessage("  {}: {}% ({}/{} kills)", ItemLink(proto), done * 100 / needed, done, needed);
+            }
+        }
+        return true;
+    }
+
     // .attune reset: remove the selected player's (or your) whole collection
     static bool HandleReset(ChatHandler* handler)
     {
@@ -553,6 +721,7 @@ public:
             target->GetGUID().GetCounter());
         state->attuned.clear();
         state->progress.clear();
+        state->unsaved.clear();
         Recalculate(target);
         handler->PSendSysMessage("Removed all of {}'s attunements.", target->GetName());
         return true;

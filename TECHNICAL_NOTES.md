@@ -33,7 +33,7 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   in `mod_unbound.conf`. Retribution's spell scripts: `data/sql/db-world/unbound_perks_spells.sql`. Perk
   numbers stay in normal WoW ranges (about +10% per perk); they are constants at the top of
   `unbound_perks.cpp` and must match `PerkData.lua`. The perk code assumes `MapUpdate.Threads = 1`.
-- **Gear attunement** (stage 1 of 4: the collection and its stats): `src/unbound_attunement.cpp`. Each
+- **Gear attunement** (stages 1-2 of 4: the collection, its stats, attuning by kills): `src/unbound_attunement.cpp`. Each
   character's collection is `characters.character_unbound_attunement` (item, progress, attuned). Attuned
   items give `Unbound.Attunement.Percent` (20%) of their fixed stats, applied like equipped-item stats
   (`Player::_ApplyItemBonuses`), with diminishing returns against `ReferenceSetStats` (600 stat points =
@@ -46,8 +46,13 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   starters/enders, crafting by its reagents, items made by using another item; greens/blues are also held
   to their expansion's item level range, because shared world-drop tables mix expansions). Run
   `python tools/item_expansions.py` again (database running) when loot, vendors or quests change;
-  `--check <item ids>` explains single items. GM commands: `.attune add|remove|check <item>`,
-  `.attune info`, `.attune reset` (on the selected player, else yourself).
+  `--check <item ids>` explains single items. Attuning: `OnPlayerRewardKillRewarder` (each player credited
+  for a kill, group members in range too); a creature counts if `Acore::XP::Gain` > 0 (would give
+  experience); 1 kill, `EliteKills` (2) for elites, `BossKills` (10) for bosses; each equipped, counting,
+  not yet attuned item gains them; `Kills` by quality (50/100/200/400). Progress is saved with the
+  character (`OnPlayerSave`, one transaction); completing an item saves at once. Messages at 25/50/75%
+  and on completion (achievement sound). GM commands: `.attune add|remove|check <item>`, `.attune info`,
+  `.attune reset` (on the selected player, else yourself); players: `.attune progress`.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Players in a

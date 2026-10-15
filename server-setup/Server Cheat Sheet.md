@@ -65,9 +65,12 @@ goes to him; `.respawn` next to his corpse brings him back early (for testing).
 
 ## Gear attunement (GM commands for testing)
 
-Attuned items permanently give the character 20% of their stats, even after the item is gone. Stage 1 (the
-collection and its stats) is built; attuning by killing creatures and the sacrifice altar come next. Until
-then, items are attuned with these GM commands (they act on the selected player, else yourself):
+Attuned items permanently give the character 20% of their stats, even after the item is gone. **Attuning:**
+wear the item and kill creatures that give experience (not grey ones): 50 kills for a green, 100 for a blue,
+200 for an epic (an elite counts as 2, a boss as 10). Every equipped item that counts progresses at once, and
+chat shows 25%, 50%, 75% and "fully attuned". **Any player** can type `.attune progress` to see their
+equipped items' progress. The sacrifice altar and tooltips come next. GM commands (they act on the selected
+player, else yourself):
 
 | Command | What it does |
 |---|---|
@@ -76,6 +79,7 @@ then, items are attuned with these GM commands (they act on the selected player,
 | `.attune remove <item>` | Take it out of the collection |
 | `.attune info` | Items attuned, % of a full set collected, and the stats it gives |
 | `.attune reset` | Remove the whole collection |
+| `.attune progress` | (any player) Your equipped items' attunement progress |
 
 Only green or better weapons and armour with required level 50-60 from classic content count (TBC and Wrath
 items count once those expansions are released). Settings: `Unbound.Attunement.*` in `mod_unbound.conf`.

@@ -10,6 +10,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 |---|---|---|---|
 | Iron Will utility perk (shorter crowd control, 3 ranks by level) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
 | Perk ranks (first: Rapid Recovery, 3 ranks by level; `.perk rank`) | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
+| Gear attunement, stage 2: attuning by kills (`.attune progress`) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Gear attunement, stage 1: collection and stats (GM commands) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Item expansion tags (attunement counts released expansions only) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Classic raids soloable (raid scaling to about 3 players' worth) | 2026-10-14 | 2026-10-14 | Kasix-K |
@@ -46,6 +47,11 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-14
 
 ### Added
+- **Gear attunement, stage 2 of 4: attuning.** Equipped items that count progress with every kill of a creature
+  that would give experience (1 kill, elites 2, bosses 10; group members in range get it too) and are attuned
+  for good at 50 kills (green), 100 (blue), 200 (epic) or 400 (legendary). Progress is kept per item
+  (unequipping pauses it); chat shows 25/50/75% and "fully attuned" with the achievement sound. Players see
+  their equipped items' progress with `.attune progress`.
 - **Class perk target** in the power budget: each spec's class perk is worth about +25-35% to that spec's
   single-target damage (Retribution estimated at about +35-40%, to confirm on a training dummy).
 - **Iron Will** (Utility perk, id 303): enemy crowd control on you and your pets (stun, fear, root, silence,

@@ -87,3 +87,17 @@ Unbound.Attunement.LevelRange = 10
 Unbound.Attunement.ReferenceSetStats = 600
 Unbound.Attunement.FullValueUntil = 100
 Unbound.Attunement.HalfValueUntil = 200
+
+#    Unbound.Attunement.Kills
+#        Description: Kills an equipped item needs to be attuned, by quality: green, blue, epic, legendary.
+#                     Only creatures that would give experience count (not grey, critters, totems or pets).
+#        Default:     "50, 100, 200, 400"
+#
+#    Unbound.Attunement.EliteKills
+#    Unbound.Attunement.BossKills
+#        Description: How many kills an elite and a boss (dungeon, raid or world boss) count as.
+#        Default:     2, 10
+
+Unbound.Attunement.Kills = "50, 100, 200, 400"
+Unbound.Attunement.EliteKills = 2
+Unbound.Attunement.BossKills = 10
