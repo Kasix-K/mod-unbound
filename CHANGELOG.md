@@ -138,6 +138,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   never the same as the week before; 75 gold. Zones were read from the server's map data.
 
 ### Fixed
+- **The Infusion micro button's icon could still vanish with ElvUI** (until a relog): its square sat on the same
+  frame level as ElvUI's micro bar backdrop, which sometimes drew over it. The square and icon now sit one level
+  above the button, set again whenever ElvUI lays out the bar.
 - **Heroic weekly dungeon quests couldn't be completed:** they asked for the boss's heroic copy, but the core gives
   kill credit for the normal entry even in Heroic. They now ask for the normal boss, and the Bulletin Board checks
   the mode: a Normal weekly only counts a Normal kill, a Heroic weekly only a Heroic one.

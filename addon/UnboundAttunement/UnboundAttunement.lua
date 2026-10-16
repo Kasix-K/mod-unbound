@@ -492,8 +492,13 @@ local function addMicroButton()
         -- ElvUI: a bordered square like its other micro buttons, the icon filling it. The icon and the pressed
         -- shade are drawn on the square's own frame: re-parenting the button (place() below) moves child frames
         -- back above it, so an icon on the button itself would end up hidden behind the square's background.
+        -- The square sits one frame level above the button, set again on every layout: one level below put it on
+        -- the same level as ElvUI's micro bar backdrop, which then sometimes drew over it (and its icon). It takes
+        -- no mouse input, so clicks still reach the button.
         local f = CreateFrame("Frame", nil, button)
-        f:SetFrameLevel(button:GetFrameLevel() - 1)
+        local function raise() f:SetFrameLevel(button:GetFrameLevel() + 1) end
+        raise()
+        f:EnableMouse(false)
         f:SetTemplate("Default", true)
         f:SetOutside(button)
         button.backdrop = f
@@ -529,6 +534,7 @@ local function addMicroButton()
                 ElvUI_MicroBar:SetWidth(AB.MicroWidth + button:GetWidth() + spacing)
             end
             button:SetAlpha(1)
+            raise()
         end
         hooksecurefunc(AB, "UpdateMicroPositionDimensions", place)
         button:HookScript("OnEnter", function(self)
