@@ -1,7 +1,12 @@
 /*
- * mod-unbound: loot companions (Loot Goblin, Arcane Loot Scanner).
+ * mod-unbound: loot companions (Loot Goblin, Arcane Loot Scanner, Scavenger Imp).
  *
- * While a character's loot companion is summoned:
+ * While a character's Scavenger Imp is summoned, opening a corpse also loots the nearest few corpses around it
+ * (Unbound.ScavengerImp.ExtraCorpses, default 4, within Unbound.ScavengerImp.Range, default 27 yards) straight
+ * into their bags, by the same rules as below. Nothing happens until the player opens a corpse themselves, and
+ * it doesn't use mod-aoe-loot.
+ *
+ * While a character's Loot Goblin or Arcane Loot Scanner is summoned:
  *  - mod-aoe-loot is on for them, so opening one corpse also loots the corpses around it;
  *  - once a second the goblin loots every corpse within the AoE loot range (AOELoot.Range) that the
  *    character may loot, straight into their bags. It follows the normal loot rules: gold is shared
@@ -15,6 +20,7 @@
 
 #include "AllCommandScript.h"
 #include "Chat.h"
+#include "Config.h"
 #include "Creature.h"
 #include "Group.h"
 #include "LootMgr.h"
@@ -23,6 +29,7 @@
 #include "ScriptMgr.h"
 #include "TemporarySummon.h"
 #include "WorldPacket.h"
+#include "WorldSession.h"
 
 #include <algorithm>
 #include <cctype>
@@ -42,8 +49,10 @@ enum UnboundLootCompanions
     // keep in sync with data/sql/db-world/unbound_loot_goblin.sql
     NPC_LOOT_GOBLIN         = 190100,
     NPC_ARCANE_LOOT_SCANNER = 190102,
+    NPC_SCAVENGER_IMP       = 190210,
 };
 
+// The full AoE loot companions (mod-aoe-loot on, and auto-loot once a second). The Scavenger Imp isn't one.
 static bool IsLootCompanion(uint32 entry)
 {
     return entry == NPC_LOOT_GOBLIN || entry == NPC_ARCANE_LOOT_SCANNER;
@@ -84,6 +93,16 @@ static bool HasLootCompanionOut(Player* player)
 
     Creature* critter = ObjectAccessor::GetCreature(*player, critterGuid);
     return critter && IsLootCompanion(critter->GetEntry());
+}
+
+static bool HasScavengerImpOut(Player* player)
+{
+    ObjectGuid critterGuid = player->GetCritterGUID();
+    if (!critterGuid)
+        return false;
+
+    Creature* critter = ObjectAccessor::GetCreature(*player, critterGuid);
+    return critter && critter->GetEntry() == NPC_SCAVENGER_IMP;
 }
 
 // Same split as WorldSession::HandleLootMoneyOpcode: shared with group members in reward range.
@@ -166,6 +185,7 @@ static bool AutoLootCorpse(Player* player, Creature* corpse)
         slotCount += questItems->second->size();
 
     bool allFit = true;
+    ObjectGuid const openLoot = player->GetLootGUID(); // a loot window the player may still have open
     player->SetLootGUID(corpse->GetGUID()); // StoreLootItem and its hooks read the loot source from here
     for (uint32 slot = 0; slot < slotCount; ++slot)
     {
@@ -196,7 +216,7 @@ static bool AutoLootCorpse(Player* player, Creature* corpse)
         InventoryResult msg;
         player->StoreLootItem(slot, loot, msg);
     }
-    player->SetLootGUID(ObjectGuid::Empty);
+    player->SetLootGUID(openLoot);
 
     // Same cleanup as WorldSession::DoLootRelease for a creature.
     if (loot->isLooted())
@@ -225,6 +245,37 @@ static void AutoLootNearby(Player* player, LootGoblinState& state)
         if (player->isAllowedToLoot(corpse) && !AutoLootCorpse(player, corpse))
             allFit = false;
 
+    if (!allFit && !state.bagsFullCooldown)
+    {
+        ChatHandler(player->GetSession()).SendSysMessage("Your loot companion can't fit any more loot in your bags.");
+        state.bagsFullCooldown = BAGS_FULL_WARNING_MS;
+    }
+}
+
+// Scavenger Imp: the player opened `opened`; loot the nearest few other corpses around it.
+static void ScavengeAround(Player* player, Creature* opened)
+{
+    std::list<Creature*> corpses;
+    player->GetDeadCreatureListInGrid(corpses, sConfigMgr->GetOption<float>("Unbound.ScavengerImp.Range", 27.0f));
+    corpses.remove_if([&](Creature* c)
+        {
+            return c == opened || !c->HasDynamicFlag(UNIT_DYNFLAG_LOOTABLE) ||
+                c->loot.loot_type == LOOT_SKINNING || !player->isAllowedToLoot(c);
+        });
+    corpses.sort([opened](Creature* a, Creature* b) { return opened->GetDistance(a) < opened->GetDistance(b); });
+
+    uint32 const extra = sConfigMgr->GetOption<uint32>("Unbound.ScavengerImp.ExtraCorpses", 4);
+    bool allFit = true;
+    uint32 looted = 0;
+    for (Creature* corpse : corpses)
+    {
+        if (looted++ >= extra)
+            break;
+        if (!AutoLootCorpse(player, corpse))
+            allFit = false;
+    }
+
+    LootGoblinState& state = sLootGoblinStates[player->GetGUID()];
     if (!allFit && !state.bagsFullCooldown)
     {
         ChatHandler(player->GetSession()).SendSysMessage("Your loot companion can't fit any more loot in your bags.");
@@ -295,6 +346,36 @@ public:
     }
 };
 
+// Scavenger Imp: runs when the player opens a corpse (CMSG_LOOT), before the loot window opens.
+class unbound_loot_goblin_server : public ServerScript
+{
+public:
+    unbound_loot_goblin_server() : ServerScript("unbound_loot_goblin_server", { SERVERHOOK_CAN_PACKET_RECEIVE }) { }
+
+    bool CanPacketReceive(WorldSession* session, WorldPacket const& packet) override
+    {
+        if (packet.GetOpcode() != CMSG_LOOT || !session)
+            return true;
+
+        Player* player = session->GetPlayer();
+        if (!player || !player->IsInWorld() || !player->IsAlive() || !HasScavengerImpOut(player))
+            return true;
+
+        WorldPacket copy(packet);
+        ObjectGuid guid;
+        copy >> guid;
+        if (!guid.IsCreatureOrVehicle())
+            return true;
+
+        Creature* opened = ObjectAccessor::GetCreature(*player, guid);
+        if (opened && !opened->IsAlive() && opened->HasDynamicFlag(UNIT_DYNFLAG_LOOTABLE) &&
+            opened->loot.loot_type != LOOT_SKINNING && player->isAllowedToLoot(opened))
+            ScavengeAround(player, opened);
+
+        return true; // the opened corpse loots normally
+    }
+};
+
 // AoE loot is a loot companion perk: block mod-aoe-loot's .aoeloot on/off. Commands can be abbreviated
 // (".aoe on"), so any first word that starts "aoeloot" is caught (no other command starts with "ao").
 class unbound_loot_goblin_commands : public AllCommandScript
@@ -314,7 +395,8 @@ public:
             return true;
 
         handler.SendSysMessage("AoE looting comes from loot companions: summon a Loot Goblin or an Arcane Loot "
-                               "Scanner and it turns on while the companion is out.");
+                               "Scanner (or a Scavenger Imp, for a few corpses at a time) and it turns on while "
+                               "the companion is out.");
         return false;
     }
 };
@@ -323,5 +405,6 @@ void AddSC_unbound_loot_goblin()
 {
     new unbound_loot_goblin_creature();
     new unbound_loot_goblin_player();
+    new unbound_loot_goblin_server();
     new unbound_loot_goblin_commands();
 }

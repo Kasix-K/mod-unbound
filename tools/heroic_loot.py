@@ -1645,6 +1645,7 @@ WARDEN_PAGES = [
         (49284, 120),   # Reins of the Swift Spectral Tiger
     ]),
     (190202, 'Pets', [
+        (910003, 40),   # Scavenger Imp (loot companion: loots up to 4 corpses around the one you open)
         (49362, 15), (44819, 15), (49662, 15), (49663, 15), (25535, 15),   # Onyxian Whelpling, Baby Blizzard Bear,
                                                                             # Gryphon Hatchling, Wind Rider Cub, Netherwhelp
         (20371, 20), (30360, 20), (13583, 20), (13584, 20), (13582, 20),   # Murky, Lurky, Panda Cub, Mini Diablo, Zergling

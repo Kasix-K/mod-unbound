@@ -82,6 +82,15 @@ SPELLS = [
         'Description_Lang_enUS': 'Summons an Arcane Loot Scanner. While it is out, looting a corpse also '
                                  'loots every corpse nearby.',
     },
+    {
+        'ID': 200203,  # Scavenger Imp companion, keep in sync with src/unbound_loot_goblin.cpp
+        '_base': 4055,              # Mechanical Squirrel's summon spell
+        'EffectMiscValue_1': 190210,
+        'SpellIconID': 215,         # Spell_Shadow_SummonImp
+        'Name_Lang_enUS': 'Scavenger Imp',
+        'Description_Lang_enUS': 'Summons a Scavenger Imp. While it is out, looting a corpse also loots '
+                                 'up to 4 corpses around it.',
+    },
 ]
 
 # Item.dbc rows (client) / item_dbc rows (server). item_template holds the rest of the item.
@@ -89,6 +98,7 @@ ITEMS = [
     # ID, Class, SubClass, SoundOverrideSubclass, Material, DisplayInfoID, InventoryType, SheathType
     (910001, 15, 2, -1, 8, 8442, 0, 0),  # Loot Goblin (companion item, loot-bag icon)
     (910002, 15, 2, -1, 8, 41425, 0, 0),  # Arcane Loot Scanner (companion item, Khorium power core icon)
+    (910003, 15, 2, -1, 8, 7155, 0, 0),  # Scavenger Imp (companion item, Imp in a Jar icon)
 ]
 ITEMS += heroic_loot.item_dbc_rows()  # heroic dungeon loot (tools/heroic_loot.py)
 ITEMS += world_bosses.item_dbc_rows()  # world boss loot (tools/world_bosses.py)
@@ -162,6 +172,7 @@ SKILL_LINE_ABILITIES = [
     # SupercededBySpell, AcquireMethod, TrivialHigh, TrivialLow, CharacterPoints x2
     (900001, SKILL_COMPANIONS, 200201, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
     (900002, SKILL_COMPANIONS, 200202, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
+    (900003, SKILL_COMPANIONS, 200203, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
 ]
 
 

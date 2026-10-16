@@ -14,6 +14,12 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   `OnTryExecuteCommand`, also catches abbreviations like `.aoe on`); a new loot companion only needs its entry
   in `IsLootCompanion`. Price/currency:
   `data/sql/db-world/unbound_loot_goblin.sql`.
+  The **Scavenger Imp** (item 910003, spell 200203, creature 190210, sold for 40 Heroic Sigils on the Warden of
+  Rare Wonders' Pets page) is not in `IsLootCompanion`: no mod-aoe-loot and no once-a-second loot. Instead
+  `unbound_loot_goblin_server` (`CanPacketReceive`, `CMSG_LOOT`) loots the nearest
+  `Unbound.ScavengerImp.ExtraCorpses` (4) other corpses within `Unbound.ScavengerImp.Range` (27 yards) of the
+  player, by the same rules (`AutoLootCorpse`, which now restores a loot window the player has open), before
+  the opened corpse's own loot window appears.
 - **Reset all instances:** resets all raid saves (any difficulty) and heroic and normal dungeon saves,
   whatever the difficulty setting. In a group only the leader can, for the group's instances; an instance
   with players still inside isn't reset.

@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Scavenger Imp loot companion (loots up to 4 corpses within 27 yards when you open one; Heroic Sigils) | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Shadowflame Ward: a 12-quest chain across the five dragonflights for a cloak that replaces the Onyxia Scale Cloak | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Warden of Rare Wonders: cosmetics (mounts, pets, tabards, fun items) for Heroic Sigils | 2026-10-16 | 2026-10-16 | SaucyHobo54 |
 | Heroic Sigil drops (1 per Heroic boss, 2 per final boss), Heroic Quartermaster, Sigils from Heroic weeklies | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
@@ -75,6 +76,10 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-16
 
 ### Added
+- **Scavenger Imp,** a third loot companion (40 Heroic Sigils, the Warden of Rare Wonders' Pets page): nothing
+  is looted until you open a corpse yourself; then it loots up to 4 of the nearest other corpses within 27
+  yards into your bags (`Unbound.ScavengerImp.ExtraCorpses` and `Unbound.ScavengerImp.Range`). The Loot Goblin
+  and Arcane Loot Scanner keep their 55 yards and full auto-looting. Regenerate `patch-Z.MPQ`.
 - **The Shadowflame Ward** (Kaelastrasz of the red dragonflight, Thorium Point in the Searing Gorge): a 12-quest
   chain, about as long as the Drakefire Amulet's, for an epic cloak (item level 66, 60 armor, 12 Stamina, 10 Fire
   and 10 Shadow Resistance) that protects from Shadowflame in Blackwing Lair like the Onyxia Scale Cloak, which

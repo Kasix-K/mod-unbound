@@ -194,6 +194,9 @@ bring one other player or a playerbot for at least one boss.
 - [ ] Without a companion out, opening a corpse loots only that corpse.
 - [ ] With the Loot Goblin or Arcane Loot Scanner out, corpses within 55 yards are auto-looted and opening one
       corpse loots the ones around it. Dismissing the companion turns it off again.
+- [ ] With the Scavenger Imp out (`.additem 910003`), nothing is looted until you open a corpse; then up to 4
+      of the nearest other corpses within 27 yards go straight to your bags, and the opened corpse's loot
+      window shows as usual. Corpses farther than 27 yards stay.
 
 ## 10. Report back
 

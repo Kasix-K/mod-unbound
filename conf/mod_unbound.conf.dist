@@ -50,6 +50,19 @@ Unbound.WorldBoss.DespawnHours = 24
 Unbound.AccountCurrency.Enable = 1
 Unbound.AccountCurrency.GMAccounts = 0
 
+#    Unbound.ScavengerImp.ExtraCorpses
+#        Description: How many other corpses the Scavenger Imp loot companion loots each time its owner opens a
+#                     corpse (the nearest ones within Unbound.ScavengerImp.Range).
+#        Default:     4
+#
+#    Unbound.ScavengerImp.Range
+#        Description: How far (yards) the Scavenger Imp looks for corpses around the player. The Loot Goblin
+#                     and Arcane Loot Scanner use mod-aoe-loot's AOELoot.Range (55) instead.
+#        Default:     27
+
+Unbound.ScavengerImp.ExtraCorpses = 4
+Unbound.ScavengerImp.Range = 27
+
 #    Unbound.Perks.RapidRecovery
 #        Description: Rapid Recovery permanent perk: after leaving combat, restore a percentage of
 #                     maximum health and mana every second until full.
