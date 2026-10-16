@@ -181,7 +181,10 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   makes a quest auto-complete.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
-- **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Players in a
+- **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). The dungeon finder's random dungeons of
+  a locked expansion (Random Burning Crusade / Lich King Dungeon and Heroic) are hidden at startup
+  (`OnBeforeWorldInitialized` gives their `LFGDungeonData` an empty level range, so the server never lists them;
+  the client's dropdown only shows what the server sends); a changed setting applies after a restart. Players in a
   locked zone go to their hearthstone, else their race's start, else their faction's capital; GMs with GM
   mode on, battlegrounds and arenas are exempt. Death Knights are GM-only through
   `CharacterCreating.Disabled.ClassMask = 32`. Releasing an expansion: raise `Unbound.ExpansionUnlocked`

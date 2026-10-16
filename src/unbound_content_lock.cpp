@@ -4,6 +4,10 @@
  * Unbound.ExpansionUnlocked (0 = classic, 1 = + The Burning Crusade, 2 = + Wrath of the Lich King)
  * says which expansions' content is released. Locked content:
  *  - dungeons and raids of a locked expansion can't be entered (or queued for in the dungeon finder);
+ *  - the dungeon finder doesn't offer a locked expansion's random dungeons (Random Burning Crusade Dungeon /
+ *    Heroic, Random Lich King Dungeon / Heroic), which it otherwise lists for any account with that
+ *    expansion (a level 60 sees Random Burning Crusade Dungeon, levels 59-68). Checked at startup, so a
+ *    changed Unbound.ExpansionUnlocked applies after a restart;
  *  - Northrend, and the Outland zones of map 530, send players home: their hearthstone location, or
  *    their race's starting area if that is locked too, or else their faction's capital. The Blood Elf
  *    and Draenei starting zones share map 530 with Outland and stay open, so those races remain
@@ -17,7 +21,9 @@
 
 #include "Chat.h"
 #include "Config.h"
+#include "Log.h"
 #include "DBCStores.h"
+#include "LFGMgr.h"
 #include "MapMgr.h"
 #include "Player.h"
 #include "ScriptMgr.h"
@@ -99,12 +105,33 @@ class unbound_content_lock_world : public WorldScript
 {
 public:
     unbound_content_lock_world() : WorldScript("unbound_content_lock_world", {
-        WORLDHOOK_ON_AFTER_CONFIG_LOAD
+        WORLDHOOK_ON_AFTER_CONFIG_LOAD,
+        WORLDHOOK_ON_BEFORE_WORLD_INITIALIZED
     }) { }
 
     void OnAfterConfigLoad(bool /*reload*/) override
     {
         sExpansionUnlocked = sConfigMgr->GetOption<uint32>("Unbound.ExpansionUnlocked", 0);
+    }
+
+    // After the dungeon finder has loaded its dungeons: a locked expansion's random dungeons get an empty level
+    // range, so LFGMgr::GetRandomAndSeasonalDungeons never lists them (the dropdown shows what the server sends).
+    void OnBeforeWorldInitialized() override
+    {
+        uint32 hidden = 0;
+        for (LFGDungeonEntry const* entry : sLFGDungeonStore)
+        {
+            if (entry->TypeID != lfg::LFG_TYPE_RANDOM || entry->ExpansionLevel <= sExpansionUnlocked)
+                continue;
+
+            if (lfg::LFGDungeonData* dungeon = const_cast<lfg::LFGDungeonData*>(sLFGMgr->GetLFGDungeon(entry->ID)))
+            {
+                dungeon->minlevel = 255;
+                dungeon->maxlevel = 0;
+                ++hidden;
+            }
+        }
+        LOG_INFO("server.loading", ">> Unbound: hid {} random dungeons of unreleased expansions from the dungeon finder", hidden);
     }
 };
 
