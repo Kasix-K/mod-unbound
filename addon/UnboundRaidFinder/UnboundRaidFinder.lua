@@ -26,7 +26,8 @@ local LOCK_REASON = {
 local raids, incoming = {}, nil      -- incoming: the list being received
 local currentRaid, mayPick = 0, true
 local selectedId
-local panel, scroll, rows, enterButton, statusText
+local panel, scroll, rows, statusText
+local findGroupButton                 -- the Dungeon Finder's own Find Group button, Enter / Leave Raid on Raids
 local display = {}                    -- rows to show: { header = text } or a raid
 
 local function send(text)
@@ -86,16 +87,18 @@ local function selectedRaid()
     end
 end
 
+-- On Raids the Find Group button is the Enter Raid / Leave Raid button (the same button, so it looks exactly
+-- like Find Group with or without ElvUI). The game resets its text whenever it updates it.
 local function updateButtons()
-    if not enterButton then return end
+    if not findGroupButton or not isRaidMode() then return end
     if currentRaid ~= 0 then
-        enterButton:SetText("Leave Raid")
-        enterButton:Enable()
+        findGroupButton:SetText("Leave Raid")
+        findGroupButton:Enable()
         return
     end
-    enterButton:SetText("Enter Raid")
+    findGroupButton:SetText("Enter Raid")
     local raid = selectedRaid()
-    if raid and raid.status == "A" and mayPick then enterButton:Enable() else enterButton:Disable() end
+    if raid and raid.status == "A" and mayPick then findGroupButton:Enable() else findGroupButton:Disable() end
 end
 
 -- one row, the way LFDQueueFrameSpecificListButton_SetDungeon draws a dungeon or a header
@@ -164,7 +167,8 @@ end
 local function createRow(i)
     local row = CreateFrame("Frame", "UnboundRaidFinderRow" .. i, panel, "LFGSpecificChoiceTemplate")
     if i == 1 then
-        row:SetPoint("TOPLEFT", panel, "TOPLEFT", 25, -165)
+        -- where the dungeon list starts (ElvUI moves it)
+        row:SetPoint("TOPLEFT", LFDQueueFrameSpecificListButton1 or panel, "TOPLEFT", 0, 0)
     else
         row:SetPoint("TOPLEFT", rows[i - 1], "BOTTOMLEFT", 0, 0)
     end
@@ -224,20 +228,20 @@ local function createRaidView()
     statusText:SetWidth(300)
     statusText:SetJustifyH("LEFT")
 
-    -- "Enter Raid" / "Leave Raid" where "Find Group" is
-    enterButton = CreateFrame("Button", "UnboundRaidFinderEnterButton", LFDQueueFrame, "UIPanelButtonTemplate2")
-    enterButton:SetSize(LFDQueueFrameFindGroupButton:GetWidth(), LFDQueueFrameFindGroupButton:GetHeight())
-    enterButton:SetPoint("BOTTOMLEFT", 18, 6)
-    enterButton:SetText("Enter Raid")
-    enterButton:Hide()
-    enterButton:SetScript("OnClick", function()
+    -- Find Group does Enter Raid / Leave Raid on Raids, and the game's join everywhere else
+    findGroupButton = LFDQueueFrameFindGroupButton
+    local findGroup = findGroupButton:GetScript("OnClick")
+    findGroupButton:SetScript("OnClick", function(self, ...)
+        if not isRaidMode() then
+            return findGroup(self, ...)
+        end
         if currentRaid ~= 0 then
             send("LEAVE")
         elseif selectedId then
             send("ENTER:" .. selectedId)
         end
     end)
-    skin("HandleButton", enterButton)
+    hooksecurefunc("LFDQueueFrameFindGroupButton_Update", updateButtons)
 
     panel:SetScript("OnShow", function()
         setStatus("")
@@ -254,13 +258,11 @@ local function setRaidView(on)
         if LFDQueueFrameBackground then
             LFDQueueFrameBackground:SetTexture("Interface\\LFGFrame\\UI-LFG-BACKGROUND-DUNGEONWALL")
         end
-        LFDQueueFrameFindGroupButton:Hide()
-        enterButton:Show()
         panel:Show()
+        updateButtons()
     else
         panel:Hide()
-        enterButton:Hide()
-        LFDQueueFrameFindGroupButton:Show()
+        LFDQueueFrameFindGroupButton_Update()   -- back to Find Group
     end
 end
 
@@ -299,8 +301,9 @@ local function hookDungeonFinder()
             setRaidView(true)
             return
         end
+        -- the game's function first (it sets the type), then the raid view goes and Find Group is reset
+        setType(value, ...)
         setRaidView(false)
-        return setType(value, ...)
     end
 end
 

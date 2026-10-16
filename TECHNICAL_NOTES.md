@@ -156,9 +156,12 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
 - **Raid Finder:** `src/unbound_raid_finder.cpp` and `addon/UnboundRaidFinder`. The addon adds a "Raids"
   entry (value `unbound_raids`) to the Dungeon Finder's type dropdown by wrapping the global
   `LFDQueueFrameTypeDropDown_Initialize` (the dropdown is set up again on every OnShow, by name), and wraps
-  `LFDQueueFrame_SetType`: for Raids it hides `LFDQueueFrameSpecific` / `LFDQueueFrameRandom` and the Find
-  Group button and shows its own list (rows from the game's `LFGSpecificChoiceTemplate`, in the place of
-  the specific list) and an Enter Raid button; any other choice goes to the game's function. The raids are `RAIDS` in the
+  `LFDQueueFrame_SetType`: for Raids it hides the `LFDQueueFrameSpecific` / `LFDQueueFrameRandom`
+  frames and shows its own list (rows from the game's `LFGSpecificChoiceTemplate`, anchored to the specific
+  list's first row so ElvUI's layout applies too); any other choice goes to the game's function. On Raids the
+  game's own Find Group button is Enter Raid / Leave Raid (its OnClick is wrapped, and a hook on
+  `LFDQueueFrameFindGroupButton_Update` puts the raid text back whenever the game updates it), so it looks
+  exactly like Find Group with or without ElvUI. The raids are `RAIDS` in the
   C++ (id, name, map, difficulty, expansion, entrance area trigger or a fixed position for classic Naxxramas);
   levels come from `dungeon_access_template`, player counts from MapDifficulty. The addon whispers its own
   character (prefix `UBRAID`: `LIST`, `ENTER:<id>`, `LEAVE`; answers `R:<id>:<status>:<min>:<max>:<players>:
