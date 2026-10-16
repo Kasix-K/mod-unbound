@@ -357,12 +357,13 @@ changes, raid by raid (see Next up).
 
 ## Quality of life
 
-- [ ] **Teleporter NPC or spell** (easy): travel to dungeons, raids and cities.
+- [x] **Bounty Wayfinder** (2026-10-16): a teleporter NPC beside every Bulletin Board that sends players close
+      to the board's open-world quests (daily kill bounties, weekly elite bounties; their own active ones listed
+      first), on a landing spot outside every hostile creature's aggro range (`tools/bounty_teleporter.py`).
 - [ ] **Account-wide collections** (moderate): companions and mounts on every character.
-- [ ] **Personal XP rates** (easy): each player sets their leveling speed (mod-individual-xp).
-- [ ] **Challenge modes** (easy to moderate): optional Hardcore or Ironman runs with rewards
+- [ ] **Personal XP rates** (easy, on hold): each player sets their leveling speed (mod-individual-xp).
+- [ ] **Challenge modes** (easy to moderate, on hold): optional Hardcore or Ironman runs with rewards
       (mod-challenge-modes).
-- [ ] **Guild houses** (easy): a private area per guild (mod-guildhouse).
 - [ ] **Higher resolution transmog splash art** (easy, art first): replace the transmog window's splash image
       (mod-transmog-plus `addon/Transmog/assets/splash.blp`, 512x512 DXT5: two characters, before and after, with an
       arrow) with sharper art, using art we made or have the rights to. Ship it in our own addon or `patch-Z.MPQ`

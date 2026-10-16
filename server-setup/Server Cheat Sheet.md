@@ -47,6 +47,7 @@
 | Loot Goblin companion | 190100 | 910001 | 200201 |
 | Arcane Loot Scanner companion | 190102 (size 0.08) | 910002 | 200202 |
 | Scavenger Imp companion (40 Heroic Sigils, Warden of Rare Wonders) | 190210 | 910003 | 200203 |
+| Bounty Wayfinder (beside each Bulletin Board; spawn guids 9190211-9190212) | 190211 | (none) | (none) |
 | Heroic Deadmines loot | (heroic bosses: entry + 1000000) | 910100-910121 | (none) |
 | Heroic loot: Wailing Caverns, Shadowfang Keep, Blackfathom Deeps, Gnomeregan | (heroic bosses: entry + 1000000) | 910122-910180 | (none) |
 | Heroic loot: Razorfen Kraul, Scarlet Monastery, Razorfen Downs, Uldaman | (heroic bosses: entry + 1000000) | 910181-910248 | (none) |
@@ -60,6 +61,9 @@ Preview a heroic item on a GM account with `.additem <item id>` (for example `.a
 
 World boss Hrimthar the Frostbound is on Lake Kel'Theril in Winterspring. GM shortcuts: `.go creature id 190110`
 goes to him; `.respawn` next to his corpse brings him back early (for testing).
+
+Bounty Wayfinder: stands beside each Bulletin Board (Stormwind, Orgrimmar) and teleports you near the
+board's open-world quests, outside aggro range. Move one with `.npc move` if it blocks the board.
 
 Shadowflame Ward chain: Kaelastrasz stands at Thorium Point (Searing Gorge); `.go creature id 190206` goes to
 him (`.npc move` to place him better). Elites: `.go creature id 190207` (Vexathrax, Burning Steppes), 190208

@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Bounty Wayfinder: teleports to the Bulletin Board's open-world quests, outside aggro range | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Scavenger Imp loot companion (loots up to 4 corpses within 27 yards when you open one; Heroic Sigils) | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Shadowflame Ward: a 12-quest chain across the five dragonflights for a cloak that replaces the Onyxia Scale Cloak | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Warden of Rare Wonders: cosmetics (mounts, pets, tabards, fun items) for Heroic Sigils | 2026-10-16 | 2026-10-16 | SaucyHobo54 |
@@ -76,6 +77,12 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-16
 
 ### Added
+- **Bounty Wayfinder** (beside both Bulletin Boards, Stormwind and Orgrimmar): teleports you close to the
+  Bulletin Board's open-world quests, the 16 daily kill bounties and 12 weekly elite bounties. Your active ones
+  are listed first, then "All bounty destinations". Every landing spot is on the ground (a herb, ore, chest,
+  friendly creature or graveyard spot) at least 35 yards from any hostile creature (plus how far it wanders,
+  and its patrol path) and 80 from either faction's guards; Grim Batol and the Isle of Dread are packed with
+  enemies, so their spots are farther out. Free; not in combat.
 - **Scavenger Imp,** a third loot companion (40 Heroic Sigils, the Warden of Rare Wonders' Pets page): nothing
   is looted until you open a corpse yourself; then it loots up to 4 of the nearest other corpses within 27
   yards into your bags (`Unbound.ScavengerImp.ExtraCorpses` and `Unbound.ScavengerImp.Range`). The Loot Goblin

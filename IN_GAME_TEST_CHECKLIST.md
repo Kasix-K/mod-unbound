@@ -198,6 +198,14 @@ bring one other player or a playerbot for at least one boss.
       of the nearest other corpses within 27 yards go straight to your bags, and the opened corpse's loot
       window shows as usual. Corpses farther than 27 yards stay.
 
+## 9b. Bounty Wayfinder
+
+- [ ] A Bounty Wayfinder stands beside the Bulletin Board in Stormwind and in Orgrimmar.
+- [ ] With a kill bounty in your quest log, it's listed first ("Your bounty: ...").
+- [ ] "All bounty destinations" lists all 28; each teleport lands on the ground, near the quest's area, with
+      nothing attacking you on arrival (try a few, especially Silithus and Winterspring).
+- [ ] In combat it refuses with "You can't be teleported while in combat."
+
 ## 10. Report back
 
 Note anything that failed or felt wrong (too hard, too easy, wrong text) and paste it into the chat with

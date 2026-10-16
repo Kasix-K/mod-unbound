@@ -70,6 +70,14 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
 - **World bosses:** `tools/world_bosses.py` (SmartAI fights, no C++; creatures 190110-190199, spawn guids
   9190110-9190199, loot 911000-911999). Hrimthar is creature 190110, adds 190111. After a change run
   `python tools/world_bosses.py` and `python tools/custom_dbc.py`, then restart the worldserver.
+- **Bounty Wayfinder:** creature 190211 (spawn guids 9190211-9190212, beside `BOARD_SPAWNS`),
+  `src/unbound_bounty_teleporter.cpp`: a gossip menu (the player's active board quests, then all) that
+  teleports to the world table `unbound_bounty_teleports` (quest, name, zone, map, x, y, z, o), loaded at
+  startup. `tools/bounty_teleporter.py` writes it; `--find` recomputes the landing spots from the live database
+  (densest group of each quest's targets; nearest gameobject, friendly creature or graveyard spot 60-250 yards
+  away, then 400, 600, 1500, that is 35 yards plus wander radius from every creature hostile to either faction
+  and from its patrol path points (`waypoint_data`, SmartAI `waypoints`), 80 from guards; hostility from
+  FactionTemplate.dbc). New board quests need a spot: run `--find`, paste the result into `SPOTS`.
 - **Shadowflame Ward:** `tools/shadowflame_ward.py` writes `unbound_shadowflame_ward.sql` (items 912100-912109,
   NPCs 190206-190209 with spawn guids + 9000000, quests 921001-921012, the scale drops). The core only checks
   the Onyxia Scale Cloak's aura (22683) against Shadowflame (`SpellEffects.cpp`, `instance_blackwing_lair.cpp`),
