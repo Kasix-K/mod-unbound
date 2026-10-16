@@ -157,7 +157,8 @@ and 14 currency.
 
 **Mythic currency** (new, name to be decided, e.g. "Mythic Shard"): a currency item from Mythic bosses,
 more at higher levels (e.g. 1 per boss plus 1 per 5 Mythic levels, double from the final boss; config
-settings). Used for upgrades; later also a vendor (cosmetics) like the Heroic currency.
+settings). Used for upgrades and to buy the wide auto-loot companions (Loot Goblin, Arcane Loot Scanner);
+later also a vendor (cosmetics) like the Heroic currency.
 
 **Effect on the climb** (estimates, to be checked in testing):
 
@@ -279,9 +280,11 @@ changes, raid by raid (see Next up).
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
       +25-35% to its spec's single-target damage (the class perk target in the Power budget).
 - [ ] **Heroic Sigil: the rest** (easy to moderate; SaucyHobo54): the Heroic currency is live and tested (see Done), still to do:
-  - **The Loot Goblin's currency** (easy): Grizzle Lootsnatch sells the Loot Goblin and Arcane Loot Scanner for
-    Sigils instead of gold (`data/sql/db-world/unbound_loot_goblin.sql`; a new `ItemExtendedCost` price from
-    `SIGIL_EXTENDED_COSTS` in `tools/heroic_loot.py`).
+  - **Loot companions by currency** (decided 2026-10-16): the small click-to-loot companion, the **Scavenger Imp**
+    (up to 4 corpses within 27 yards when you open one), is bought with **Heroic Sigils** (done: 40 Sigils at the
+    Warden of Rare Wonders). The wide auto-loot companions, the **Loot Goblin** and **Arcane Loot Scanner** (every
+    corpse within 55 yards, automatically), move to the **Mythic currency** once it exists (Grizzle Lootsnatch
+    sells them for 10 gold until then).
   - **The Altar of Tribute's prices** (easy to moderate): Sigils instead of gold, or as a second option
     (`src/unbound_attunement.cpp`, `Unbound.Attunement.TributeGold`).
   - **Prices outside gear:** cosmetics are done (the Warden of Rare Wonders, 2026-10-16: 7 mounts, 20 pets, 8
