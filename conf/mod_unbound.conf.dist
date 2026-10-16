@@ -213,6 +213,9 @@ Unbound.Perks.ManaLeech.RankLevels = "1, 30, 60, 255, 255"
 #                                            taken, in %
 Unbound.Perks.EndlessRage.Percent = "8, 14, 20, 26, 30"
 Unbound.Perks.EndlessRage.RankLevels = "1, 30, 60, 255, 255"
+#    Unbound.Perks.FocusedMind.Percent       (perk 316, Rogue and Druid only) energy regenerates this % faster
+Unbound.Perks.FocusedMind.Percent = "8, 14, 20, 26, 30"
+Unbound.Perks.FocusedMind.RankLevels = "1, 30, 60, 255, 255"
 
 #    Defensive perks (src/unbound_perks.cpp). One number per rank (Rank 1 to 5), RankLevels as above
 #    (default "1, 30, 60, 255, 255"). At most 3 Defensive perks can be active at once.

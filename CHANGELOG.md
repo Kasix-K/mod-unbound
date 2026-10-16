@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Focused Mind utility perk (Rogue and Druid, +8/14/20% energy regeneration, 5 ranks) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Endless Rage utility perk (Warrior and Druid, +8/14/20% rage, 5 ranks) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | AoE loot only from loot companions (`.aoeloot on/off` disabled) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Gear attunement renamed infusion (infuse, infused, `.infuse`, `/infusion`; classic Naxxramas keeps its attunement) | 2026-10-15 | 2026-10-15 | Kasix-K |
@@ -70,6 +71,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Added
+- **Focused Mind** (Utility perk, id 316, Rogues and Druids only): energy regenerates +8 / 14 / 20% faster at
+  levels 1 / 30 / 60 and 26 / 30% at Ranks 4-5 (GM-only for now). A server-only aura like the Vitality talent
+  (spell 200217, energy regeneration %), so the energy bar fills faster in the client too.
 - **Endless Rage** (Utility perk, id 315, Warriors and Druids only): more rage from damage you deal and take,
   +8 / 14 / 20% at levels 1 / 30 / 60 and 26 / 30% at Ranks 4-5 (GM-only for now). Rage from damage dealt is a
   server-only aura like the Endless Rage talent (spell 200216, stacks with it); rage from damage taken is added

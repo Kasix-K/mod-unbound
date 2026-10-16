@@ -134,6 +134,8 @@ local function endlessRage(v)
     return "Generate " .. G(pct(v[1])) .. " more Rage, from damage you deal and damage you take."
 end
 local RAGE_ONLY = "Warriors and Druids only. A Druid gets it in Bear and Dire Bear Form (while using Rage)."
+local function focusedMind(v) return "Energy regenerates " .. G(pct(v[1])) .. " faster." end
+local ENERGY_ONLY = "Rogues and Druids only. A Druid gets it in Cat Form (while using Energy)."
 -- Defensive
 local function chance(kind)
     if kind == "Block" then return GetBlockChance() or 0 end
@@ -572,6 +574,11 @@ UnboundPerks.PERKS = {
       desc = endlessRage({ 20 }),
       note = RAGE_ONLY,
       applyRank = ranked(endlessRage, function(v) return string.format("+%g%% rage", v[1]) end, RAGE_ONLY) },
+    { id = 316, name = "Focused Mind", category = "UTILITY", works = true, classes = { ROGUE = true, DRUID = true },
+      icon = "Interface\\Icons\\Ability_Rogue_FleetFooted",
+      desc = focusedMind({ 20 }),
+      note = ENERGY_ONLY,
+      applyRank = ranked(focusedMind, function(v) return string.format("+%g%% energy regeneration", v[1]) end, ENERGY_ONLY) },
 
     -- Class: Paladin ----------------------------------------------------------------------------------
     { id = 1001, name = "Retribution", category = "CLASS", class = "PALADIN", works = true,

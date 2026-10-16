@@ -39,7 +39,7 @@
 | Thing | Creature | Item | Spell |
 |---|---|---|---|
 | Transmogrify spell | (none) | (none) | 200200 |
-| Perk auras (server-only, invisible) | (none) | (none) | 200210-200216 |
+| Perk auras (server-only, invisible) | (none) | (none) | 200210-200217 |
 | Loot Goblin companion | 190100 | 910001 | 200201 |
 | Arcane Loot Scanner companion | 190102 (size 0.08) | 910002 | 200202 |
 | Heroic Deadmines loot | (heroic bosses: entry + 1000000) | 910100-910121 | (none) |
@@ -211,6 +211,7 @@ The avoidance conversions work on melee attacks; the character sheet still shows
 | 313 | Spell-Protected Steady Hands | pushback -30 / 50 / 70%, interrupt lockouts and silences -10 / 20 / 30% |
 | 314 | Mana Leech | 1 / 1.5 / 2% of damage dealt as mana (mana users only) |
 | 315 | Endless Rage | +8 / 14 / 20% rage from damage dealt and taken (Warriors and Druids only) |
+| 316 | Focused Mind | energy regenerates 8 / 14 / 20% faster (Rogues and Druids only) |
 
 GM testing: target a player (or nobody, for yourself) and type `.perk rank 3 2` for Rank 2;
 `.perk rank 3` goes back to the rank the level gives. The perk window shows the rank as "2/3".
