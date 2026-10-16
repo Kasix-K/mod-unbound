@@ -224,9 +224,10 @@ changes, raid by raid (see Next up).
 - [x] Onyxia's Lair as a classic level 60 raid (2026-10-15): classic Onyxia, Whelps and Warders, classic
       spell damage, no Lair Guards, classic loot and Head of Onyxia quests, solo scaling
 
-- [x] Perk ranks (2026-10-15, Idea 1: Ranks 1-3 by level, Ranks 4-5 earned at the endgame): 58 of 61 perks
+- [x] Perk ranks (2026-10-15, Idea 1: Ranks 1-3 by level, Ranks 4-5 GM-only): 58 of 61 perks
       have ranks; all 57 Offensive, Defensive and Utility perks have 5 ranks (1-3 at levels 1 / 30 / 60, 4-5
-      about 1.3x / 1.5x of Rank 3, GM-only via `.perk rank` for now; Rapid Recovery keeps 3). Values and rank
+      about 1.3x / 1.5x of Rank 3, GM-only via `.perk rank` by design, hidden from players' tooltips; Rapid
+      Recovery keeps 3). Values and rank
       levels in `mod_unbound.conf`; "3/5" badges and every rank in the tooltip.
 
 ## Next up
@@ -260,10 +261,6 @@ changes, raid by raid (see Next up).
   - Shadowflame (Firemaw, Ebonroc, Flamegor, Nefarian) still needs an Onyxia Scale Cloak, which can't be
     obtained on this server (Onyxia isn't skinnable, the pattern drops nowhere, both on purpose). A custom
     way to get one is planned.
-- [ ] **Earning perk Ranks 4-5** (moderate): how players reach the endgame ranks, now GM-only (buy per perk
-      with gold, then Heroic Sigils / Mythic currency; perk points; or rank by use), an Upgrade button in the
-      perk window, and saving earned ranks (and what they cost, so purchases can be refunded if the design
-      changes).
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
       +25-35% to its spec's single-target damage (the class perk target in the Power budget).
 - [ ] **Heroic currency and vendor** (moderate; SaucyHobo54): a token ("Heroic Sigil", renamed from "Heroic Badge" on 2026-10-15) from Heroic bosses,
@@ -315,7 +312,7 @@ changes, raid by raid (see Next up).
     refund within 2 hours, then switch characters.
   - **Build order** (all SaucyHobo54): Stage A, testable with `.additem`: 1. the sigil (client patch rows and the
     server item), 2. the account balance. Stage B: 3. boss drops (`heroic_loot.py`), 4. the Quartermaster, 5. the
-    Bulletin Board reward, then the Loot Goblin's price, the Altar of Tribute's prices and perk Rank 4 purchases.
+    Bulletin Board reward, then the Loot Goblin's price and the Altar of Tribute's prices.
 - [ ] **Heroic classic raids** (moderate): Molten Core, Blackwing Lair, Zul'Gurub, Ruins and Temple of
       Ahn'Qiraj, Onyxia's Lair, Naxxramas.
 - [x] **Raid Finder** (2026-10-15): a Raids choice in the Dungeon Finder's dropdown listing every raid (those not

@@ -81,6 +81,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 ### Changed
 - **Infusion is a side tab on the character sheet too,** under the Perks side tab, instead of a micro menu button
+- **Perk Ranks 4 and 5 stay GM-only** by design (`.perk rank`); players don't earn them, so the roadmap no longer
+  plans a way to earn or buy them.
   (whose icon ElvUI's micro bar sometimes hid). The two side tabs act like tabs: opening one window closes the other.
 - **The Perks tab is a side tab on the character sheet:** a square icon tab on its right edge (the Spellbook's side
   tab template), instead of a sixth bottom tab, which didn't fit once the Currency tab appeared. Lit while the perk
