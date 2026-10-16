@@ -71,6 +71,10 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ### Changed
 - **Ossirian solo:** alone in Ruins of Ahn'Qiraj, his Curse of Tongues fails and his Enveloping Winds comes at most
   every 40 seconds instead of 20 (`Unbound.SoloRaid.Ossirian`, `Unbound.SoloRaid.OssirianWindsInterval`).
+- **Pet perks only for classes with a pet.** Pet Encouragement, Pet's Blessing, Pets replenishment and Pets
+  Roar are hidden in the perk window for Warriors, Paladins, Rogues, Priests, Druids and Shamans, and the
+  server refuses them (and switches them off at login if they were on). Hunters, Warlocks, Death Knights and
+  Mages keep them.
 - **Razorgore solo: fewer add waves.** Alone in Blackwing Lair, his add waves come at most every 30 seconds
   (`Unbound.SoloRaid.RazorgoreWaveInterval`; the instance sends one every 15): a wave that comes sooner is removed
   as it appears. The instance still counts those adds towards its totals (12 dragonkin, 40 orcs), so fewer come in all.

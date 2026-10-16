@@ -25,7 +25,9 @@
  * At most 5 Offensive perks (ids 101-199), 3 Defensive (201-299) and 3 Utility (301-399) can be active at
  * once (CATEGORY_LIMITS); the addon uses the same limits (CATEGORIES in addon/UnboundPerks/PerkData.lua).
  * Exclusive groups (EXCLUSIVE_GROUPS): turning one on turns the others off. Class perks (ids 1001+) only work for
- * their class (CLASS_PERKS); the server refuses them for any other class.
+ * their class (CLASS_PERKS); the server refuses them for any other class. Pet-only perks (PET_PERKS: Pet
+ * Encouragement, Pet's Blessing, Pets replenishment, Pets Roar) only work for Hunters, Warlocks, Death Knights
+ * and Mages; for other classes they are hidden and refused, and switched off at login if they were saved.
  *
  * Working toggled perks (ids match addon/UnboundPerks/PerkData.lua; all also work for pets). The Offensive
  * numbers below are Rank 3 (level 60). Each has 5 ranks (RANKED_PERKS): Ranks 1-3 by level 1/30/60 at about
@@ -416,6 +418,14 @@ namespace
         { PERK_RETRIBUTION, CLASS_PALADIN },
     };
 
+    // Perks that only affect a pet: only for classes with a controllable pet (Hunter, Warlock, Death Knight's
+    // ghoul, Mage's Water Elemental). The server refuses them for the other classes, as the addon hides them
+    // (petClass in PerkData.lua).
+    std::set<uint32> const PET_PERKS = {
+        PERK_PET_ENCOURAGEMENT, PERK_PETS_BLESSING, PERK_PET_REPLENISHMENT, PERK_PETS_ROAR };
+    constexpr uint32 PET_CLASS_MASK = (1 << (CLASS_HUNTER - 1)) | (1 << (CLASS_WARLOCK - 1)) |
+                                      (1 << (CLASS_DEATH_KNIGHT - 1)) | (1 << (CLASS_MAGE - 1));
+
     // Retribution
     constexpr uint32 SPELL_CRUSADER_STRIKE = 35395;
     constexpr uint32 SPELL_EXORCISM_RANK_1 = 879;
@@ -469,9 +479,11 @@ namespace
         return 0;
     }
 
-    // False for a class perk of another class.
+    // False for a class perk of another class, or a pet perk for a class without a pet.
     bool CanUsePerk(Player const* player, uint32 perk)
     {
+        if (PET_PERKS.count(perk) && !(player->getClassMask() & PET_CLASS_MASK))
+            return false;
         auto itr = CLASS_PERKS.find(perk);
         return itr == CLASS_PERKS.end() || player->getClass() == itr->second;
     }
@@ -1260,7 +1272,8 @@ namespace
                     bool on = parts[2] == "1";
                     CategoryLimit const* limit = LimitOf(*perk);
                     if (on && !CanUsePerk(player, *perk))
-                        SendAddon(player, "ERR:That perk belongs to another class.");
+                        SendAddon(player, PET_PERKS.count(*perk) ? "ERR:That perk is for classes with a pet." :
+                                                                   "ERR:That perk belongs to another class.");
                     else if (on && limit && !state.active.count(*perk) && !ActivePartner(state.active, *perk) &&
                         CountIn(state.active, *limit) >= limit->max)
                         SendAddon(player, "ERR:You can only have " + std::to_string(limit->max) + " " + limit->name +

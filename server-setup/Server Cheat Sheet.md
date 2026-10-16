@@ -140,6 +140,9 @@ items count once those expansions are released). Settings: `Unbound.Attunement.*
 
 ## Perk ranks
 
+The 4 pet-only perks (Pet Encouragement, Pet's Blessing, Pets replenishment, Pets Roar) only show for
+Hunters, Warlocks, Death Knights and Mages.
+
 58 of the 61 perks have ranks (all but No Daze, No Resurrection Sickness and Retribution). A character's
 rank comes from its level; values in `mod_unbound.conf` (`Unbound.Perks.<Name>.*`). Test any rank with
 `.perk rank <perk id> <rank>`; `.perk rank <perk id>` goes back to the level's rank.

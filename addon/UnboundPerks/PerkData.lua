@@ -12,6 +12,7 @@
 --   permanent  always on, can't be toggled
 --   works      the server implements it (src/unbound_perks.cpp); every perk listed here should have it
 --   class      only shown to that class, e.g. "PALADIN"
+--   petClass   only affects a pet: only shown to classes with one (PET_CLASSES; the server refuses it for the rest)
 --   excludes   id (or list of ids) of perks that can't be active together with this one (turning this on
 --              turns them off)
 --   applyRank  ranked perks: rewrites desc/note from the rank numbers the server sends
@@ -347,7 +348,7 @@ UnboundPerks.PERKS = {
       icon = "Interface\\Icons\\Spell_Nature_Bloodlust",
       desc = hasteCapping({ 10 }), applyRank = offensive(hasteCapping, one("up to +%g%%")),
       live = function() return capLine("Haste", hastePercent(), 5, cur(108, 10)) end },
-    { id = 109, name = "Pet Encouragement", category = "OFFENSIVE", pets = PETS_TOO, works = true,
+    { id = 109, name = "Pet Encouragement", category = "OFFENSIVE", pets = PETS_TOO, works = true, petClass = true,
       icon = "Interface\\Icons\\Ability_Hunter_BeastWithin",
       desc = petEncouragement({ 15 }), applyRank = offensive(petEncouragement, one("+%g%% pet damage")) },
     { id = 110, name = "Rolling Momentum", category = "OFFENSIVE", pets = PETS_TOO, works = true,
@@ -456,7 +457,7 @@ UnboundPerks.PERKS = {
       icon = "Interface\\Icons\\Spell_Nature_StoneClawTotem",
       desc = hardenedFlesh({ 10, 20 }),
       applyRank = ranked(hardenedFlesh, function(v) return string.format("excess -%g%%", v[2]) end) },
-    { id = 217, name = "Pet's Blessing", category = "DEFENSIVE", works = true,
+    { id = 217, name = "Pet's Blessing", category = "DEFENSIVE", works = true, petClass = true,
       icon = "Interface\\Icons\\Ability_Hunter_Pet_Turtle",
       desc = petsBlessing({ 20 }), applyRank = ranked(petsBlessing, one("pet damage taken -%g%%")) },
     { id = 218, name = "Shield Wall Training", category = "DEFENSIVE", works = true,
@@ -530,11 +531,11 @@ UnboundPerks.PERKS = {
       applyRank = ranked(soulDrain, function(v)
           return string.format("%g%% of damage, healing received -%g%%", v[1], v[2])
       end, "Can't be active together with Vampirism.") },
-    { id = 309, name = "Pets replenishment", category = "UTILITY", works = true,
+    { id = 309, name = "Pets replenishment", category = "UTILITY", works = true, petClass = true,
       icon = "Interface\\Icons\\Ability_Hunter_MendPet",
       desc = petHealing({ 50 }),
       applyRank = ranked(petHealing, function(v) return string.format("+%g%% healing taken", v[1]) end) },
-    { id = 310, name = "Pets Roar", category = "UTILITY", works = true,
+    { id = 310, name = "Pets Roar", category = "UTILITY", works = true, petClass = true,
       icon = "Interface\\Icons\\Ability_Physical_Taunt",
       desc = petThreat({ 300 }),
       applyRank = ranked(petThreat, function(v) return string.format("+%g%% pet threat", v[1]) end) },

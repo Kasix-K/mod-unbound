@@ -95,11 +95,14 @@ local function activeCount(catKey)
     return n
 end
 
+-- Classes with a controllable pet (the same as the server's PET_CLASS_MASK): only they see pet-only perks.
+local PET_CLASSES = { HUNTER = true, WARLOCK = true, DEATHKNIGHT = true, MAGE = true }
+
 local function buildPerkLists()
     local cls = playerClass()
     wipe(perksByCat); wipe(categories)
     for _, perk in ipairs(P.PERKS) do
-        if not perk.class or perk.class == cls then
+        if (not perk.class or perk.class == cls) and (not perk.petClass or PET_CLASSES[cls]) then
             perksByCat[perk.category] = perksByCat[perk.category] or {}
             table.insert(perksByCat[perk.category], perk)
         end
