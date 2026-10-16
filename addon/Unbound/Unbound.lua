@@ -45,3 +45,22 @@ if FCF_UpdateButtonSide then
         return updateButtonSide(chatFrame, ...)
     end
 end
+
+-- Dungeon Finder: hide dungeons the server reports as locked for "insufficient expansion". The client lists
+-- every dungeon that fits the player's level and the account's expansion (Wrath), so at level 60 it showed
+-- Hellfire Ramparts, The Blood Furnace and The Slave Pens under "Burning Crusade Normal". The server's content
+-- lock (src/unbound_content_lock.cpp) reports an unreleased expansion's dungeons with this reason, so they
+-- come back by themselves once that expansion is released. A header with nothing left under it is removed
+-- by the game's own list code.
+local LOCKED_INSUFFICIENT_EXPANSION = 1
+
+if LFD_CURRENT_FILTER then
+    local defaultFilter = LFD_CURRENT_FILTER
+    LFD_CURRENT_FILTER = function(dungeonID)
+        local _, reason = GetLFDLockInfo(dungeonID, 1)
+        if reason == LOCKED_INSUFFICIENT_EXPANSION then
+            return false
+        end
+        return defaultFilter(dungeonID)
+    end
+end

@@ -181,10 +181,14 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   makes a quest auto-complete.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
-- **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). The dungeon finder's random dungeons of
-  a locked expansion (Random Burning Crusade / Lich King Dungeon and Heroic) are hidden at startup
-  (`OnBeforeWorldInitialized` gives their `LFGDungeonData` an empty level range, so the server never lists them;
-  the client's dropdown only shows what the server sends); a changed setting applies after a restart. Players in a
+- **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Dungeon finder: at startup
+  (`OnBeforeWorldInitialized`) every `LFGDungeonData` of a locked expansion (except classic Naxxramas) gets
+  expansion 255, above any account's. The server then leaves those random dungeons out of the random list (the
+  client's dropdown shows what the server sends) and reports the specific ones as
+  `LFG_LOCKSTATUS_INSUFFICIENT_EXPANSION` (1). The client builds the specific list itself from its own
+  LFGDungeons.dbc (level and account expansion), so the Unbound addon wraps `LFD_CURRENT_FILTER` to drop
+  dungeons whose `GetLFDLockInfo(id, 1)` reason is 1; empty headers then drop out on their own. A changed
+  `Unbound.ExpansionUnlocked` applies after a restart. Players in a
   locked zone go to their hearthstone, else their race's start, else their faction's capital; GMs with GM
   mode on, battlegrounds and arenas are exempt. Death Knights are GM-only through
   `CharacterCreating.Disabled.ClassMask = 32`. Releasing an expansion: raise `Unbound.ExpansionUnlocked`

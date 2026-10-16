@@ -4,10 +4,13 @@
  * Unbound.ExpansionUnlocked (0 = classic, 1 = + The Burning Crusade, 2 = + Wrath of the Lich King)
  * says which expansions' content is released. Locked content:
  *  - dungeons and raids of a locked expansion can't be entered (or queued for in the dungeon finder);
- *  - the dungeon finder doesn't offer a locked expansion's random dungeons (Random Burning Crusade Dungeon /
- *    Heroic, Random Lich King Dungeon / Heroic), which it otherwise lists for any account with that
- *    expansion (a level 60 sees Random Burning Crusade Dungeon, levels 59-68). Checked at startup, so a
- *    changed Unbound.ExpansionUnlocked applies after a restart;
+ *  - the dungeon finder treats a locked expansion's dungeons like those of an expansion the account doesn't
+ *    have: the server no longer offers its random dungeons (Random Burning Crusade Dungeon / Heroic, Random
+ *    Lich King Dungeon / Heroic) and reports its specific dungeons as locked for "insufficient expansion",
+ *    which the Unbound addon hides from the list (Hellfire Ramparts, The Blood Furnace and The Slave Pens
+ *    fit level 60 and showed up, with their "Burning Crusade Normal" header). Accounts have the Wrath
+ *    expansion, so without this the dungeon finder offers anything that fits the player's level. Done at
+ *    startup, so a changed Unbound.ExpansionUnlocked applies after a restart;
  *  - Northrend, and the Outland zones of map 530, send players home: their hearthstone location, or
  *    their race's starting area if that is locked too, or else their faction's capital. The Blood Elf
  *    and Draenei starting zones share map 530 with Outland and stay open, so those races remain
@@ -114,24 +117,26 @@ public:
         sExpansionUnlocked = sConfigMgr->GetOption<uint32>("Unbound.ExpansionUnlocked", 0);
     }
 
-    // After the dungeon finder has loaded its dungeons: a locked expansion's random dungeons get an empty level
-    // range, so LFGMgr::GetRandomAndSeasonalDungeons never lists them (the dropdown shows what the server sends).
+    // After the dungeon finder has loaded its dungeons: a locked expansion's entries get an expansion above any
+    // account's, so the server leaves its random dungeons out of the random list and reports its specific ones
+    // as LFG_LOCKSTATUS_INSUFFICIENT_EXPANSION (the Unbound addon hides those). Classic Naxxramas stays classic.
     void OnBeforeWorldInitialized() override
     {
-        uint32 hidden = 0;
+        uint32 locked = 0;
         for (LFGDungeonEntry const* entry : sLFGDungeonStore)
         {
-            if (entry->TypeID != lfg::LFG_TYPE_RANDOM || entry->ExpansionLevel <= sExpansionUnlocked)
+            if (entry->ExpansionLevel <= sExpansionUnlocked)
+                continue;
+            if (entry->MapID == MAP_NAXXRAMAS && entry->Difficulty == NAXX40_DIFFICULTY)
                 continue;
 
             if (lfg::LFGDungeonData* dungeon = const_cast<lfg::LFGDungeonData*>(sLFGMgr->GetLFGDungeon(entry->ID)))
             {
-                dungeon->minlevel = 255;
-                dungeon->maxlevel = 0;
-                ++hidden;
+                dungeon->expansion = 255;
+                ++locked;
             }
         }
-        LOG_INFO("server.loading", ">> Unbound: hid {} random dungeons of unreleased expansions from the dungeon finder", hidden);
+        LOG_INFO("server.loading", ">> Unbound: {} dungeon finder entries of unreleased expansions locked", locked);
     }
 };
 
