@@ -224,7 +224,10 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   `unbound_heroic_quartermaster.sql`) shows a menu of `QUARTERMASTER_PAGES`; each opens a never-spawned page
   creature's (190105-190109) vendor list through `SendListInventory(guid, pageEntry)` (a vendor window holds at
   most 150 items; `check()` enforces it), its items ordered by `quartermaster_sort_key` (slot, then armor or weapon
-  type, then name) into the `slot` column. Prices: `SIGIL_EXTENDED_COSTS` (Sigils -> ItemExtendedCost id), which
+  type, then name) into the `slot` column. The Warden of Rare Wonders (creature 190200,
+  `unbound_warden_of_rare_wonders.sql`, Tyrande Whisperwind's display 7274) is the same script
+  (`npc_unbound_sigil_vendor`) with `WARDEN_PAGES` (Mounts, Pets, Tabards, Fun items; page creatures 190201-190204;
+  items listed by hand). NPCs 190200-190299. Prices: `SIGIL_EXTENDED_COSTS` (Sigils -> ItemExtendedCost id), which
   `tools/custom_dbc.py` turns into the client and server rows. The Bulletin Board's weekly Heroic dungeon quests give
   `TIER_SIGILS` Sigils (`RewardItem1`). After a change run `python tools/heroic_loot.py`, `python
   tools/classic_heroics.py` (for `normal_loot` bosses' loot ids) and `python tools/bulletin_board.py`.

@@ -507,10 +507,16 @@ INSERT INTO `itemdisplayinfo_dbc` (`ID`, `ModelName_1`, `ModelName_2`, `ModelTex
 DELETE FROM `currencytypes_dbc` WHERE `ID` IN (400);
 INSERT INTO `currencytypes_dbc` (`ID`, `ItemID`, `CategoryID`, `BitIndex`) VALUES
 (400,912000,100,30);
-DELETE FROM `itemextendedcost_dbc` WHERE `ID` IN (3000, 3001, 3002, 3003, 3004);
+DELETE FROM `itemextendedcost_dbc` WHERE `ID` IN (3000, 3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008, 3009, 3010);
 INSERT INTO `itemextendedcost_dbc` (`ID`, `HonorPoints`, `ArenaPoints`, `ArenaBracket`, `ItemID_1`, `ItemID_2`, `ItemID_3`, `ItemID_4`, `ItemID_5`, `ItemCount_1`, `ItemCount_2`, `ItemCount_3`, `ItemCount_4`, `ItemCount_5`, `RequiredArenaRating`, `ItemPurchaseGroup`) VALUES
 (3000,0,0,0,912000,0,0,0,0,10,0,0,0,0,0,0),
 (3001,0,0,0,912000,0,0,0,0,15,0,0,0,0,0,0),
 (3002,0,0,0,912000,0,0,0,0,20,0,0,0,0,0,0),
 (3003,0,0,0,912000,0,0,0,0,25,0,0,0,0,0,0),
-(3004,0,0,0,912000,0,0,0,0,30,0,0,0,0,0,0);
+(3004,0,0,0,912000,0,0,0,0,30,0,0,0,0,0,0),
+(3005,0,0,0,912000,0,0,0,0,5,0,0,0,0,0,0),
+(3006,0,0,0,912000,0,0,0,0,40,0,0,0,0,0,0),
+(3007,0,0,0,912000,0,0,0,0,75,0,0,0,0,0,0),
+(3008,0,0,0,912000,0,0,0,0,90,0,0,0,0,0,0),
+(3009,0,0,0,912000,0,0,0,0,100,0,0,0,0,0,0),
+(3010,0,0,0,912000,0,0,0,0,120,0,0,0,0,0,0);

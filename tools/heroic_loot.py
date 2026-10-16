@@ -1615,7 +1615,8 @@ SIGILS_FINAL = 2   # from a final boss
 # menu; each page is a never-spawned vendor creature whose npc_vendor list it opens (a 3.3.5 vendor window holds at
 # most 150 items, and there are 450 heroic items). Prices are ItemExtendedCost rows (tools/custom_dbc.py builds them
 # from SIGIL_EXTENDED_COSTS): Sigils -> ExtendedCost id.
-SIGIL_EXTENDED_COSTS = {10: 3000, 15: 3001, 20: 3002, 25: 3003, 30: 3004}
+SIGIL_EXTENDED_COSTS = {10: 3000, 15: 3001, 20: 3002, 25: 3003, 30: 3004,
+                        5: 3005, 40: 3006, 75: 3007, 90: 3008, 100: 3009, 120: 3010}  # 3005+: the Warden's prices
 QUARTERMASTER_PAGES = [
     # vendor entry, menu text, inventory types (final-boss items all go on the last page), Sigils
     (190105, 'Rings, necks, cloaks, wrists and belts (10 Sigils)', {2, 6, 9, 11, 12, 16}, 10),
@@ -1625,6 +1626,44 @@ QUARTERMASTER_PAGES = [
     (190109, 'Final boss treasures (30 Sigils)', None, 30),
 ]
 TWO_HANDED_OR_RANGED = {15, 17, 25, 26, 28}  # 25 Sigils on the weapons page; one-handers, shields, off-hands 20
+
+# ---------------------------------------------------------------- the Warden of Rare Wonders
+# Creature 190200 (data/sql/db-world/unbound_warden_of_rare_wonders.sql, same script as the Quartermaster): cosmetics
+# for Heroic Sigils, a menu of four pages (never-spawned vendor creatures 190201-190204). Only items a level 60
+# character can use on a classic-only server: no level 70 or Expert Riding mounts, no profession items, and no mounts
+# that still drop in reachable content (Deathcharger, the Zul'Gurub mounts, the Black Qiraji crystal). Items checked in
+# the world database on 2026-10-16.
+WARDEN_PAGES = [
+    # vendor entry, menu text, [(item, Sigils), ...]
+    (190201, 'Mounts', [
+        (23720, 40),    # Riding Turtle (level 1, no riding skill)
+        (49283, 75),    # Reins of the Spectral Tiger
+        (37719, 90),    # Swift Zhevra
+        (54811, 100),   # Celestial Steed (scales with riding)
+        (37012, 100),   # The Horseman's Reins (scales with riding)
+        (46778, 100),   # Magic Rooster Egg (level 60)
+        (49284, 120),   # Reins of the Swift Spectral Tiger
+    ]),
+    (190202, 'Pets', [
+        (49362, 15), (44819, 15), (49662, 15), (49663, 15), (25535, 15),   # Onyxian Whelpling, Baby Blizzard Bear,
+                                                                            # Gryphon Hatchling, Wind Rider Cub, Netherwhelp
+        (20371, 20), (30360, 20), (13583, 20), (13584, 20), (13582, 20),   # Murky, Lurky, Panda Cub, Mini Diablo, Zergling
+        (39286, 20), (41133, 20), (35504, 20),                             # Frosty, Mr. Chilly, Phoenix Hatchling
+        (49665, 25), (49646, 25), (54847, 25), (56806, 25), (38050, 25),   # Pandaren Monk, Core Hound Pup, Lil' XT,
+                                                                            # Mini Thor, Ethereal Soul-Trader
+        (49693, 30), (49343, 30),                                          # Lil' K.T., Spectral Tiger Cub
+    ]),
+    (190203, 'Tabards', [
+        (23705, 25), (23709, 25), (38309, 25), (38310, 25),   # Flame, Frost, Nature, the Arcane
+        (38314, 25), (38312, 25), (38311, 25), (38313, 25),   # the Defender, Brilliance, the Void, Fury
+    ]),
+    (190204, 'Fun items', [
+        (8529, 5), (38577, 5), (36863, 5),   # Noggenfogger Elixir, Party G.R.E.N.A.D.E., Decahedral Dwarven Dice
+        (46780, 10), (34480, 10),            # Ogre Pinata, Romantic Picnic Basket
+        (13379, 15),                         # Piccolo of the Flaming Fire (level 53)
+        (1973, 20),                          # Orb of Deception (level 54)
+    ]),
+]
 # Each page lists its items by type, then alphabetically: by slot (head to feet, then rings, trinkets, weapons),
 # then armor type (cloth, leather, mail, plate) or weapon type (axe, dagger, mace, ...), then name.
 QUARTERMASTER_SLOT_ORDER = [1, 2, 3, 16, 5, 20, 9, 10, 6, 7, 8, 11, 12,  # head .. feet, rings, trinkets
@@ -2025,6 +2064,14 @@ def vendor_sql():
         for slot, (item, sigils) in enumerate(items):
             rows.append(f'({entry}, {slot}, {item}, 0, 0, {SIGIL_EXTENDED_COSTS[sigils]})')
     lines.append(',\n'.join(rows) + ';')
+    # the Warden of Rare Wonders' pages (cosmetics)
+    entries = ', '.join(str(entry) for entry, _, _ in WARDEN_PAGES)
+    lines += ['', '-- the Warden of Rare Wonders\' pages (cosmetics; src/unbound_heroic_quartermaster.cpp): prices in Heroic Sigils',
+              f'DELETE FROM `npc_vendor` WHERE `entry` IN ({entries});',
+              'INSERT INTO `npc_vendor` (`entry`, `slot`, `item`, `maxcount`, `incrtime`, `ExtendedCost`) VALUES']
+    rows = [f'({entry}, {slot}, {item}, 0, 0, {SIGIL_EXTENDED_COSTS[sigils]})'
+            for entry, _, items in WARDEN_PAGES for slot, (item, sigils) in enumerate(items)]
+    lines.append(',\n'.join(rows) + ';')
     return '\n'.join(lines)
 
 
@@ -2050,6 +2097,10 @@ def check():
     # every Quartermaster page fits in a 3.3.5 vendor window
     for entry, items in quartermaster_pages().items():
         assert len(items) <= 150, f'Quartermaster page {entry} has {len(items)} items (at most 150)'
+    for entry, _, items in WARDEN_PAGES:
+        assert len(items) <= 150, f'Warden page {entry} has {len(items)} items (at most 150)'
+        for item, sigils in items:
+            assert sigils in SIGIL_EXTENDED_COSTS, f'no ItemExtendedCost row for {sigils} Sigils (item {item})'
 
 
 def main():

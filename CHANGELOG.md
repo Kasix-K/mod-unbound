@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Warden of Rare Wonders: cosmetics (mounts, pets, tabards, fun items) for Heroic Sigils | 2026-10-16 | 2026-10-16 | SaucyHobo54 |
 | Heroic Sigil drops (1 per Heroic boss, 2 per final boss), Heroic Quartermaster, Sigils from Heroic weeklies | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Heroic Sigil (account-wide currency): the item, Currency tab entry and shared account balance | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Focused Mind utility perk (Rogue and Druid, +8/14/20% energy regeneration, 5 ranks) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
@@ -69,6 +70,15 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | Transmog window (mod-transmog-plus), Warpweaver NPC kept | 2026-10-13 | 2026-10-13 | Kasix-K |
 | Transmogrify spell | 2026-10-13 | 2026-10-13 | Kasix-K |
 | Transmog (first version, mod-transmog) | 2026-10-12 | 2026-10-13 (replaced) | Kasix-K |
+
+## 2026-10-16
+
+### Added
+- **Warden of Rare Wonders** (`.npc add 190200`, Tyrande Whisperwind's look): cosmetics for Heroic Sigils on four
+  tabs. Mounts 40-120 (Riding Turtle, Spectral Tiger, Swift Zhevra, Celestial Steed, The Horseman's Reins, Magic
+  Rooster, Swift Spectral Tiger), pets 15-30 (20, from Onyxian Whelpling to Lil' K.T.), tabards 25 (the 8 card-game
+  tabards), fun items 5-20 (Noggenfogger Elixir to Orb of Deception). Only items a level 60 character can use on a
+  classic-only server. Six new Sigil prices (5, 40, 75, 90, 100, 120): regenerate `patch-Z.MPQ`.
 
 ## 2026-10-15
 

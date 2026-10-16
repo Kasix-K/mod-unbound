@@ -284,8 +284,9 @@ changes, raid by raid (see Next up).
     `SIGIL_EXTENDED_COSTS` in `tools/heroic_loot.py`).
   - **The Altar of Tribute's prices** (easy to moderate): Sigils instead of gold, or as a second option
     (`src/unbound_attunement.cpp`, `Unbound.Attunement.TributeGold`).
-  - **Prices outside gear:** companions, consumables, mounts and transmog at the Quartermaster (a new page in
-    `QUARTERMASTER_PAGES`; prices still to decide).
+  - **Prices outside gear:** cosmetics are done (the Warden of Rare Wonders, 2026-10-16: 7 mounts, 20 pets, 8
+    tabards, 7 fun items). Still open: consumables and transmog sets, and the TBC mounts (Raven Lord, Swift White
+    Hawkstrider, Fiery Warhorse) and level 70 mounts once TBC is released.
 - [ ] **Heroic classic raids** (moderate): Molten Core, Blackwing Lair, Zul'Gurub, Ruins and Temple of
       Ahn'Qiraj, Onyxia's Lair, Naxxramas.
 - [x] **Raid Finder** (2026-10-15): a Raids choice in the Dungeon Finder's dropdown listing every raid (those not

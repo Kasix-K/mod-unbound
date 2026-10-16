@@ -34,6 +34,7 @@
 | Grizzle Lootsnatch (companion vendor) | `.npc add 190101` |
 | Altar of Tribute (infusion; one per capital city) | `.npc add 190103` |
 | Heroic Quartermaster (Heroic gear for Heroic Sigils; one per capital city) | `.npc add 190104` |
+| Warden of Rare Wonders (cosmetics for Heroic Sigils: mounts, pets, tabards, fun items; one per capital city) | `.npc add 190200` |
 
 ## Custom IDs
 
@@ -41,7 +42,7 @@
 |---|---|---|---|
 | Transmogrify spell | (none) | (none) | 200200 |
 | Perk auras (server-only, invisible) | (none) | (none) | 200210-200217 |
-| Heroic Sigil (account-wide currency; icon display 70000, currency 400 bit 30, prices 3000-3004) | (none) | 912000 (currencies 912000-912099) | (none) |
+| Heroic Sigil (account-wide currency; icon display 70000, currency 400 bit 30, prices 3000-3010) | (none) | 912000 (currencies 912000-912099) | (none) |
 | Loot Goblin companion | 190100 | 910001 | 200201 |
 | Arcane Loot Scanner companion | 190102 (size 0.08) | 910002 | 200202 |
 | Heroic Deadmines loot | (heroic bosses: entry + 1000000) | 910100-910121 | (none) |
