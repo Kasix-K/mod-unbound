@@ -13,7 +13,7 @@ The endgame goal: **one player can solo a full Mythic raid** (the player count w
 goal is **classic Naxxramas on Mythic +1** solo; the stretch goal is **Naxxramas Mythic +10** (set 2026-10-15,
 see Endgame goals below). Raids are
 scaled down to one player, and **gear infusion is the main lever** that lets a player climb Mythic
-levels; perks and perk ranks add on top. Design every power system against these targets, and change the
+levels; perks add on top (perk Ranks 4-5 are GM-only and not counted). Design every power system against these targets, and change the
 numbers here first if testing says so. Every number below is meant to be a config setting.
 
 ### Content
@@ -47,8 +47,8 @@ testing):
 
 | Goal | Raid | Player power needed | Reached with (see Player, Mythic+ gear) |
 |---|---|---|---|
-| **Realistic endgame goal** | **Naxxramas (classic) Mythic +1** | about 6.6-7.7x | A fully infused character (normal gear, about +200%) with five Offensive perks, perk ranks and the class perk (about 7.5-8x); no Mythic gear needed |
-| **Stretch goal** | **Naxxramas (classic) Mythic +10** | about 12-14x | Mythic gear infused around +10 on top (about 10.5x before the class perk, about 13-14x with it) |
+| **Realistic endgame goal** | **Naxxramas (classic) Mythic +1** | about 6.6-7.7x | A fully infused character (normal gear, about +200%) with five Offensive perks and the class perk (about 5.8-6.3x), plus some Mythic gear from earlier Mythic runs for the last 20% or so (e.g. Mythic items infused around +3-5) |
+| **Stretch goal** | **Naxxramas (classic) Mythic +10** | about 12-14x | Mythic gear infused around +10 on top (as tuned now about 8x before the class perk, about 10-11x with it: short of the goal, see Mythic+ gear) |
 
 Mythic stops at +10, so the stretch goal is also the top of the game: Naxxramas Mythic +10 is the hardest
 content there is. Change these targets here first if testing says otherwise.
@@ -59,7 +59,7 @@ content there is. Change these targets here first if testing says otherwise.
 |---|---|
 | Gear | Normal level 60 gear: the baseline (1x) |
 | Perks | About **x1.55** with five Offensive perks (about +10% per perk) |
-| Perk ranks | Up to about **x1.3** more on top of perks (together about x2) |
+| Perk ranks | **None for players:** Ranks 1-3 are part of the perks above; Ranks 4-5 (about x1.3) are **GM-only** (decided 2026-10-15) and not counted |
 | Class perk | About **x1.25-1.35**: each spec's class perk is worth about **+25-35% to that spec's single-target damage** (a lone raid boss is what a solo Mythic raid is about). Extra area damage on trash is fine on top. Every class perk is held to this target, so no spec pulls ahead. Measure with a damage meter on a training dummy, perk off vs on |
 | Gear infusion / tribute | About **+200% of gear stats** when well collected (about x3), the main lever: |
 | - per item | **20%** of the item's fixed stats (tune 15-25% in testing); fixed stats only (no procs, set bonuses, weapon damage) |
@@ -67,9 +67,9 @@ content there is. Change these targets here first if testing says otherwise.
 | - minimum item level | Only items whose **required level is within 10 of the level cap** count (level 50+ while the cap is 60; it moves up with each expansion), so every infused item matters and nobody grinds low-level items |
 | - diminishing returns | Full value up to **+100%** of gear stats, half value up to **+200%**, a quarter beyond: early collecting feels strong, the long tail is the endgame grind (no hard cap) |
 | - the grind | About **255 level 60 blue/epic items** for +200% with the diminishing returns (about 170 items give +150%); 20% of an item is about 7 stat points, a full set is about 600 (`ReferenceSetStats`). Tune `Percent` or the diminishing returns after testing |
-| **Total** | About **6x** a normal level 60 when fully progressed, before the class perk: Molten Core Mythic +10. With the class perk about **7.5-8x**: Naxxramas Mythic +1, the realistic endgame goal. Mythic gear on top leads to Naxxramas Mythic +10 (see Endgame goals) |
+| **Total** | About **4.6x** a normal level 60 with normal gear fully infused, before the class perk: Molten Core Mythic +6. With the class perk about **5.8-6.3x**: Molten Core Mythic +10, Naxxramas normal. Mythic gear on top leads to Naxxramas Mythic +1, the realistic endgame goal, and further (see Endgame goals) |
 
-Numbers check: a 6x character has a few thousand of a primary stat and tens of thousands of health, well
+Numbers check: a 6x character (fully infused with the class perk) has a few thousand of a primary stat and tens of thousands of health, well
 above normal WoW but nowhere near Peloria's billions.
 
 ### Infusion and tribute rules
@@ -157,17 +157,19 @@ and 14 currency.
 
 **Mythic currency** (new, name to be decided, e.g. "Mythic Shard"): a currency item from Mythic bosses,
 more at higher levels (e.g. 1 per boss plus 1 per 5 Mythic levels, double from the final boss; config
-settings). Used for upgrades; later also a vendor (cosmetics, perk ranks) like the Heroic currency.
+settings). Used for upgrades; later also a vendor (cosmetics) like the Heroic currency.
 
 **Effect on the climb** (estimates, to be checked in testing):
 
 | Fully collected | Gear worn | Infused | Player power (with perks, before class perk) | Clears about |
 |---|---|---|---|---|
-| Before Mythic gear (normal infusion only) | 1x | +200% | about 6x (7.5-8x with the class perk) | Molten Core Mythic +10; with the class perk Naxxramas Mythic +1 |
-| Every Mythic item infused at +10 | about 1.5x | about +380% | about 10.5x (13-14x with the class perk) | Naxxramas Mythic +5-7; with the class perk Naxxramas Mythic +10 |
+| Before Mythic gear (normal infusion only) | 1x | +200% | about 4.6x (5.8-6.3x with the class perk) | Molten Core Mythic +6; with the class perk Molten Core Mythic +10 and Naxxramas normal |
+| Every Mythic item infused at +10 | about 1.5x | about +380% | about 8x (10-11x with the class perk) | Naxxramas Mythic +2; with the class perk Naxxramas Mythic +5-6 |
 
-Mythic gear is what carries a player from the realistic goal (Naxxramas +1) to the stretch goal (Naxxramas
-+10, the top). If it gets there too fast, lower the infusion percent per level first (2% to 1%), then the
+Mythic gear is what carries a player to the realistic goal (Naxxramas +1; with perk Ranks 4-5 GM-only, normal
+infusion alone stops at about Naxxramas normal) and on to the stretch goal (Naxxramas +10, the top). As tuned
+above it stops around Naxxramas +5-6, so the stretch goal needs about 1.3x more from Mythic gear: when it's
+built, try a Mythic infusion percent of 3% per level (+10: 50%) or more gear stats per level. If it gets there too fast, lower the infusion percent per level first (2% to 1%), then the
 gear stats per level.
 
 Mechanics are a separate problem: some bosses need more than one player whatever the numbers

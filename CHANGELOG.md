@@ -83,7 +83,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 - **Infusion is a side tab on the character sheet too,** under the Perks side tab, instead of a micro menu button
   (whose icon ElvUI's micro bar sometimes hid). The two side tabs act like tabs: opening one window closes the other.
 - **Perk Ranks 4 and 5 stay GM-only** by design (`.perk rank`); players don't earn them, so the roadmap no longer
-  plans a way to earn or buy them.
+  plans a way to earn or buy them. The Power budget no longer counts them (about x1.3): a fully infused player is about 4.6x
+  (5.8-6.3x with the class perk), so Mythic gear now also carries the realistic goal, Naxxramas Mythic +1.
 - **The Perks tab is a side tab on the character sheet:** a square icon tab on its right edge (the Spellbook's side
   tab template), instead of a sixth bottom tab, which didn't fit once the Currency tab appeared. Lit while the perk
   window is open; ElvUI's side tab look with ElvUI's character skin.
