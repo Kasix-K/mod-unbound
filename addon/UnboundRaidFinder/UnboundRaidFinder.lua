@@ -239,7 +239,14 @@ local skinned = false
 local function skinRaidView()
     if skinned then return end
     skinned = true
+    -- only when ElvUI skins the Dungeon Finder itself (its "LFD" skin can be off while other skins are on;
+    -- then the dungeon list keeps the game's look, and so does the raid list)
     if not elvSkins() then return end
+    local ok, lfdSkinned = pcall(function()
+        local E = unpack(ElvUI)
+        return E.private.skins.blizzard.lfd
+    end)
+    if not ok or not lfdSkinned then return end
     for _, row in ipairs(rows) do
         local box = row.enableButton
         if box.StripTextures and box.CreateBackdrop then
