@@ -153,6 +153,15 @@ bring one other player or a playerbot for at least one boss.
 - [ ] Sapphiron: alone, his Ice Bolt in the air phase freezes you and his Frost Breath doesn't kill you. A pet
       dies to the breath unless it stands behind your ice block.
 
+**Still to check alone** (these may need a solo change; note what kills you or makes the fight impossible)
+- [ ] Naxxramas: Patchwerk, Razuvious, Gluth, Loatheb, Faerlina, Kel'Thuzad (power checks), Four Horsemen with
+      `Unbound.Naxx40.Doable.FourHorsemen` off and on.
+- [ ] Molten Core: Core Hounds (they revive each other unless all die together), Ragnaros' Magma Blast.
+- [ ] Blackwing Lair: Firemaw's Flame Buffet stacks, Nefarian's Bone Constructs.
+- [ ] Zul'Gurub: Bloodlord Mandokir, High Priest Thekal (his adds revive each other).
+- [ ] Ruins of Ahn'Qiraj: Ossirian (no Curse of Tongues, Enveloping Winds at most every 40 seconds).
+- [ ] Temple of Ahn'Qiraj: C'Thun (the stomach phase), the Anubisath Sentinels (they share their abilities).
+
 **With two players**
 - [ ] For one boss above, the normal mechanic happens again with a second player in the raid.
 
@@ -207,6 +216,34 @@ bring one other player or a playerbot for at least one boss.
       Nothing attacks you while you hang in the air (try a few, especially Silithus and Winterspring).
 - [ ] Hive'Regal and Mazthoril put you on the ground instead (caves).
 - [ ] In combat it refuses with "You can't be teleported while in combat."
+
+## 9c. Shadowflame Ward quest chain
+
+- [ ] Kaelastrasz (`.go creature id 190206`) stands at Thorium Point on the ground, not inside something, and
+      offers Shadows Over Blackrock to a level 58+ Alliance and Horde character.
+- [ ] After the first quest, all five flights' quests are offered at once (black, red, blue, green, bronze).
+- [ ] Scales drop only while you're on the quest (about 1 in 3 kills): black in the Burning Steppes, red in
+      Grim Batol, blue in Mazthoril, green at Seradane / Bough Shadow / Dream Bough, bronze from Chronalis.
+- [ ] Vexathrax (Burning Steppes), Pyraxis (Grim Batol) and Azurathys (Azshara) stand in their camps on the ground
+      (`.go creature id 190207`, 190208, 190209), fight like elites (about twice a normal elite's health), drop
+      their pristine scale and respawn in 10 minutes.
+- [ ] The Scales Assembled is only offered once all five flights' last quests are done.
+- [ ] Onyxia drops the Scale of Onyxia only for a player on Scale of the Broodmother.
+- [ ] The last quest gives the Shadowflame Ward: epic, 60 armor, 12 Stamina, 10 Fire and Shadow Resistance.
+- [ ] Quest texts read well and the quest log puts them under Searing Gorge.
+
+## 9d. Heroic Sigil vendors and the Scavenger Imp
+
+- [ ] The Warden of Rare Wonders with Ysera's look (`.npc add 190205`) shows Ysera's night elf model and the same
+      four pages as the Tyrande one (`.npc add 190200`).
+- [ ] The Warden's Pets page sells the Scavenger Imp for 40 Heroic Sigils; it teaches the companion (the imp shows
+      in the Companions tab and summons a small imp).
+- [ ] The Heroic Quartermaster's pages are sorted by slot, then armor or weapon type, then name.
+
+## 9e. Expansion lock on a normal account
+
+- [ ] On a non-GM account: TBC and Wrath zones send you home, the Dungeon Finder shows only classic dungeons and
+      raids, and a Death Knight can't be created.
 
 ## 10. Report back
 
