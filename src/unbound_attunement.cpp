@@ -766,6 +766,7 @@ public:
             { "check",  HandleCheck,  SEC_GAMEMASTER, Console::No },
             { "info",   HandleInfo,   SEC_GAMEMASTER, Console::No },
             { "reset",  HandleReset,  SEC_GAMEMASTER, Console::No },
+            { "fill",   HandleFill,   SEC_GAMEMASTER, Console::No },
             { "progress", HandleProgress, SEC_PLAYER, Console::No },
         };
         static ChatCommandTable commandTable =
@@ -877,6 +878,105 @@ public:
                 handler->PSendSysMessage("  {}: {}% ({}/{} kills)", ItemLink(proto), done * 100 / needed, done, needed);
             }
         }
+        return true;
+    }
+
+    // .infuse fill <100|200|full> (testing): infuse real items for the selected player (or yourself) until the
+    // infusion bonus reaches +100% or +200% of a full set's stats after the diminishing returns, or infuse every
+    // item that counts. Items the target can use come first, best first, so the stats look like a real
+    // collection; .infuse reset undoes it.
+    static bool HandleFill(ChatHandler* handler, std::string level)
+    {
+        Player* target = handler->getSelectedPlayerOrSelf();
+        bool const full = level == "full";
+        float wantedEffective = 0.0f;
+        if (!full)
+        {
+            wantedEffective = level == "100" ? 100.0f : level == "200" ? 200.0f : 0.0f;
+            if (wantedEffective <= 0.0f)
+            {
+                handler->SendSysMessage("Usage: .infuse fill 100 | 200 | full");
+                return true;
+            }
+        }
+
+        // the raw % (before diminishing returns) that gives that effective %: the inverse of Effective()
+        float const halfTop = std::max(sHalfValueUntil, sFullValueUntil);
+        float wantedRaw = wantedEffective;
+        if (wantedEffective > sFullValueUntil)
+            wantedRaw = wantedEffective <= halfTop
+                ? sFullValueUntil + 2.0f * (wantedEffective - sFullValueUntil)
+                : sFullValueUntil + 2.0f * (halfTop - sFullValueUntil) + 4.0f * (wantedEffective - halfTop);
+
+        AttunementState* state = StateOf(target);
+        if (!full && state->rawPercent >= wantedRaw)
+        {
+            handler->PSendSysMessage("{} already has {:.0f}% after diminishing returns.", target->GetName(),
+                state->effectivePercent);
+            return true;
+        }
+
+        // candidates: every item that counts and isn't infused yet, usable by the target first, then by item level
+        struct Candidate { ItemTemplate const* proto; bool usable; float points; };
+        std::vector<Candidate> candidates;
+        for (auto const& [entry, proto] : *sObjectMgr->GetItemTemplateStore())
+        {
+            if (state->attuned.count(entry) || CheckItem(&proto) != ItemCheck::Counts)
+                continue;
+            float points = 0.0f;
+            ItemStats(&proto, points);
+            if (points <= 0.0f)
+                continue;
+            candidates.push_back({ &proto, target->CanUseItem(&proto) == EQUIP_ERR_OK, points });
+        }
+        std::sort(candidates.begin(), candidates.end(), [](Candidate const& a, Candidate const& b)
+        {
+            if (a.usable != b.usable)
+                return a.usable;
+            if (a.proto->ItemLevel != b.proto->ItemLevel)
+                return a.proto->ItemLevel > b.proto->ItemLevel;
+            return a.proto->ItemId < b.proto->ItemId;
+        });
+
+        // pick until the raw % is reached (each item gives sPercent of its stat points)
+        float raw = state->rawPercent;
+        std::vector<uint32> picked;
+        for (Candidate const& candidate : candidates)
+        {
+            if (!full && raw >= wantedRaw)
+                break;
+            picked.push_back(candidate.proto->ItemId);
+            if (sReferenceSetStats > 0.0f)
+                raw += candidate.points * sPercent / 100.0f / sReferenceSetStats * 100.0f;
+        }
+        if (picked.empty())
+        {
+            handler->PSendSysMessage("{} has no more items to infuse.", target->GetName());
+            return true;
+        }
+
+        // save in chunks, then apply once
+        uint32 const guid = target->GetGUID().GetCounter();
+        CharacterDatabaseTransaction trans = CharacterDatabase.BeginTransaction();
+        for (std::size_t i = 0; i < picked.size(); i += 500)
+        {
+            std::string values;
+            for (std::size_t j = i; j < std::min(picked.size(), i + 500); ++j)
+                values += Acore::StringFormat("{}({}, {}, 0, 1)", values.empty() ? "" : ", ", guid, picked[j]);
+            trans->Append("REPLACE INTO `character_unbound_attunement` (`guid`, `item`, `progress`, `attuned`) VALUES {}",
+                values);
+        }
+        CharacterDatabase.CommitTransaction(trans);
+        for (uint32 entry : picked)
+        {
+            state->progress.erase(entry);
+            state->attuned.insert(entry);
+        }
+        Recalculate(target);
+        SendAddon(target, "RESET");
+        handler->PSendSysMessage("Infused {} items for {}: {} items in total, {:.0f}% of a full set collected, {:.0f}% "
+            "after diminishing returns.", picked.size(), target->GetName(), state->attuned.size(), state->rawPercent,
+            state->effectivePercent);
         return true;
     }
 

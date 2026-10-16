@@ -126,7 +126,13 @@ player, else yourself; the old `.attune` still works):
 | `.infuse remove <item>` | Take it out of the collection |
 | `.infuse info` | Items infused, % of a full set collected, and the stats it gives |
 | `.infuse reset` | Remove the whole collection |
+| `.infuse fill 100` | (testing) Infuse items until the bonus is +100% of a full set's stats after diminishing returns |
+| `.infuse fill 200` | (testing) The same up to +200% |
+| `.infuse fill full` | (testing) Infuse every item that counts: the most a character can collect |
 | `.infuse progress` | (any player) Your equipped items' infusion progress |
+
+`.infuse fill` picks real items, gear the target can use first, best first, so the stats look like a real
+collection. `.infuse reset` undoes it.
 
 Only green or better weapons and armour with required level 50-60 from classic content count (TBC and Wrath
 items count once those expansions are released). Settings: `Unbound.Attunement.*` in `mod_unbound.conf`.

@@ -103,6 +103,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   read). The Defensive Sacrifice perk keeps its name.
 
 ### Added
+- **`.infuse fill 100 | 200 | full`** (GM, for testing): infuses real items for the selected player (or yourself)
+  until the infusion bonus is +100% or +200% of a full set's stats after diminishing returns, or infuses every
+  item that counts. Gear the target can use comes first, best first; `.infuse reset` undoes it.
 - **Soloable raid mechanics, Naxxramas: Gothik** (`Unbound.SoloRaid.Gothik`): alone, his phase two teleport
   between the live and dead sides keeps the player on his threat list (it dropped everyone on the other side,
   which with one player emptied it and made him reset), and the gate is open in phase two. Sapphiron was
