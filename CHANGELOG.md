@@ -80,6 +80,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   with the core's own formula. Class-limited perks can now be for several classes (a class mask).
 
 ### Changed
+- **The Perks tab is a side tab on the character sheet:** a square icon tab on its right edge (the Spellbook's side
+  tab template), instead of a sixth bottom tab, which didn't fit once the Currency tab appeared. Lit while the perk
+  window is open; ElvUI's side tab look with ElvUI's character skin.
 - **Daily kill bounties with one target got a second:** Mossflayer Trolls (10 Shadowhunter + 8 Cannibal), Ice Thistle
   Yetis (10 Yeti + 8 Patriarch) and The Blackrock Clan (10 Slayer + 8 Warlock), instead of 12 of one type, like the
   other bounties.

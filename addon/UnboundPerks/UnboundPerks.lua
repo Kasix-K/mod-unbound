@@ -740,57 +740,67 @@ local function build()
     frame:SetScript("OnHide", function() PlaySound("igCharacterInfoClose") end)
 end
 
--- ------------------------------------------------------------------ character sheet tab
--- A "Perks" tab after the character sheet's own tabs (Character, Pet, Reputation, Skills, Currency),
--- built from the same template. It opens the perk window beside the character sheet instead of
--- switching the sheet's page. With ElvUI's character skin on, ElvUI skins it like the other tabs.
+-- ------------------------------------------------------------------ character sheet side tab
+-- A "Perks" side tab on the character sheet's right edge, built from the Spellbook's side tab template
+-- (SpellBookSkillLineTabTemplate: a square icon tab, like the Spellbook's General / Arcane / Fire tabs), so the
+-- sheet keeps the game's own bottom tabs (Character, Pet, Reputation, Skills, Currency; six didn't fit). It opens
+-- the perk window beside the character sheet and is lit while the window is open. With ElvUI's character skin on,
+-- it gets ElvUI's side tab look (Skins/Blizzard/Spellbook.lua).
+local SIDE_TAB_ICON = "Interface\\Icons\\Spell_Holy_PowerInfusion"
+
 local function elvSkins()
     if not ElvUI then return nil end
     local ok, E = pcall(function() return unpack(ElvUI) end)
     if not ok or not E or not E.private or not E.private.skins then return nil end
     local blizzard = E.private.skins.blizzard
     if not (blizzard and blizzard.enable and blizzard.character) then return nil end
-    return E:GetModule("Skins", true)
+    return E:GetModule("Skins", true), E
 end
 
 local function addCharacterTab()
     if not CharacterFrame or _G["UnboundPerksCharacterTab"] then return end
-    local tab = CreateFrame("Button", "UnboundPerksCharacterTab", CharacterFrame, "CharacterFrameTabButtonTemplate")
-    tab:SetText("Perks")
-    PanelTemplates_TabResize(tab, 0)
-    PanelTemplates_DeselectTab(tab)
+    local tab = CreateFrame("CheckButton", "UnboundPerksCharacterTab", CharacterFrame, "SpellBookSkillLineTabTemplate")
+    tab:SetNormalTexture(SIDE_TAB_ICON)
+    tab.tooltip = "Character Perks"
+    tab:SetPoint("TOPLEFT", CharacterFrame, "TOPRIGHT", -32, -65)   -- where the Spellbook's first side tab sits
+    tab:Show()
 
-    local skins = elvSkins()
-    if skins and skins.HandleTab then pcall(skins.HandleTab, skins, tab) end
-    local gap = skins and -15 or -16   -- ElvUI spaces its tabs one pixel closer
+    local function update() tab:SetChecked(frame and frame:IsShown()) end
+    if frame then
+        frame:HookScript("OnShow", update)
+        frame:HookScript("OnHide", update)
+    end
 
-    -- follow the right-most visible tab (the Pet and Currency tabs come and go)
-    local function anchor()
-        local last
-        for i = 1, 5 do
-            local t = _G["CharacterFrameTab" .. i]
-            if t and t:IsShown() then last = t end
-        end
-        tab:ClearAllPoints()
-        if last then tab:SetPoint("LEFT", last, "RIGHT", gap, 0) end
-    end
-    for i = 1, 5 do
-        local t = _G["CharacterFrameTab" .. i]
-        if t then t:HookScript("OnShow", anchor); t:HookScript("OnHide", anchor) end
-    end
-    CharacterFrame:HookScript("OnShow", anchor)
-    anchor()
+    -- ElvUI's look, the first time the character sheet opens (at login ElvUI may not be set up yet)
+    local skinned = false
+    CharacterFrame:HookScript("OnShow", function()
+        update()
+        if skinned then return end
+        skinned = true
+        local skins, E = elvSkins()
+        if not skins then return end
+        pcall(function()
+            tab:StripTextures()
+            tab:StyleButton(nil, true)
+            tab:SetTemplate("Default", true)
+            tab:GetNormalTexture():SetInside()
+            tab:GetNormalTexture():SetTexCoord(unpack(E.TexCoords))
+            tab:ClearAllPoints()
+            tab:Point("TOPLEFT", CharacterFrame, "TOPRIGHT", -33, -65)
+        end)
+    end)
 
     tab:SetScript("OnClick", function()
         PlaySound("igCharacterInfoTab")
         if frame:IsShown() then
             frame:Hide()
         else
-            -- open next to the character sheet
+            -- open next to the character sheet, right of the side tab
             frame:ClearAllPoints()
-            frame:SetPoint("TOPLEFT", CharacterFrame, "TOPRIGHT", -28, -10)
+            frame:SetPoint("TOPLEFT", CharacterFrame, "TOPRIGHT", 2, -10)
             frame:Show()
         end
+        update()
     end)
     tab:SetScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")

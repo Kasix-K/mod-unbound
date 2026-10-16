@@ -102,7 +102,7 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
   Feugen don't revive each other or overload their coils (the
   Four Horsemen need `Unbound.Naxx40.Doable.FourHorsemen = 1` to be beaten solo). Switch them off in
   `mod_unbound.conf` (`Unbound.SoloRaid.*`).
-- **Perks:** type `/perks` or click the **Perks** tab at the bottom of the character sheet (C) to open the Character Perks window (needs the **UnboundPerks** addon). Always on
+- **Perks:** type `/perks` or click the **Perks** side tab on the right edge of the character sheet (C) to open the Character Perks window (needs the **UnboundPerks** addon). Always on
   for everyone: No Resurrection Sickness, No Daze, and Rapid Recovery (ranked by level: up to 8% health
   and mana per second, 4 seconds after combat). Switch on up to 5 Offensive perks (about +10% each) and your class perk (so far: Paladin
   Retribution). Perks can't be changed in combat; save favourite sets as loadouts.
