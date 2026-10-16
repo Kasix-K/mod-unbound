@@ -232,6 +232,18 @@ changes, raid by raid (see Next up).
       Recovery keeps 3). Values and rank
       levels in `mod_unbound.conf`; "3/5" badges and every rank in the tooltip.
 
+- [x] Heroic currency and vendor (2026-10-15): the **Heroic Sigil** (item 912000; icon
+      `Spell_Holy_SealOfRighteousness`, a gold lion's head; in the Currency tab under "Unbound"; soulbound,
+      multi-drop, no bag space). **One shared amount per account** (`src/unbound_account_currency.cpp`: set at login,
+      saved at every save and logout; bot sessions via `IsHeadless()` and GM accounts keep their own unless
+      `Unbound.AccountCurrency.GMAccounts = 1`). **Drops:** 1 per Heroic boss, 2 from the final boss of each dungeon
+      and wing (`final=True` in `tools/heroic_loot.py`, all 189 Heroic bosses; Stockade and Ragefire Chasm keep their
+      normal loot). **Heroic Quartermaster** (`.npc add 190104`): all 450 Heroic items on five menu pages (a vendor
+      window holds 150): accessories 10, head/shoulders/chest 15, hands/legs/feet 15, weapons 20-25, final boss
+      treasures 30, sorted by slot, type and name. **Bulletin Board:** the weekly Heroic dungeon quests give 10
+      Sigils plus 75 gold. Kept above "free" on purpose: every unique item counts for infusion, so cheap gear would
+      buy the endgame. What's left is in Next up ("Heroic Sigil: the rest").
+
 ## Next up
 
 - [ ] **Soloable raid mechanics** (moderate, per raid): changes for mechanics no single player can handle,
@@ -265,57 +277,19 @@ changes, raid by raid (see Next up).
     way to get one is planned.
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
       +25-35% to its spec's single-target damage (the class perk target in the Power budget).
-- [ ] **Heroic currency and vendor** (moderate; SaucyHobo54): a token ("Heroic Sigil", renamed from "Heroic Badge" on 2026-10-15) from Heroic bosses,
-      spent on companions, mounts, transmog or gear. Becomes the Loot Goblin's currency. Starting values
-      (2026-10-15, tune in testing):
-  - **Drops:** 1 per Heroic boss, 2 from the final boss (about 7-10 a run), plus 10 from the weekly Heroic
-    dungeon quest on the Bulletin Board (decided 2026-10-15: 10 sigils plus 75 gold, `tools/bulletin_board.py`).
-  - **Delivery (decided 2026-10-15):** in the loot. `tools/heroic_loot.py` adds the sigil to every Heroic boss's
-    loot table (1, or 2 for a final boss). The sigil has `ITEM_FLAG_MULTI_DROP`, so loot is free-for-all: every
-    group member gets their own (bots too, harmlessly: an alt-bot's copy never reaches the account balance).
-    Final bosses are marked `final=True` in `heroic_loot.py` (26: every dungeon and every wing, the same list as
-    `DUNGEONS` in `tools/bulletin_board.py`), not taken from list order: the loot table is keyed by map, and
-    the wings of Scarlet Monastery, Dire Maul, Blackrock Spire and Stratholme share one map each.
-  - **Heroic gear at the vendor**, priced by item strength. Bosses already drop one Heroic item each (two from
-    the final boss), so the vendor is for choosing a piece, not the main source of gear:
-
-    | Item | Price | Runs to afford one |
-    |---|---|---|
-    | Rings, necks, cloaks, wrists, waists (item level 61) | 10 | 1-1.5 |
-    | Head, shoulders, chest, hands, legs, feet (item level 62) | 15 | about 2 |
-    | One-handed weapons, shields, off-hands | 20 | 2-3 |
-    | Two-handed and ranged weapons, final-boss pieces (item level 63) | 25-30 | 3-4 |
-
-    Kept above "free" on purpose: every unique item counts for infusion (about 255 for +200%), so cheap gear
-    would let players buy their way to the endgame. The Mythic currency sits above this at similar ratios.
-  - **The Heroic Quartermaster (decided 2026-10-15):** one NPC per capital with a menu of category pages (e.g.
-    accessories, armor, weapons), each opening its own vendor list: a 3.3.5 vendor window holds at most 150
-    items (`MAX_VENDOR_ITEMS`) and there are 450 Heroic items (910100-910549). Prices use `ItemExtendedCost`
-    rows (one per price) in the client patch and on the server. Prices outside gear (companions, consumables,
-    mounts, transmog) are still to be decided.
-  - **In the Currency tab:** the token is an item in the hidden token bag (bag family "currency tokens"), with
-    `CurrencyTypes.dbc` / `CurrencyCategory.dbc` rows in the client patch (e.g. an "Unbound" header). Icon:
-    `Spell_Holy_SealOfRighteousness` (a gold lion's head on green); no item display uses it yet, so the patch
-    adds a new `ItemDisplayInfo.dbc` row.
-  - **Reserved IDs:** item 912000 (currencies 912000-912099), item display 70000, `ItemExtendedCost` 3000+,
-    the Quartermaster creature 190104, and the next free `CurrencyTypes` bit (29 is the highest used).
-  - **One shared amount per account:** a balance table in the character database (`account, currency item,
-    amount`, so the Mythic currency is just another row), set on the character at login (after inventory
-    loads) and written back from `OnPlayerSave` and at logout (`OnPlayerSave` has no transaction parameter, so
-    it is saved at the same moment as the character, not in the same transaction). The item is soulbound and
-    can't be sold, traded or mailed (no counting it twice), with a high stack limit. Only the character a
-    player logged in touches the balance: account alt-bots are on (`Playerbots.AllowAccountBots = 1`), and a
-    bot-controlled session is `GetSession()->IsHeadless()` (decided 2026-10-15; set when the session has no
-    socket, the same check mod-playerbots uses; a real player's session stays non-headless even after a
-    disconnect). Optionally store which character holds the balance and ignore writes from any other. GM
-    accounts and playerbot (RNDBOT) accounts keep their own amounts.
-  - **Tests:** earn on A then log into B (same total); spend on B then back to A; with A online, have alt B as
-    a bot earn and spend (the balance must not change); restart mid-session (matches the last save); a vendor
-    refund within 2 hours, then switch characters.
-  - **Build order** (all SaucyHobo54): Stage A, testable with `.additem`: 1. the sigil (client patch rows and the
-    server item; built 2026-10-15), 2. the account balance (built 2026-10-15, `src/unbound_account_currency.cpp`). Stage B (built 2026-10-15): 3. boss drops (`heroic_loot.py`), 4. the Quartermaster, 5. the
-    Bulletin Board reward. Still to do: the Loot Goblin's price, the Altar of Tribute's prices and the prices
-    outside gear (companions, consumables, mounts, transmog).
+- [ ] **Heroic Sigil: the rest** (easy to moderate; SaucyHobo54): the Heroic currency is live (see Done), still to do:
+  - **Test in game:** the account-balance tests (earn on A then log into B; spend on B then back to A; with A
+    online, alt B as a bot earns and spends and the balance doesn't change; restart mid-session; a Quartermaster
+    refund within 2 hours, then switch characters), Sigil drops (1 per Heroic boss, 2 from a final boss) and the
+    weekly Heroic quests' 10 Sigils plus 75 gold. Set `Unbound.AccountCurrency.GMAccounts` back to 0 afterwards if
+    GM test items shouldn't mix into the balance.
+  - **The Loot Goblin's currency** (easy): Grizzle Lootsnatch sells the Loot Goblin and Arcane Loot Scanner for
+    Sigils instead of gold (`data/sql/db-world/unbound_loot_goblin.sql`; a new `ItemExtendedCost` price from
+    `SIGIL_EXTENDED_COSTS` in `tools/heroic_loot.py`).
+  - **The Altar of Tribute's prices** (easy to moderate): Sigils instead of gold, or as a second option
+    (`src/unbound_attunement.cpp`, `Unbound.Attunement.TributeGold`).
+  - **Prices outside gear:** companions, consumables, mounts and transmog at the Quartermaster (a new page in
+    `QUARTERMASTER_PAGES`; prices still to decide).
 - [ ] **Heroic classic raids** (moderate): Molten Core, Blackwing Lair, Zul'Gurub, Ruins and Temple of
       Ahn'Qiraj, Onyxia's Lair, Naxxramas.
 - [x] **Raid Finder** (2026-10-15): a Raids choice in the Dungeon Finder's dropdown listing every raid (those not
@@ -368,7 +342,6 @@ changes, raid by raid (see Next up).
 - [ ] **Heroic-only loot** (moderate, mostly data): better versions of drops, or extra drops, on Heroic.
 - [ ] **Random item bonuses** (easy): drops sometimes roll an extra enchant (mod-random-enchants).
 - [ ] **Daily "Heroic of the Day"** (moderate): one random Heroic gives bonus rewards each day.
-- [ ] **Change the Loot Goblin's currency** (easy once the Heroic currency exists).
 
 ## Progression past 60
 
