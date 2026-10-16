@@ -2,6 +2,9 @@
 
 ## Tips
 
+- **An NPC, item or quest still shows an old name** (e.g. "Altar of Sacrifice" instead of "Altar of Tribute"):
+  the game client caches names. Exit the game, delete the client's `Cache\WDB` folder, and start again; it
+  rebuilds the cache from the server (settings and addon data are in `WTF`, not touched).
 - **Preview a creature's size without restarting:** summon or spawn it, target it, and type
   `.modify scale <number>` on a GM account (for example `.modify scale 0.08`). The change only lasts
   until the creature despawns or is dismissed. When you find the size you like, ask Claude to make it
