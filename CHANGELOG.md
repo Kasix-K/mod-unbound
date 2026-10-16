@@ -115,6 +115,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   read). The Defensive Sacrifice perk keeps its name.
 
 ### Added
+- **Quest log headers for the Bulletin Board quests:** Open World (kill and elite bounties), Normal Dungeon, Heroic
+  Dungeon, Mythic Dungeon (for Mythic+ later), Raids, Gathering and Crafting. New QuestSort categories 920-926 in the
+  client patch and the server (`tools/bulletin_board.py` QUEST_SORTS, `tools/custom_dbc.py`).
 - **`.infuse fill 100 | 200 | full`** (GM, for testing): infuses real items for the selected player (or yourself)
   until the infusion bonus is +100% or +200% of a full set's stats after diminishing returns, or infuses every
   item that counts. Gear the target can use comes first, best first; `.infuse reset` undoes it.

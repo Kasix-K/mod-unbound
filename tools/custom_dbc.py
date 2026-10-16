@@ -1,7 +1,8 @@
 """
 Generate mod-unbound's custom DBC rows for both sides from one definition:
 
-  server: data/sql/db-world/unbound_custom_dbc.sql   (spell_dbc, spell_script_names, item_dbc, itemset_dbc, mapdifficulty_dbc)
+  server: data/sql/db-world/unbound_custom_dbc.sql   (spell_dbc, spell_script_names, item_dbc, itemset_dbc, mapdifficulty_dbc,
+                                                      questsort_dbc)
   client: <client>/Data/patch-Z.MPQ                  (DBFilesClient\\Spell.dbc, Item.dbc, ItemSet.dbc, SkillLineAbility.dbc,
                                                       MapDifficulty.dbc)
 
@@ -21,6 +22,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 from classic_heroics import HEROIC_DUNGEONS, HEROIC_LEVEL, HEROIC_MAX_PLAYERS, map_difficulty_id  # noqa: E402
 import heroic_loot  # noqa: E402
+from bulletin_board import QUEST_SORTS  # noqa: E402
 import world_bosses  # noqa: E402
 MODULE = os.path.dirname(HERE)
 ACORE = os.path.dirname(os.path.dirname(MODULE))
@@ -133,6 +135,17 @@ def map_difficulty_row(entry):
             return LANG_MASK
         return '' if col.startswith('Message') or col == 'Difficultystring' else 0
     return [entry.get(col, default(col)) for col in MAP_DIFFICULTY_COLUMNS]
+
+
+# QuestSort.dbc rows (client) / questsort_dbc rows (server): the Bulletin Board's quest log headers
+# (tools/bulletin_board.py, QUEST_SORTS).
+LOCALES = ('enUS', 'enGB', 'koKR', 'frFR', 'deDE', 'enCN', 'zhCN', 'enTW', 'zhTW', 'esES', 'esMX', 'ruRU', 'ptPT',
+           'ptBR', 'itIT', 'Unk')
+QUEST_SORT_COLUMNS = ['ID'] + [f'SortName_Lang_{loc}' for loc in LOCALES] + ['SortName_Lang_Mask']
+
+
+def quest_sort_row(sort_id, name):
+    return [sort_id, name] + [''] * (len(LOCALES) - 1) + [LANG_MASK]
 
 
 # ---------------------------------------------------------------- DBC helpers
@@ -296,6 +309,11 @@ def write_sql(cols, rows, path):
                      + ') VALUES')
         lines.append(',\n'.join('(' + ','.join(sql_literal(v) for v in map_difficulty_row(m)) + ')'
                                 for m in MAP_DIFFICULTIES) + ';')
+    if QUEST_SORTS:
+        lines.append(f"DELETE FROM `questsort_dbc` WHERE `ID` IN ({', '.join(str(s) for s, _ in QUEST_SORTS)});")
+        lines.append('INSERT INTO `questsort_dbc` (' + ', '.join('`' + c + '`' for c in QUEST_SORT_COLUMNS) + ') VALUES')
+        lines.append(',\n'.join('(' + ','.join(sql_literal(v) for v in quest_sort_row(s, n)) + ')'
+                                for s, n in QUEST_SORTS) + ';')
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, 'w', encoding='utf8', newline='\n') as f:
         f.write('\n'.join(lines) + '\n')
@@ -416,11 +434,14 @@ def main():
     if MAP_DIFFICULTIES:
         files['DBFilesClient\\MapDifficulty.dbc'] = append_rows_with_strings(
             os.path.join(args.dbc, 'MapDifficulty.dbc'), [map_difficulty_row(m) for m in MAP_DIFFICULTIES])
+    if QUEST_SORTS:
+        files['DBFilesClient\\QuestSort.dbc'] = append_rows_with_strings(
+            os.path.join(args.dbc, 'QuestSort.dbc'), [quest_sort_row(s, n) for s, n in QUEST_SORTS])
     mpq_path = os.path.join(args.client, 'Data', 'patch-Z.MPQ')
     write_mpq(mpq_path, files)
     print('wrote', mpq_path, f'({len(SPELLS)} spells, {len(ITEMS)} items, {len(ITEM_SETS)} item sets, '
                              f'{len(SKILL_LINE_ABILITIES)} skill line abilities, '
-                             f'{len(MAP_DIFFICULTIES)} map difficulties)')
+                             f'{len(MAP_DIFFICULTIES)} map difficulties, {len(QUEST_SORTS)} quest sorts)')
 
 
 if __name__ == '__main__':

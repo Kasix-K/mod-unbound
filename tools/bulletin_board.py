@@ -218,6 +218,22 @@ ELITE_QUESTS = [
      [(12474, 'Emeraldon Boughguard', 6), (12476, 'Emeraldon Oracle', 5), (12475, 'Emeraldon Tree Warder', 4)]),
 ]
 
+# Quest log headers: each board quest is sorted under one of these categories (QuestSortID = -id). They are
+# new QuestSort.dbc rows (IDs above the game's 376), added to the client patch and the server by
+# tools/custom_dbc.py, which reads this list. Append only: the ids are stored in the quests.
+SORT_OPEN_WORLD, SORT_NORMAL_DUNGEON, SORT_HEROIC_DUNGEON, SORT_MYTHIC_DUNGEON, SORT_RAIDS, SORT_GATHERING, \
+    SORT_CRAFTING = range(920, 927)
+QUEST_SORTS = [
+    (SORT_OPEN_WORLD, 'Open World'),
+    (SORT_NORMAL_DUNGEON, 'Normal Dungeon'),
+    (SORT_HEROIC_DUNGEON, 'Heroic Dungeon'),
+    (SORT_MYTHIC_DUNGEON, 'Mythic Dungeon'),
+    (SORT_RAIDS, 'Raids'),
+    (SORT_GATHERING, 'Gathering'),
+    (SORT_CRAFTING, 'Crafting'),
+]
+DUNGEON_SORT = {'Normal': SORT_NORMAL_DUNGEON, 'Heroic': SORT_HEROIC_DUNGEON, 'Mythic': SORT_MYTHIC_DUNGEON}
+
 # pools (pool_template / pool_quest), one quest a day per pool except the kill bounties
 POOL_KILL = 920000
 POOL_FIRST_PROFESSION = 920001
@@ -236,10 +252,11 @@ QUEST_COLUMNS = ['ID', 'QuestType', 'QuestLevel', 'MinLevel', 'QuestSortID', 'Qu
                  'ObjectiveText4', 'VerifiedBuild']
 
 
-def quest_row(qid, title, log, description, flags, reward, kills=(), item=None, info=0, group=0, area=''):
+def quest_row(qid, title, log, description, flags, reward, kills=(), item=None, info=0, group=0, area='', sort=0):
     kills = list(kills) + [(0, 0)] * (4 - len(kills))
-    # QuestType 2: a normal quest (0 would make it auto-complete, skipping its objectives)
-    row = [qid, 2, LEVEL, LEVEL, 0, info, group, 0, reward, flags, 0, esc(title), esc(log),
+    # QuestType 2: a normal quest (0 would make it auto-complete, skipping its objectives).
+    # QuestSortID -sort: the quest log header (QUEST_SORTS).
+    row = [qid, 2, LEVEL, LEVEL, -sort, info, group, 0, reward, flags, 0, esc(title), esc(log),
            esc(description), esc(area), esc('Return to a Bulletin Board.')]
     row += [k[0] for k in kills] + [k[1] for k in kills]
     row += [item[0] if item else 0, item[1] if item else 0, "''", "''", "''", "''", 0]
@@ -250,8 +267,8 @@ def main():
     quests, addons, offers, requests, conditions, pool_templates, pool_quests = [], [], [], [], [], [], []
 
     def add(qid, title, log, description, flags, reward, kills=(), item=None, info=0, group=0, area='',
-            skill=(0, 0), offer='', request=''):
-        quests.append(quest_row(qid, title, log, description, flags, reward, kills, item, info, group, area))
+            skill=(0, 0), offer='', request='', sort=0):
+        quests.append(quest_row(qid, title, log, description, flags, reward, kills, item, info, group, area, sort))
         # SpecialFlags 1: repeatable (the core expects it on daily and weekly quests)
         addons.append(f'({qid}, 0, 0, 0, 0, 0, 0, 0, 0, 0, {skill[0]}, {skill[1]}, 0, 0, 0, 0, 0, 1)')
         offers.append(f'({qid}, 0, 0, 0, 0, 0, 0, 0, 0, {esc(offer)}, 0)')
@@ -267,13 +284,13 @@ def main():
             f'By order of the Bulletin Board: the {zone} grow more dangerous by the day. Thin their numbers and '
             f'collect the bounty.$B$BSlay {names}.',
             QUEST_FLAGS_DAILY, KILL_REWARD, kills=[(entry, count) for entry, _, count in targets], area=zone,
-            offer='Good hunting. The bounty is yours.')
+            offer='Good hunting. The bounty is yours.', sort=SORT_OPEN_WORLD)
         pool_quests.append(f"({qid}, {POOL_KILL}, {esc(title)})")
 
     # daily profession quests: one pool per profession
     pool = POOL_FIRST_PROFESSION
-    for group, base, reward, verb in ((GATHER_QUESTS, 920700, GATHER_REWARD, 'Gather'),
-                                      (CRAFT_QUESTS, 920800, CRAFT_REWARD, 'Craft')):
+    for group, base, reward, verb, sort in ((GATHER_QUESTS, 920700, GATHER_REWARD, 'Gather', SORT_GATHERING),
+                                            (CRAFT_QUESTS, 920800, CRAFT_REWARD, 'Craft', SORT_CRAFTING)):
         for p, (skill, (profession, items)) in enumerate(group.items()):
             pool_templates.append(f"({pool}, 1, {esc('Bulletin Board - daily ' + profession)})")
             for i, (item, name, count, points) in enumerate(items, start=1):
@@ -284,7 +301,7 @@ def main():
                     f'someone skilled in {profession} need apply.',
                     QUEST_FLAGS_DAILY, reward, item=(item, count), skill=(skill, points),
                     offer='Just what was asked for. The payment is yours.',
-                    request=f'Have you brought the {name}?')
+                    request=f'Have you brought the {name}?', sort=sort)
                 pool_quests.append(f"({qid}, {pool}, {esc(title)})")
             pool += 1
 
@@ -303,7 +320,8 @@ def main():
                     f'This week the board calls for {name}{difficulty}. Clear it and defeat {boss_name}; '
                     f'your whole group shares the credit.', QUEST_FLAGS_WEEKLY, reward,
                     kills=[(boss_of(boss), 1)], info=info, group=group, area=name,
-                    offer=f'{boss_name} is defeated. Well done; the reward is yours.')
+                    offer=f'{boss_name} is defeated. Well done; the reward is yours.',
+                    sort=DUNGEON_SORT[tier] if kind == 'dungeon' else SORT_RAIDS)
                 conditions.append(f"(19, 0, {qid}, 0, 0, 11, 0, {ws[tier]}, {i}, 0, 0, 0, 0, '', "
                                   f"{esc(f'Bulletin Board: {label} is this week' + chr(39) + 's ' + tier + ' ' + kind)})")
 
@@ -315,7 +333,8 @@ def main():
             f'The board has posted a bounty on the elites of {place}, {zone}. They are dangerous: bring '
             f'friends if you need them.$B$BSlay {names}.',
             QUEST_FLAGS_WEEKLY, ELITE_REWARD, kills=[(entry, count) for entry, _, count in targets],
-            group=ELITE_GROUP, area=zone, offer=f'{place} will be quieter for a while. The bounty is yours.')
+            group=ELITE_GROUP, area=zone, offer=f'{place} will be quieter for a while. The bounty is yours.',
+            sort=SORT_OPEN_WORLD)
         conditions.append(f"(19, 0, {qid}, 0, 0, 11, 0, {WS_ELITE}, {i}, 0, 0, 0, 0, '', "
                           f"{esc('Bulletin Board: this week' + chr(39) + 's elite bounty is ' + place)})")
 

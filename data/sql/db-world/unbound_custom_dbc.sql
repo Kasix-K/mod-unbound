@@ -491,3 +491,12 @@ INSERT INTO `mapdifficulty_dbc` (`ID`, `MapID`, `Difficulty`, `Message_Lang_enUS
 (10429,429,1,'Heroic Difficulty requires you to be level 60.','','','','','','','','','','','','','','','',16712190,86400,5,'DUNGEON_DIFFICULTY_5PLAYER_HEROIC'),
 (10289,289,1,'Heroic Difficulty requires you to be level 60.','','','','','','','','','','','','','','','',16712190,86400,5,'DUNGEON_DIFFICULTY_5PLAYER_HEROIC'),
 (10329,329,1,'Heroic Difficulty requires you to be level 60.','','','','','','','','','','','','','','','',16712190,86400,5,'DUNGEON_DIFFICULTY_5PLAYER_HEROIC');
+DELETE FROM `questsort_dbc` WHERE `ID` IN (920, 921, 922, 923, 924, 925, 926);
+INSERT INTO `questsort_dbc` (`ID`, `SortName_Lang_enUS`, `SortName_Lang_enGB`, `SortName_Lang_koKR`, `SortName_Lang_frFR`, `SortName_Lang_deDE`, `SortName_Lang_enCN`, `SortName_Lang_zhCN`, `SortName_Lang_enTW`, `SortName_Lang_zhTW`, `SortName_Lang_esES`, `SortName_Lang_esMX`, `SortName_Lang_ruRU`, `SortName_Lang_ptPT`, `SortName_Lang_ptBR`, `SortName_Lang_itIT`, `SortName_Lang_Unk`, `SortName_Lang_Mask`) VALUES
+(920,'Open World','','','','','','','','','','','','','','','',16712190),
+(921,'Normal Dungeon','','','','','','','','','','','','','','','',16712190),
+(922,'Heroic Dungeon','','','','','','','','','','','','','','','',16712190),
+(923,'Mythic Dungeon','','','','','','','','','','','','','','','',16712190),
+(924,'Raids','','','','','','','','','','','','','','','',16712190),
+(925,'Gathering','','','','','','','','','','','','','','','',16712190),
+(926,'Crafting','','','','','','','','','','','','','','','',16712190);

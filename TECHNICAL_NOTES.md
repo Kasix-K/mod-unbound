@@ -197,6 +197,10 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   against the creature's normal entry (`GetEntry()`), even for a heroic copy. `unbound_bulletin_board_player`
   (`OnPlayerPassedQuestKilledMonsterCredit`, which also gets the killed template's entry) lets a Normal weekly
   (9201xx, 9204xx) count only a Normal kill and a Heroic / Mythic weekly only a Heroic one.
+  Quest log headers: each board quest's `QuestSortID` is minus one of `QUEST_SORTS` in the tool (920 Open World,
+  921-923 Normal / Heroic / Mythic Dungeon, 924 Raids, 925 Gathering, 926 Crafting), new QuestSort.dbc rows that
+  `tools/custom_dbc.py` adds to the client patch and to `questsort_dbc` (a client without the new patch shows the
+  quests without headers). Run both tools after changing them.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Dungeon finder: at startup
