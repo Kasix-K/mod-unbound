@@ -126,6 +126,9 @@ local function setRow(row, entry)
         row.instanceName:SetFontObject(color.font)
         row.lockedIndicator:Hide()
         row.enableButton:Show()
+        -- the check mark as the dungeon list sets it on every update (ElvUI's skin strips the template's)
+        row.enableButton:SetCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check")
+        row.enableButton:SetDisabledCheckedTexture("Interface\\Buttons\\UI-CheckBox-Check-Disabled")
         row.enableButton:SetChecked(entry.id == selectedId)
         if mayPick and currentRaid == 0 then row.enableButton:Enable() else row.enableButton:Disable() end
     else
@@ -183,7 +186,15 @@ local function createRow(i)
             self.enableButton:Click()
         end
     end)
-    skin("HandleCheckBox", row.enableButton)
+    -- the checkbox looks like the dungeon list's: ElvUI strips those and gives them an inset box
+    -- (Skins/Blizzard/LFD.lua) instead of its usual checkbox skin
+    if elvSkins() and row.enableButton.StripTextures and row.enableButton.CreateBackdrop then
+        pcall(function()
+            row.enableButton:StripTextures()
+            row.enableButton:CreateBackdrop("Default")
+            row.enableButton.backdrop:SetInside(nil, 4, 4)
+        end)
+    end
     return row
 end
 
