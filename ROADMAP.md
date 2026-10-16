@@ -266,8 +266,37 @@ changes, raid by raid (see Next up).
       changes).
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
       +25-35% to its spec's single-target damage (the class perk target in the Power budget).
-- [ ] **Heroic currency and vendor** (moderate): a token (e.g. "Heroic Badge") from Heroic bosses,
-      spent on companions, mounts, transmog or gear. Becomes the Loot Goblin's currency.
+- [ ] **Heroic currency and vendor** (moderate; SaucyHobo54): a token (e.g. "Heroic Badge") from Heroic bosses,
+      spent on companions, mounts, transmog or gear. Becomes the Loot Goblin's currency. Starting values
+      (2026-10-15, tune in testing):
+  - **Drops:** 1 per Heroic boss, 2 from the final boss (about 7-10 a run), plus 10 from the weekly Heroic
+    dungeon quest on the Bulletin Board.
+  - **Heroic gear at the vendor**, priced by item strength. Bosses already drop one Heroic item each (two from
+    the final boss), so the vendor is for choosing a piece, not the main source of gear:
+
+    | Item | Price | Runs to afford one |
+    |---|---|---|
+    | Rings, necks, cloaks, wrists, waists (item level 61) | 10 | 1-1.5 |
+    | Head, shoulders, chest, hands, legs, feet (item level 62) | 15 | about 2 |
+    | One-handed weapons, shields, off-hands | 20 | 2-3 |
+    | Two-handed and ranged weapons, final-boss pieces (item level 63) | 25-30 | 3-4 |
+
+    Kept above "free" on purpose: every unique item counts for infusion (about 255 for +200%), so cheap gear
+    would let players buy their way to the endgame. The Mythic currency sits above this at similar ratios.
+  - **In the Currency tab:** the token is an item in the hidden token bag (bag family "currency tokens"), with
+    `CurrencyTypes.dbc` / `CurrencyCategory.dbc` rows in the client patch (e.g. an "Unbound" header).
+  - **One shared amount per account:** a balance table in the character database (`account, currency item,
+    amount`, so the Mythic currency is just another row), set on the character at login (after inventory
+    loads) and written back from `OnPlayerSave` and at logout (`OnPlayerSave` has no transaction parameter, so
+    it is saved at the same moment as the character, not in the same transaction). The item is soulbound and
+    can't be sold, traded or mailed (no counting it twice), with a high stack limit. Only the character a
+    player logged in touches the balance: account alt-bots are on (`Playerbots.AllowAccountBots = 1`), and a
+    bot-controlled session is `GetSession()->GetRemoteAddress() == "headless"` (no socket; a real player's
+    session keeps its IP even after a disconnect). Optionally store which character holds the balance and
+    ignore writes from any other. GM accounts and playerbot (RNDBOT) accounts keep their own amounts.
+  - **Tests:** earn on A then log into B (same total); spend on B then back to A; with A online, have alt B as
+    a bot earn and spend (the balance must not change); restart mid-session (matches the last save); a vendor
+    refund within 2 hours, then switch characters.
 - [ ] **Heroic classic raids** (moderate): Molten Core, Blackwing Lair, Zul'Gurub, Ruins and Temple of
       Ahn'Qiraj, Onyxia's Lair, Naxxramas.
 - [x] **Raid Finder** (2026-10-15): a Raids choice in the Dungeon Finder's dropdown listing every raid (those not
