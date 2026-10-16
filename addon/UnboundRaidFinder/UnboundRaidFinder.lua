@@ -50,9 +50,17 @@ local function setStatus(text, r, g, b)
     end
 end
 
+-- The level shown (and its colour) is the raid's content level, the level cap of its expansion: every
+-- classic raid shows 60. The entry requirements the server checks (dungeon_access_template, e.g. Molten
+-- Core from 50) are unchanged.
+local CONTENT_LEVEL = { [0] = 60, [1] = 70, [2] = 80 }
+
+local function contentLevel(raid)
+    return CONTENT_LEVEL[raid.expansion] or (raid.max > 0 and raid.max or raid.min)
+end
+
 local function levelText(raid)
-    if raid.max > 0 and raid.max ~= raid.min then return format(LFD_LEVEL_FORMAT_RANGE, raid.min, raid.max) end
-    return raid.min > 0 and format(LFD_LEVEL_FORMAT_SINGLE, raid.min) or ""
+    return format(LFD_LEVEL_FORMAT_SINGLE, contentLevel(raid))
 end
 
 local function isRaidMode()
@@ -120,7 +128,7 @@ local function setRow(row, entry)
     row.level:SetText(levelText(entry))
     row.level:Show()
 
-    local color = GetQuestDifficultyColor(entry.max > 0 and entry.max or entry.min)
+    local color = GetQuestDifficultyColor(contentLevel(entry))
     row.level:SetFontObject(color.font)
     if entry.status == "A" or entry.id == currentRaid then
         row.instanceName:SetFontObject(color.font)

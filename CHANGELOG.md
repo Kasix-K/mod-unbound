@@ -75,6 +75,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   "Classic Raids" header), and Find Group becomes Enter Raid / Leave Raid. `/raidfinder` opens it.
   Raids of an unreleased expansion aren't listed at all (only the classic raids while
   `Unbound.ExpansionUnlocked` is 0).
+  Each raid shows its content level (60 for every classic raid), coloured like the Dungeon Finder's levels;
+  the entry requirements are unchanged.
 - **The Dungeon Finder no longer offers unreleased expansions' dungeons:** "Random Burning Crusade Dungeon" in
   the random list, and Hellfire Ramparts, The Blood Furnace and The Slave Pens (with their "Burning Crusade
   Normal" header) in the specific list. They showed at level 60 because accounts have the Wrath expansion,
