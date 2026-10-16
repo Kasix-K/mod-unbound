@@ -30,3 +30,8 @@ UPDATE `gameobject_template` SET `ScriptName` = 'go_unbound_solo_razorgore_egg' 
 -- Enveloping Winds (Ossirian the Unscarred): solo, at most every Unbound.SoloRaid.OssirianWindsInterval seconds.
 DELETE FROM `spell_script_names` WHERE `ScriptName` = 'spell_unbound_solo_ossirian_winds';
 INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES (25189, 'spell_unbound_solo_ossirian_winds');
+
+-- Soul Burn (Firelord, Molten Core): solo it fails (spell_unbound_solo_raid_block above); for groups it comes every
+-- 25 seconds instead of every 2-4 (its 16-second silence was up the whole fight). First cast still 4-6 seconds in.
+UPDATE `smart_scripts` SET `event_param3` = 25000, `event_param4` = 25000
+WHERE `entryorguid` = 11668 AND `source_type` = 0 AND `id` = 0 AND `action_param1` = 19393;

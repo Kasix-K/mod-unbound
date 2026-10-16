@@ -26,7 +26,8 @@
  *
  * Molten Core:
  *   Lucifron               His Flamewaker Protectors' Dominate Mind (20604) fails.
- *   Firelords              Soul Burn (19393: fire damage over time that also silences) fails.
+ *   Firelords              Soul Burn (19393: fire damage over time that also silences) fails. (For groups,
+ *                          unbound_solo_raids.sql slows it to every 25 seconds.)
  *
  * Zul'Gurub:
  *   Jin'do the Hexxer      Brain Wash Totem (24262, the totem mind controls a player) and Banish (24466,
