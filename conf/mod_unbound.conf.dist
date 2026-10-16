@@ -372,6 +372,13 @@ Unbound.Attunement.TributeOwnGearMultiplier = 2
 #                     controlling Razorgore with the Orb of Domination, which still works).
 #        Default:     1 - Enabled
 #
+#    Unbound.SoloRaid.RazorgoreWaveInterval
+#        Description: Blackwing Lair, Razorgore solo: the fewest seconds between his add waves. The
+#                     instance sends a wave of 2-5 adds every 15 seconds; a wave that comes sooner than
+#                     this after the last one kept is removed. 15 (or less) = unchanged. Needs
+#                     Unbound.SoloRaid.Razorgore.
+#        Default:     30
+#
 #    Unbound.SoloRaid.Vaelastrasz
 #        Description: Blackwing Lair, Vaelastrasz the Corrupt: Burning Adrenaline (kills its target
 #                     when it ends) fails.
@@ -449,6 +456,7 @@ Unbound.Attunement.TributeOwnGearMultiplier = 2
 
 Unbound.SoloRaid.Enable = 1
 Unbound.SoloRaid.Razorgore = 1
+Unbound.SoloRaid.RazorgoreWaveInterval = 30
 Unbound.SoloRaid.Vaelastrasz = 1
 Unbound.SoloRaid.Ebonroc = 1
 Unbound.SoloRaid.Chromaggus = 1

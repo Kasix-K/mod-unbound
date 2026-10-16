@@ -69,6 +69,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Changed
+- **Razorgore solo: fewer add waves.** Alone in Blackwing Lair, his add waves come at most every 30 seconds
+  (`Unbound.SoloRaid.RazorgoreWaveInterval`; the instance sends one every 15): a wave that comes sooner is removed
+  as it appears. The instance still counts those adds towards its totals (12 dragonkin, 40 orcs), so fewer come in all.
 - **Perk tooltips no longer mention Ranks 4-5:** ranks that can't be reached yet (level 255, the endgame ranks until
   a way to earn them exists) aren't listed in the tooltip, and the badge counts only the reachable ranks ("3/3").
   A GM given such a rank with `.perk rank` still sees up to their own rank.

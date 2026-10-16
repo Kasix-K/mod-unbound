@@ -92,7 +92,7 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
   prompt. **Leave Raid** takes you back to where you joined from. Needs the **UnboundRaidFinder** addon.
 - **Solo raids:** alone in a raid (no other players or bots; pets are fine), mechanics no single player can
   handle are changed. Blackwing Lair: in Razorgore's room, walk over (or click) the eggs to break them once
-  Razorgore is pulled, and don't kill him before the last egg; Grethok, Vaelastrasz, Ebonroc, Chromaggus and
+  Razorgore is pulled, and don't kill him before the last egg; his add waves come every 30 seconds instead of 15; Grethok, Vaelastrasz, Ebonroc, Chromaggus and
   Nefarius skip their solo-killing spells. Molten Core, Zul'Gurub and Ahn'Qiraj: no mind controls (Lucifron's
   adds, Jin'do's totem, Hakkar, Skeram, Qiraji Mindslayers), no Jin'do Banish, Hakkar Blood Siphon, Ayamiss
   Paralyze or Twin Emperors Heal Brother; each hit on Viscidus counts 10 times towards freezing (frost) and

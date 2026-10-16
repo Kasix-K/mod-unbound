@@ -120,7 +120,11 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   `DIRECT_DAMAGE`) against fixed thresholds; solo, `ModifyMeleeDamage` and `ModifySpellDamageTaken` call those
   AI functions `ViscidusHitMultiplier - 1` more times (with no damage), so the thresholds, emotes and phases of
   his own script do the rest. Swings count before the hit roll, so misses count too. Settings:
-  `Unbound.SoloRaid.Enable`, one per boss and `Unbound.SoloRaid.ViscidusHitMultiplier`. Thaddius' fix is in
+  `Unbound.SoloRaid.Enable`, one per boss, `Unbound.SoloRaid.ViscidusHitMultiplier` and
+  `Unbound.SoloRaid.RazorgoreWaveInterval`. Razorgore's waves (`unbound_solo_razorgore_waves`, an
+  AllCreatureScript): `OnCreatureAddWorld` sees each summoned Blackwing Legionnaire / Mage / Dragonkin in map 469,
+  groups adds summoned within 2 seconds as one wave, and despawns a whole wave that comes less than the interval
+  after the last wave kept (per instance id, under a mutex: instances update on several threads). Thaddius' fix is in
   `src/naxx40/boss_thaddius_40.cpp` (the boss skips the 5-second revive, the minions skip the Tesla Coil
   overload), asking `UnboundSoloThaddius()` from `src/unbound_solo_raids.h`; Gothik's is in
   `boss_gothik_40.cpp` (`EVENT_TELEPORT` skips clearing threat, phase two opens the gate), asking

@@ -12,6 +12,9 @@
  *                          event, eggs (177807) break when the player walks over or clicks them,
  *                          instead of only by Razorgore under the Orb of Domination's control.
  *                          (Killing Razorgore before the last egg still blows up the room.)
+ *                          His add waves come at most every Unbound.SoloRaid.RazorgoreWaveInterval
+ *                          seconds (the instance script sends one every 15): a wave that comes sooner
+ *                          is removed as it appears.
  *   Vaelastrasz            Burning Adrenaline (18173) fails: every third one goes on his target and
  *                          kills them when it ends.
  *   Ebonroc                Shadow of Ebonroc (23340) fails: it heals him from every hit on the
@@ -64,6 +67,8 @@
 
 #include "Config.h"
 #include "Creature.h"
+#include "AllCreatureScript.h"
+#include "GameTime.h"
 #include "CreatureAI.h"
 #include "GameObject.h"
 #include "GameObjectAI.h"
@@ -81,6 +86,8 @@
 
 #include <algorithm>
 #include <array>
+#include <mutex>
+#include <unordered_map>
 
 namespace
 {
@@ -115,6 +122,7 @@ namespace
     bool sEnabled = true;
     std::array<bool, MAX_SOLO_RAID_FIX> sFixEnabled = { };
     uint32 sViscidusHitMultiplier = 10;
+    uint32 sRazorgoreWaveInterval = 30;    // seconds
 
     struct BlockedSpell
     {
@@ -146,6 +154,13 @@ namespace
     }};
 
     constexpr uint32 NPC_VISCIDUS = 15299;
+
+    // Razorgore's add waves (instance_blackwing_lair.cpp, EVENT_RAZOR_SPAWN: 2-5 adds every 15 seconds)
+    constexpr uint32 MAP_BWL_RAZORGORE_WAVES = 469;
+    constexpr uint32 NPC_BLACKWING_DRAGON = 12422;
+    constexpr uint32 NPC_BLACKWING_LEGIONAIRE = 12416;
+    constexpr uint32 NPC_BLACKWING_MAGE = 12420;
+    constexpr uint32 WAVE_GROUP_MS = 2000;            // adds summoned this close together are one wave
 
     // Razorgore's egg event (scripts/EasternKingdoms/BlackrockMountain/BlackwingLair/blackwing_lair.h)
     constexpr uint32 BWL_DATA_RAZORGORE = 0;          // DATA_RAZORGORE_THE_UNTAMED (GUID data)
@@ -317,6 +332,61 @@ private:
     }
 };
 
+// Razorgore (Blackwing Lair): the instance script summons a wave of 2-5 adds every 15 seconds until 12 dragonkin
+// and 40 orcs have come. Solo, a wave that comes less than sRazorgoreWaveInterval seconds after the last one
+// kept is removed as it appears (the instance still counts it towards those totals, so fewer come in all).
+class unbound_solo_razorgore_waves : public AllCreatureScript
+{
+public:
+    unbound_solo_razorgore_waves() : AllCreatureScript("unbound_solo_razorgore_waves") { }
+
+    void OnCreatureAddWorld(Creature* creature) override
+    {
+        uint32 const entry = creature->GetEntry();
+        if (entry != NPC_BLACKWING_DRAGON && entry != NPC_BLACKWING_LEGIONAIRE && entry != NPC_BLACKWING_MAGE)
+            return;
+        if (!creature->IsSummon() || creature->GetMapId() != MAP_BWL_RAZORGORE_WAVES)
+            return;
+        if (!IsFixActive(FIX_RAZORGORE) || !IsSoloRaid(creature->GetMap()))
+            return;
+
+        uint32 const now = GameTime::GetGameTimeMS().count();
+        bool keep;
+        {
+            // instances update on several threads at once
+            std::lock_guard<std::mutex> lock(_mutex);
+            Waves& waves = _waves[creature->GetInstanceId()];
+            if (!waves.started || now - waves.waveStart > WAVE_GROUP_MS)   // a new wave
+            {
+                waves.waveStart = now;
+                waves.waveKept = !waves.started || now - waves.lastKept >= sRazorgoreWaveInterval * IN_MILLISECONDS;
+                if (waves.waveKept)
+                    waves.lastKept = now;
+                waves.started = true;
+            }
+            keep = waves.waveKept;
+        }
+
+        if (!keep)
+        {
+            creature->SetVisible(false);
+            creature->DespawnOrUnsummon(1ms);   // after this update, not while it's being added
+        }
+    }
+
+private:
+    struct Waves
+    {
+        bool started = false;
+        uint32 waveStart = 0;   // first add of the current wave
+        bool waveKept = false;
+        uint32 lastKept = 0;    // start of the last wave kept
+    };
+
+    std::mutex _mutex;
+    std::unordered_map<uint32, Waves> _waves;   // instance id -> its waves
+};
+
 class unbound_solo_raids_world : public WorldScript
 {
 public:
@@ -330,6 +400,7 @@ public:
         for (uint8 fix = 0; fix < MAX_SOLO_RAID_FIX; ++fix)
             sFixEnabled[fix] = sConfigMgr->GetOption<bool>(std::string("Unbound.SoloRaid.") + FIX_KEYS[fix], true);
         sViscidusHitMultiplier = std::max<uint32>(1, sConfigMgr->GetOption<uint32>("Unbound.SoloRaid.ViscidusHitMultiplier", 10));
+        sRazorgoreWaveInterval = sConfigMgr->GetOption<uint32>("Unbound.SoloRaid.RazorgoreWaveInterval", 30);
     }
 };
 
@@ -338,5 +409,6 @@ void AddSC_unbound_solo_raids()
     RegisterSpellScript(spell_unbound_solo_raid_block);
     RegisterGameObjectAI(go_unbound_solo_razorgore_egg);
     new unbound_solo_viscidus_unit();
+    new unbound_solo_razorgore_waves();
     new unbound_solo_raids_world();
 }
