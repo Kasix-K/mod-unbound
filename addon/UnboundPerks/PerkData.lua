@@ -12,6 +12,7 @@
 --   permanent  always on, can't be toggled
 --   works      the server implements it (src/unbound_perks.cpp); every perk listed here should have it
 --   class      only shown to that class, e.g. "PALADIN"
+--   classes    only shown to these classes, e.g. { WARRIOR = true, DRUID = true } (the server's CLASS_PERKS)
 --   petClass   only affects a pet: only shown to classes with one (PET_CLASSES; the server refuses it for the rest)
 --   excludes   id (or list of ids) of perks that can't be active together with this one (turning this on
 --              turns them off)
@@ -129,6 +130,10 @@ end
 local function manaLeech(v)
     return "Restore Mana equal to " .. G(pct(v[1])) .. " of all damage you deal."
 end
+local function endlessRage(v)
+    return "Generate " .. G(pct(v[1])) .. " more Rage, from damage you deal and damage you take."
+end
+local RAGE_ONLY = "Warriors and Druids only. A Druid gets it in Bear and Dire Bear Form (while using Rage)."
 -- Defensive
 local function chance(kind)
     if kind == "Block" then return GetBlockChance() or 0 end
@@ -562,6 +567,11 @@ UnboundPerks.PERKS = {
       desc = manaLeech({ 2 }),
       note = MANA_ONLY,
       applyRank = ranked(manaLeech, function(v) return string.format("%g%% of damage as mana", v[1]) end, MANA_ONLY) },
+    { id = 315, name = "Endless Rage", category = "UTILITY", works = true, classes = { WARRIOR = true, DRUID = true },
+      icon = "Interface\\Icons\\Ability_Warrior_EndlessRage",
+      desc = endlessRage({ 20 }),
+      note = RAGE_ONLY,
+      applyRank = ranked(endlessRage, function(v) return string.format("+%g%% rage", v[1]) end, RAGE_ONLY) },
 
     -- Class: Paladin ----------------------------------------------------------------------------------
     { id = 1001, name = "Retribution", category = "CLASS", class = "PALADIN", works = true,

@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Endless Rage utility perk (Warrior and Druid, +8/14/20% rage, 5 ranks) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | AoE loot only from loot companions (`.aoeloot on/off` disabled) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Gear attunement renamed infusion (infuse, infused, `.infuse`, `/infusion`; classic Naxxramas keeps its attunement) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Altar of Sacrifice renamed Altar of Tribute (sacrifice is now tribute everywhere players see it) | 2026-10-15 | 2026-10-15 | Kasix-K |
@@ -67,6 +68,12 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | Transmog (first version, mod-transmog) | 2026-10-12 | 2026-10-13 (replaced) | Kasix-K |
 
 ## 2026-10-15
+
+### Added
+- **Endless Rage** (Utility perk, id 315, Warriors and Druids only): more rage from damage you deal and take,
+  +8 / 14 / 20% at levels 1 / 30 / 60 and 26 / 30% at Ranks 4-5 (GM-only for now). Rage from damage dealt is a
+  server-only aura like the Endless Rage talent (spell 200216, stacks with it); rage from damage taken is added
+  with the core's own formula. Class-limited perks can now be for several classes (a class mask).
 
 ### Changed
 - **Ossirian solo:** alone in Ruins of Ahn'Qiraj, his Curse of Tongues fails and his Enveloping Winds comes at most

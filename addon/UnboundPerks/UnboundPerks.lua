@@ -102,7 +102,8 @@ local function buildPerkLists()
     local cls = playerClass()
     wipe(perksByCat); wipe(categories)
     for _, perk in ipairs(P.PERKS) do
-        if (not perk.class or perk.class == cls) and (not perk.petClass or PET_CLASSES[cls]) then
+        if (not perk.class or perk.class == cls) and (not perk.classes or perk.classes[cls]) and
+           (not perk.petClass or PET_CLASSES[cls]) then
             perksByCat[perk.category] = perksByCat[perk.category] or {}
             table.insert(perksByCat[perk.category], perk)
         end

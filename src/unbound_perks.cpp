@@ -123,6 +123,9 @@
  *   312 Unbreakable Presence   you generate 50/100/150% more threat                       (exclusive with 311)
  *   313 Steady Hands           spell pushback -30/50/70%; interrupt lockouts and silences on you -10/20/30%
  *   314 Mana Leech             restore mana equal to 1/1.5/2% of the damage you deal, while using mana
+ *   315 Endless Rage           Warrior and Druid only (CLASS_PERKS): +8/14/20% rage, from damage dealt (a
+ *                              server-only aura like the Endless Rage talent, SPELL_PERK_RAGE) and from damage
+ *                              taken (ApplyRageTaken, with the core's own rage formula)
  *   The numbers are Rank 1/2/3 (levels 1, 30, 60); Ranks 4-5 (about 1.3x / 1.5x, GM-only for now) and all
  *   values are in mod_unbound.conf (RANKED_PERKS). Speed, threat
  *   and Steady Hands are server-only passive auras (SPELL_PERK_*); the leech perks and fall damage use the
@@ -167,6 +170,7 @@
 #include "SpellScriptLoader.h"
 #include "StringConvert.h"
 #include "Tokenize.h"
+#include "World.h"
 #include "WorldPacket.h"
 
 #include <algorithm>
@@ -296,6 +300,7 @@ namespace
         PERK_UNBREAKABLE_PRESENCE   = 312,
         PERK_STEADY_HANDS           = 313,  // "Spell-Protected Steady Hands"
         PERK_MANA_LEECH             = 314,
+        PERK_ENDLESS_RAGE           = 315,  // Warrior and Druid only
         PERK_RETRIBUTION            = 1001,  // Paladin
     };
 
@@ -309,7 +314,7 @@ namespace
         PERK_NATURE_MASTERY, PERK_FIRE_MASTERY, PERK_FROST_MASTERY, PERK_PHYSICAL_MASTERY,
         PERK_IRON_WILL, PERK_LONGER_LEGS, PERK_PLANTED_FEET, PERK_RELENTLESS_PURSUIT, PERK_VAMPIRISM,
         PERK_SOUL_DRAIN, PERK_PET_REPLENISHMENT, PERK_PETS_ROAR, PERK_SILENT_KILLER, PERK_UNBREAKABLE_PRESENCE,
-        PERK_STEADY_HANDS, PERK_MANA_LEECH, PERK_GREATER_BULWARK, PERK_EVASIVE_MANEUVERS, PERK_PARRY_KING,
+        PERK_STEADY_HANDS, PERK_MANA_LEECH, PERK_ENDLESS_RAGE, PERK_GREATER_BULWARK, PERK_EVASIVE_MANEUVERS, PERK_PARRY_KING,
         PERK_REINFORCED_ARMOR, PERK_SPELLWARDED, PERK_STOICISM, PERK_DEFENSIVE_MOMENTUM, PERK_FORTRESS,
         PERK_JUGGERNAUT, PERK_COUNTERWEIGHT, PERK_TITANS_RESOLVE, PERK_SECOND_WIND, PERK_HARDENED_FLESH,
         PERK_PETS_BLESSING, PERK_SHIELD_WALL_TRAINING, PERK_SURVIVAL_INSTINCT, PERK_VITAL_RESERVE, PERK_ENDURING,
@@ -378,6 +383,7 @@ namespace
         { PERK_UNBREAKABLE_PRESENCE, "UnbreakablePresence", { { "Percent", "50, 100, 150, 200, 225" } } },
         { PERK_STEADY_HANDS,         "SteadyHands",         { { "Pushback", "30, 50, 70, 80, 90" }, { "Lockout", "10, 20, 30, 35, 40" } } },
         { PERK_MANA_LEECH,           "ManaLeech",           { { "Percent", "1, 1.5, 2, 2.5, 3" } } },
+        { PERK_ENDLESS_RAGE,         "EndlessRage",         { { "Percent", "8, 14, 20, 26, 30" } } },
         { PERK_GREATER_BULWARK,      "GreaterBulwark",      { { "Efficiency", "100, 110, 120, 125, 130" } } },
         { PERK_EVASIVE_MANEUVERS,    "EvasiveManeuvers",    { { "Efficiency", "100, 110, 120, 125, 130" } } },
         { PERK_PARRY_KING,           "ParryKing",           { { "Efficiency", "100, 110, 120, 125, 130" } } },
@@ -411,11 +417,14 @@ namespace
     // data/sql/db-world/unbound_perks_defensive_spells.sql
     constexpr uint32 SPELL_PERK_VITALITY     = 200214;  // maximum health (%), armor (%)
     constexpr uint32 SPELL_PERK_DEFENSE_PROC = 200215;  // procs on melee hits/dodges/parries/blocks taken
+    constexpr uint32 SPELL_PERK_RAGE         = 200216;  // rage from damage dealt (%), like the Endless Rage talent
     constexpr uint32 SPELL_DAMAGE_SHIELD     = 59653;   // the warrior's Damage Shield damage (Thornmail's hit)
 
-    // Class perks: the class each one belongs to. The server refuses a class perk for any other class.
-    std::unordered_map<uint32, uint8> const CLASS_PERKS = {
-        { PERK_RETRIBUTION, CLASS_PALADIN },
+    // Class-limited perks: the classes each one is for (a class mask). The server refuses them for any other class.
+    constexpr uint32 ClassBit(uint8 cls) { return 1 << (cls - 1); }
+    std::unordered_map<uint32, uint32> const CLASS_PERKS = {
+        { PERK_RETRIBUTION, ClassBit(CLASS_PALADIN) },
+        { PERK_ENDLESS_RAGE, ClassBit(CLASS_WARRIOR) | ClassBit(CLASS_DRUID) },  // the rage users
     };
 
     // Perks that only affect a pet: only for classes with a controllable pet (Hunter, Warlock, Death Knight's
@@ -485,7 +494,7 @@ namespace
         if (PET_PERKS.count(perk) && !(player->getClassMask() & PET_CLASS_MASK))
             return false;
         auto itr = CLASS_PERKS.find(perk);
-        return itr == CLASS_PERKS.end() || player->getClass() == itr->second;
+        return itr == CLASS_PERKS.end() || (player->getClassMask() & itr->second);
     }
 
     constexpr uint32 STAT_REFRESH_MS = 2000;
@@ -1184,6 +1193,8 @@ namespace
         int32 defenseProc = Has(&state, PERK_COUNTERWEIGHT) || Has(&state, PERK_SHIELD_WALL_TRAINING) ||
                             Has(&state, PERK_THORNMAIL) ? 1 : 0;
         SetPerkAura(player, SPELL_PERK_DEFENSE_PROC, { defenseProc, 0, 0 });
+        // Endless Rage: rage from damage dealt (rage from damage taken is in ApplyRageTaken)
+        SetPerkAura(player, SPELL_PERK_RAGE, { value(PERK_ENDLESS_RAGE, 0), 0, 0 });
 
         if (Pet* pet = player->GetPet())
         {
@@ -1614,6 +1625,26 @@ namespace
         return damage;
     }
 
+    // Endless Rage: extra rage from damage taken (Unit::RewardRage's victim formula times the perk's %). Rage from
+    // damage dealt comes from SPELL_PERK_RAGE (SPELL_AURA_MOD_RAGE_FROM_DAMAGE_DEALT), which the core applies.
+    void ApplyRageTaken(Unit* attacker, Unit* victim, uint32 damage)
+    {
+        if (!attacker || attacker == victim || !damage || !victim->IsPlayer() || victim->getPowerType() != POWER_RAGE)
+            return;
+        Player* player = victim->ToPlayer();
+        PerkState const* state = StateOf(player);
+        if (!Has(state, PERK_ENDLESS_RAGE))
+            return;
+        float level = float(player->GetLevel());
+        float rageConversion = 0.0091107836f * level * level + 3.225598133f * level + 4.2652911f;
+        if (level > 70)
+            rageConversion += 13.27f * (level - 70);
+        float rage = damage / rageConversion * 2.5f * RankValue(player, *state, PERK_ENDLESS_RAGE, 0) / 100.0f;
+        rage *= sWorld->getRate(RATE_POWER_RAGE_INCOME);
+        if (int32 amount = int32(rage * 10))  // rage is stored x10
+            player->ModifyPower(POWER_RAGE, amount);
+    }
+
     // Counterweight, Shield Wall Training and Thornmail, from the defense proc aura (a melee attack taken).
     void HandleDefenseProc(Unit* victim, Unit* attacker, uint32 hitMask, uint32 damage)
     {
@@ -1940,6 +1971,7 @@ public:
             return damage;
         damage = ApplyFallDamage(attacker, victim, damage, damagetype);
         damage = ApplyBigHitPerks(attacker, victim, damage);
+        ApplyRageTaken(attacker, victim, damage);
         ApplyLeech(attacker, victim, damage);
         if (damage && victim->IsAlive() && damage >= victim->GetHealth() &&
             victim->HasAura(SPELL_RIGHTEOUS_VENGEANCE_DOT))
