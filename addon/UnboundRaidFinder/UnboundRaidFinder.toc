@@ -1,6 +1,6 @@
 ## Interface: 30300
 ## Title: Unbound Raid Finder
-## Notes: Raids tab in the Dungeon Finder for the Unbound server. Open with /raidfinder.
+## Notes: A "Raids" choice in the Dungeon Finder for the Unbound server. Open with /raidfinder.
 ## Author: mod-unbound
-## Version: 0.1
+## Version: 0.2
 UnboundRaidFinder.lua

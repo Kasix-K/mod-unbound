@@ -269,7 +269,7 @@ changes, raid by raid (see Next up).
       spent on companions, mounts, transmog or gear. Becomes the Loot Goblin's currency.
 - [ ] **Heroic classic raids** (moderate): Molten Core, Blackwing Lair, Zul'Gurub, Ruins and Temple of
       Ahn'Qiraj, Onyxia's Lair, Naxxramas.
-- [x] **Raid Finder** (2026-10-15): a Raids tab in the Dungeon Finder listing every raid (those not
+- [x] **Raid Finder** (2026-10-15): a Raids choice in the Dungeon Finder's dropdown listing every raid (those not
       available greyed out with the reason); no queue, the group leader enters first and the group gets a
       prompt to follow; Leave Raid. Later: Normal/Heroic choice once Heroic raids exist, 10/25-player
       choice for Wrath raids once Wrath is released.

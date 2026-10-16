@@ -84,8 +84,8 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
   professions, weekly dungeon and raid quests (Normal dungeon, Heroic dungeon, Normal raid, a different
   one each), and a weekly elite bounty (an elite camp, a different one each week). GMs: `.bulletinboard show` lists this week's picks, `.bulletinboard reroll` picks again. Move a
   board with `.gobject move` if it stands badly.
-- **Raid Finder:** open the Dungeon Finder (or type `/raidfinder`) and click the **Raids** tab at the bottom.
-  Pick a raid and press **Enter Raid**. In a group the leader picks; everyone else gets an "Enter the raid?"
+- **Raid Finder:** open the Dungeon Finder (or type `/raidfinder`) and choose **Raids** in its dropdown (under
+  the random dungeons and Specific Dungeons). Tick a raid and press **Enter Raid**. In a group the leader picks; everyone else gets an "Enter the raid?"
   prompt. **Leave Raid** takes you back to where you joined from. Needs the **UnboundRaidFinder** addon.
 - **Solo raids:** alone in a raid (no other players or bots; pets are fine), mechanics no single player can
   handle are changed. Blackwing Lair: in Razorgore's room, walk over (or click) the eggs to break them once

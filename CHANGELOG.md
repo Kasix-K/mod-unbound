@@ -12,7 +12,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | Gear attunement renamed infusion (infuse, infused, `.infuse`, `/infusion`; classic Naxxramas keeps its attunement) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Altar of Sacrifice renamed Altar of Tribute (sacrifice is now tribute everywhere players see it) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Bulletin Board: daily bounties and profession quests, weekly dungeon and raid quests per tier, weekly elite bounty | 2026-10-15 | 2026-10-15 | Kasix-K |
-| Raid Finder: Raids tab in the Dungeon Finder (enter raids, group prompt, Leave Raid) | 2026-10-15 | 2026-10-15 | Kasix-K |
+| Raid Finder: Raids choice in the Dungeon Finder (enter raids, group prompt, Leave Raid) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Classic Naxxramas (40 players, level 60) in the Eastern Plaguelands, from mod-individual-progression | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Onyxia's Lair as a classic level 60 raid (classic stats, spell damage, loot, Head of Onyxia quests) | 2026-10-15 | 2026-10-15 | Kasix-K |
 | Soloable raid mechanics: Naxxramas (Thaddius, Gothik) | 2026-10-15 | 2026-10-15 | Kasix-K |
@@ -69,6 +69,10 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Changed
+- **Raid Finder looks like the Dungeon Finder:** instead of separate Dungeons and Raids tabs, **Raids** is a choice
+  in the Dungeon Finder's own dropdown (after the random dungeons and Specific Dungeons). Choosing it swaps the
+  dungeon list for the raids, drawn like the specific dungeon list (checkbox, lock icon with the reason, level,
+  "Classic Raids" header), and Find Group becomes Enter Raid / Leave Raid. `/raidfinder` opens it.
 - **The Dungeon Finder no longer offers unreleased expansions' dungeons:** "Random Burning Crusade Dungeon" in
   the random list, and Hellfire Ramparts, The Blood Furnace and The Slave Pens (with their "Burning Crusade
   Normal" header) in the specific list. They showed at level 60 because accounts have the Wrath expansion,

@@ -74,11 +74,14 @@ Boards: Stormwind Trade District (`.go xyz -8812.4 651.6 94.9 0`) and Orgrimmar 
 
 ## 4. Raid Finder
 
-- [ ] Open the Dungeon Finder (I key or the micro menu): there are **Dungeons** and **Raids** tabs at the bottom.
-      `/raidfinder` opens the Raids tab.
-- [ ] The Dungeons tab is still the normal Dungeon Finder, and queueing for a dungeon still works.
-- [ ] The Raids tab lists raids by expansion with their level, and greys out the ones you can't enter, with a
-      reason (level, not released, Naxxramas attunement).
+- [ ] Open the Dungeon Finder (I key or the micro menu): its type dropdown (random dungeons, Specific Dungeons)
+      ends with **Raids**. `/raidfinder` opens the Dungeon Finder on Raids.
+- [ ] Choosing Raids replaces the dungeon list with the raids, in the same style (checkbox, lock icon, level,
+      "Classic Raids" header), and Find Group becomes **Enter Raid**. Choosing a random dungeon or Specific
+      Dungeons again brings the normal Dungeon Finder back, and queueing for a dungeon still works.
+- [ ] Close and reopen the Dungeon Finder while on Raids: the dropdown still says Raids and has the Raids entry.
+- [ ] Raids you can't enter show a lock icon, with the reason in the tooltip (level, not released, Naxxramas
+      attunement). Ticking a raid unticks the one before (one raid at a time).
 - [ ] **Solo:** pick Molten Core and Enter. You're teleported **inside** the raid near its entrance.
 - [ ] **Leave Raid** takes you back to where you joined from. Also try it after logging out and back in inside
       the raid.
@@ -87,7 +90,7 @@ Boards: Stormwind Trade District (`.go xyz -8812.4 651.6 94.9 0`) and Orgrimmar 
       next to the leader, declining (or 2 minutes passing) leaves them where they are.
 - [ ] A member below the level or without the Naxxramas attunement is told why and isn't teleported.
 - [ ] Playerbots in the group come along.
-- [ ] Set `Unbound.RaidFinder.Enable = 0`, restart, and open the Raids tab: chat says "The Raid Finder is turned off
+- [ ] Set `Unbound.RaidFinder.Enable = 0`, restart, and choose Raids: chat says "The Raid Finder is turned off
       on this server." Set it back to 1 afterwards.
 
 ## 5. Onyxia's Lair (classic level 60)
