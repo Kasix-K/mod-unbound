@@ -242,7 +242,8 @@ changes, raid by raid (see Next up).
       window holds 150): accessories 10, head/shoulders/chest 15, hands/legs/feet 15, weapons 20-25, final boss
       treasures 30, sorted by slot, type and name. **Bulletin Board:** the weekly Heroic dungeon quests give 10
       Sigils plus 75 gold. Kept above "free" on purpose: every unique item counts for infusion, so cheap gear would
-      buy the endgame. What's left is in Next up ("Heroic Sigil: the rest").
+      buy the endgame. Tested in game (2026-10-15): the shared balance across characters and with an alt-bot, a
+      restart, the drops and the weekly quest. What's left is in Next up ("Heroic Sigil: the rest").
 
 ## Next up
 
@@ -277,12 +278,7 @@ changes, raid by raid (see Next up).
     way to get one is planned.
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
       +25-35% to its spec's single-target damage (the class perk target in the Power budget).
-- [ ] **Heroic Sigil: the rest** (easy to moderate; SaucyHobo54): the Heroic currency is live (see Done), still to do:
-  - **Test in game:** the account-balance tests (earn on A then log into B; spend on B then back to A; with A
-    online, alt B as a bot earns and spends and the balance doesn't change; restart mid-session; a Quartermaster
-    refund within 2 hours, then switch characters), Sigil drops (1 per Heroic boss, 2 from a final boss) and the
-    weekly Heroic quests' 10 Sigils plus 75 gold. Set `Unbound.AccountCurrency.GMAccounts` back to 0 afterwards if
-    GM test items shouldn't mix into the balance.
+- [ ] **Heroic Sigil: the rest** (easy to moderate; SaucyHobo54): the Heroic currency is live and tested (see Done), still to do:
   - **The Loot Goblin's currency** (easy): Grizzle Lootsnatch sells the Loot Goblin and Arcane Loot Scanner for
     Sigils instead of gold (`data/sql/db-world/unbound_loot_goblin.sql`; a new `ItemExtendedCost` price from
     `SIGIL_EXTENDED_COSTS` in `tools/heroic_loot.py`).
