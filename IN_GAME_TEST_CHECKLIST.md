@@ -24,7 +24,8 @@ count as players for the solo raid changes). Use a level 60 character unless a c
 - [ ] Hover gear you can't wear (wrong armour type): **"Infusion: tribute only (you can't wear it)"**.
 - [ ] Kill creatures with gear on: chat shows **[Infusion]** messages at 25%, 50% and 75%, then
       **"… is fully infused!"**.
-- [ ] The micro menu button reads **Infusion**, and its tooltip says "Gear Infusion".
+- [ ] The character sheet (C) has two side tabs on its right edge, Perks and Infusion below it; Infusion's tooltip says
+      "Gear Infusion". Opening one window closes the other.
 - [ ] The window opens with the button, `/infusion`, `/infuse`, and the old `/attunement` and `/attune`.
       The title is **Gear Infusion**, with an **Infused (n)** tab and **Infusion stats** on the left.
 - [ ] `.infuse progress` works as a normal player, and `.attune progress` still works too.

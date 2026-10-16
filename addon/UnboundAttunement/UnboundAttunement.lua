@@ -468,124 +468,91 @@ local function toggle()
     if frame:IsShown() then frame:Hide() else frame:Show() end
 end
 
--- ------------------------------------------------------------------ micro menu button
--- An "Infusion" button in the micro menu, between Talents and Achievements. ElvUI keeps its own fixed list of micro
--- buttons, so with ElvUI's micro bar the button styles itself like ElvUI's and follows the bar's layout;
--- with the default UI it uses the game's micro button art.
-local MICRO_ICON = "Interface\\Icons\\INV_Enchant_EssenceEternalLarge"
+-- ------------------------------------------------------------------ character sheet side tab
+-- An "Infusion" side tab on the character sheet's right edge, under the UnboundPerks addon's "Perks" side tab
+-- (both built from the Spellbook's side tab template, SpellBookSkillLineTabTemplate). It opens the infusion
+-- window beside the character sheet and is lit while it's open. The two side tabs act like tabs: opening one
+-- window closes the other, so they never overlap. With ElvUI's character skin on, it gets ElvUI's side tab look
+-- (Skins/Blizzard/Spellbook.lua). Replaces the micro menu button, whose icon ElvUI's micro bar sometimes hid.
+local SIDE_TAB_ICON = "Interface\\Icons\\INV_Enchant_EssenceEternalLarge"
+local SIDE_TAB_GAP = 17   -- between the Spellbook's side tabs
 
-local function elvActionBars()
-    if not ElvUI or not ElvUI_MicroBar then return nil end
+local function elvSkins()
+    if not ElvUI then return nil end
     local ok, E = pcall(function() return unpack(ElvUI) end)
-    if not ok or not E then return nil end
-    local AB = E:GetModule("ActionBars", true)
-    if not AB or not AB.db or not AB.db.microbar then return nil end
-    return E, AB
+    if not ok or not E or not E.private or not E.private.skins then return nil end
+    local blizzard = E.private.skins.blizzard
+    if not (blizzard and blizzard.enable and blizzard.character) then return nil end
+    return E:GetModule("Skins", true), E
 end
 
-local function addMicroButton()
-    if _G["UnboundAttunementMicroButton"] or not HelpMicroButton then return end
-    local button = CreateFrame("Button", "UnboundAttunementMicroButton", HelpMicroButton:GetParent())
+local function addCharacterTab()
+    if not CharacterFrame or _G["UnboundInfusionCharacterTab"] then return end
+    local tab = CreateFrame("CheckButton", "UnboundInfusionCharacterTab", CharacterFrame, "SpellBookSkillLineTabTemplate")
+    tab:SetNormalTexture(SIDE_TAB_ICON)
+    tab.tooltip = "Gear Infusion"
+    tab:Show()
 
-    local E, AB = elvActionBars()
-    if E then
-        -- ElvUI: a bordered square like its other micro buttons, the icon filling it. The icon and the pressed
-        -- shade are drawn on the square's own frame: re-parenting the button (place() below) moves child frames
-        -- back above it, so an icon on the button itself would end up hidden behind the square's background.
-        -- The square sits one frame level above the button, set again on every layout: one level below put it on
-        -- the same level as ElvUI's micro bar backdrop, which then sometimes drew over it (and its icon). It takes
-        -- no mouse input, so clicks still reach the button.
-        local f = CreateFrame("Frame", nil, button)
-        local function raise() f:SetFrameLevel(button:GetFrameLevel() + 1) end
-        raise()
-        f:EnableMouse(false)
-        f:SetTemplate("Default", true)
-        f:SetOutside(button)
-        button.backdrop = f
-        button.icon = f:CreateTexture(nil, "ARTWORK")
-        button.icon:SetTexture(MICRO_ICON)
-        button.icon:SetInside(f)
-        button.icon:SetTexCoord(0.1, 0.9, 0.1, 0.9)
-        local pushed = f:CreateTexture(nil, "OVERLAY")
-        pushed:SetTexture(1, 1, 1, 0.25)
-        pushed:SetInside(f)
-        pushed:Hide()
-        button:HookScript("OnMouseDown", function() pushed:Show() end)
-        button:HookScript("OnMouseUp", function() pushed:Hide() end)
-
-        -- One row (the usual layout): between Talents and Achievements; ElvUI anchors each button to the one
-        -- before it, so moving Achievements after this button shifts the rest along. Several rows: ElvUI's grid
-        -- would break, so the button goes after the last one (Help) instead.
-        local function place()
-            button:SetParent(HelpMicroButton:GetParent())
-            button:SetSize(CharacterMicroButton:GetWidth(), CharacterMicroButton:GetHeight())
-            local spacing = E:Scale((E.PixelMode and 1 or 3) + (AB.db.microbar.buttonSpacing or 0))
-            local oneRow = (AB.db.microbar.buttonsPerRow or 10) >= 10
-            button:ClearAllPoints()
-            if oneRow then
-                button:SetPoint("LEFT", TalentMicroButton, "RIGHT", spacing, 0)
-                AchievementMicroButton:ClearAllPoints()
-                AchievementMicroButton:SetPoint("LEFT", button, "RIGHT", spacing, 0)
-            else
-                button:SetPoint("LEFT", HelpMicroButton, "RIGHT", spacing, 0)
-            end
-            -- one row: make the bar's background wide enough for the extra button
-            if oneRow and HelpMicroButton:GetParent() == ElvUI_MicroBar and AB.MicroWidth then
-                ElvUI_MicroBar:SetWidth(AB.MicroWidth + button:GetWidth() + spacing)
-            end
-            button:SetAlpha(1)
-            raise()
+    local elv   -- ElvUI engine once its look is applied
+    -- under the Perks side tab when the UnboundPerks addon is on, else in its place
+    local function anchor()
+        tab:ClearAllPoints()
+        local perks = _G["UnboundPerksCharacterTab"]
+        if perks and perks:IsShown() then
+            tab:SetPoint("TOPLEFT", perks, "BOTTOMLEFT", 0, -SIDE_TAB_GAP)
+        else
+            tab:SetPoint("TOPLEFT", CharacterFrame, "TOPRIGHT", elv and -33 or -32, -65)
         end
-        hooksecurefunc(AB, "UpdateMicroPositionDimensions", place)
-        button:HookScript("OnEnter", function(self)
-            if AB.db.microbar.mouseover then E:UIFrameFadeIn(ElvUI_MicroBar, 0.2, ElvUI_MicroBar:GetAlpha(), AB.db.microbar.alpha) end
-            self.backdrop:SetBackdropBorderColor(unpack(E.media.rgbvaluecolor))
-        end)
-        button:HookScript("OnLeave", function(self)
-            if AB.db.microbar.mouseover then E:UIFrameFadeOut(ElvUI_MicroBar, 0.2, ElvUI_MicroBar:GetAlpha(), 0) end
-            self.backdrop:SetBackdropBorderColor(unpack(E.media.bordercolor))
-        end)
-        place()
-    else
-        -- default UI: the game's micro button frame with the icon where the character portrait goes
-        button.icon = button:CreateTexture(nil, "ARTWORK")
-        button.icon:SetTexture(MICRO_ICON)
-        button:SetSize(28, 58)
-        button:SetNormalTexture("Interface\\Buttons\\UI-MicroButtonCharacter-Up")
-        button:SetPushedTexture("Interface\\Buttons\\UI-MicroButtonCharacter-Down")
-        button:SetHighlightTexture("Interface\\Buttons\\UI-MicroButton-Hilight", "ADD")
-        button.icon:SetSize(18, 25)
-        button.icon:SetPoint("TOP", 0, -28)
-        button.icon:SetTexCoord(0.2, 0.8, 0.0666, 0.9)
-        -- between Talents (hidden below level 10: then after Spellbook) and Achievements
-        local function place()
-            button:SetParent(AchievementMicroButton:GetParent())
-            local before = TalentMicroButton:IsShown() and TalentMicroButton or SpellbookMicroButton
-            button:ClearAllPoints()
-            button:SetPoint("BOTTOMLEFT", before, "BOTTOMRIGHT", -3, 0)
-            AchievementMicroButton:ClearAllPoints()
-            AchievementMicroButton:SetPoint("BOTTOMLEFT", button, "BOTTOMRIGHT", -3, 0)
-        end
-        -- the game re-anchors the micro buttons (talents unlocking, vehicles): put this one back each time
-        if UpdateMicroButtons then hooksecurefunc("UpdateMicroButtons", place) end
-        if VehicleMenuBar_MoveMicroButtons then hooksecurefunc("VehicleMenuBar_MoveMicroButtons", place) end
-        place()
-        button:SetScript("OnMouseDown", function(self) self.icon:SetPoint("TOP", 1, -29) end)
-        button:SetScript("OnMouseUp", function(self) self.icon:SetPoint("TOP", 0, -28) end)
+    end
+    local function update() tab:SetChecked(frame and frame:IsShown()) end
+    if frame then
+        frame:HookScript("OnShow", update)
+        frame:HookScript("OnHide", update)
     end
 
-    button:SetScript("OnClick", function()
-        PlaySound("igMainMenuOptionCheckBoxOn")
-        toggle()
+    -- ElvUI's look, the first time the character sheet opens (at login ElvUI may not be set up yet)
+    local skinned = false
+    CharacterFrame:HookScript("OnShow", function()
+        if not skinned then
+            skinned = true
+            local skins, E = elvSkins()
+            if skins then
+                pcall(function()
+                    tab:StripTextures()
+                    tab:StyleButton(nil, true)
+                    tab:SetTemplate("Default", true)
+                    tab:GetNormalTexture():SetInside()
+                    tab:GetNormalTexture():SetTexCoord(unpack(E.TexCoords))
+                    elv = E
+                end)
+            end
+        end
+        anchor()
+        update()
     end)
-    button:HookScript("OnEnter", function(self)
+    anchor()
+
+    tab:SetScript("OnClick", function()
+        PlaySound("igCharacterInfoTab")
+        if frame:IsShown() then
+            frame:Hide()
+        else
+            local perks = _G["UnboundPerksFrame"]
+            if perks and perks:IsShown() then perks:Hide() end
+            -- open next to the character sheet, right of the side tabs
+            frame:ClearAllPoints()
+            frame:SetPoint("TOPLEFT", CharacterFrame, "TOPRIGHT", 2, -10)
+            frame:Show()
+        end
+        update()
+    end)
+    tab:SetScript("OnEnter", function(self)
         GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         GameTooltip:SetText("Gear Infusion", 1, 1, 1)
         GameTooltip:AddLine("Your infused gear and the stats it gives (/infusion).", 1, 0.82, 0)
         GameTooltip:Show()
     end)
-    button:HookScript("OnLeave", function() GameTooltip:Hide() end)
-    button:Show()
+    tab:SetScript("OnLeave", function() GameTooltip:Hide() end)
 end
 
 -- ------------------------------------------------------------------ startup
@@ -593,14 +560,7 @@ local loader = CreateFrame("Frame")
 loader:RegisterEvent("PLAYER_LOGIN")
 loader:SetScript("OnEvent", function(self)
     build()
-    -- add the micro button a moment later, after ElvUI (if any) has set up its micro bar
-    local wait = 0
-    self:SetScript("OnUpdate", function(s, elapsed)
-        wait = wait + elapsed
-        if wait < 1 then return end
-        s:SetScript("OnUpdate", nil)
-        addMicroButton()
-    end)
+    addCharacterTab()
 end)
 
 SLASH_UNBOUNDATTUNEMENT1 = "/infusion"

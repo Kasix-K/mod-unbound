@@ -101,8 +101,10 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   `TributeGold` by quality (2/10/50/250), times `TributeOwnGearMultiplier` (2; the old `Sacrifice*` names are still
   read) if `Player::CanUseItem`.
   Client: `addon/UnboundAttunement` (tooltips on GameTooltip/ItemRefTooltip/ShoppingTooltips, the collection window,
-  the Infusion button in the micro menu between Talents and Achievements, `/infusion`; ElvUI's micro bar has a fixed button list, so
-  the button styles itself like ElvUI's and re-places itself after `AB:UpdateMicroPositionDimensions`). It whispers its own character
+  the Infusion side tab on the character sheet's right edge, `/infusion`). The side tabs (Perks from UnboundPerks, Infusion below
+  it) use the Spellbook's `SpellBookSkillLineTabTemplate`; opening one window closes the other, and with ElvUI's character skin
+  they get ElvUI's side tab look on the first character sheet open. (It was a micro menu button until 2026-10-15; ElvUI's
+  micro bar sometimes drew over its icon.) It whispers its own character
   (prefix `UBATT`): `Q:<ids>` -> `I:<id>:<code>:<done>:<needed>:<price>:<reason>` (code A infused, W wear to
   infuse, S tribute only, N doesn't count); `COLL` -> `C:BEGIN`, `C:A:`, `C:P:`, `C:S:`, `C:T:`, `C:END`; the server
   pushes `P:` (kill progress), `A:<id>` (infused) and `RESET` (a GM changed the collection).

@@ -795,7 +795,9 @@ local function addCharacterTab()
         if frame:IsShown() then
             frame:Hide()
         else
-            -- open next to the character sheet, right of the side tab
+            local infusion = _G["UnboundAttunementFrame"]   -- the other side tab's window (UnboundAttunement)
+            if infusion and infusion:IsShown() then infusion:Hide() end
+            -- open next to the character sheet, right of the side tabs
             frame:ClearAllPoints()
             frame:SetPoint("TOPLEFT", CharacterFrame, "TOPRIGHT", 2, -10)
             frame:Show()

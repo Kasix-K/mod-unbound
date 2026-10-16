@@ -80,6 +80,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   with the core's own formula. Class-limited perks can now be for several classes (a class mask).
 
 ### Changed
+- **Infusion is a side tab on the character sheet too,** under the Perks side tab, instead of a micro menu button
+  (whose icon ElvUI's micro bar sometimes hid). The two side tabs act like tabs: opening one window closes the other.
 - **The Perks tab is a side tab on the character sheet:** a square icon tab on its right edge (the Spellbook's side
   tab template), instead of a sixth bottom tab, which didn't fit once the Currency tab appeared. Lit while the perk
   window is open; ElvUI's side tab look with ElvUI's character skin.
