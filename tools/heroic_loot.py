@@ -2112,7 +2112,15 @@ def main():
              f'DELETE FROM `item_template` WHERE `entry` IN ({ids});',
              '']
     parts += [item_sql(i) + '\n' for i in HEROIC_ITEMS]
-    parts += ['DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;', '', loot_sql(), '', vendor_sql()]
+    parts += ['DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;', '']
+    # every item set piece needs an item_set_names row (the server warns at startup otherwise)
+    set_items = [i for i in HEROIC_ITEMS if i.get('set')]
+    if set_items:
+        parts += ['-- item set pieces\' names',
+                  f"DELETE FROM `item_set_names` WHERE `entry` IN ({', '.join(str(i['id']) for i in set_items)});",
+                  'INSERT INTO `item_set_names` (`entry`, `name`, `InventoryType`, `VerifiedBuild`) VALUES',
+                  ',\n'.join(f"({i['id']}, {sql_str(i['name'])}, {i['inv']}, 0)" for i in set_items) + ';', '']
+    parts += [loot_sql(), '', vendor_sql()]
     path = os.path.join(MODULE, 'data', 'sql', 'db-world', 'unbound_heroic_loot.sql')
     with open(path, 'w', encoding='utf8', newline='\n') as f:
         f.write('\n'.join(parts) + '\n')

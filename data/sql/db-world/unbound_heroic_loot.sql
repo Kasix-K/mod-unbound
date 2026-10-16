@@ -6754,6 +6754,14 @@ INSERT INTO `item_template` SELECT * FROM `unbound_hl_tmp`;
 
 DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;
 
+-- item set pieces' names
+DELETE FROM `item_set_names` WHERE `entry` IN (910112, 910115, 910118, 910119);
+INSERT INTO `item_set_names` (`entry`, `name`, `InventoryType`, `VerifiedBuild`) VALUES
+(910112, 'Blackened Defias Belt', 6, 0),
+(910115, 'Blackened Defias Gloves', 10, 0),
+(910118, 'Blackened Defias Armor', 5, 0),
+(910119, 'Blackened Defias Leggings', 7, 0);
+
 -- Targorr the Dread (Heroic), map 34
 DELETE FROM `creature_loot_template` WHERE `Entry` = 1001696;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES

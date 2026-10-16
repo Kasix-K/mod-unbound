@@ -97,6 +97,10 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 - **Warden of Rare Wonders with Ysera's look** (`.npc add 190205`): the same vendor in Ysera's night elf form
   (display 28640, from Ulduar), to place instead of or beside the Tyrande one.
 
+### Fixed
+- **Startup warnings for the Blackened Defias Garb set:** its four pieces now have `item_set_names` rows
+  (`tools/heroic_loot.py`), so the server no longer reports them missing.
+
 ## 2026-10-15
 
 ### Added
