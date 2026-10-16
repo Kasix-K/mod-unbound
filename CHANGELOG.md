@@ -73,6 +73,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   in the Dungeon Finder's own dropdown (after the random dungeons and Specific Dungeons). Choosing it swaps the
   dungeon list for the raids, drawn like the specific dungeon list (checkbox, lock icon with the reason, level,
   "Classic Raids" header), and Find Group becomes Enter Raid / Leave Raid. `/raidfinder` opens it.
+  Raids of an unreleased expansion aren't listed at all (only the classic raids while
+  `Unbound.ExpansionUnlocked` is 0).
 - **The Dungeon Finder no longer offers unreleased expansions' dungeons:** "Random Burning Crusade Dungeon" in
   the random list, and Hellfire Ramparts, The Blood Furnace and The Slave Pens (with their "Burning Crusade
   Normal" header) in the specific list. They showed at level 60 because accounts have the Wrath expansion,

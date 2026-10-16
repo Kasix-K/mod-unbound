@@ -68,11 +68,15 @@ local function buildDisplay()
     wipe(display)
     local lastExpansion
     for _, raid in ipairs(raids) do
-        if raid.expansion ~= lastExpansion then
-            display[#display + 1] = { header = EXPANSIONS[raid.expansion] or "" }
-            lastExpansion = raid.expansion
+        -- raids of an expansion the server's content lock keeps closed aren't listed at all (like the Dungeon
+        -- Finder's dungeons); they appear once that expansion is released (Unbound.ExpansionUnlocked)
+        if raid.status ~= "E" then
+            if raid.expansion ~= lastExpansion then
+                display[#display + 1] = { header = EXPANSIONS[raid.expansion] or "" }
+                lastExpansion = raid.expansion
+            end
+            display[#display + 1] = raid
         end
-        display[#display + 1] = raid
     end
 end
 
