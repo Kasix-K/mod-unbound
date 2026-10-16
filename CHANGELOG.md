@@ -69,6 +69,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Changed
+- **Ossirian solo:** alone in Ruins of Ahn'Qiraj, his Curse of Tongues fails and his Enveloping Winds comes at most
+  every 40 seconds instead of 20 (`Unbound.SoloRaid.Ossirian`, `Unbound.SoloRaid.OssirianWindsInterval`).
 - **Razorgore solo: fewer add waves.** Alone in Blackwing Lair, his add waves come at most every 30 seconds
   (`Unbound.SoloRaid.RazorgoreWaveInterval`; the instance sends one every 15): a wave that comes sooner is removed
   as it appears. The instance still counts those adds towards its totals (12 dragonkin, 40 orcs), so fewer come in all.

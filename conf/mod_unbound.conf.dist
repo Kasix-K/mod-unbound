@@ -418,6 +418,16 @@ Unbound.Attunement.TributeOwnGearMultiplier = 2
 #                     paralyzed player fail.
 #        Default:     1 - Enabled
 #
+#    Unbound.SoloRaid.Ossirian
+#        Description: Ruins of Ahn'Qiraj, Ossirian the Unscarred: Curse of Tongues fails, and Enveloping
+#                     Winds comes at most every Unbound.SoloRaid.OssirianWindsInterval seconds.
+#        Default:     1 - Enabled
+#
+#    Unbound.SoloRaid.OssirianWindsInterval
+#        Description: The fewest seconds between Ossirian's Enveloping Winds solo (his script casts it every
+#                     20 seconds; a cast that comes sooner after the last one fails). 20 (or less) = unchanged.
+#        Default:     40
+#
 #    Unbound.SoloRaid.Skeram
 #        Description: Temple of Ahn'Qiraj, The Prophet Skeram: True Fulfillment (mind control) fails.
 #        Default:     1 - Enabled
@@ -465,6 +475,8 @@ Unbound.SoloRaid.Lucifron = 1
 Unbound.SoloRaid.Jindo = 1
 Unbound.SoloRaid.Hakkar = 1
 Unbound.SoloRaid.Ayamiss = 1
+Unbound.SoloRaid.Ossirian = 1
+Unbound.SoloRaid.OssirianWindsInterval = 40
 Unbound.SoloRaid.Skeram = 1
 Unbound.SoloRaid.TwinEmperors = 1
 Unbound.SoloRaid.Viscidus = 1

@@ -238,7 +238,8 @@ changes, raid by raid (see Next up).
         Mutation), Nefarian (Shadow Command)
   - [x] Molten Core (2026-10-15): Lucifron's Flamewaker Protectors (Dominate Mind)
   - [x] Zul'Gurub (2026-10-15): Jin'do (Brain Wash Totem, Banish), Hakkar (Cause Insanity, Blood Siphon)
-  - [x] Ruins of Ahn'Qiraj (2026-10-15): Ayamiss (Paralyze, larva Feed)
+  - [x] Ruins of Ahn'Qiraj (2026-10-15): Ayamiss (Paralyze, larva Feed); Ossirian (no Curse of Tongues, Enveloping
+        Winds at most every 40 seconds)
   - [x] Temple of Ahn'Qiraj (2026-10-15): Viscidus (each hit counts 10 times towards freeze and shatter),
         Twin Emperors (Heal Brother), Skeram (True Fulfillment), Qiraji Mindslayer (Cause Insanity)
   - [x] Naxxramas (classic), Thaddius (2026-10-15): Stalagg and Feugen don't revive each other and don't

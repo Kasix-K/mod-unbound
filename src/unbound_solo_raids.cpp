@@ -37,6 +37,9 @@
  * Ruins of Ahn'Qiraj:
  *   Ayamiss the Hunter     Paralyze (25725) fails, and so does the Hive'Zara Larva's Feed (25721) on the
  *                          paralyzed player, which a stunned solo player can't stop.
+ *   Ossirian the Unscarred Curse of Tongues (25195) fails, and Enveloping Winds (25189, every 20 seconds)
+ *                          fails if it comes less than Unbound.SoloRaid.OssirianWindsInterval seconds after
+ *                          the last one that landed.
  *
  * Temple of Ahn'Qiraj:
  *   The Prophet Skeram     True Fulfillment (785, a mind control) fails.
@@ -108,6 +111,7 @@ namespace
         FIX_QIRAJI_MINDSLAYER,
         FIX_THADDIUS,
         FIX_GOTHIK,
+        FIX_OSSIRIAN,
         MAX_SOLO_RAID_FIX
     };
 
@@ -116,13 +120,14 @@ namespace
     {
         "Razorgore", "Vaelastrasz", "Ebonroc", "Chromaggus", "Nefarian",
         "Lucifron", "Jindo", "Hakkar", "Ayamiss", "Skeram", "TwinEmperors", "Viscidus", "QirajiMindslayer",
-        "Thaddius", "Gothik"
+        "Thaddius", "Gothik", "Ossirian"
     };
 
     bool sEnabled = true;
     std::array<bool, MAX_SOLO_RAID_FIX> sFixEnabled = { };
     uint32 sViscidusHitMultiplier = 10;
     uint32 sRazorgoreWaveInterval = 30;    // seconds
+    uint32 sOssirianWindsInterval = 40;    // seconds
 
     struct BlockedSpell
     {
@@ -132,7 +137,7 @@ namespace
     };
 
     // Keep in sync with data/sql/db-world/unbound_solo_raids.sql
-    constexpr std::array<BlockedSpell, 17> BLOCKED_SPELLS =
+    constexpr std::array<BlockedSpell, 18> BLOCKED_SPELLS =
     {{
         { 14515, 12557, FIX_RAZORGORE         },  // Dominate Mind, Grethok the Controller
         { 18173, 13020, FIX_VAELASTRASZ       },  // Burning Adrenaline, Vaelastrasz the Corrupt
@@ -147,6 +152,7 @@ namespace
         { 24324, 14834, FIX_HAKKAR            },  // Blood Siphon, Hakkar
         { 25725, 15369, FIX_AYAMISS           },  // Paralyze, Ayamiss the Hunter
         { 25721, 15555, FIX_AYAMISS           },  // Feed, Hive'Zara Larva
+        { 25195, 15339, FIX_OSSIRIAN          },  // Curse of Tongues, Ossirian the Unscarred
         { 785,   15263, FIX_SKERAM            },  // True Fulfillment, The Prophet Skeram (and his images)
         { 7393,  15275, FIX_TWIN_EMPERORS     },  // Heal Brother, Emperor Vek'nilash
         { 7393,  15276, FIX_TWIN_EMPERORS     },  // Heal Brother, Emperor Vek'lor
@@ -154,6 +160,7 @@ namespace
     }};
 
     constexpr uint32 NPC_VISCIDUS = 15299;
+    constexpr uint32 NPC_OSSIRIAN = 15339;
 
     // Razorgore's add waves (instance_blackwing_lair.cpp, EVENT_RAZOR_SPAWN: 2-5 adds every 15 seconds)
     constexpr uint32 MAP_BWL_RAZORGORE_WAVES = 469;
@@ -214,6 +221,39 @@ class spell_unbound_solo_raid_block : public SpellScript
         OnCheckCast += SpellCheckCastFn(spell_unbound_solo_raid_block::CheckCast);
     }
 };
+
+// Enveloping Winds (25189), Ossirian the Unscarred: his script casts it on his target every 20 seconds. Solo, a
+// cast less than sOssirianWindsInterval seconds after the last one that landed fails.
+class spell_unbound_solo_ossirian_winds : public SpellScript
+{
+    PrepareSpellScript(spell_unbound_solo_ossirian_winds);
+
+    SpellCastResult CheckCast()
+    {
+        Unit* caster = GetCaster();
+        if (!caster || caster->GetEntry() != NPC_OSSIRIAN || !IsFixActive(FIX_OSSIRIAN) || !IsSoloRaid(caster->GetMap()))
+            return SPELL_CAST_OK;
+
+        uint32 const now = GameTime::GetGameTimeMS().count();
+        std::lock_guard<std::mutex> lock(_mutex);   // instances update on several threads at once
+        auto itr = _lastCast.find(caster->GetGUID());
+        if (itr != _lastCast.end() && now - itr->second < sOssirianWindsInterval * IN_MILLISECONDS)
+            return SPELL_FAILED_DONT_REPORT;
+        _lastCast[caster->GetGUID()] = now;
+        return SPELL_CAST_OK;
+    }
+
+    void Register() override
+    {
+        OnCheckCast += SpellCheckCastFn(spell_unbound_solo_ossirian_winds::CheckCast);
+    }
+
+    static std::mutex _mutex;
+    static std::unordered_map<ObjectGuid, uint32> _lastCast;   // Ossirian -> when Enveloping Winds last landed
+};
+
+std::mutex spell_unbound_solo_ossirian_winds::_mutex;
+std::unordered_map<ObjectGuid, uint32> spell_unbound_solo_ossirian_winds::_lastCast;
 
 // Black Dragon Egg (177807) in Razorgore's room. Normally only Razorgore, controlled through the Orb of
 // Domination, can break them (spell_egg_event); solo, the player breaks them by walking over or clicking.
@@ -401,12 +441,14 @@ public:
             sFixEnabled[fix] = sConfigMgr->GetOption<bool>(std::string("Unbound.SoloRaid.") + FIX_KEYS[fix], true);
         sViscidusHitMultiplier = std::max<uint32>(1, sConfigMgr->GetOption<uint32>("Unbound.SoloRaid.ViscidusHitMultiplier", 10));
         sRazorgoreWaveInterval = sConfigMgr->GetOption<uint32>("Unbound.SoloRaid.RazorgoreWaveInterval", 30);
+        sOssirianWindsInterval = sConfigMgr->GetOption<uint32>("Unbound.SoloRaid.OssirianWindsInterval", 40);
     }
 };
 
 void AddSC_unbound_solo_raids()
 {
     RegisterSpellScript(spell_unbound_solo_raid_block);
+    RegisterSpellScript(spell_unbound_solo_ossirian_winds);
     RegisterGameObjectAI(go_unbound_solo_razorgore_egg);
     new unbound_solo_viscidus_unit();
     new unbound_solo_razorgore_waves();

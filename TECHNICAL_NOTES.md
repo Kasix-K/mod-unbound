@@ -121,7 +121,9 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   AI functions `ViscidusHitMultiplier - 1` more times (with no damage), so the thresholds, emotes and phases of
   his own script do the rest. Swings count before the hit roll, so misses count too. Settings:
   `Unbound.SoloRaid.Enable`, one per boss, `Unbound.SoloRaid.ViscidusHitMultiplier` and
-  `Unbound.SoloRaid.RazorgoreWaveInterval`. Razorgore's waves (`unbound_solo_razorgore_waves`, an
+  `Unbound.SoloRaid.RazorgoreWaveInterval`. Ossirian's Enveloping Winds (`spell_unbound_solo_ossirian_winds`,
+  spell 25189) fails in `OnCheckCast` if it comes less than `Unbound.SoloRaid.OssirianWindsInterval` seconds after
+  the last one that landed (per Ossirian, under a mutex). Razorgore's waves (`unbound_solo_razorgore_waves`, an
   AllCreatureScript): `OnCreatureAddWorld` sees each summoned Blackwing Legionnaire / Mage / Dragonkin in map 469,
   groups adds summoned within 2 seconds as one wave, and despawns a whole wave that comes less than the interval
   after the last wave kept (per instance id, under a mutex: instances update on several threads). Thaddius' fix is in

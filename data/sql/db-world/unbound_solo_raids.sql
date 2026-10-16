@@ -17,6 +17,7 @@ INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
 (24324, 'spell_unbound_solo_raid_block'),  -- Blood Siphon (Hakkar)
 (25725, 'spell_unbound_solo_raid_block'),  -- Paralyze (Ayamiss the Hunter, Ruins of Ahn'Qiraj)
 (25721, 'spell_unbound_solo_raid_block'),  -- Feed (Hive'Zara Larva, Ayamiss)
+(25195, 'spell_unbound_solo_raid_block'),  -- Curse of Tongues (Ossirian the Unscarred)
 (785, 'spell_unbound_solo_raid_block'),    -- True Fulfillment (The Prophet Skeram, Temple of Ahn'Qiraj)
 (7393, 'spell_unbound_solo_raid_block'),   -- Heal Brother (Twin Emperors)
 (26079, 'spell_unbound_solo_raid_block');  -- Cause Insanity (Qiraji Mindslayer)
@@ -24,3 +25,7 @@ INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
 -- Black Dragon Egg in Razorgore's room: solo players break eggs by walking over or clicking them.
 -- (It had no script before; groups get the game's normal handling.)
 UPDATE `gameobject_template` SET `ScriptName` = 'go_unbound_solo_razorgore_egg' WHERE `entry` = 177807;
+
+-- Enveloping Winds (Ossirian the Unscarred): solo, at most every Unbound.SoloRaid.OssirianWindsInterval seconds.
+DELETE FROM `spell_script_names` WHERE `ScriptName` = 'spell_unbound_solo_ossirian_winds';
+INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES (25189, 'spell_unbound_solo_ossirian_winds');

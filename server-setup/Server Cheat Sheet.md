@@ -95,7 +95,8 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
   Razorgore is pulled, and don't kill him before the last egg; his add waves come every 30 seconds instead of 15; Grethok, Vaelastrasz, Ebonroc, Chromaggus and
   Nefarius skip their solo-killing spells. Molten Core, Zul'Gurub and Ahn'Qiraj: no mind controls (Lucifron's
   adds, Jin'do's totem, Hakkar, Skeram, Qiraji Mindslayers), no Jin'do Banish, Hakkar Blood Siphon, Ayamiss
-  Paralyze or Twin Emperors Heal Brother; each hit on Viscidus counts 10 times towards freezing (frost) and
+  Paralyze, Ossirian Curse of Tongues or Twin Emperors Heal Brother (and Ossirian's Enveloping Winds only every 40
+  seconds); each hit on Viscidus counts 10 times towards freezing (frost) and
   shattering (melee) him. Naxxramas: Gothik doesn't reset when he teleports to the other side, and Stalagg and
   Feugen don't revive each other or overload their coils (the
   Four Horsemen need `Unbound.Naxx40.Doable.FourHorsemen = 1` to be beaten solo). Switch them off in
