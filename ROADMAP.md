@@ -363,6 +363,11 @@ changes, raid by raid (see Next up).
 - [ ] **Challenge modes** (easy to moderate): optional Hardcore or Ironman runs with rewards
       (mod-challenge-modes).
 - [ ] **Guild houses** (easy): a private area per guild (mod-guildhouse).
+- [ ] **Higher resolution transmog splash art** (easy, art first): replace the transmog window's splash image
+      (mod-transmog-plus `addon/Transmog/assets/splash.blp`, 512x512 DXT5: two characters, before and after, with an
+      arrow) with sharper art, using art we made or have the rights to. Ship it in our own addon or `patch-Z.MPQ`
+      at the same path, so mod-transmog-plus itself stays unchanged; BLP or 32-bit TGA, power-of-two sizes (1024x1024
+      at most).
 
 ## Open questions
 
