@@ -65,7 +65,13 @@ CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `t`.* FROM `creature_template_res
 UPDATE `unbound_hc_tmp` SET `CreatureID` = `CreatureID` + @OFFSET;
 INSERT INTO `creature_template_resistance` SELECT * FROM `unbound_hc_tmp`;
 
-
+-- heroic bosses use their own loot tables (tools/heroic_loot.py)
+UPDATE `creature_template` SET `lootid` = 1001696 WHERE `entry` = 1001696;  -- Targorr the Dread (Heroic)
+UPDATE `creature_template` SET `lootid` = 1001666 WHERE `entry` = 1001666;  -- Kam Deepfury (Heroic)
+UPDATE `creature_template` SET `lootid` = 1001717 WHERE `entry` = 1001717;  -- Hamhock (Heroic)
+UPDATE `creature_template` SET `lootid` = 1001716 WHERE `entry` = 1001716;  -- Bazil Thredd (Heroic)
+UPDATE `creature_template` SET `lootid` = 1001663 WHERE `entry` = 1001663;  -- Dextren Ward (Heroic)
+UPDATE `creature_template` SET `lootid` = 1001720 WHERE `entry` = 1001720;  -- Bruegal Ironknuckle (Heroic)
 
 -- spawn everything in heroic too (spawnMask bit 1 = normal, bit 2 = heroic)
 UPDATE `creature` SET `spawnMask` = `spawnMask` | 2 WHERE `map` = @MAP;
@@ -218,7 +224,11 @@ CREATE TEMPORARY TABLE `unbound_hc_tmp` SELECT `t`.* FROM `creature_template_res
 UPDATE `unbound_hc_tmp` SET `CreatureID` = `CreatureID` + @OFFSET;
 INSERT INTO `creature_template_resistance` SELECT * FROM `unbound_hc_tmp`;
 
-
+-- heroic bosses use their own loot tables (tools/heroic_loot.py)
+UPDATE `creature_template` SET `lootid` = 1011517 WHERE `entry` = 1011517;  -- Oggleflint (Heroic)
+UPDATE `creature_template` SET `lootid` = 1011520 WHERE `entry` = 1011520;  -- Taragaman the Hungerer (Heroic)
+UPDATE `creature_template` SET `lootid` = 1011518 WHERE `entry` = 1011518;  -- Jergosh the Invoker (Heroic)
+UPDATE `creature_template` SET `lootid` = 1011519 WHERE `entry` = 1011519;  -- Bazzalan (Heroic)
 
 -- spawn everything in heroic too (spawnMask bit 1 = normal, bit 2 = heroic)
 UPDATE `creature` SET `spawnMask` = `spawnMask` | 2 WHERE `map` = @MAP;

@@ -139,7 +139,7 @@ CURRENCY_CATEGORIES = [
 ITEM_EXTENDED_COST_COLUMNS = ['ID', 'HonorPoints', 'ArenaPoints', 'ArenaBracket'] + \
                              [f'ItemID_{k}' for k in range(1, 6)] + [f'ItemCount_{k}' for k in range(1, 6)] + \
                              ['RequiredArenaRating', 'ItemPurchaseGroup']
-SIGIL_PRICES = {3000: 10, 3001: 15, 3002: 20, 3003: 25, 3004: 30}  # ExtendedCost id: sigils
+SIGIL_PRICES = {cost_id: sigils for sigils, cost_id in heroic_loot.SIGIL_EXTENDED_COSTS.items()}  # ExtendedCost id: sigils
 ITEM_EXTENDED_COSTS = [
     (cost_id, 0, 0, 0, HEROIC_SIGIL, 0, 0, 0, 0, sigils, 0, 0, 0, 0, 0, 0)
     for cost_id, sigils in SIGIL_PRICES.items()

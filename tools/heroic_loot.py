@@ -1599,8 +1599,47 @@ HEROIC_ITEMS = [
 # Keyed by map id, then by the NORMAL boss entry (its heroic copy is entry + HEROIC_ENTRY_OFFSET).
 #   groups: each list is one loot group with equal chances; exactly one item from each group drops.
 #   extra:  (item, chance %) rolled independently.
-#   gold:   (min, max) in copper.
+#   gold:   (min, max) in copper (left as the normal boss's when not given).
+#   final:  True for the last boss of a dungeon or wing (the 26 in bulletin_board.DUNGEONS; check() makes sure):
+#           it drops SIGILS_FINAL Heroic Sigils instead of SIGILS.
+#   normal_loot: True = the heroic boss drops the normal boss's whole loot (the pilot heroics, Stockade and
+#           Ragefire Chasm, have no heroic gear), plus its Heroic Sigils.
+# Every heroic boss drops Heroic Sigils (the Heroic currency, item 912000: tools/custom_dbc.py and
+# data/sql/db-world/unbound_currencies.sql). The item is multi-drop, so every group member loots their own.
+HEROIC_SIGIL = 912000
+SIGILS = 1         # per heroic boss
+SIGILS_FINAL = 2   # from a final boss
+
+# ---------------------------------------------------------------- the Heroic Quartermaster
+# Creature 190104 (data/sql/db-world/unbound_heroic_quartermaster.sql, src/unbound_heroic_quartermaster.cpp) shows a
+# menu; each page is a never-spawned vendor creature whose npc_vendor list it opens (a 3.3.5 vendor window holds at
+# most 150 items, and there are 450 heroic items). Prices are ItemExtendedCost rows (tools/custom_dbc.py builds them
+# from SIGIL_EXTENDED_COSTS): Sigils -> ExtendedCost id.
+SIGIL_EXTENDED_COSTS = {10: 3000, 15: 3001, 20: 3002, 25: 3003, 30: 3004}
+QUARTERMASTER_PAGES = [
+    # vendor entry, menu text, inventory types (final-boss items all go on the last page), Sigils
+    (190105, 'Rings, necks, cloaks, wrists and belts (10 Sigils)', {2, 6, 9, 11, 12, 16}, 10),
+    (190106, 'Head, shoulders and chest (15 Sigils)', {1, 3, 5, 20}, 15),
+    (190107, 'Hands, legs and feet (15 Sigils)', {7, 8, 10}, 15),
+    (190108, 'Weapons, shields and off-hands (20-25 Sigils)', {13, 14, 15, 17, 21, 22, 23, 25, 26, 28}, None),
+    (190109, 'Final boss treasures (30 Sigils)', None, 30),
+]
+TWO_HANDED_OR_RANGED = {15, 17, 25, 26, 28}  # 25 Sigils on the weapons page; one-handers, shields, off-hands 20
 LOOT = {
+    34: {  # Stormwind Stockades (pilot heroic: normal loot plus Sigils)
+        1696: dict(name='Targorr the Dread', normal_loot=True),
+        1666: dict(name='Kam Deepfury', normal_loot=True),
+        1717: dict(name='Hamhock', normal_loot=True),
+        1716: dict(name='Bazil Thredd', normal_loot=True, final=True),
+        1663: dict(name='Dextren Ward', normal_loot=True),
+        1720: dict(name='Bruegal Ironknuckle', normal_loot=True),
+    },
+    389: {  # Ragefire Chasm (pilot heroic: normal loot plus Sigils)
+        11517: dict(name='Oggleflint', normal_loot=True),
+        11520: dict(name='Taragaman the Hungerer', normal_loot=True),
+        11518: dict(name='Jergosh the Invoker', normal_loot=True),
+        11519: dict(name='Bazzalan', normal_loot=True, final=True),
+    },
     36: {  # Deadmines
         644:  dict(name="Rhahk'Zor", groups=[[910100, 910101, 910102]], gold=(2000, 4000)),
         642:  dict(name="Sneed's Shredder", groups=[[910103, 910104, 910105]], gold=(2000, 4000)),
@@ -1610,7 +1649,7 @@ LOOT = {
                    extra=[(8494, 1)],  # Parrot Cage (Hyacinth Macaw) companion
                    gold=(2000, 4000)),
         645:  dict(name='Cookie', groups=[[910115, 910116, 910117]], gold=(2000, 4000)),
-        639:  dict(name='Edwin VanCleef', groups=[[910118, 910119], [910120, 910121]], gold=(5000, 10000)),
+        639:  dict(final=True, name='Edwin VanCleef', groups=[[910118, 910119], [910120, 910121]], gold=(5000, 10000)),
     },
     43: {  # Wailing Caverns
         3671: dict(name="Lady Anacondra", groups=[[910122, 910123]], gold=(2000, 4000)),
@@ -1620,7 +1659,7 @@ LOOT = {
         3674: dict(name="Skum", groups=[[910128, 910129]], gold=(2000, 4000)),
         3673: dict(name="Lord Serpentis", groups=[[910130, 910131, 910132]], gold=(2000, 4000)),
         5775: dict(name="Verdan the Everliving", groups=[[910133, 910134, 910135]], gold=(2000, 4000)),
-        3654: dict(name="Mutanus the Devourer", groups=[[910136], [910137]], gold=(5000, 10000)),
+        3654: dict(final=True, name="Mutanus the Devourer", groups=[[910136], [910137]], gold=(5000, 10000)),
     },
     33: {  # Shadowfang Keep
         3914: dict(name="Rethilgore", groups=[[910138]], gold=(2000, 4000)),
@@ -1630,7 +1669,7 @@ LOOT = {
         4279: dict(name="Odo the Blindwatcher", groups=[[910146, 910147]], gold=(2000, 4000)),
         4274: dict(name="Fenrus the Devourer", groups=[[910148, 910149]], gold=(2000, 4000)),
         3927: dict(name="Wolf Master Nandos", groups=[[910150, 910151]], gold=(2000, 4000)),
-        4275: dict(name="Archmage Arugal", groups=[[910152], [910153]], gold=(5000, 10000)),
+        4275: dict(final=True, name="Archmage Arugal", groups=[[910152], [910153]], gold=(5000, 10000)),
     },
     48: {  # Blackfathom Deeps
         4887: dict(name="Ghamoo-ra", groups=[[910154, 910155]], gold=(2000, 4000)),
@@ -1639,14 +1678,14 @@ LOOT = {
         12876: dict(name="Baron Aquanis", groups=[[910161, 910162, 910163]], gold=(2000, 4000)),
         4832: dict(name="Twilight Lord Kelris", groups=[[910164, 910165]], gold=(2000, 4000)),
         4830: dict(name="Old Serra'kis", groups=[[910166, 910167]], gold=(2000, 4000)),
-        4829: dict(name="Aku'mai", groups=[[910168], [910169]], gold=(5000, 10000)),
+        4829: dict(final=True, name="Aku'mai", groups=[[910168], [910169]], gold=(5000, 10000)),
     },
     90: {  # Gnomeregan
         7361: dict(name="Grubbis", groups=[[910170]], gold=(2000, 4000)),
         7079: dict(name="Viscous Fallout", groups=[[910171, 910172, 910173]], gold=(2000, 4000)),
         6235: dict(name="Electrocutioner 6000", groups=[[910174, 910175]], gold=(2000, 4000)),
         6229: dict(name="Crowd Pummeler 9-60", groups=[[910176, 910177]], gold=(2000, 4000)),
-        7800: dict(name="Mekgineer Thermaplugg", groups=[[910178, 910179], [910180]], gold=(5000, 10000)),
+        7800: dict(final=True, name="Mekgineer Thermaplugg", groups=[[910178, 910179], [910180]], gold=(5000, 10000)),
     },
     47: {  # Razorfen Kraul
         6168: dict(name="Roogug", groups=[[910181, 910182, 910183]], gold=(2000, 4000)),
@@ -1654,24 +1693,24 @@ LOOT = {
         4428: dict(name="Death Speaker Jargba", groups=[[910185, 910186, 910187]], gold=(2000, 4000)),
         4420: dict(name="Overlord Ramtusk", groups=[[910188, 910189]], gold=(2000, 4000)),
         4422: dict(name="Agathelos the Raging", groups=[[910190, 910191]], gold=(2000, 4000)),
-        4421: dict(name="Charlga Razorflank", groups=[[910192, 910193], [910194]], gold=(5000, 10000)),
+        4421: dict(final=True, name="Charlga Razorflank", groups=[[910192, 910193], [910194]], gold=(5000, 10000)),
     },
     189: {  # Scarlet Monastery
         3983: dict(name="Interrogator Vishas", groups=[[910195]], gold=(2000, 4000)),
-        4543: dict(name="Bloodmage Thalnos", groups=[[910196]], gold=(5000, 10000)),
+        4543: dict(final=True, name="Bloodmage Thalnos", groups=[[910196]], gold=(5000, 10000)),
         3974: dict(name="Houndmaster Loksey", groups=[[910197]], gold=(2000, 4000)),
-        6487: dict(name="Arcanist Doan", groups=[[910198, 910199, 910200], [910201, 910202]], gold=(5000, 10000)),
-        3975: dict(name="Herod", groups=[[910203, 910204], [910205]], gold=(5000, 10000)),
+        6487: dict(final=True, name="Arcanist Doan", groups=[[910198, 910199, 910200], [910201, 910202]], gold=(5000, 10000)),
+        3975: dict(final=True, name="Herod", groups=[[910203, 910204], [910205]], gold=(5000, 10000)),
         4542: dict(name="High Inquisitor Fairbanks", groups=[[910206, 910207, 910208]], gold=(2000, 4000)),
         3976: dict(name="Scarlet Commander Mograine", groups=[[910209, 910210, 910211]], gold=(2000, 4000)),
-        3977: dict(name="High Inquisitor Whitemane", groups=[[910212, 910213], [910214]], gold=(5000, 10000)),
+        3977: dict(final=True, name="High Inquisitor Whitemane", groups=[[910212, 910213], [910214]], gold=(5000, 10000)),
     },
     129: {  # Razorfen Downs
         7355: dict(name="Tuten'kash", groups=[[910215, 910216]], gold=(2000, 4000)),
         7357: dict(name="Mordresh Fire Eye", groups=[[910217, 910218, 910219]], gold=(2000, 4000)),
         8567: dict(name="Glutton", groups=[[910220]], gold=(2000, 4000)),
         7356: dict(name="Plaguemaw the Rotting", groups=[[910221]], gold=(2000, 4000)),
-        7358: dict(name="Amnennar the Coldbringer", groups=[[910222, 910223, 910224], [910225, 910226, 910227]], gold=(5000, 10000)),
+        7358: dict(final=True, name="Amnennar the Coldbringer", groups=[[910222, 910223, 910224], [910225, 910226, 910227]], gold=(5000, 10000)),
     },
     70: {  # Uldaman
         6910: dict(name="Revelosh", groups=[], gold=(2000, 4000)),
@@ -1683,7 +1722,7 @@ LOOT = {
         7206: dict(name="Ancient Stone Keeper", groups=[[910239, 910240, 910241]], gold=(2000, 4000)),
         7291: dict(name="Galgann Firehammer", groups=[[910242, 910243, 910244]], gold=(2000, 4000)),
         4854: dict(name="Grimlok", groups=[[910245, 910246, 910247]], gold=(2000, 4000)),
-        2748: dict(name="Archaedas", groups=[[910248]], gold=(5000, 10000)),
+        2748: dict(final=True, name="Archaedas", groups=[[910248]], gold=(5000, 10000)),
     },
     209: {  # Zul'Farrak
         8127: dict(name="Antu'sul", groups=[[910249, 910250]], gold=(2000, 4000)),
@@ -1694,7 +1733,7 @@ LOOT = {
         7604: dict(name="Sergeant Bly", groups=[[910260, 910261, 910262]], gold=(2000, 4000)),
         7795: dict(name="Hydromancer Velratha", groups=[[910256, 910263, 910264]], gold=(2000, 4000)),
         7273: dict(name="Gahz'rilla", groups=[[910265]], gold=(2000, 4000)),
-        7267: dict(name="Chief Ukorz Sandscalp", groups=[[910249, 910266], [910267]], gold=(5000, 10000)),
+        7267: dict(final=True, name="Chief Ukorz Sandscalp", groups=[[910249, 910266], [910267]], gold=(5000, 10000)),
     },
     349: {  # Maraudon
         13282: dict(name="Noxxion", groups=[[910268, 910269]], gold=(2000, 4000)),
@@ -1704,7 +1743,7 @@ LOOT = {
         12203: dict(name="Landslide", groups=[[910277, 910278, 910279]], gold=(2000, 4000)),
         13601: dict(name="Tinkerer Gizlock", groups=[[910280, 910281]], gold=(2000, 4000)),
         13596: dict(name="Rotgrip", groups=[[910282, 910283]], gold=(2000, 4000)),
-        12201: dict(name="Princess Theradras", groups=[[910284, 910285, 910286], [910287, 910288, 910289]], gold=(5000, 10000)),
+        12201: dict(final=True, name="Princess Theradras", groups=[[910284, 910285, 910286], [910287, 910288, 910289]], gold=(5000, 10000)),
     },
     109: {  # Sunken Temple
         8580: dict(name="Atal'alarion", groups=[[910290, 910291]], gold=(2000, 4000)),
@@ -1715,7 +1754,7 @@ LOOT = {
         5711: dict(name="Ogom the Wretched", groups=[[910301, 910302]], gold=(2000, 4000)),
         5719: dict(name="Morphaz", groups=[[910292, 910293, 910294]], gold=(2000, 4000)),
         5722: dict(name="Hazzas", groups=[[910292, 910293, 910294]], gold=(2000, 4000)),
-        5709: dict(name="Shade of Eranikus", groups=[[910303, 910304, 910305], [910306, 910307]], gold=(5000, 10000)),
+        5709: dict(final=True, name="Shade of Eranikus", groups=[[910303, 910304, 910305], [910306, 910307]], gold=(5000, 10000)),
     },
     230: {  # Blackrock Depths
         9025: dict(name="Lord Roccor", groups=[[910308, 910309, 910310]], gold=(2000, 4000)),
@@ -1739,7 +1778,7 @@ LOOT = {
         9156: dict(name="Ambassador Flamelash", groups=[[910354, 910355, 910356]], gold=(2000, 4000)),
         9938: dict(name="Magmus", groups=[[910357, 910358, 910359]], gold=(2000, 4000)),
         8929: dict(name="Princess Moira Bronzebeard", groups=[[910360, 910361, 910362]], gold=(2000, 4000)),
-        9019: dict(name="Emperor Dagran Thaurissan", groups=[[910363, 910364, 910365], [910366, 910367, 910368]], gold=(5000, 10000)),
+        9019: dict(final=True, name="Emperor Dagran Thaurissan", groups=[[910363, 910364, 910365], [910366, 910367, 910368]], gold=(5000, 10000)),
     },
     229: {  # Blackrock Spire
         9196: dict(name="Highlord Omokk", groups=[[910369, 910370, 910371]], gold=(2000, 4000)),
@@ -1750,7 +1789,7 @@ LOOT = {
         9736: dict(name="Quartermaster Zigris", groups=[[910382, 910383]], gold=(2000, 4000)),
         10220: dict(name="Halycon", groups=[[910384, 910385, 910386]], gold=(2000, 4000)),
         10268: dict(name="Gizrul the Slavener", groups=[[910387, 910388, 910389]], gold=(2000, 4000)),
-        9568: dict(name="Overlord Wyrmthalak", groups=[[910390, 910391, 910392], [910393]], gold=(5000, 10000)),
+        9568: dict(final=True, name="Overlord Wyrmthalak", groups=[[910390, 910391, 910392], [910393]], gold=(5000, 10000)),
         9816: dict(name="Pyroguard Emberseer", groups=[[910394, 910395]], gold=(2000, 4000)),
         10264: dict(name="Solakar Flamewreath", groups=[[910396, 910397, 910398]], gold=(2000, 4000)),
         10899: dict(name="Goraluk Anvilcrack", groups=[[910399, 910400, 910401]], gold=(2000, 4000)),
@@ -1759,7 +1798,7 @@ LOOT = {
         10430: dict(name="The Beast", groups=[[910406, 910407, 910408]], gold=(2000, 4000)),
         16080: dict(name="Mor Grayhoof", groups=[[910409, 910410, 910411]], gold=(2000, 4000)),
         16042: dict(name="Lord Valthalak", groups=[[910412, 910413, 910414]], gold=(2000, 4000)),
-        10363: dict(name="General Drakkisath", groups=[[910415, 910416, 910417], [910418, 910419, 910420]], gold=(5000, 10000)),
+        10363: dict(final=True, name="General Drakkisath", groups=[[910415, 910416, 910417], [910418, 910419, 910420]], gold=(5000, 10000)),
     },
     429: {  # Dire Maul
         14354: dict(name="Pusillin", groups=[], gold=(2000, 4000)),
@@ -1767,19 +1806,19 @@ LOOT = {
         13280: dict(name="Hydrospawn", groups=[[910424, 910425, 910426]], gold=(2000, 4000)),
         11490: dict(name="Zevrim Thornhoof", groups=[[910427, 910428, 910429]], gold=(2000, 4000)),
         16097: dict(name="Isalien", groups=[[910430, 910431, 910432]], gold=(2000, 4000)),
-        11492: dict(name="Alzzin the Wildshaper", groups=[[910433, 910434, 910435], [910436, 910437, 910438]], gold=(5000, 10000)),
+        11492: dict(final=True, name="Alzzin the Wildshaper", groups=[[910433, 910434, 910435], [910436, 910437, 910438]], gold=(5000, 10000)),
         11489: dict(name="Tendris Warpwood", groups=[[910439, 910440, 910441]], gold=(2000, 4000)),
         11488: dict(name="Illyanna Ravenoak", groups=[[910442, 910443, 910444]], gold=(2000, 4000)),
         11487: dict(name="Magister Kalendris", groups=[[910445, 910446]], gold=(2000, 4000)),
         11496: dict(name="Immol'thar", groups=[[910447, 910448, 910449]], gold=(2000, 4000)),
-        11486: dict(name="Prince Tortheldrin", groups=[[910450, 910451, 910452], [910453, 910454, 910455]], gold=(5000, 10000)),
+        11486: dict(final=True, name="Prince Tortheldrin", groups=[[910450, 910451, 910452], [910453, 910454, 910455]], gold=(5000, 10000)),
         14326: dict(name="Guard Mol'dar", groups=[[910456, 910457, 910458]], gold=(2000, 4000)),
         14322: dict(name="Stomper Kreeg", groups=[[910459]], gold=(2000, 4000)),
         14321: dict(name="Guard Fengus", groups=[[910456, 910457, 910458]], gold=(2000, 4000)),
         14323: dict(name="Guard Slip'kik", groups=[[910456, 910457, 910458]], gold=(2000, 4000)),
         14325: dict(name="Captain Kromcrush", groups=[[910460, 910461, 910462]], gold=(2000, 4000)),
         14324: dict(name="Cho'Rush the Observer", groups=[[910463, 910464]], gold=(2000, 4000)),
-        11501: dict(name="King Gordok", groups=[[910465, 910466, 910467], [910468, 910469, 910470]], gold=(5000, 10000)),
+        11501: dict(final=True, name="King Gordok", groups=[[910465, 910466, 910467], [910468, 910469, 910470]], gold=(5000, 10000)),
     },
     289: {  # Scholomance
         10506: dict(name="Kirtonos the Herald", groups=[[910471, 910472, 910473]], gold=(2000, 4000)),
@@ -1795,7 +1834,7 @@ LOOT = {
         10504: dict(name="Lord Alexei Barov", groups=[[910493, 910494, 910495]], gold=(2000, 4000)),
         10502: dict(name="Lady Illucia Barov", groups=[[910486, 910490, 910488]], gold=(2000, 4000)),
         16118: dict(name="Kormok", groups=[[910496, 910497, 910498]], gold=(2000, 4000)),
-        1853: dict(name="Darkmaster Gandling", groups=[[910499, 910500, 910501], [910502, 910503, 910504]], gold=(5000, 10000)),
+        1853: dict(final=True, name="Darkmaster Gandling", groups=[[910499, 910500, 910501], [910502, 910503, 910504]], gold=(5000, 10000)),
     },
     329: {  # Stratholme
         10516: dict(name="The Unforgiven", groups=[[910505, 910506]], gold=(2000, 4000)),
@@ -1808,13 +1847,13 @@ LOOT = {
         11143: dict(name="Postmaster Malown", groups=[[910521, 910522, 910523]], gold=(2000, 4000)),
         16101: dict(name="Jarien", groups=[], gold=(2000, 4000)),
         16102: dict(name="Sothos", groups=[], gold=(2000, 4000)),
-        10813: dict(name="Balnazzar", groups=[[910524, 910525, 910526], [910527, 910528, 910529]], gold=(5000, 10000)),
+        10813: dict(final=True, name="Balnazzar", groups=[[910524, 910525, 910526], [910527, 910528, 910529]], gold=(5000, 10000)),
         10435: dict(name="Magistrate Barthilas", groups=[[910530, 910531, 910532]], gold=(2000, 4000)),
         10436: dict(name="Baroness Anastari", groups=[[910533, 910534, 910535]], gold=(2000, 4000)),
         10437: dict(name="Nerub'enkan", groups=[[910536, 910537, 910538]], gold=(2000, 4000)),
         10438: dict(name="Maleki the Pallid", groups=[[910539, 910540, 910541]], gold=(2000, 4000)),
         10439: dict(name="Ramstein the Gorger", groups=[[910510, 910542, 910543]], gold=(2000, 4000)),
-        10440: dict(name="Baron Rivendare", groups=[[910544, 910545, 910546], [910547, 910548, 910549]], gold=(5000, 10000)),
+        10440: dict(final=True, name="Baron Rivendare", groups=[[910544, 910545, 910546], [910547, 910548, 910549]], gold=(5000, 10000)),
     },
 }
 
@@ -1832,9 +1871,11 @@ def lootid_sql(map_id):
     bosses = LOOT.get(map_id, {})
     lines = []
     for entry, boss in bosses.items():
-        gmin, gmax = boss.get('gold', (0, 0))
-        lines.append(f"UPDATE `creature_template` SET `lootid` = {heroic_entry(entry)}, `mingold` = {gmin}, "
-                     f"`maxgold` = {gmax} WHERE `entry` = {heroic_entry(entry)};  -- {boss['name']} (Heroic)")
+        gold = ''
+        if 'gold' in boss:  # otherwise the heroic copy keeps the normal boss's gold
+            gold = f", `mingold` = {boss['gold'][0]}, `maxgold` = {boss['gold'][1]}"
+        lines.append(f"UPDATE `creature_template` SET `lootid` = {heroic_entry(entry)}{gold} "
+                     f"WHERE `entry` = {heroic_entry(entry)};  -- {boss['name']} (Heroic)")
     if lines:
         lines.insert(0, '-- heroic bosses use their own loot tables (tools/heroic_loot.py)')
     return '\n'.join(lines)
@@ -1908,10 +1949,22 @@ def loot_sql():
                 rows += [f"({h}, {item}, 0, 0, 0, 1, {group_id}, 1, 1, {sql_str('Heroic ' + boss['name'])})" for item in group]
             rows += [f"({h}, {item}, 0, {chance}, 0, 1, 0, 1, 1, {sql_str('Heroic ' + boss['name'] + ' (rare)')})"
                      for item, chance in boss.get('extra', [])]
+            sigils = SIGILS_FINAL if boss.get('final') else SIGILS  # always drops; multi-drop: one each per player
+            rows.append(f"({h}, {HEROIC_SIGIL}, 0, 100, 0, 1, 0, {sigils}, {sigils}, "
+                        f"{sql_str('Heroic ' + boss['name'] + ' (Heroic Sigil)')})")
             if rows:
                 lines.append('INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, '
                              '`QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES')
                 lines.append(',\n'.join(rows) + ';')
+            if boss.get('normal_loot'):
+                # a pilot heroic without heroic gear: the normal boss's whole loot table, references and groups too
+                lines.append('INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, '
+                             '`QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)')
+                lines.append(f"SELECT {h}, `l`.`Item`, `l`.`Reference`, `l`.`Chance`, `l`.`QuestRequired`, `l`.`LootMode`, "
+                             f"`l`.`GroupId`, `l`.`MinCount`, `l`.`MaxCount`, {sql_str('Heroic ' + boss['name'] + ' (normal loot)')}")
+                lines.append('FROM `creature_template` `ct` JOIN `creature_loot_template` `l` ON `l`.`Entry` = `ct`.`lootid` '
+                             f'WHERE `ct`.`entry` = {entry};')
+                continue
             # the normal boss's quest drops (quest items, items that start a quest, quest-only drops), same chances
             lines.append('INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, '
                          '`QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`)')
@@ -1921,6 +1974,42 @@ def loot_sql():
                          'JOIN `item_template` `i` ON `i`.`entry` = `l`.`Item`')
             lines.append(f'WHERE `ct`.`entry` = {entry} AND `l`.`Reference` = 0 AND `l`.`GroupId` = 0 '
                          'AND (`i`.`class` = 12 OR `l`.`QuestRequired` = 1 OR `i`.`startquest` > 0);')
+    return '\n'.join(lines)
+
+
+def final_boss_items():
+    return {item for bosses in LOOT.values() for boss in bosses.values() if boss.get('final')
+            for group in boss.get('groups', []) for item in group}
+
+
+def quartermaster_pages():
+    """{vendor entry: [(item, Sigils), ...]} for the Heroic Quartermaster's pages."""
+    finals = final_boss_items()
+    pages = {entry: [] for entry, _, _, _ in QUARTERMASTER_PAGES}
+    for item in HEROIC_ITEMS:
+        for entry, _, slots, sigils in QUARTERMASTER_PAGES:
+            if slots is None:
+                if item['id'] in finals:
+                    pages[entry].append((item['id'], sigils))
+                    break
+            elif item['id'] not in finals and item['inv'] in slots:
+                pages[entry].append((item['id'], sigils or (25 if item['inv'] in TWO_HANDED_OR_RANGED else 20)))
+                break
+        else:
+            raise AssertionError(f"heroic item {item['id']} fits no Quartermaster page (inventory type {item['inv']})")
+    return pages
+
+
+def vendor_sql():
+    entries = ', '.join(str(entry) for entry, _, _, _ in QUARTERMASTER_PAGES)
+    lines = ['-- the Heroic Quartermaster\'s pages (src/unbound_heroic_quartermaster.cpp): prices in Heroic Sigils',
+             f'DELETE FROM `npc_vendor` WHERE `entry` IN ({entries});',
+             'INSERT INTO `npc_vendor` (`entry`, `slot`, `item`, `maxcount`, `incrtime`, `ExtendedCost`) VALUES']
+    rows = []
+    for entry, items in quartermaster_pages().items():
+        for slot, (item, sigils) in enumerate(items):
+            rows.append(f'({entry}, {slot}, {item}, 0, 0, {SIGIL_EXTENDED_COSTS[sigils]})')
+    lines.append(',\n'.join(rows) + ';')
     return '\n'.join(lines)
 
 
@@ -1938,6 +2027,14 @@ def check():
         assert 950 <= s['ID'] <= 999
         for item in s['items']:
             assert item in known, f'set item {item} is not defined in HEROIC_ITEMS'
+    # the final bosses (two Sigils) are exactly the Bulletin Board's: the last boss of every dungeon and wing
+    import bulletin_board
+    finals = {entry for bosses in LOOT.values() for entry, boss in bosses.items() if boss.get('final')}
+    expected = {row[1] for row in bulletin_board.DUNGEONS}
+    assert finals == expected, f'final=True differs from bulletin_board.DUNGEONS: {sorted(finals ^ expected)}'
+    # every Quartermaster page fits in a 3.3.5 vendor window
+    for entry, items in quartermaster_pages().items():
+        assert len(items) <= 150, f'Quartermaster page {entry} has {len(items)} items (at most 150)'
 
 
 def main():
@@ -1948,7 +2045,7 @@ def main():
              f'DELETE FROM `item_template` WHERE `entry` IN ({ids});',
              '']
     parts += [item_sql(i) + '\n' for i in HEROIC_ITEMS]
-    parts += ['DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;', '', loot_sql()]
+    parts += ['DROP TEMPORARY TABLE IF EXISTS `unbound_hl_tmp`;', '', loot_sql(), '', vendor_sql()]
     path = os.path.join(MODULE, 'data', 'sql', 'db-world', 'unbound_heroic_loot.sql')
     with open(path, 'w', encoding='utf8', newline='\n') as f:
         f.write('\n'.join(parts) + '\n')

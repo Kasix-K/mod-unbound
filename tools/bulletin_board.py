@@ -167,12 +167,16 @@ RAIDS = [
     ('Naxxramas', 351019, "Kel'Thuzad"),   # classic Naxxramas (src/naxx40)
 ]
 # tier: (quest id base, reward, boss entry for a dungeon/raid entry, or None while the tier doesn't exist yet).
+# Weekly dungeon quests of a tier in TIER_SIGILS also give that many Heroic Sigils (the Heroic currency, item 912000:
+# tools/heroic_loot.py, tools/custom_dbc.py); the Mythic currency joins here once it exists.
+HEROIC_SIGIL = 912000
+TIER_SIGILS = {'Heroic': 10}
 # Every tier asks for the normal boss entry: the core gives kill credit for a creature's normal entry even when
 # its heroic copy (entry + HEROIC_ENTRY_OFFSET) was killed. src/unbound_bulletin_board.cpp checks the mode: a
 # Normal quest only counts a kill in Normal, a Heroic quest only one in Heroic (by the quest id's tier).
 DUNGEON_TIERS = {
     'Normal': (920100, 50 * GOLD, lambda boss: boss),
-    'Heroic': (920200, 100 * GOLD, lambda boss: boss),
+    'Heroic': (920200, 75 * GOLD, lambda boss: boss),   # plus TIER_SIGILS (decided 2026-10-15: 10 Sigils + 75 gold)
     'Mythic': (920300, 150 * GOLD, None),   # Mythic+ isn't built yet
 }
 RAID_TIERS = {
@@ -249,17 +253,19 @@ QUEST_COLUMNS = ['ID', 'QuestType', 'QuestLevel', 'MinLevel', 'QuestSortID', 'Qu
                  'RequiredNpcOrGo1', 'RequiredNpcOrGo2', 'RequiredNpcOrGo3', 'RequiredNpcOrGo4',
                  'RequiredNpcOrGoCount1', 'RequiredNpcOrGoCount2', 'RequiredNpcOrGoCount3', 'RequiredNpcOrGoCount4',
                  'RequiredItemId1', 'RequiredItemCount1', 'ObjectiveText1', 'ObjectiveText2', 'ObjectiveText3',
-                 'ObjectiveText4', 'VerifiedBuild']
+                 'ObjectiveText4', 'RewardItem1', 'RewardAmount1', 'VerifiedBuild']
 
 
-def quest_row(qid, title, log, description, flags, reward, kills=(), item=None, info=0, group=0, area='', sort=0):
+def quest_row(qid, title, log, description, flags, reward, kills=(), item=None, info=0, group=0, area='', sort=0,
+              reward_item=None):
     kills = list(kills) + [(0, 0)] * (4 - len(kills))
     # QuestType 2: a normal quest (0 would make it auto-complete, skipping its objectives).
     # QuestSortID -sort: the quest log header (QUEST_SORTS).
     row = [qid, 2, LEVEL, LEVEL, -sort, info, group, 0, reward, flags, 0, esc(title), esc(log),
            esc(description), esc(area), esc('Return to a Bulletin Board.')]
     row += [k[0] for k in kills] + [k[1] for k in kills]
-    row += [item[0] if item else 0, item[1] if item else 0, "''", "''", "''", "''", 0]
+    row += [item[0] if item else 0, item[1] if item else 0, "''", "''", "''", "''"]
+    row += [reward_item[0] if reward_item else 0, reward_item[1] if reward_item else 0, 0]
     return '(' + ', '.join(str(v) for v in row) + ')'
 
 
@@ -267,8 +273,9 @@ def main():
     quests, addons, offers, requests, conditions, pool_templates, pool_quests = [], [], [], [], [], [], []
 
     def add(qid, title, log, description, flags, reward, kills=(), item=None, info=0, group=0, area='',
-            skill=(0, 0), offer='', request='', sort=0):
-        quests.append(quest_row(qid, title, log, description, flags, reward, kills, item, info, group, area, sort))
+            skill=(0, 0), offer='', request='', sort=0, reward_item=None):
+        quests.append(quest_row(qid, title, log, description, flags, reward, kills, item, info, group, area, sort,
+                                reward_item))
         # SpecialFlags 1: repeatable (the core expects it on daily and weekly quests)
         addons.append(f'({qid}, 0, 0, 0, 0, 0, 0, 0, 0, 0, {skill[0]}, {skill[1]}, 0, 0, 0, 0, 0, 1)')
         offers.append(f'({qid}, 0, 0, 0, 0, 0, 0, 0, 0, {esc(offer)}, 0)')
@@ -321,7 +328,8 @@ def main():
                     f'your whole group shares the credit.', QUEST_FLAGS_WEEKLY, reward,
                     kills=[(boss_of(boss), 1)], info=info, group=group, area=name,
                     offer=f'{boss_name} is defeated. Well done; the reward is yours.',
-                    sort=DUNGEON_SORT[tier] if kind == 'dungeon' else SORT_RAIDS)
+                    sort=DUNGEON_SORT[tier] if kind == 'dungeon' else SORT_RAIDS,
+                    reward_item=(HEROIC_SIGIL, TIER_SIGILS[tier]) if kind == 'dungeon' and tier in TIER_SIGILS else None)
                 conditions.append(f"(19, 0, {qid}, 0, 0, 11, 0, {ws[tier]}, {i}, 0, 0, 0, 0, '', "
                                   f"{esc(f'Bulletin Board: {label} is this week' + chr(39) + 's ' + tier + ' ' + kind)})")
 

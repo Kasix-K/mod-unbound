@@ -10,6 +10,7 @@ void AddSC_unbound_perks();
 void AddSC_unbound_attunement();
 void AddSC_unbound_world_bosses();
 void AddSC_unbound_account_currency();
+void AddSC_unbound_heroic_quartermaster();
 void AddSC_unbound_solo_raids();
 void AddSC_unbound_classic_onyxia();
 void AddSC_unbound_naxx40();
@@ -26,6 +27,7 @@ void Addmod_unboundScripts()
     AddSC_unbound_attunement();
     AddSC_unbound_world_bosses();
     AddSC_unbound_account_currency();
+    AddSC_unbound_heroic_quartermaster();
     AddSC_unbound_solo_raids();
     AddSC_unbound_classic_onyxia();
     AddSC_unbound_naxx40();

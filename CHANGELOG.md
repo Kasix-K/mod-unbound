@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Heroic Sigil drops (1 per Heroic boss, 2 per final boss), Heroic Quartermaster, Sigils from Heroic weeklies | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Heroic Sigil (account-wide currency): the item, Currency tab entry and shared account balance | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Focused Mind utility perk (Rogue and Druid, +8/14/20% energy regeneration, 5 ranks) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Endless Rage utility perk (Warrior and Druid, +8/14/20% rage, 5 ranks) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
@@ -72,6 +73,13 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Added
+- **Heroic Sigils drop, and the Heroic Quartermaster (Stage B).** Every Heroic boss drops 1 Heroic Sigil, the
+  final boss of each dungeon and wing 2 (all 189 Heroic bosses; everyone in the group loots their own). Stormwind
+  Stockades and Ragefire Chasm's Heroic bosses now have their own loot tables (their normal loot plus the Sigils).
+  The weekly Heroic dungeon quests on the Bulletin Board give 10 Sigils plus 75 gold (was 100 gold). The **Heroic
+  Quartermaster** (`.npc add 190104`) sells all 450 Heroic items for Sigils from a menu of five pages: rings,
+  necks, cloaks, wrists and belts 10; head, shoulders, chest 15; hands, legs, feet 15; one-handers, shields and
+  off-hands 20, two-handers and ranged 25; final boss treasures 30.
 - **Heroic Sigil, the Heroic currency (Stage A).** Item 912000 with a gold lion's head icon, in the Currency tab
   under a new "Unbound" header; soulbound, takes no bag space, multi-drop (every group member gets their own from
   loot). **One shared amount per account:** every character of an account sees and spends the same Sigils (set at

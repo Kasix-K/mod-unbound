@@ -217,6 +217,16 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   only it may write. A character's own stack is added to the account once, the first time it logs in
   (`character_unbound_currency_merged`). The latest balances are cached in memory, so a quick relog doesn't read a
   balance whose database write is still queued. A new shared currency only needs its entry in `SHARED_CURRENCIES`.
+  **Earning and spending** (`tools/heroic_loot.py`): every heroic boss's loot table gets the Sigil (`SIGILS` = 1,
+  `SIGILS_FINAL` = 2 for `final=True` bosses; `check()` makes sure the final bosses are exactly
+  `bulletin_board.DUNGEONS`). Bosses with `normal_loot=True` (Stockade, Ragefire Chasm) copy the normal boss's
+  whole loot table. The Heroic Quartermaster (`src/unbound_heroic_quartermaster.cpp`, creature 190104 in
+  `unbound_heroic_quartermaster.sql`) shows a menu of `QUARTERMASTER_PAGES`; each opens a never-spawned page
+  creature's (190105-190109) vendor list through `SendListInventory(guid, pageEntry)` (a vendor window holds at
+  most 150 items; `check()` enforces it). Prices: `SIGIL_EXTENDED_COSTS` (Sigils -> ItemExtendedCost id), which
+  `tools/custom_dbc.py` turns into the client and server rows. The Bulletin Board's weekly Heroic dungeon quests give
+  `TIER_SIGILS` Sigils (`RewardItem1`). After a change run `python tools/heroic_loot.py`, `python
+  tools/classic_heroics.py` (for `normal_loot` bosses' loot ids) and `python tools/bulletin_board.py`.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Dungeon finder: at startup

@@ -313,8 +313,9 @@ changes, raid by raid (see Next up).
     a bot earn and spend (the balance must not change); restart mid-session (matches the last save); a vendor
     refund within 2 hours, then switch characters.
   - **Build order** (all SaucyHobo54): Stage A, testable with `.additem`: 1. the sigil (client patch rows and the
-    server item; built 2026-10-15), 2. the account balance (built 2026-10-15, `src/unbound_account_currency.cpp`). Stage B: 3. boss drops (`heroic_loot.py`), 4. the Quartermaster, 5. the
-    Bulletin Board reward, then the Loot Goblin's price and the Altar of Tribute's prices.
+    server item; built 2026-10-15), 2. the account balance (built 2026-10-15, `src/unbound_account_currency.cpp`). Stage B (built 2026-10-15): 3. boss drops (`heroic_loot.py`), 4. the Quartermaster, 5. the
+    Bulletin Board reward. Still to do: the Loot Goblin's price, the Altar of Tribute's prices and the prices
+    outside gear (companions, consumables, mounts, transmog).
 - [ ] **Heroic classic raids** (moderate): Molten Core, Blackwing Lair, Zul'Gurub, Ruins and Temple of
       Ahn'Qiraj, Onyxia's Lair, Naxxramas.
 - [x] **Raid Finder** (2026-10-15): a Raids choice in the Dungeon Finder's dropdown listing every raid (those not

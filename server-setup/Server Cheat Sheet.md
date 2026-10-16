@@ -33,6 +33,7 @@
 | Warpweaver (transmogrifier) | `.npc add 190010` |
 | Grizzle Lootsnatch (companion vendor) | `.npc add 190101` |
 | Altar of Tribute (infusion; one per capital city) | `.npc add 190103` |
+| Heroic Quartermaster (Heroic gear for Heroic Sigils; one per capital city) | `.npc add 190104` |
 
 ## Custom IDs
 
