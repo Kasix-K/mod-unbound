@@ -270,7 +270,13 @@ changes, raid by raid (see Next up).
       spent on companions, mounts, transmog or gear. Becomes the Loot Goblin's currency. Starting values
       (2026-10-15, tune in testing):
   - **Drops:** 1 per Heroic boss, 2 from the final boss (about 7-10 a run), plus 10 from the weekly Heroic
-    dungeon quest on the Bulletin Board.
+    dungeon quest on the Bulletin Board (decided 2026-10-15: 10 badges plus 75 gold, `tools/bulletin_board.py`).
+  - **Delivery (decided 2026-10-15):** in the loot. `tools/heroic_loot.py` adds the badge to every Heroic boss's
+    loot table (1, or 2 for a final boss). The badge has `ITEM_FLAG_MULTI_DROP`, so loot is free-for-all: every
+    group member gets their own (bots too, harmlessly: an alt-bot's copy never reaches the account balance).
+    Final bosses are marked `final=True` in `heroic_loot.py` (26: every dungeon and every wing, the same list as
+    `DUNGEONS` in `tools/bulletin_board.py`), not taken from list order: the loot table is keyed by map, and
+    the wings of Scarlet Monastery, Dire Maul, Blackrock Spire and Stratholme share one map each.
   - **Heroic gear at the vendor**, priced by item strength. Bosses already drop one Heroic item each (two from
     the final boss), so the vendor is for choosing a piece, not the main source of gear:
 
@@ -283,20 +289,33 @@ changes, raid by raid (see Next up).
 
     Kept above "free" on purpose: every unique item counts for infusion (about 255 for +200%), so cheap gear
     would let players buy their way to the endgame. The Mythic currency sits above this at similar ratios.
+  - **The Heroic Quartermaster (decided 2026-10-15):** one NPC per capital with a menu of category pages (e.g.
+    accessories, armor, weapons), each opening its own vendor list: a 3.3.5 vendor window holds at most 150
+    items (`MAX_VENDOR_ITEMS`) and there are 450 Heroic items (910100-910549). Prices use `ItemExtendedCost`
+    rows (one per price) in the client patch and on the server. Prices outside gear (companions, consumables,
+    mounts, transmog) are still to be decided.
   - **In the Currency tab:** the token is an item in the hidden token bag (bag family "currency tokens"), with
-    `CurrencyTypes.dbc` / `CurrencyCategory.dbc` rows in the client patch (e.g. an "Unbound" header).
+    `CurrencyTypes.dbc` / `CurrencyCategory.dbc` rows in the client patch (e.g. an "Unbound" header). Icon:
+    `Spell_Holy_SealOfRighteousness` (a gold lion's head on green); no item display uses it yet, so the patch
+    adds a new `ItemDisplayInfo.dbc` row.
+  - **Reserved IDs:** item 912000 (currencies 912000-912099), item display 70000, `ItemExtendedCost` 3000+,
+    the Quartermaster creature 190104, and the next free `CurrencyTypes` bit (29 is the highest used).
   - **One shared amount per account:** a balance table in the character database (`account, currency item,
     amount`, so the Mythic currency is just another row), set on the character at login (after inventory
     loads) and written back from `OnPlayerSave` and at logout (`OnPlayerSave` has no transaction parameter, so
     it is saved at the same moment as the character, not in the same transaction). The item is soulbound and
     can't be sold, traded or mailed (no counting it twice), with a high stack limit. Only the character a
     player logged in touches the balance: account alt-bots are on (`Playerbots.AllowAccountBots = 1`), and a
-    bot-controlled session is `GetSession()->GetRemoteAddress() == "headless"` (no socket; a real player's
-    session keeps its IP even after a disconnect). Optionally store which character holds the balance and
-    ignore writes from any other. GM accounts and playerbot (RNDBOT) accounts keep their own amounts.
+    bot-controlled session is `GetSession()->IsHeadless()` (decided 2026-10-15; set when the session has no
+    socket, the same check mod-playerbots uses; a real player's session stays non-headless even after a
+    disconnect). Optionally store which character holds the balance and ignore writes from any other. GM
+    accounts and playerbot (RNDBOT) accounts keep their own amounts.
   - **Tests:** earn on A then log into B (same total); spend on B then back to A; with A online, have alt B as
     a bot earn and spend (the balance must not change); restart mid-session (matches the last save); a vendor
     refund within 2 hours, then switch characters.
+  - **Build order** (all SaucyHobo54): Stage A, testable with `.additem`: 1. the badge (client patch rows and the
+    server item), 2. the account balance. Stage B: 3. boss drops (`heroic_loot.py`), 4. the Quartermaster, 5. the
+    Bulletin Board reward, then the Loot Goblin's price, the Altar of Tribute's prices and perk Rank 4 purchases.
 - [ ] **Heroic classic raids** (moderate): Molten Core, Blackwing Lair, Zul'Gurub, Ruins and Temple of
       Ahn'Qiraj, Onyxia's Lair, Naxxramas.
 - [x] **Raid Finder** (2026-10-15): a Raids choice in the Dungeon Finder's dropdown listing every raid (those not
