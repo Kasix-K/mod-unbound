@@ -266,6 +266,17 @@ local function onServerRank(rest)
         for n in string.gmatch(entry, "[%d%.]+") do table.insert(nums, tonumber(n)) end
         table.insert(parsed, nums)
     end
+    -- Ranks a player can't reach yet (level 255: the endgame Ranks 4-5 until a way to earn them exists) aren't
+    -- shown anywhere: not in the tooltip's rank list, not in the "3/5" badge. A GM given such a rank with
+    -- .perk rank still sees up to their own rank. Each rank's level is its last number.
+    local shown = 0
+    for i, v in ipairs(parsed) do
+        if (v[#v] or 0) < 255 or i <= rank then shown = i end
+    end
+    if shown > 0 and shown < #parsed then
+        for i = #parsed, shown + 1, -1 do table.remove(parsed, i) end
+        maxRank = shown
+    end
     ranks[id] = { rank = rank, max = maxRank }
     for _, perk in ipairs(P.PERKS) do
         if perk.id == id and perk.applyRank then perk.applyRank(perk, rank, maxRank, parsed) end

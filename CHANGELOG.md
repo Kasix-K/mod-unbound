@@ -69,6 +69,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Changed
+- **Perk tooltips no longer mention Ranks 4-5:** ranks that can't be reached yet (level 255, the endgame ranks until
+  a way to earn them exists) aren't listed in the tooltip, and the badge counts only the reachable ranks ("3/3").
+  A GM given such a rank with `.perk rank` still sees up to their own rank.
 - **Raid Finder looks like the Dungeon Finder:** instead of separate Dungeons and Raids tabs, **Raids** is a choice
   in the Dungeon Finder's own dropdown (after the random dungeons and Specific Dungeons). Choosing it swaps the
   dungeon list for the raids, drawn like the specific dungeon list (checkbox, lock icon with the reason, level,
