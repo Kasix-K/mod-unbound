@@ -4,7 +4,8 @@
 -- health, 4,691 armor, 1648-2184 melee every 2 s. AzerothCore: health = level stats x HealthModifier,
 -- melee = (base damage + attack power / 14) x attack time x DamageModifier (creature_classlevelstats).
 -- The 25-player difficulty (Onyxia 36538) keeps its level 80 entry requirement, so it can't be entered.
--- Scale of Onyxia and the Onyxia Scale Cloak recipe stay unobtainable (no skinning).
+-- Onyxia isn't skinnable and the Onyxia Scale Cloak recipe stays unobtainable; the Scale of Onyxia drops for
+-- players on the Shadowflame Ward quest instead (tools/shadowflame_ward.py), whose cloak replaces it.
 
 -- Entry from level 60 (10-player difficulty)
 UPDATE `dungeon_access_template` SET `min_level` = 60 WHERE `map_id` = 249 AND `difficulty` = 0;
@@ -62,6 +63,7 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 (10184, 18422, 0, 100, 0, 1, 0, 1, 1, 'Onyxia - Head of Onyxia (Horde)'),
 (10184, 18423, 0, 100, 0, 1, 0, 1, 1, 'Onyxia - Head of Onyxia (Alliance)'),
 (10184, 18705, 0, 100, 1, 1, 0, 1, 1, 'Onyxia - Mature Black Dragon Sinew'),
+(10184, 15410, 0, 100, 1, 1, 0, 1, 1, 'Onyxia - Scale of Onyxia (Shadowflame Ward quest)'),
 (10184, 21108, 0, 100, 0, 1, 0, 1, 1, 'Onyxia - Draconic for Dummies');
 
 -- Each faction's head drops for that faction (like the level 80 heads did)

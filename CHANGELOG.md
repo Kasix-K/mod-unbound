@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Shadowflame Ward: a 12-quest chain across the five dragonflights for a cloak that replaces the Onyxia Scale Cloak | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Warden of Rare Wonders: cosmetics (mounts, pets, tabards, fun items) for Heroic Sigils | 2026-10-16 | 2026-10-16 | SaucyHobo54 |
 | Heroic Sigil drops (1 per Heroic boss, 2 per final boss), Heroic Quartermaster, Sigils from Heroic weeklies | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Heroic Sigil (account-wide currency): the item, Currency tab entry and shared account balance | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
@@ -74,6 +75,15 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-16
 
 ### Added
+- **The Shadowflame Ward** (Kaelastrasz of the red dragonflight, Thorium Point in the Searing Gorge): a 12-quest
+  chain, about as long as the Drakefire Amulet's, for an epic cloak (item level 66, 60 armor, 12 Stamina, 10 Fire
+  and 10 Shadow Resistance) that protects from Shadowflame in Blackwing Lair like the Onyxia Scale Cloak, which
+  can't be obtained here. Collect scales from all five dragonflights in any order: black (Burning Steppes, then
+  the new elite Vexathrax there), red (Grim Batol, then Pyraxis), blue (Mazthoril, then Azurathys in Azshara's
+  blue dragonkin camp), green (the three Nightmare camps) and bronze (Chronalis); then the **Scale of Onyxia**,
+  now a drop from Onyxia for players on the quest, binds them into the ward. Vexathrax, Pyraxis and Azurathys
+  use the models and fights of the rares Teremus the Devourer, Narillasanz and Azurous, at level 60 with a
+  10-minute respawn. Regenerate `patch-Z.MPQ` (10 new items).
 - **Warden of Rare Wonders** (`.npc add 190200`, Tyrande Whisperwind's look): cosmetics for Heroic Sigils on four
   tabs. Mounts 40-120 (Riding Turtle, Spectral Tiger, Swift Zhevra, Celestial Steed, The Horseman's Reins, Magic
   Rooster, Swift Spectral Tiger), pets 15-30 (20, from Onyxian Whelpling to Lil' K.T.), tabards 25 (the 8 card-game

@@ -53,11 +53,17 @@
 | Heroic loot: Blackrock Spire, Dire Maul, Scholomance, Stratholme | (heroic bosses: entry + 1000000) | 910369-910549 | (none) |
 | Blackened Defias Garb set (item set 950) | (none) | 910112, 910115, 910118, 910119 | 9102, 9336 (set bonuses) |
 | World boss Hrimthar the Frostbound (spawn guid 9190110) | 190110, adds 190111 | 911000-911005 | (none) |
+| Shadowflame Ward chain (quests 921001-921012; spawn guids 9190206-9190209) | Kaelastrasz 190206; Vexathrax 190207, Pyraxis 190208, Azurathys 190209 | ward 912100, scales 912101-912108, unfinished ward 912109 | (none) |
 
 Preview a heroic item on a GM account with `.additem <item id>` (for example `.additem 910118`).
 
 World boss Hrimthar the Frostbound is on Lake Kel'Theril in Winterspring. GM shortcuts: `.go creature id 190110`
 goes to him; `.respawn` next to his corpse brings him back early (for testing).
+
+Shadowflame Ward chain: Kaelastrasz stands at Thorium Point (Searing Gorge); `.go creature id 190206` goes to
+him (`.npc move` to place him better). Elites: `.go creature id 190207` (Vexathrax, Burning Steppes), 190208
+(Pyraxis, Grim Batol), 190209 (Azurathys, Azshara). Test the cloak with `.additem 912100`, skip ahead with
+`.quest complete <id>` (921001-921012), and `.additem 15410` gives a Scale of Onyxia.
 
 World boss announcements (whole server, in chat): 10 and 5 minutes before a world boss spawns, when it
 spawns (with the location), when it dies (with who killed it), and when nobody killed it within 24 hours

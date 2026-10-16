@@ -64,6 +64,13 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
 - **World bosses:** `tools/world_bosses.py` (SmartAI fights, no C++; creatures 190110-190199, spawn guids
   9190110-9190199, loot 911000-911999). Hrimthar is creature 190110, adds 190111. After a change run
   `python tools/world_bosses.py` and `python tools/custom_dbc.py`, then restart the worldserver.
+- **Shadowflame Ward:** `tools/shadowflame_ward.py` writes `unbound_shadowflame_ward.sql` (items 912100-912109,
+  NPCs 190206-190209 with spawn guids + 9000000, quests 921001-921012, the scale drops). The core only checks
+  the Onyxia Scale Cloak's aura (22683) against Shadowflame (`SpellEffects.cpp`, `instance_blackwing_lair.cpp`),
+  so the cloak just has that aura on equip. The five flights' last quests share each-from-all exclusive group
+  -921010, so The Scales Assembled (921010) needs all of them. The three elites are copies (template, model,
+  SmartAI) of rares 7846, 2447 and 10202. The Scale of Onyxia drop is in `unbound_classic_onyxia.sql`, since
+  that file rebuilds Onyxia's loot. After a change run the tool and `python tools/custom_dbc.py --client ...`.
 - **Perks:** window in `addon/UnboundPerks` (`PerkData.lua` = perk list and descriptions); server side in
   `src/unbound_perks.cpp`. The addon whispers its own character (prefix `UBPERK`: `SYNC`, `SET:<id>:<0|1>`,
   `LOAD:<ids>`; the server answers `STATE:<ids>` or `ERR:<text>`); active perks are saved in

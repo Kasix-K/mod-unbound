@@ -123,7 +123,8 @@ powershell -ExecutionPolicy Bypass -File server-setup\apply-unbound-settings.ps1
 - Custom IDs are shared, so pick new ones next to the existing ones and say so in the commit: spells
   2002xx, items 9100xx (heroic loot 910100-910999, world boss loot 911000-911999), item sets 950-999,
   creatures 1901xx (world bosses 190110-190199, spawn guids 9190110-9190199), NPCs 190200-190299,
-  currencies 912000-912099, ItemExtendedCost 3000+,
+  currencies 912000-912099, Shadowflame Ward (items 912100-912199, NPCs 190206-190209, spawn guids
+  9190206-9190209, quests 921001-921099), ItemExtendedCost 3000+,
   SkillLineAbility 9000xx, loot references 9100100-9100199, Bulletin Board
   (gameobject 920000, spawn guids 9920000-9920009, quests 920001-920999, pools 920000-920099, world states
   920001-920009). Classic Naxxramas (from mod-individual-progression)

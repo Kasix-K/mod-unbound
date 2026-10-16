@@ -26,6 +26,7 @@ from classic_heroics import HEROIC_DUNGEONS, HEROIC_LEVEL, HEROIC_MAX_PLAYERS, m
 import heroic_loot  # noqa: E402
 from bulletin_board import QUEST_SORTS  # noqa: E402
 import world_bosses  # noqa: E402
+import shadowflame_ward  # noqa: E402
 MODULE = os.path.dirname(HERE)
 ACORE = os.path.dirname(os.path.dirname(MODULE))
 ROOT = os.path.dirname(ACORE)
@@ -91,6 +92,7 @@ ITEMS = [
 ]
 ITEMS += heroic_loot.item_dbc_rows()  # heroic dungeon loot (tools/heroic_loot.py)
 ITEMS += world_bosses.item_dbc_rows()  # world boss loot (tools/world_bosses.py)
+ITEMS += shadowflame_ward.item_dbc_rows()  # Shadowflame Ward quest items and cloak (tools/shadowflame_ward.py)
 
 # ---------------------------------------------------------------- currencies
 # Account-wide currencies (ROADMAP.md "Heroic currency and vendor"): items 912000-912099 in the Currency tab

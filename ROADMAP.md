@@ -273,9 +273,9 @@ changes, raid by raid (see Next up).
         Noth, Heigan, Grobbulus
   - [ ] Then, after testing, the risky ones: Core Hounds, Ragnaros' Magma Blast, Firemaw's Flame Buffet,
         Nefarian's Bone Constructs, Mandokir, Thekal, Ossirian, C'Thun, Anubisath Sentinels
-  - Shadowflame (Firemaw, Ebonroc, Flamegor, Nefarian) still needs an Onyxia Scale Cloak, which can't be
-    obtained on this server (Onyxia isn't skinnable, the pattern drops nowhere, both on purpose). A custom
-    way to get one is planned.
+  - [x] Shadowflame (Firemaw, Ebonroc, Flamegor, Nefarian) (2026-10-16): the **Shadowflame Ward**, a 12-quest
+        chain across the five dragonflights (Kaelastrasz, Thorium Point), replaces the Onyxia Scale Cloak,
+        which can't be obtained here (Onyxia isn't skinnable, the pattern drops nowhere, both on purpose).
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
       +25-35% to its spec's single-target damage (the class perk target in the Power budget).
 - [ ] **Heroic Sigil: the rest** (easy to moderate; SaucyHobo54): the Heroic currency is live and tested (see Done), still to do:

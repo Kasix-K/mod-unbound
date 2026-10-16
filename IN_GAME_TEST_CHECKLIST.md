@@ -126,7 +126,7 @@ bring one other player or a playerbot for at least one boss.
 - [ ] Ebonroc: Shadow of Ebonroc fails (he doesn't heal from your hits).
 - [ ] Chromaggus: Time Lapse and Chromatic Mutation fail.
 - [ ] Nefarian: Lord Victor Nefarius' Shadow Command fails (you aren't mind controlled).
-- [ ] Shadowflame still needs an Onyxia Scale Cloak (expected for now, until Shadowflame Ward exists).
+- [ ] Shadowflame doesn't burn you while you wear the Shadowflame Ward (912100).
 
 **Molten Core**
 - [ ] Lucifron: his Flamewaker Protectors' Dominate Mind fails.
