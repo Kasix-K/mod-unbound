@@ -195,7 +195,10 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   client's dropdown shows what the server sends) and reports the specific ones as
   `LFG_LOCKSTATUS_INSUFFICIENT_EXPANSION` (1). The client builds the specific list itself from its own
   LFGDungeons.dbc (level and account expansion), so the Unbound addon wraps `LFD_CURRENT_FILTER` to drop
-  dungeons whose `GetLFDLockInfo(id, 1)` reason is 1; empty headers then drop out on their own. A changed
+  dungeons whose `GetLFDLockInfo(id, 1)` reason is 1; empty headers then drop out on their own. The dropdown's
+  random dungeons come from the client too (greyed out when locked): the addon wraps
+  `LFDQueueFrameTypeDropDown_Initialize` and, while it runs, swaps `GetNumRandomDungeons` /
+  `GetLFGRandomDungeonInfo` for versions without the ones locked with reason 1. A changed
   `Unbound.ExpansionUnlocked` applies after a restart. Players in a
   locked zone go to their hearthstone, else their race's start, else their faction's capital; GMs with GM
   mode on, battlegrounds and arenas are exempt. Death Knights are GM-only through

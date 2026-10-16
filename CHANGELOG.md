@@ -79,7 +79,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   the random list, and Hellfire Ramparts, The Blood Furnace and The Slave Pens (with their "Burning Crusade
   Normal" header) in the specific list. They showed at level 60 because accounts have the Wrath expansion,
   although the content lock keeps those dungeons closed. The server now reports them as locked for
-  "insufficient expansion" and leaves the randoms out, and the **Unbound** addon hides dungeons locked that way.
+  "insufficient expansion" and leaves the randoms out, and the **Unbound** addon hides dungeons locked that way
+  (in the specific list, and the random ones the client still listed greyed out in the dropdown).
   Follows `Unbound.ExpansionUnlocked` (after a restart).
 - **AoE loot comes only from loot companions.** mod-aoe-loot's `.aoeloot on` and `.aoeloot off` (and short
   forms like `.aoe on`) are disabled for everyone and say that AoE looting comes from summoning a Loot Goblin

@@ -64,3 +64,31 @@ if LFD_CURRENT_FILTER then
         return defaultFilter(dungeonID)
     end
 end
+
+-- The same for the random dungeons in the Dungeon Finder's dropdown: the client lists every random dungeon
+-- that fits the player's level and the account's expansion (Random Burning Crusade Dungeon at level 60) and
+-- only greys out the locked ones. While the dropdown is built, the random dungeons the server reports as
+-- locked for "insufficient expansion" are left out of what the game's dropdown code sees.
+if LFDQueueFrameTypeDropDown_Initialize and GetNumRandomDungeons and GetLFGRandomDungeonInfo then
+    local initialize = LFDQueueFrameTypeDropDown_Initialize
+    LFDQueueFrameTypeDropDown_Initialize = function(...)
+        local getNum, getInfo = GetNumRandomDungeons, GetLFGRandomDungeonInfo
+        local shown = {}
+        for i = 1, getNum() do
+            local id = getInfo(i)
+            local _, reason = GetLFDLockInfo(id, 1)
+            if reason ~= LOCKED_INSUFFICIENT_EXPANSION then
+                shown[#shown + 1] = i
+            end
+        end
+        GetNumRandomDungeons = function() return #shown end
+        GetLFGRandomDungeonInfo = function(i) return getInfo(shown[i]) end
+        local ok, err = pcall(initialize, ...)
+        GetNumRandomDungeons, GetLFGRandomDungeonInfo = getNum, getInfo
+        if not ok then error(err, 0) end
+    end
+    -- the dropdown keeps the function it was first set up with until the Dungeon Finder opens again
+    if LFDQueueFrameTypeDropDown and LFDQueueFrameTypeDropDown.initialize == initialize then
+        LFDQueueFrameTypeDropDown.initialize = LFDQueueFrameTypeDropDown_Initialize
+    end
+end
