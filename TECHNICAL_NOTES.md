@@ -206,6 +206,17 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   Elite bounty creatures that were raid-tuned (HealthModifier 7-100) are set to 3 (Lord Lakmaeran 6) in
   `unbound_elite_bounty_scaling.sql`, which lists the original values; check new bounty camps the same way (the open
   world isn't scaled by mod-autobalance).
+- **Account-wide currencies** (the Heroic Sigil, item 912000): the item is defined in
+  `data/sql/db-world/unbound_currencies.sql` (soulbound, multi-drop, currency token bag) and on the client side in
+  `tools/custom_dbc.py` (icon display 70000, currency 400 bit 30 under an "Unbound" header, prices 3000-3004; run
+  `python tools/custom_dbc.py --client <client>` after changing them). `src/unbound_account_currency.cpp` keeps one
+  amount per account in `characters.account_unbound_currency`: at login the character's stack is set to the
+  account's amount, at every save (and logout) it is written back. Only a player-logged-in character takes part:
+  bot sessions (`WorldSession::IsHeadless()`, which covers account alt-bots) keep their own amount, and so do GM
+  accounts unless `Unbound.AccountCurrency.GMAccounts = 1`. `holder` = the character that loaded the balance last;
+  only it may write. A character's own stack is added to the account once, the first time it logs in
+  (`character_unbound_currency_merged`). The latest balances are cached in memory, so a quick relog doesn't read a
+  balance whose database write is still queued. A new shared currency only needs its entry in `SHARED_CURRENCIES`.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Dungeon finder: at startup

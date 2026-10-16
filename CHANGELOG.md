@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Heroic Sigil (account-wide currency): the item, Currency tab entry and shared account balance | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Focused Mind utility perk (Rogue and Druid, +8/14/20% energy regeneration, 5 ranks) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Endless Rage utility perk (Warrior and Druid, +8/14/20% rage, 5 ranks) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | AoE loot only from loot companions (`.aoeloot on/off` disabled) | 2026-10-15 | 2026-10-15 | Kasix-K |
@@ -71,6 +72,12 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-15
 
 ### Added
+- **Heroic Sigil, the Heroic currency (Stage A).** Item 912000 with a gold lion's head icon, in the Currency tab
+  under a new "Unbound" header; soulbound, takes no bag space, multi-drop (every group member gets their own from
+  loot). **One shared amount per account:** every character of an account sees and spends the same Sigils (set at
+  login, saved at every save and at logout). Characters logged in as bots and GM accounts keep their own amounts
+  (`Unbound.AccountCurrency.GMAccounts` turns sharing on for GM accounts, for testing). Not dropping anywhere yet:
+  boss drops and the Heroic Quartermaster are Stage B.
 - **Focused Mind** (Utility perk, id 316, Rogues and Druids only): energy regenerates +8 / 14 / 20% faster at
   levels 1 / 30 / 60 and 26 / 30% at Ranks 4-5 (GM-only for now). A server-only aura like the Vitality talent
   (spell 200217, energy regeneration %), so the energy bar fills faster in the client too.

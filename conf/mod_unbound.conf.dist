@@ -35,6 +35,21 @@ Unbound.WorldBoss.Announce = 1
 Unbound.WorldBoss.Warnings = "10, 5"
 Unbound.WorldBoss.DespawnHours = 24
 
+#    Unbound.AccountCurrency.Enable
+#        Description: One shared amount per account for the account-wide currencies (the Heroic Sigil; see
+#                     src/unbound_account_currency.cpp). Characters logged in as bots keep their own amount.
+#        Default:     1 - Enabled
+#                     0 - Disabled (every character keeps its own amount)
+#
+#    Unbound.AccountCurrency.GMAccounts
+#        Description: Whether GM accounts share their currency too. Off keeps .additem testing on GM accounts
+#                     out of the shared balance; turn it on to test the sharing on a GM account.
+#        Default:     0 - GM accounts keep their own amount per character
+#                     1 - GM accounts share like players
+
+Unbound.AccountCurrency.Enable = 1
+Unbound.AccountCurrency.GMAccounts = 0
+
 #    Unbound.Perks.RapidRecovery
 #        Description: Rapid Recovery permanent perk: after leaving combat, restore a percentage of
 #                     maximum health and mana every second until full.
