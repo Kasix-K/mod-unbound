@@ -1625,6 +1625,21 @@ QUARTERMASTER_PAGES = [
     (190109, 'Final boss treasures (30 Sigils)', None, 30),
 ]
 TWO_HANDED_OR_RANGED = {15, 17, 25, 26, 28}  # 25 Sigils on the weapons page; one-handers, shields, off-hands 20
+# Each page lists its items by type, then alphabetically: by slot (head to feet, then rings, trinkets, weapons),
+# then armor type (cloth, leather, mail, plate) or weapon type (axe, dagger, mace, ...), then name.
+QUARTERMASTER_SLOT_ORDER = [1, 2, 3, 16, 5, 20, 9, 10, 6, 7, 8, 11, 12,  # head .. feet, rings, trinkets
+                            13, 21, 22, 14, 23, 17, 15, 26, 25, 28]   # one-hand .. two-hand, ranged, relics
+QUARTERMASTER_SLOT_RANK = {inv: rank for rank, inv in enumerate(QUARTERMASTER_SLOT_ORDER)}
+QUARTERMASTER_SLOT_RANK[20] = QUARTERMASTER_SLOT_RANK[5]   # robes with chests
+QUARTERMASTER_WEAPON_TYPES = {0: 'Axe', 1: 'Axe', 2: 'Bow', 3: 'Gun', 4: 'Mace', 5: 'Mace', 6: 'Polearm',
+                              7: 'Sword', 8: 'Sword', 10: 'Staff', 13: 'Fist Weapon', 15: 'Dagger', 16: 'Thrown',
+                              18: 'Crossbow', 19: 'Wand'}
+
+
+def quartermaster_sort_key(item):
+    """Slot, then armor type (cloth, leather, mail, plate; rings and the like first) or weapon type, then name."""
+    kind = QUARTERMASTER_WEAPON_TYPES[item['sub']] if item['cls'] == CLS_WEAPON else f"{item['sub']:02d}"
+    return QUARTERMASTER_SLOT_RANK.get(item['inv'], len(QUARTERMASTER_SLOT_ORDER)), kind, item['name'].lower()
 LOOT = {
     34: {  # Stormwind Stockades (pilot heroic: normal loot plus Sigils)
         1696: dict(name='Targorr the Dread', normal_loot=True),
@@ -1986,7 +2001,7 @@ def quartermaster_pages():
     """{vendor entry: [(item, Sigils), ...]} for the Heroic Quartermaster's pages."""
     finals = final_boss_items()
     pages = {entry: [] for entry, _, _, _ in QUARTERMASTER_PAGES}
-    for item in HEROIC_ITEMS:
+    for item in sorted(HEROIC_ITEMS, key=quartermaster_sort_key):
         for entry, _, slots, sigils in QUARTERMASTER_PAGES:
             if slots is None:
                 if item['id'] in finals:
