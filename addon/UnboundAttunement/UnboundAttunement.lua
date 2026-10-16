@@ -49,12 +49,69 @@ local function money(copper)
     return math.floor(copper / 10000) .. "g"
 end
 
+-- An infusion progress bar inside the tooltip, styled like the experience bar (purple fill, segment ticks, the
+-- percentage on top). It sits on an empty tooltip line, which keeps room for it, and hides when the tooltip clears.
+local BAR_HEIGHT = 11
+local BAR_SEGMENTS = 10
+local XP_PURPLE = { 0.58, 0.0, 0.55 }
+
+local function progressBar(tooltip)
+    if tooltip.ubattBar then return tooltip.ubattBar end
+    local bar = CreateFrame("StatusBar", nil, tooltip)
+    bar:SetHeight(BAR_HEIGHT)
+    bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+    bar:SetStatusBarColor(unpack(XP_PURPLE))
+    local bg = bar:CreateTexture(nil, "BACKGROUND")
+    bg:SetAllPoints()
+    bg:SetTexture(0, 0, 0, 0.6)
+    local border = CreateFrame("Frame", nil, bar)
+    border:SetPoint("TOPLEFT", -2, 2)
+    border:SetPoint("BOTTOMRIGHT", 2, -2)
+    border:SetBackdrop({ edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border", edgeSize = 8 })
+    border:SetBackdropBorderColor(0.6, 0.6, 0.6, 1)
+    bar.ticks = {}
+    for i = 1, BAR_SEGMENTS - 1 do
+        local tick = bar:CreateTexture(nil, "OVERLAY")
+        tick:SetTexture(0, 0, 0, 0.7)
+        tick:SetWidth(1)
+        bar.ticks[i] = tick
+    end
+    bar:SetScript("OnSizeChanged", function(self, width)
+        for i, tick in ipairs(self.ticks) do
+            local x = math.floor(width * i / BAR_SEGMENTS)
+            tick:ClearAllPoints()
+            tick:SetPoint("TOPLEFT", self, "TOPLEFT", x, 0)
+            tick:SetPoint("BOTTOMLEFT", self, "BOTTOMLEFT", x, 0)
+        end
+    end)
+    bar.text = bar:CreateFontString(nil, "OVERLAY", "TextStatusBarText")
+    bar.text:SetPoint("CENTER", 0, 1)
+    bar:Hide()
+    tooltip.ubattBar = bar
+    return bar
+end
+
+local function addProgressBar(tooltip, done, needed)
+    tooltip:AddLine(" ")
+    local line = _G[tooltip:GetName() .. "TextLeft" .. tooltip:NumLines()]
+    if not line then return end
+    local bar = progressBar(tooltip)
+    bar:ClearAllPoints()
+    bar:SetPoint("LEFT", line, "LEFT", 1, 0)
+    bar:SetPoint("RIGHT", tooltip, "RIGHT", -11, 0)
+    bar:SetMinMaxValues(0, math.max(needed, 1))
+    bar:SetValue(math.min(done, needed))
+    local percent = needed > 0 and math.floor(done * 100 / needed) or 0
+    bar.text:SetText(string.format("%d%%", percent))
+    bar:Show()
+end
+
 local function addLines(tooltip, info)
     if info.code == "A" then
         tooltip:AddLine("Infused: its stats are yours for good", unpack(GREEN))
     elseif info.code == "W" then
-        local percent = info.needed > 0 and math.floor(info.done * 100 / info.needed) or 0
-        tooltip:AddLine(string.format("Infusion: %d%% (%d/%d kills)", percent, info.done, info.needed), unpack(LIGHT_BLUE))
+        tooltip:AddLine("Infusion", unpack(LIGHT_BLUE))
+        addProgressBar(tooltip, info.done, info.needed)
         if info.done == 0 then
             tooltip:AddLine("Wear it and slay foes to infuse it", unpack(GREY))
         end
@@ -95,7 +152,10 @@ for _, name in ipairs({ "GameTooltip", "ItemRefTooltip", "ShoppingTooltip1", "Sh
     local tooltip = _G[name]
     if tooltip then
         tooltip:HookScript("OnTooltipSetItem", onTooltipSetItem)
-        tooltip:HookScript("OnTooltipCleared", function(self) self.ubattId = nil; self.ubattAdded = nil end)
+        tooltip:HookScript("OnTooltipCleared", function(self)
+            self.ubattId = nil; self.ubattAdded = nil
+            if self.ubattBar then self.ubattBar:Hide() end
+        end)
         table.insert(tooltips, tooltip)
     end
 end

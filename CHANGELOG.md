@@ -110,6 +110,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   (display 28640, from Ulduar), to place instead of or beside the Tyrande one.
 
 ### Changed
+- **Infusion progress on item tooltips is a bar** like the experience bar (purple, ten segments, the percentage
+  on it) instead of the "Infusion: % (x/x kills)" line. Copy the UnboundAttunement addon and `/reload`.
 - **The Warden of Rare Wonders' mounts and pets cost four times as many Heroic Sigils:** mounts 160-480 (were
   40-120), pets 60-120 (were 15-30), the Scavenger Imp 160 (was 40). Tabards and fun items are unchanged.
   Regenerate `patch-Z.MPQ` (seven new prices).
