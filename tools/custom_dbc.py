@@ -2,9 +2,11 @@
 Generate mod-unbound's custom DBC rows for both sides from one definition:
 
   server: data/sql/db-world/unbound_custom_dbc.sql   (spell_dbc, spell_script_names, item_dbc, itemset_dbc, mapdifficulty_dbc,
-                                                      questsort_dbc)
+                                                      questsort_dbc, itemdisplayinfo_dbc, currencytypes_dbc,
+                                                      itemextendedcost_dbc)
   client: <client>/Data/patch-Z.MPQ                  (DBFilesClient\\Spell.dbc, Item.dbc, ItemSet.dbc, SkillLineAbility.dbc,
-                                                      MapDifficulty.dbc)
+                                                      MapDifficulty.dbc, QuestSort.dbc, ItemDisplayInfo.dbc,
+                                                      CurrencyTypes.dbc, CurrencyCategory.dbc, ItemExtendedCost.dbc)
 
 The client DBCs are built from the server's extracted DBCs, which are identical to the 3.3.5a
 (12340) client's. Run after changing the tables below, then restart the worldserver and the client:
@@ -89,6 +91,59 @@ ITEMS = [
 ]
 ITEMS += heroic_loot.item_dbc_rows()  # heroic dungeon loot (tools/heroic_loot.py)
 ITEMS += world_bosses.item_dbc_rows()  # world boss loot (tools/world_bosses.py)
+
+# ---------------------------------------------------------------- currencies
+# Account-wide currencies (ROADMAP.md "Heroic currency and vendor"): items 912000-912099 in the Currency tab
+# under an "Unbound" header. The item's full row (soulbound, multi-drop, currency token bag) is in
+# data/sql/db-world/unbound_currencies.sql.
+HEROIC_SIGIL = 912000
+CURRENCY_CATEGORY_UNBOUND = 100
+ITEMS += [
+    # ID, Class, SubClass, SoundOverrideSubclass, Material, DisplayInfoID, InventoryType, SheathType
+    (HEROIC_SIGIL, 10, 0, -1, 4, 70000, 0, 0),  # Heroic Sigil (class 10 = currency, like Emblem of Heroism)
+]
+
+# ItemDisplayInfo.dbc rows (client) / itemdisplayinfo_dbc rows (server): currency icons. Modelled on Emblem of
+# Heroism's display (54562): only the inventory icon and the pickup sound group.
+ITEM_DISPLAY_COLUMNS = ['ID', 'ModelName_1', 'ModelName_2', 'ModelTexture_1', 'ModelTexture_2', 'InventoryIcon_1',
+                        'InventoryIcon_2', 'GeosetGroup_1', 'GeosetGroup_2', 'GeosetGroup_3', 'Flags',
+                        'SpellVisualID', 'GroupSoundIndex', 'HelmetGeosetVis_1', 'HelmetGeosetVis_2'] + \
+                       [f'Texture_{k}' for k in range(1, 9)] + ['ItemVisual', 'ParticleColorID']
+
+
+def item_display_row(display_id, icon):
+    values = {'ID': display_id, 'InventoryIcon_1': icon, 'GroupSoundIndex': 7}
+    return [values.get(c, '' if c.startswith(('Model', 'Inventory', 'Texture')) else 0) for c in ITEM_DISPLAY_COLUMNS]
+
+
+ITEM_DISPLAYS = [
+    item_display_row(70000, 'Spell_Holy_SealOfRighteousness'),  # Heroic Sigil: a gold lion's head on green
+]
+
+# CurrencyTypes.dbc rows (client) / currencytypes_dbc rows (server): ID, ItemID, CategoryID, BitIndex. BitIndex is
+# the item's bit in the character's known-currencies mask (64 bits; 29 is the highest the game uses).
+CURRENCY_TYPES = [
+    (400, HEROIC_SIGIL, CURRENCY_CATEGORY_UNBOUND, 30),
+]
+
+# CurrencyCategory.dbc rows, client only (the server doesn't load it): the Currency tab's headers.
+CURRENCY_CATEGORY_COLUMNS = ['ID', 'Flags'] + [f'Name_Lang_{loc}' for loc in (
+    'enUS', 'enGB', 'koKR', 'frFR', 'deDE', 'enCN', 'zhCN', 'enTW', 'zhTW', 'esES', 'esMX', 'ruRU', 'ptPT', 'ptBR',
+    'itIT', 'Unk')] + ['Name_Lang_Mask']
+CURRENCY_CATEGORIES = [
+    [CURRENCY_CATEGORY_UNBOUND, 0, 'Unbound'] + [''] * 15 + [LANG_MASK],
+]
+
+# ItemExtendedCost.dbc rows (client) / itemextendedcost_dbc rows (server): vendor prices in Heroic Sigils, one row per
+# price (an npc_vendor row's ExtendedCost points at one). The gear prices from the roadmap; more come with the vendor.
+ITEM_EXTENDED_COST_COLUMNS = ['ID', 'HonorPoints', 'ArenaPoints', 'ArenaBracket'] + \
+                             [f'ItemID_{k}' for k in range(1, 6)] + [f'ItemCount_{k}' for k in range(1, 6)] + \
+                             ['RequiredArenaRating', 'ItemPurchaseGroup']
+SIGIL_PRICES = {3000: 10, 3001: 15, 3002: 20, 3003: 25, 3004: 30}  # ExtendedCost id: sigils
+ITEM_EXTENDED_COSTS = [
+    (cost_id, 0, 0, 0, HEROIC_SIGIL, 0, 0, 0, 0, sigils, 0, 0, 0, 0, 0, 0)
+    for cost_id, sigils in SIGIL_PRICES.items()
+]
 
 # ItemSet.dbc rows (client) / itemset_dbc rows (server): heroic dungeon sets (tools/heroic_loot.py)
 ITEM_SETS = heroic_loot.item_set_rows()
@@ -314,6 +369,21 @@ def write_sql(cols, rows, path):
         lines.append('INSERT INTO `questsort_dbc` (' + ', '.join('`' + c + '`' for c in QUEST_SORT_COLUMNS) + ') VALUES')
         lines.append(',\n'.join('(' + ','.join(sql_literal(v) for v in quest_sort_row(s, n)) + ')'
                                 for s, n in QUEST_SORTS) + ';')
+    if ITEM_DISPLAYS:
+        lines.append(f"DELETE FROM `itemdisplayinfo_dbc` WHERE `ID` IN ({', '.join(str(r[0]) for r in ITEM_DISPLAYS)});")
+        lines.append('INSERT INTO `itemdisplayinfo_dbc` (' + ', '.join('`' + c + '`' for c in ITEM_DISPLAY_COLUMNS)
+                     + ') VALUES')
+        lines.append(',\n'.join('(' + ','.join(sql_literal(v) for v in r) + ')' for r in ITEM_DISPLAYS) + ';')
+    if CURRENCY_TYPES:
+        lines.append(f"DELETE FROM `currencytypes_dbc` WHERE `ID` IN ({', '.join(str(r[0]) for r in CURRENCY_TYPES)});")
+        lines.append('INSERT INTO `currencytypes_dbc` (`ID`, `ItemID`, `CategoryID`, `BitIndex`) VALUES')
+        lines.append(',\n'.join('(' + ','.join(str(v) for v in r) + ')' for r in CURRENCY_TYPES) + ';')
+    if ITEM_EXTENDED_COSTS:
+        lines.append(f"DELETE FROM `itemextendedcost_dbc` WHERE `ID` IN "
+                     f"({', '.join(str(r[0]) for r in ITEM_EXTENDED_COSTS)});")
+        lines.append('INSERT INTO `itemextendedcost_dbc` (' + ', '.join('`' + c + '`' for c in ITEM_EXTENDED_COST_COLUMNS)
+                     + ') VALUES')
+        lines.append(',\n'.join('(' + ','.join(str(v) for v in r) + ')' for r in ITEM_EXTENDED_COSTS) + ';')
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, 'w', encoding='utf8', newline='\n') as f:
         f.write('\n'.join(lines) + '\n')
@@ -437,11 +507,25 @@ def main():
     if QUEST_SORTS:
         files['DBFilesClient\\QuestSort.dbc'] = append_rows_with_strings(
             os.path.join(args.dbc, 'QuestSort.dbc'), [quest_sort_row(s, n) for s, n in QUEST_SORTS])
+    if ITEM_DISPLAYS:
+        files['DBFilesClient\\ItemDisplayInfo.dbc'] = append_rows_with_strings(
+            os.path.join(args.dbc, 'ItemDisplayInfo.dbc'), ITEM_DISPLAYS)
+    if CURRENCY_TYPES:
+        files['DBFilesClient\\CurrencyTypes.dbc'] = append_int_rows(os.path.join(args.dbc, 'CurrencyTypes.dbc'),
+                                                                    CURRENCY_TYPES)
+    if CURRENCY_CATEGORIES:
+        files['DBFilesClient\\CurrencyCategory.dbc'] = append_rows_with_strings(
+            os.path.join(args.dbc, 'CurrencyCategory.dbc'), CURRENCY_CATEGORIES)
+    if ITEM_EXTENDED_COSTS:
+        files['DBFilesClient\\ItemExtendedCost.dbc'] = append_int_rows(os.path.join(args.dbc, 'ItemExtendedCost.dbc'),
+                                                                       ITEM_EXTENDED_COSTS)
     mpq_path = os.path.join(args.client, 'Data', 'patch-Z.MPQ')
     write_mpq(mpq_path, files)
     print('wrote', mpq_path, f'({len(SPELLS)} spells, {len(ITEMS)} items, {len(ITEM_SETS)} item sets, '
                              f'{len(SKILL_LINE_ABILITIES)} skill line abilities, '
-                             f'{len(MAP_DIFFICULTIES)} map difficulties, {len(QUEST_SORTS)} quest sorts)')
+                             f'{len(MAP_DIFFICULTIES)} map difficulties, {len(QUEST_SORTS)} quest sorts, '
+                             f'{len(ITEM_DISPLAYS)} item displays, {len(CURRENCY_TYPES)} currencies, '
+                             f'{len(CURRENCY_CATEGORIES)} currency categories, {len(ITEM_EXTENDED_COSTS)} prices)')
 
 
 if __name__ == '__main__':

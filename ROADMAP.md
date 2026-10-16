@@ -84,7 +84,7 @@ its full 20% whichever way it was collected. Time versus cost is the whole trade
 | The item | **Kept**: wear it, transmog it, sell it later | **Destroyed** |
 | Which items | Only gear the character **can equip** (their armour type, their class's weapons) | **Any item** that counts (see the Player table), including gear the character could infuse |
 | Value | **Full 20%** | **Full 20%** (not reduced) |
-| Cost | Free | A price scaled by quality: gold for now, Heroic Badges once they exist |
+| Cost | Free | A price scaled by quality: gold for now, Heroic Sigils once they exist |
 | Cost for gear the character could infuse | (free) | **Double** the normal price, so infusing stays the main route for one's own gear |
 
 - **Collected stats are permanent:** once an item is 100% infused (or given in tribute), its 20% stays whatever
@@ -113,7 +113,7 @@ its full 20% whichever way it was collected. Time versus cost is the whole trade
 - **Tribute at an altar NPC (the Altar of Tribute):** an altar in the capital cities (players of both factions can use any,
   as everything else is cross-faction). Talking to it opens the tribute window: pick an item from the bags,
   see its stats and the price, confirm.
-- **Tribute prices** (gold, scaled by quality; config settings, Heroic Badges later):
+- **Tribute prices** (gold, scaled by quality; config settings, Heroic Sigils later):
 
   | Quality | Price | Gear the character could infuse (double) |
   |---|---|---|
@@ -261,18 +261,18 @@ changes, raid by raid (see Next up).
     obtained on this server (Onyxia isn't skinnable, the pattern drops nowhere, both on purpose). A custom
     way to get one is planned.
 - [ ] **Earning perk Ranks 4-5** (moderate): how players reach the endgame ranks, now GM-only (buy per perk
-      with gold, then Heroic Badges / Mythic currency; perk points; or rank by use), an Upgrade button in the
+      with gold, then Heroic Sigils / Mythic currency; perk points; or rank by use), an Upgrade button in the
       perk window, and saving earned ranks (and what they cost, so purchases can be refunded if the design
       changes).
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, like Paladin Retribution, each worth about
       +25-35% to its spec's single-target damage (the class perk target in the Power budget).
-- [ ] **Heroic currency and vendor** (moderate; SaucyHobo54): a token (e.g. "Heroic Badge") from Heroic bosses,
+- [ ] **Heroic currency and vendor** (moderate; SaucyHobo54): a token ("Heroic Sigil", renamed from "Heroic Badge" on 2026-10-15) from Heroic bosses,
       spent on companions, mounts, transmog or gear. Becomes the Loot Goblin's currency. Starting values
       (2026-10-15, tune in testing):
   - **Drops:** 1 per Heroic boss, 2 from the final boss (about 7-10 a run), plus 10 from the weekly Heroic
-    dungeon quest on the Bulletin Board (decided 2026-10-15: 10 badges plus 75 gold, `tools/bulletin_board.py`).
-  - **Delivery (decided 2026-10-15):** in the loot. `tools/heroic_loot.py` adds the badge to every Heroic boss's
-    loot table (1, or 2 for a final boss). The badge has `ITEM_FLAG_MULTI_DROP`, so loot is free-for-all: every
+    dungeon quest on the Bulletin Board (decided 2026-10-15: 10 sigils plus 75 gold, `tools/bulletin_board.py`).
+  - **Delivery (decided 2026-10-15):** in the loot. `tools/heroic_loot.py` adds the sigil to every Heroic boss's
+    loot table (1, or 2 for a final boss). The sigil has `ITEM_FLAG_MULTI_DROP`, so loot is free-for-all: every
     group member gets their own (bots too, harmlessly: an alt-bot's copy never reaches the account balance).
     Final bosses are marked `final=True` in `heroic_loot.py` (26: every dungeon and every wing, the same list as
     `DUNGEONS` in `tools/bulletin_board.py`), not taken from list order: the loot table is keyed by map, and
@@ -313,7 +313,7 @@ changes, raid by raid (see Next up).
   - **Tests:** earn on A then log into B (same total); spend on B then back to A; with A online, have alt B as
     a bot earn and spend (the balance must not change); restart mid-session (matches the last save); a vendor
     refund within 2 hours, then switch characters.
-  - **Build order** (all SaucyHobo54): Stage A, testable with `.additem`: 1. the badge (client patch rows and the
+  - **Build order** (all SaucyHobo54): Stage A, testable with `.additem`: 1. the sigil (client patch rows and the
     server item), 2. the account balance. Stage B: 3. boss drops (`heroic_loot.py`), 4. the Quartermaster, 5. the
     Bulletin Board reward, then the Loot Goblin's price, the Altar of Tribute's prices and perk Rank 4 purchases.
 - [ ] **Heroic classic raids** (moderate): Molten Core, Blackwing Lair, Zul'Gurub, Ruins and Temple of
@@ -327,7 +327,7 @@ changes, raid by raid (see Next up).
 
 - [x] **Bulletin Board** (2026-10-15): daily kill bounties and profession quests, weekly dungeon and raid quests
       per tier (Normal and Heroic dungeons, Normal raids so far), weekly elite bounty. Add the Mythic and Heroic raid weeklies to
-      `tools/bulletin_board.py` when those modes exist; switch rewards to Heroic Badges / Mythic currency then.
+      `tools/bulletin_board.py` when those modes exist; switch rewards to Heroic Sigils / Mythic currency then.
 
 - [ ] **More world bosses** (moderate, mostly data): one per continent and level range, added to
       `tools/world_bosses.py`. Later a weekly rotation (boss of the week) with a first-kill bonus.
