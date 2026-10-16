@@ -236,8 +236,9 @@ bring one other player or a playerbot for at least one boss.
 
 - [ ] The Warden of Rare Wonders with Ysera's look (`.npc add 190205`) shows Ysera's night elf model and the same
       four pages as the Tyrande one (`.npc add 190200`).
-- [ ] The Warden's Pets page sells the Scavenger Imp for 40 Heroic Sigils; it teaches the companion (the imp shows
+- [ ] The Warden's Pets page sells the Scavenger Imp for 160 Heroic Sigils; it teaches the companion (the imp shows
       in the Companions tab and summons a small imp).
+- [ ] The Warden's mounts cost 160-480 Sigils and pets 60-160; the menu shows those ranges.
 - [ ] The Heroic Quartermaster's pages are sorted by slot, then armor or weapon type, then name.
 
 ## 9e. Expansion lock on a normal account

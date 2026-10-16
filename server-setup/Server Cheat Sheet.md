@@ -46,7 +46,7 @@
 | Heroic Sigil (account-wide currency; icon display 70000, currency 400 bit 30, prices 3000-3010) | (none) | 912000 (currencies 912000-912099) | (none) |
 | Loot Goblin companion | 190100 | 910001 | 200201 |
 | Arcane Loot Scanner companion | 190102 (size 0.08) | 910002 | 200202 |
-| Scavenger Imp companion (40 Heroic Sigils, Warden of Rare Wonders) | 190210 | 910003 | 200203 |
+| Scavenger Imp companion (160 Heroic Sigils, Warden of Rare Wonders) | 190210 | 910003 | 200203 |
 | Bounty Wayfinder (beside each Bulletin Board; spawn guids 9190211-9190212) | 190211 | (none) | (none) |
 | Heroic Deadmines loot | (heroic bosses: entry + 1000000) | 910100-910121 | (none) |
 | Heroic loot: Wailing Caverns, Shadowfang Keep, Blackfathom Deeps, Gnomeregan | (heroic bosses: entry + 1000000) | 910122-910180 | (none) |
@@ -81,7 +81,7 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
 - **Transmog:** cast Transmogrify, type `/transmog`, or talk to the Warpweaver.
 - **Loot companions:** while the Loot Goblin or Arcane Loot Scanner is out, corpses within 55 yards are
   auto-looted, and opening a corpse also loots the corpses around it. That's the only way to AoE loot:
-  `.aoeloot on/off` is disabled. The **Scavenger Imp** (40 Heroic Sigils from the Warden of Rare Wonders) is the
+  `.aoeloot on/off` is disabled. The **Scavenger Imp** (160 Heroic Sigils from the Warden of Rare Wonders) is the
   smaller one: when you open a corpse, it also loots up to 4 of the nearest corpses within 27 yards
   (`Unbound.ScavengerImp.ExtraCorpses` and `.Range` in `mod_unbound.conf`).
 - **Reset lockouts:** right-click your portrait, then **Reset all instances**. This resets raids and

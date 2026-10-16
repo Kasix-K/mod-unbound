@@ -281,7 +281,7 @@ changes, raid by raid (see Next up).
       +25-35% to its spec's single-target damage (the class perk target in the Power budget).
 - [ ] **Heroic Sigil: the rest** (easy to moderate; SaucyHobo54): the Heroic currency is live and tested (see Done), still to do:
   - **Loot companions by currency** (decided 2026-10-16): the small click-to-loot companion, the **Scavenger Imp**
-    (up to 4 corpses within 27 yards when you open one), is bought with **Heroic Sigils** (done: 40 Sigils at the
+    (up to 4 corpses within 27 yards when you open one), is bought with **Heroic Sigils** (done: 160 Sigils at the
     Warden of Rare Wonders). The wide auto-loot companions, the **Loot Goblin** and **Arcane Loot Scanner** (every
     corpse within 55 yards, automatically), move to the **Mythic currency** once it exists (Grizzle Lootsnatch
     sells them for 10 gold until then).

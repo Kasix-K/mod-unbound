@@ -85,7 +85,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   how far it wanders, and its patrol path) and 80 from either faction's guards. Camps in caves or tunnels
   (Hive'Regal, Mazthoril) teleport to a safe ground spot instead. Free; not in combat. Regenerate
   `patch-Z.MPQ` (spell 200204).
-- **Scavenger Imp,** a third loot companion (40 Heroic Sigils, the Warden of Rare Wonders' Pets page): nothing
+- **Scavenger Imp,** a third loot companion (160 Heroic Sigils, the Warden of Rare Wonders' Pets page): nothing
   is looted until you open a corpse yourself; then it loots up to 4 of the nearest other corpses within 27
   yards into your bags (`Unbound.ScavengerImp.ExtraCorpses` and `Unbound.ScavengerImp.Range`). The Loot Goblin
   and Arcane Loot Scanner keep their 55 yards and full auto-looting. Regenerate `patch-Z.MPQ`.
@@ -105,6 +105,12 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   classic-only server. Six new Sigil prices (5, 40, 75, 90, 100, 120): regenerate `patch-Z.MPQ`.
 - **Warden of Rare Wonders with Ysera's look** (`.npc add 190205`): the same vendor in Ysera's night elf form
   (display 28640, from Ulduar), to place instead of or beside the Tyrande one.
+
+### Changed
+- **The Warden of Rare Wonders' mounts and pets cost four times as many Heroic Sigils:** mounts 160-480 (were
+  40-120), pets 60-120 (were 15-30), the Scavenger Imp 160 (was 40). Tabards and fun items are unchanged.
+  Regenerate `patch-Z.MPQ` (seven new prices).
+
 
 ### Fixed
 - **Startup warnings for the Blackened Defias Garb set:** its four pieces now have `item_set_names` rows

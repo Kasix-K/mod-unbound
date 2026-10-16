@@ -1616,7 +1616,9 @@ SIGILS_FINAL = 2   # from a final boss
 # most 150 items, and there are 450 heroic items). Prices are ItemExtendedCost rows (tools/custom_dbc.py builds them
 # from SIGIL_EXTENDED_COSTS): Sigils -> ExtendedCost id.
 SIGIL_EXTENDED_COSTS = {10: 3000, 15: 3001, 20: 3002, 25: 3003, 30: 3004,
-                        5: 3005, 40: 3006, 75: 3007, 90: 3008, 100: 3009, 120: 3010}  # 3005+: the Warden's prices
+                        5: 3005, 40: 3006, 75: 3007, 90: 3008, 100: 3009, 120: 3010,  # 3005+: the Warden's prices
+                        60: 3011, 80: 3012, 160: 3013, 300: 3014, 360: 3015, 400: 3016, 480: 3017}
+# (append only: ids already in players' client patches keep their price)
 QUARTERMASTER_PAGES = [
     # vendor entry, menu text, inventory types (final-boss items all go on the last page), Sigils
     (190105, 'Rings, necks, cloaks, wrists and belts (10 Sigils)', {2, 6, 9, 11, 12, 16}, 10),
@@ -1636,23 +1638,23 @@ TWO_HANDED_OR_RANGED = {15, 17, 25, 26, 28}  # 25 Sigils on the weapons page; on
 WARDEN_PAGES = [
     # vendor entry, menu text, [(item, Sigils), ...]
     (190201, 'Mounts', [
-        (23720, 40),    # Riding Turtle (level 1, no riding skill)
-        (49283, 75),    # Reins of the Spectral Tiger
-        (37719, 90),    # Swift Zhevra
-        (54811, 100),   # Celestial Steed (scales with riding)
-        (37012, 100),   # The Horseman's Reins (scales with riding)
-        (46778, 100),   # Magic Rooster Egg (level 60)
-        (49284, 120),   # Reins of the Swift Spectral Tiger
+        (23720, 160),    # Riding Turtle (level 1, no riding skill)
+        (49283, 300),    # Reins of the Spectral Tiger
+        (37719, 360),    # Swift Zhevra
+        (54811, 400),   # Celestial Steed (scales with riding)
+        (37012, 400),   # The Horseman's Reins (scales with riding)
+        (46778, 400),   # Magic Rooster Egg (level 60)
+        (49284, 480),   # Reins of the Swift Spectral Tiger
     ]),
     (190202, 'Pets', [
-        (910003, 40),   # Scavenger Imp (loot companion: loots up to 4 corpses around the one you open)
-        (49362, 15), (44819, 15), (49662, 15), (49663, 15), (25535, 15),   # Onyxian Whelpling, Baby Blizzard Bear,
+        (910003, 160),   # Scavenger Imp (loot companion: loots up to 4 corpses around the one you open)
+        (49362, 60), (44819, 60), (49662, 60), (49663, 60), (25535, 60),   # Onyxian Whelpling, Baby Blizzard Bear,
                                                                             # Gryphon Hatchling, Wind Rider Cub, Netherwhelp
-        (20371, 20), (30360, 20), (13583, 20), (13584, 20), (13582, 20),   # Murky, Lurky, Panda Cub, Mini Diablo, Zergling
-        (39286, 20), (41133, 20), (35504, 20),                             # Frosty, Mr. Chilly, Phoenix Hatchling
-        (49665, 25), (49646, 25), (54847, 25), (56806, 25), (38050, 25),   # Pandaren Monk, Core Hound Pup, Lil' XT,
+        (20371, 80), (30360, 80), (13583, 80), (13584, 80), (13582, 80),   # Murky, Lurky, Panda Cub, Mini Diablo, Zergling
+        (39286, 80), (41133, 80), (35504, 80),                             # Frosty, Mr. Chilly, Phoenix Hatchling
+        (49665, 100), (49646, 100), (54847, 100), (56806, 100), (38050, 100),   # Pandaren Monk, Core Hound Pup, Lil' XT,
                                                                             # Mini Thor, Ethereal Soul-Trader
-        (49693, 30), (49343, 30),                                          # Lil' K.T., Spectral Tiger Cub
+        (49693, 120), (49343, 120),                                          # Lil' K.T., Spectral Tiger Cub
     ]),
     (190203, 'Tabards', [
         (23705, 25), (23709, 25), (38309, 25), (38310, 25),   # Flame, Frost, Nature, the Arcane
