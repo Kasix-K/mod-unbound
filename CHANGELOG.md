@@ -79,6 +79,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   Rooster, Swift Spectral Tiger), pets 15-30 (20, from Onyxian Whelpling to Lil' K.T.), tabards 25 (the 8 card-game
   tabards), fun items 5-20 (Noggenfogger Elixir to Orb of Deception). Only items a level 60 character can use on a
   classic-only server. Six new Sigil prices (5, 40, 75, 90, 100, 120): regenerate `patch-Z.MPQ`.
+- **Warden of Rare Wonders with Ysera's look** (`.npc add 190205`): the same vendor in Ysera's night elf form
+  (display 28640, from Ulduar), to place instead of or beside the Tyrande one.
 
 ## 2026-10-15
 

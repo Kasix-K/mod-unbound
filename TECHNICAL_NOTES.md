@@ -227,7 +227,8 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   type, then name) into the `slot` column. The Warden of Rare Wonders (creature 190200,
   `unbound_warden_of_rare_wonders.sql`, Tyrande Whisperwind's display 7274) is the same script
   (`npc_unbound_sigil_vendor`) with `WARDEN_PAGES` (Mounts, Pets, Tabards, Fun items; page creatures 190201-190204;
-  items listed by hand). NPCs 190200-190299. Prices: `SIGIL_EXTENDED_COSTS` (Sigils -> ItemExtendedCost id), which
+  items listed by hand); 190205 is a copy with Ysera's night elf display 28640 (same script and pages). NPCs
+  190200-190299. Prices: `SIGIL_EXTENDED_COSTS` (Sigils -> ItemExtendedCost id), which
   `tools/custom_dbc.py` turns into the client and server rows. The Bulletin Board's weekly Heroic dungeon quests give
   `TIER_SIGILS` Sigils (`RewardItem1`). After a change run `python tools/heroic_loot.py`, `python
   tools/classic_heroics.py` (for `normal_loot` bosses' loot ids) and `python tools/bulletin_board.py`.

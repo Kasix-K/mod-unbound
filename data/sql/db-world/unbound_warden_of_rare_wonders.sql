@@ -3,10 +3,11 @@
 -- list of one never-spawned page creature (190201-190204; their npc_vendor rows come from tools/heroic_loot.py,
 -- WARDEN_PAGES). NPCs 190200-190299 (190100-190109 are used and 190110-190199 are the world bosses').
 -- Place one in each capital with `.npc add 190200` (friendly to both factions). Looks like Tyrande Whisperwind
--- (display 7274, her Darnassus model).
+-- (display 7274, her Darnassus model). 190205 is the same vendor looking like Ysera in her night elf form
+-- (display 28640, creature 33495's model): `.npc add 190205`.
 SET @WARDEN := 190200;
 
-DELETE FROM `creature_template` WHERE `entry` BETWEEN @WARDEN AND @WARDEN + 4;
+DELETE FROM `creature_template` WHERE `entry` BETWEEN @WARDEN AND @WARDEN + 5;
 INSERT INTO `creature_template` (`entry`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`,
     `faction`, `npcflag`, `rank`, `dmgschool`, `BaseAttackTime`, `RangeAttackTime`, `unit_class`, `unit_flags`, `type`,
     `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `AIName`, `MovementType`, `HoverHeight`, `RacialLeader`,
@@ -18,15 +19,19 @@ INSERT INTO `creature_template` (`entry`, `name`, `subname`, `IconName`, `gossip
 (@WARDEN + 1, 'Warden of Rare Wonders', 'Mounts', NULL, 0, 80, 80, 2, 35, 128, 0, 0, 2000, 0, 2, 2, 7, 0, 0, 0, 0, '', 0, 1, 0, 0, 1, 0, 2, ''),
 (@WARDEN + 2, 'Warden of Rare Wonders', 'Pets', NULL, 0, 80, 80, 2, 35, 128, 0, 0, 2000, 0, 2, 2, 7, 0, 0, 0, 0, '', 0, 1, 0, 0, 1, 0, 2, ''),
 (@WARDEN + 3, 'Warden of Rare Wonders', 'Tabards', NULL, 0, 80, 80, 2, 35, 128, 0, 0, 2000, 0, 2, 2, 7, 0, 0, 0, 0, '', 0, 1, 0, 0, 1, 0, 2, ''),
-(@WARDEN + 4, 'Warden of Rare Wonders', 'Fun items', NULL, 0, 80, 80, 2, 35, 128, 0, 0, 2000, 0, 2, 2, 7, 0, 0, 0, 0, '', 0, 1, 0, 0, 1, 0, 2, '');
+(@WARDEN + 4, 'Warden of Rare Wonders', 'Fun items', NULL, 0, 80, 80, 2, 35, 128, 0, 0, 2000, 0, 2, 2, 7, 0, 0, 0, 0, '', 0, 1, 0, 0, 1, 0, 2, ''),
+-- the same vendor with Ysera's look (same script, greeting and pages)
+(@WARDEN + 5, 'Warden of Rare Wonders', 'Heroic Sigils', NULL, 0, 80, 80, 2, 35, 129, 0, 0, 2000, 0, 2, 2, 7, 0, 0, 0, 0, '', 0, 1, 0, 0, 1, 0, 2,
+    'npc_unbound_warden_of_rare_wonders');
 
-DELETE FROM `creature_template_model` WHERE `CreatureID` BETWEEN @WARDEN AND @WARDEN + 4;
+DELETE FROM `creature_template_model` WHERE `CreatureID` BETWEEN @WARDEN AND @WARDEN + 5;
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`, `VerifiedBuild`) VALUES
 (@WARDEN, 0, 7274, 1, 1, 0),
 (@WARDEN + 1, 0, 7274, 1, 1, 0),
 (@WARDEN + 2, 0, 7274, 1, 1, 0),
 (@WARDEN + 3, 0, 7274, 1, 1, 0),
-(@WARDEN + 4, 0, 7274, 1, 1, 0);
+(@WARDEN + 4, 0, 7274, 1, 1, 0),
+(@WARDEN + 5, 0, 28640, 1, 1, 0);
 
 -- Greeting
 DELETE FROM `npc_text` WHERE `ID` = @WARDEN;

@@ -35,6 +35,7 @@
 | Altar of Tribute (infusion; one per capital city) | `.npc add 190103` |
 | Heroic Quartermaster (Heroic gear for Heroic Sigils; one per capital city) | `.npc add 190104` |
 | Warden of Rare Wonders (cosmetics for Heroic Sigils: mounts, pets, tabards, fun items; one per capital city) | `.npc add 190200` |
+| Warden of Rare Wonders with Ysera's night elf look (same vendor) | `.npc add 190205` |
 
 ## Custom IDs
 
