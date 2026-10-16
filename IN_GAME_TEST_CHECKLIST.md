@@ -80,7 +80,7 @@ Boards: Stormwind Trade District (`.go xyz -8812.4 651.6 94.9 0`) and Orgrimmar 
       "Classic Raids" header), and Find Group becomes **Enter Raid**. Choosing a random dungeon or Specific
       Dungeons again brings the normal Dungeon Finder back, and queueing for a dungeon still works.
 - [ ] Close and reopen the Dungeon Finder while on Raids: the dropdown still says Raids and has the Raids entry.
-- [ ] Raids you can't enter show a lock icon, with the reason in the tooltip (level, Naxxramas attunement). Ticking a raid unticks the one before (one raid at a time).
+- [ ] Raids you can't enter show a lock icon (level, Naxxramas attunement); hovering a raid shows no tooltip. Ticking a raid unticks the one before (one raid at a time).
 - [ ] Only the classic raids are listed (no Burning Crusade or Wrath raids while those expansions are locked).
 - [ ] **Solo:** pick Molten Core and Enter. You're teleported **inside** the raid near its entrance.
 - [ ] **Leave Raid** takes you back to where you joined from. Also try it after logging out and back in inside

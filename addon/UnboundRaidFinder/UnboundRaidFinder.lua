@@ -17,11 +17,6 @@ local ROW_HEIGHT = 16                 -- the Dungeon Finder's list: 15 rows of 1
 local NUM_ROWS = 15
 
 local EXPANSIONS = { [0] = "Classic Raids", [1] = "Burning Crusade Raids", [2] = "Wrath of the Lich King Raids" }
-local LOCK_REASON = {
-    L = "Your level doesn't fit this raid.",
-    Q = "Needs \"The Dread Citadel - Naxxramas\" from Archmage Angela Dosantos at Light's Hope Chapel.",
-    E = "This expansion has not been released yet.",
-}
 
 local raids, incoming = {}, nil      -- incoming: the list being received
 local currentRaid, mayPick = 0, true
@@ -188,20 +183,6 @@ local function createRow(i)
             self.enableButton:Click()
         end
     end)
-    row:SetScript("OnEnter", function(self)
-        local raid = self.entry
-        if not raid or raid.header then return end
-        GameTooltip:SetOwner(self, "ANCHOR_TOP")
-        GameTooltip:SetText(raid.name, 1, 1, 1)
-        if raid.players > 0 then GameTooltip:AddLine(raid.players .. " players", 1, 0.82, 0) end
-        if levelText(raid) ~= "" then GameTooltip:AddLine(levelText(raid), 1, 0.82, 0) end
-        if LOCK_REASON[raid.status] and raid.id ~= currentRaid then
-            GameTooltip:AddLine(YOU_MAY_NOT_QUEUE_FOR_DUNGEON, 1, 1, 1)
-            GameTooltip:AddLine(LOCK_REASON[raid.status], 1, 0.3, 0.3, true)
-        end
-        GameTooltip:Show()
-    end)
-    row:SetScript("OnLeave", function() GameTooltip:Hide() end)
     skin("HandleCheckBox", row.enableButton)
     return row
 end
