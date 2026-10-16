@@ -60,7 +60,7 @@ content there is. Change these targets here first if testing says otherwise.
 | Gear | Normal level 60 gear: the baseline (1x) |
 | Perks | About **x1.55** with five Offensive perks (about +10% per perk) |
 | Perk ranks | Up to about **x1.3** more on top of perks (together about x2) |
-| Class perk | About **x1.25-1.35**: each spec's class perk is worth about **+25-35% to that spec's single-target damage** (a lone raid boss is what a solo Mythic raid is about). Extra area damage on trash is fine on top. Every class perk is held to this target, so no spec pulls ahead. Measure with a damage meter on a training dummy, perk off vs on. Paladin **Retribution** is estimated at about +35-40% (Holy +15% / Physical +10% about +12%, a free Crusader Strike per Divine Storm about +10-15%, a free Exorcism per Judgement about +5-10%, stronger Exorcism a few %), the top of the range: if testing confirms it, lower Holy to +10% |
+| Class perk | About **x1.25-1.35**: each spec's class perk is worth about **+25-35% to that spec's single-target damage** (a lone raid boss is what a solo Mythic raid is about). Extra area damage on trash is fine on top. Every class perk is held to this target, so no spec pulls ahead. Measure with a damage meter on a training dummy, perk off vs on |
 | Gear infusion / tribute | About **+200% of gear stats** when well collected (about x3), the main lever: |
 | - per item | **20%** of the item's fixed stats (tune 15-25% in testing); fixed stats only (no procs, set bonuses, weapon damage) |
 | - which items count | **Every unique item** counts once (a second copy adds nothing); **green or better** |
