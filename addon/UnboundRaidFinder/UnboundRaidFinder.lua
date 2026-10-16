@@ -186,15 +186,6 @@ local function createRow(i)
             self.enableButton:Click()
         end
     end)
-    -- the checkbox looks like the dungeon list's: ElvUI strips those and gives them an inset box
-    -- (Skins/Blizzard/LFD.lua) instead of its usual checkbox skin
-    if elvSkins() and row.enableButton.StripTextures and row.enableButton.CreateBackdrop then
-        pcall(function()
-            row.enableButton:StripTextures()
-            row.enableButton:CreateBackdrop("Default")
-            row.enableButton.backdrop:SetInside(nil, 4, 4)
-        end)
-    end
     return row
 end
 
@@ -213,7 +204,6 @@ local function createRaidView()
     scroll:SetScript("OnVerticalScroll", function(self, offset)
         FauxScrollFrame_OnVerticalScroll(self, offset, ROW_HEIGHT, updateList)
     end)
-    skin("HandleScrollBar", _G["UnboundRaidFinderScrollFrameScrollBar"])
 
     statusText = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     statusText:SetPoint("BOTTOMLEFT", 25, 34)
@@ -242,6 +232,27 @@ local function createRaidView()
     end)
 end
 
+-- ElvUI's look, done the first time the raid list is shown: at login ElvUI may not have finished setting up
+-- (its border size and colours), which left the boxes without borders. The checkboxes are styled like the
+-- dungeon list's (Skins/Blizzard/LFD.lua strips them and gives them an inset box, not its usual checkbox skin).
+local skinned = false
+local function skinRaidView()
+    if skinned then return end
+    skinned = true
+    if not elvSkins() then return end
+    for _, row in ipairs(rows) do
+        local box = row.enableButton
+        if box.StripTextures and box.CreateBackdrop then
+            pcall(function()
+                box:StripTextures()
+                box:CreateBackdrop("Default")
+                box.backdrop:SetInside(nil, 4, 4)
+            end)
+        end
+    end
+    skin("HandleScrollBar", _G["UnboundRaidFinderScrollFrameScrollBar"])
+end
+
 local function setRaidView(on)
     if not panel then return end
     if on then
@@ -250,6 +261,7 @@ local function setRaidView(on)
         if LFDQueueFrameBackground then
             LFDQueueFrameBackground:SetTexture("Interface\\LFGFrame\\UI-LFG-BACKGROUND-DUNGEONWALL")
         end
+        skinRaidView()
         panel:Show()
         updateButtons()
     else
