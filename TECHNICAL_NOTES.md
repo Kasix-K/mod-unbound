@@ -201,6 +201,9 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   921-923 Normal / Heroic / Mythic Dungeon, 924 Raids, 925 Gathering, 926 Crafting), new QuestSort.dbc rows that
   `tools/custom_dbc.py` adds to the client patch and to `questsort_dbc` (a client without the new patch shows the
   quests without headers). Run both tools after changing them.
+  Elite bounty creatures that were raid-tuned (HealthModifier 7-100) are set to 3 (Lord Lakmaeran 6) in
+  `unbound_elite_bounty_scaling.sql`, which lists the original values; check new bounty camps the same way (the open
+  world isn't scaled by mod-autobalance).
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Dungeon finder: at startup

@@ -80,6 +80,10 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   with the core's own formula. Class-limited perks can now be for several classes (a class mask).
 
 ### Changed
+- **Raid-tuned elite bounty camps at normal elite strength** (`unbound_elite_bounty_scaling.sql`): the Emerald portal
+  guardians (Verdantine, Jademir, Emeraldon), the Tainted Scar demons and the Isle of Dread Chimaerok had 7-25x
+  health (23,000-81,000; the open world isn't scaled by autobalance); now 3x like the other bounty camps (7,500-9,700).
+  Lord Lakmaeran 6x (about 19,400, was 324,000). This changes them for everyone in the open world.
 - **Ossirian solo:** alone in Ruins of Ahn'Qiraj, his Curse of Tongues fails and his Enveloping Winds comes at most
   every 40 seconds instead of 20 (`Unbound.SoloRaid.Ossirian`, `Unbound.SoloRaid.OssirianWindsInterval`).
 - **Pet perks only for classes with a pet.** Pet Encouragement, Pet's Blessing, Pets replenishment and Pets
