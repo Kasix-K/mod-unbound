@@ -1,5 +1,5 @@
 -- Unbound Attunement: gear infusion (called attunement in the code) on item tooltips, and the collection window
--- (/infusion, or the Infusion button in the micro menu). The server (src/unbound_attunement.cpp) knows everything: the addon
+-- (/infusion, or the Infusion side tab on the character sheet). The server (src/unbound_attunement.cpp) knows everything: the addon
 -- asks it about items and the collection with whispered addon messages (prefix UBATT) and keeps the answers.
 -- The window uses the same Blizzard frame art and talent-tree grid as the perk window.
 
@@ -473,7 +473,7 @@ end
 -- (both built from the Spellbook's side tab template, SpellBookSkillLineTabTemplate). It opens the infusion
 -- window beside the character sheet and is lit while it's open. The two side tabs act like tabs: opening one
 -- window closes the other, so they never overlap. With ElvUI's character skin on, it gets ElvUI's side tab look
--- (Skins/Blizzard/Spellbook.lua). Replaces the micro menu button, whose icon ElvUI's micro bar sometimes hid.
+-- (Skins/Blizzard/Spellbook.lua).
 local SIDE_TAB_ICON = "Interface\\Icons\\INV_Enchant_EssenceEternalLarge"
 local SIDE_TAB_GAP = 17   -- between the Spellbook's side tabs
 
