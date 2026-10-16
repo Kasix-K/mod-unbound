@@ -100,6 +100,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 - **Perk Ranks 4 and 5 stay GM-only** by design (`.perk rank`); players don't earn them, so the roadmap no longer
   plans a way to earn or buy them. The Power budget no longer counts them (about x1.3): a fully infused player is about 4.6x
   (5.8-6.3x with the class perk), so Mythic gear now also carries the realistic goal, Naxxramas Mythic +1.
+- **Mythic gear infuses at 20% + 3% per Mythic level** (planned; was 2%): a +10 item infuses at 50%, which keeps the
+  stretch goal, Naxxramas Mythic +10, in reach without perk Ranks 4-5.
 - **The Perks tab is a side tab on the character sheet:** a square icon tab on its right edge (the Spellbook's side
   tab template), instead of a sixth bottom tab, which didn't fit once the Currency tab appeared. Lit while the perk
   window is open; ElvUI's side tab look with ElvUI's character skin.

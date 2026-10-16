@@ -48,7 +48,7 @@ testing):
 | Goal | Raid | Player power needed | Reached with (see Player, Mythic+ gear) |
 |---|---|---|---|
 | **Realistic endgame goal** | **Naxxramas (classic) Mythic +1** | about 6.6-7.7x | A fully infused character (normal gear, about +200%) with five Offensive perks and the class perk (about 5.8-6.3x), plus some Mythic gear from earlier Mythic runs for the last 20% or so (e.g. Mythic items infused around +3-5) |
-| **Stretch goal** | **Naxxramas (classic) Mythic +10** | about 12-14x | Mythic gear infused around +10 on top (as tuned now about 8x before the class perk, about 10-11x with it: short of the goal, see Mythic+ gear) |
+| **Stretch goal** | **Naxxramas (classic) Mythic +10** | about 12-14x | Mythic gear infused around +10 on top (about 9x before the class perk, about 11.5-12.5x with it: the low end of the goal, check in testing) |
 
 Mythic stops at +10, so the stretch goal is also the top of the game: Naxxramas Mythic +10 is the hardest
 content there is. Change these targets here first if testing says otherwise.
@@ -136,7 +136,7 @@ config settings (the item generator reads them).
 | Per Mythic level | **+2% of the +1 stats, added**: +10 (the maximum) = about 1.2x the +1 item (helm: 20 Stamina at +1, about 22 at +5, about 24 at +10) |
 | Drop level | An item drops at the level the run was cleared at (a +7 clear drops +7 gear) |
 | Item count | About 450 dungeon items x 10 levels (about 4,500 entries, plus the raids' items; the client patch grows about 0.15 MB) |
-| Infusion percent | **20% + 2% per Mythic level** for Mythic items (+1: 22%, +5: 30%, +10: 40%), so infusing high is worth much more than wearing high: the helm gives 4 Stamina infused at +1, about 10 at +10 |
+| Infusion percent | **20% + 3% per Mythic level** for Mythic items (+1: 23%, +5: 35%, +10: 50%; was 2% until 2026-10-15), so infusing high is worth much more than wearing high: the helm gives about 4.6 Stamina infused at +1, about 12 at +10 |
 | Infusion: one item | All level copies of a Mythic item count as **one item**: infusing (or giving in tribute) a higher copy **replaces** the lower copy's bonus, it never adds to it. Infusing early is never wasted, waiting for a higher copy pays more. (Heroic and Mythic versions of a piece are different items and both count.) |
 | Infusion: kills | A higher copy needs its own kills (the normal epic count); an upgrade never changes what is already infused |
 | Diminishing returns | A fourth step for the much larger Mythic totals: full value up to +100%, half to +200%, a quarter to +400%, **an eighth beyond** |
@@ -164,13 +164,13 @@ settings). Used for upgrades; later also a vendor (cosmetics) like the Heroic cu
 | Fully collected | Gear worn | Infused | Player power (with perks, before class perk) | Clears about |
 |---|---|---|---|---|
 | Before Mythic gear (normal infusion only) | 1x | +200% | about 4.6x (5.8-6.3x with the class perk) | Molten Core Mythic +6; with the class perk Molten Core Mythic +10 and Naxxramas normal |
-| Every Mythic item infused at +10 | about 1.5x | about +380% | about 8x (10-11x with the class perk) | Naxxramas Mythic +2; with the class perk Naxxramas Mythic +5-6 |
+| Every Mythic item infused at +10 | about 1.5x | about +430% | about 9x (11.5-12.5x with the class perk) | Naxxramas Mythic +3-4; with the class perk Naxxramas Mythic +8-10 |
 
 Mythic gear is what carries a player to the realistic goal (Naxxramas +1; with perk Ranks 4-5 GM-only, normal
-infusion alone stops at about Naxxramas normal) and on to the stretch goal (Naxxramas +10, the top). As tuned
-above it stops around Naxxramas +5-6, so the stretch goal needs about 1.3x more from Mythic gear: when it's
-built, try a Mythic infusion percent of 3% per level (+10: 50%) or more gear stats per level. If it gets there too fast, lower the infusion percent per level first (2% to 1%), then the
-gear stats per level.
+infusion alone stops at about Naxxramas normal) and on to the stretch goal (Naxxramas +10, the top). The
+infusion percent per level was raised from 2% to 3% (2026-10-15) so it still reaches about Naxxramas +8-10
+with perk Ranks 4-5 GM-only. If testing falls short, raise the gear stats per level next; if it gets there
+too fast, lower the infusion percent per level first (3% to 2%), then the gear stats per level.
 
 Mechanics are a separate problem: some bosses need more than one player whatever the numbers
 (Razorgore's orb, the Twin Emperors' teleport tank swap, C'Thun's stomach phase). They need small script
