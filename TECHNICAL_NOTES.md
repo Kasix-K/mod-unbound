@@ -77,7 +77,13 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   (densest group of each quest's targets; nearest gameobject, friendly creature or graveyard spot 60-250 yards
   away, then 400, 600, 1500, that is 35 yards plus wander radius from every creature hostile to either faction
   and from its patrol path points (`waypoint_data`, SmartAI `waypoints`), 80 from guards; hostility from
-  FactionTemplate.dbc). New board quests need a spot: run `--find`, paste the result into `SPOTS`.
+  FactionTemplate.dbc). Then a drop point: from the camp's centre out towards that ground spot, the first
+  point (40+ yards out) as safe as a ground spot, 90 yards above the highest known ground within 150. The
+  player arrives there; `unbound_bounty_teleporter_player` (OnPlayerUpdate) adds Wayfinder's Descent (spell
+  200204: Slow Fall's feather fall aura, `SPELL_ATTR0_NO_AURA_CANCEL`, 2 minutes, re-added while still in the
+  air) once the teleport has finished, and removes it when the player stops falling (after a 2 second grace),
+  dies, or after 5 minutes; logging in removes a left-over one. `GROUND_ONLY` (caves, tunnels) teleports to the
+  ground spot. New board quests need a spot: run `--find`, paste the result into `SPOTS`.
 - **Shadowflame Ward:** `tools/shadowflame_ward.py` writes `unbound_shadowflame_ward.sql` (items 912100-912109,
   NPCs 190206-190209 with spawn guids + 9000000, quests 921001-921012, the scale drops). The core only checks
   the Onyxia Scale Cloak's aura (22683) against Shadowflame (`SpellEffects.cpp`, `instance_blackwing_lair.cpp`),

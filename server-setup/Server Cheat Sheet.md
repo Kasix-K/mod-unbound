@@ -62,8 +62,9 @@ Preview a heroic item on a GM account with `.additem <item id>` (for example `.a
 World boss Hrimthar the Frostbound is on Lake Kel'Theril in Winterspring. GM shortcuts: `.go creature id 190110`
 goes to him; `.respawn` next to his corpse brings him back early (for testing).
 
-Bounty Wayfinder: stands beside each Bulletin Board (Stormwind, Orgrimmar) and teleports you near the
-board's open-world quests, outside aggro range. Move one with `.npc move` if it blocks the board.
+Bounty Wayfinder: stands beside each Bulletin Board (Stormwind, Orgrimmar) and drops you from 90 yards up
+beside the board's open-world quests, outside aggro range, with Wayfinder's Descent (spell 200204, a slow fall
+until you land). Move one with `.npc move` if it blocks the board.
 
 Shadowflame Ward chain: Kaelastrasz stands at Thorium Point (Searing Gorge); `.go creature id 190206` goes to
 him (`.npc move` to place him better). Elites: `.go creature id 190207` (Vexathrax, Burning Steppes), 190208

@@ -79,10 +79,12 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ### Added
 - **Bounty Wayfinder** (beside both Bulletin Boards, Stormwind and Orgrimmar): teleports you close to the
   Bulletin Board's open-world quests, the 16 daily kill bounties and 12 weekly elite bounties. Your active ones
-  are listed first, then "All bounty destinations". Every landing spot is on the ground (a herb, ore, chest,
-  friendly creature or graveyard spot) at least 35 yards from any hostile creature (plus how far it wanders,
-  and its patrol path) and 80 from either faction's guards; Grim Batol and the Isle of Dread are packed with
-  enemies, so their spots are farther out. Free; not in combat.
+  are listed first, then "All bounty destinations". You arrive **90 yards up in the air** beside the camp, with
+  **Wayfinder's Descent** (a slow fall that can't be cancelled and lasts until you land, no falling damage), so
+  you see the camp from above and glide in. The drop point is at least 35 yards from any hostile creature (plus
+  how far it wanders, and its patrol path) and 80 from either faction's guards. Camps in caves or tunnels
+  (Hive'Regal, Mazthoril) teleport to a safe ground spot instead. Free; not in combat. Regenerate
+  `patch-Z.MPQ` (spell 200204).
 - **Scavenger Imp,** a third loot companion (40 Heroic Sigils, the Warden of Rare Wonders' Pets page): nothing
   is looted until you open a corpse yourself; then it loots up to 4 of the nearest other corpses within 27
   yards into your bags (`Unbound.ScavengerImp.ExtraCorpses` and `Unbound.ScavengerImp.Range`). The Loot Goblin

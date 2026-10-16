@@ -38,13 +38,15 @@ LANG_MASK = 16712190
 SPELL_ATTR0_IS_ABILITY = 0x00000010
 SPELL_ATTR0_ALLOW_WHILE_MOUNTED = 0x01000000
 SPELL_ATTR0_NOT_IN_COMBAT_ONLY_PEACEFUL = 0x10000000
+SPELL_ATTR0_NO_AURA_CANCEL = 0x80000000
 
 SPELL_EFFECT_DUMMY = 3
 TARGET_UNIT_CASTER = 1
 SKILL_COMPANIONS = 778
 
 # Every custom spell: column name -> value. Unlisted columns are 0 / '' unless '_base' names an
-# existing spell to copy (its localized strings are cleared; set the enUS ones you want).
+# existing spell to copy (its localized strings are cleared; set the enUS ones you want). '_or' ORs flags into
+# the copied values (e.g. {'Attributes': SPELL_ATTR0_NO_AURA_CANCEL}).
 SPELLS = [
     {
         'ID': 200200,  # Transmogrify, keep in sync with src/unbound_transmog_spell.cpp
@@ -90,6 +92,16 @@ SPELLS = [
         'Name_Lang_enUS': 'Scavenger Imp',
         'Description_Lang_enUS': 'Summons a Scavenger Imp. While it is out, looting a corpse also loots '
                                  'up to 4 corpses around it.',
+    },
+    {
+        'ID': 200204,  # Wayfinder's Descent, keep in sync with src/unbound_bounty_teleporter.cpp
+        '_base': 130,               # Slow Fall: the feather fall aura
+        '_or': {'Attributes': SPELL_ATTR0_NO_AURA_CANCEL},
+        'DurationIndex': 4,         # 2 minutes at most; removed as soon as the player lands
+        'SpellClassSet': 0, 'SpellClassMask_1': 0, 'SpellClassMask_2': 0, 'SpellClassMask_3': 0,   # not a mage spell
+        'Name_Lang_enUS': "Wayfinder's Descent",
+        'Description_Lang_enUS': 'Falls slowly and safely to the ground.',
+        'AuraDescription_Lang_enUS': 'Falling slowly. No falling damage.',
     },
 ]
 
@@ -315,6 +327,8 @@ def spell_rows(dbc, cols):
                 else:
                     values[name] = 0
         values.update({k: v for k, v in spell.items() if not k.startswith('_')})
+        for name, flags in spell.get('_or', {}).items():   # flag columns are unsigned
+            values[name] = (values[name] & 0xffffffff) | flags
         rows.append([values[name] for name, _ in cols])
     return rows
 

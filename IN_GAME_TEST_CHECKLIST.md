@@ -202,8 +202,10 @@ bring one other player or a playerbot for at least one boss.
 
 - [ ] A Bounty Wayfinder stands beside the Bulletin Board in Stormwind and in Orgrimmar.
 - [ ] With a kill bounty in your quest log, it's listed first ("Your bounty: ...").
-- [ ] "All bounty destinations" lists all 28; each teleport lands on the ground, near the quest's area, with
-      nothing attacking you on arrival (try a few, especially Silithus and Winterspring).
+- [ ] "All bounty destinations" lists all 28. You arrive high in the air with Wayfinder's Descent (it can't be
+      right-clicked off), fall slowly, can steer, take no falling damage, and it disappears when you land.
+      Nothing attacks you while you hang in the air (try a few, especially Silithus and Winterspring).
+- [ ] Hive'Regal and Mazthoril put you on the ground instead (caves).
 - [ ] In combat it refuses with "You can't be teleported while in combat."
 
 ## 10. Report back
