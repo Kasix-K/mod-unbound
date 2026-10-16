@@ -80,6 +80,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   with the core's own formula. Class-limited perks can now be for several classes (a class mask).
 
 ### Changed
+- **Daily kill bounties with one target got a second:** Mossflayer Trolls (10 Shadowhunter + 8 Cannibal), Ice Thistle
+  Yetis (10 Yeti + 8 Patriarch) and The Blackrock Clan (10 Slayer + 8 Warlock), instead of 12 of one type, like the
+  other bounties.
 - **Raid-tuned elite bounty camps at normal elite strength** (`unbound_elite_bounty_scaling.sql`): the Emerald portal
   guardians (Verdantine, Jademir, Emeraldon), the Tainted Scar demons and the Isle of Dread Chimaerok had 7-25x
   health (23,000-81,000; the open world isn't scaled by autobalance); now 3x like the other bounty camps (7,500-9,700).

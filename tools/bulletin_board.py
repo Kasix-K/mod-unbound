@@ -62,7 +62,7 @@ KILL_QUESTS = [
     ('Bounty: Abominations of the Plague', 'Eastern Plaguelands',
      [(8543, 'Stitched Horror', 8), (8542, 'Death Singer', 8), (8541, 'Hate Shrieker', 8)]),
     ('Bounty: Mossflayer Trolls', 'Eastern Plaguelands',
-     [(8561, 'Mossflayer Shadowhunter', 12)]),
+     [(8561, 'Mossflayer Shadowhunter', 10), (8562, 'Mossflayer Cannibal', 8)]),
     ('Bounty: The Scarlet Crusade', 'Western Plaguelands',
      [(1834, 'Scarlet Paladin', 8), (1827, 'Scarlet Sentinel', 8), (1883, 'Scarlet Worker', 8)]),
     ('Bounty: The Restless Dead', 'Western Plaguelands',
@@ -86,9 +86,9 @@ KILL_QUESTS = [
     ('Bounty: Owlbeasts and Chimaera', 'Winterspring',
      [(7453, 'Moontouched Owlbeast', 10), (7449, 'Chillwind Ravager', 10)]),
     ('Bounty: Ice Thistle Yetis', 'Winterspring',
-     [(7458, 'Ice Thistle Yeti', 12)]),
+     [(7458, 'Ice Thistle Yeti', 10), (7460, 'Ice Thistle Patriarch', 8)]),
     ('Bounty: The Blackrock Clan', 'Burning Steppes',
-     [(7027, 'Blackrock Slayer', 12)]),
+     [(7027, 'Blackrock Slayer', 10), (7028, 'Blackrock Warlock', 8)]),
 ]
 KILL_REWARD = 15 * GOLD
 KILL_PER_DAY = 2
