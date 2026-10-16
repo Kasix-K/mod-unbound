@@ -122,6 +122,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   never the same as the week before; 75 gold. Zones were read from the server's map data.
 
 ### Fixed
+- **Heroic weekly dungeon quests couldn't be completed:** they asked for the boss's heroic copy, but the core gives
+  kill credit for the normal entry even in Heroic. They now ask for the normal boss, and the Bulletin Board checks
+  the mode: a Normal weekly only counts a Normal kill, a Heroic weekly only a Heroic one.
 - **Classic Naxxramas was scaled for about 17 players solo** instead of about 2.8: it runs on the map's heroic
   difficulty slot, so mod-autobalance used the heroic raid floor (0.4). It now gets the 40-player raids' floor
   (0.03) through `AutoBalance.InflectionPoint.PerInstance` (`533 -1 0.03`, in `apply-unbound-settings.ps1`).

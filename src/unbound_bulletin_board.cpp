@@ -9,10 +9,17 @@
  * available while its world state matches (conditions). They are picked again at every weekly reset
  * (the core's next-reset time, world state 20002, changes) and on startup if they've never been picked.
  *
+ * The weekly quests ask for the boss's normal entry in every tier: the core gives kill credit for a creature's
+ * normal entry even when its heroic copy was killed (Player::KilledMonsterCredit compares GetEntry()). So the
+ * mode is checked here (OnPlayerPassedQuestKilledMonsterCredit, which also gets the template entry that was
+ * actually killed): a Normal quest only counts a Normal kill, a Heroic or Mythic quest only a Heroic one.
+ *
  * GM commands: .bulletinboard show (this week's picks), .bulletinboard reroll (pick again now).
  */
 
 #include "Chat.h"
+#include "Player.h"
+#include "QuestDef.h"
 #include "CommandScript.h"
 #include "Random.h"
 #include "ScriptMgr.h"
@@ -40,6 +47,11 @@ namespace
     constexpr std::array<char const*, 3> TIERS = { "Normal", "Heroic", "Mythic" };
 
     constexpr uint32 CHECK_INTERVAL = 60 * IN_MILLISECONDS;
+
+    // Weekly quest ids (tools/bulletin_board.py, DUNGEON_TIERS / RAID_TIERS): 9201xx Normal dungeon, 9202xx
+    // Heroic, 9203xx Mythic, 9204xx Normal raid, 9205xx Heroic, 9206xx Mythic.
+    constexpr uint32 WEEKLY_QUEST_FIRST = 920100;
+    constexpr uint32 WEEKLY_QUEST_LAST = 920699;
 
     // A different place (1..count) for each tier.
     void PickDistinct(std::array<uint32, 3> const& states, uint32 count)
@@ -113,6 +125,28 @@ private:
     uint32 _timer = 0;
 };
 
+// The mode of a weekly quest's boss kill: entry is the killed creature's template (its heroic copy in Heroic),
+// realEntry the normal entry the quest asks for.
+class unbound_bulletin_board_player : public PlayerScript
+{
+public:
+    unbound_bulletin_board_player() : PlayerScript("unbound_bulletin_board_player", {
+        PLAYERHOOK_PASSED_QUEST_KILLED_MONSTER_CREDIT
+    }) { }
+
+    bool OnPlayerPassedQuestKilledMonsterCredit(Player* /*player*/, Quest const* quest, uint32 entry, uint32 realEntry,
+        ObjectGuid /*guid*/) override
+    {
+        uint32 const id = quest->GetQuestId();
+        if (id < WEEKLY_QUEST_FIRST || id > WEEKLY_QUEST_LAST)
+            return true;
+
+        uint32 const tier = (id - WEEKLY_QUEST_FIRST) / 100 % 3;   // 0 Normal, 1 Heroic, 2 Mythic
+        bool const killedHeroic = entry != realEntry;
+        return tier == 0 ? !killedHeroic : killedHeroic;
+    }
+};
+
 class unbound_bulletin_board_commands : public CommandScript
 {
 public:
@@ -156,5 +190,6 @@ public:
 void AddSC_unbound_bulletin_board()
 {
     new unbound_bulletin_board_world();
+    new unbound_bulletin_board_player();
     new unbound_bulletin_board_commands();
 }

@@ -166,10 +166,13 @@ RAIDS = [
     ("Temple of Ahn'Qiraj", 15727, "C'Thun"),
     ('Naxxramas', 351019, "Kel'Thuzad"),   # classic Naxxramas (src/naxx40)
 ]
-# tier: (quest id base, reward, boss entry for a dungeon/raid entry, or None while the tier doesn't exist yet)
+# tier: (quest id base, reward, boss entry for a dungeon/raid entry, or None while the tier doesn't exist yet).
+# Every tier asks for the normal boss entry: the core gives kill credit for a creature's normal entry even when
+# its heroic copy (entry + HEROIC_ENTRY_OFFSET) was killed. src/unbound_bulletin_board.cpp checks the mode: a
+# Normal quest only counts a kill in Normal, a Heroic quest only one in Heroic (by the quest id's tier).
 DUNGEON_TIERS = {
     'Normal': (920100, 50 * GOLD, lambda boss: boss),
-    'Heroic': (920200, 100 * GOLD, lambda boss: boss + HEROIC_ENTRY_OFFSET),
+    'Heroic': (920200, 100 * GOLD, lambda boss: boss),
     'Mythic': (920300, 150 * GOLD, None),   # Mythic+ isn't built yet
 }
 RAID_TIERS = {

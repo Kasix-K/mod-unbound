@@ -191,6 +191,10 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   were for; 920007 is the week's elite bounty (920900 + i), any but last week's. Append to DUNGEONS / RAIDS /
   ELITE_QUESTS only (positions are stored) and keep the counts in the C++ in sync. `QuestType` must be 2: 0
   makes a quest auto-complete.
+  Weekly quests ask for the boss's normal entry in every tier: `Player::KilledMonsterCredit` matches objectives
+  against the creature's normal entry (`GetEntry()`), even for a heroic copy. `unbound_bulletin_board_player`
+  (`OnPlayerPassedQuestKilledMonsterCredit`, which also gets the killed template's entry) lets a Normal weekly
+  (9201xx, 9204xx) count only a Normal kill and a Heroic / Mythic weekly only a Heroic one.
 - **Unbound addon** (`addon/Unbound`): difficulty menu from level 60, `/heroic`, `/normal`, and the
   chat-window load-error guard.
 - **Expansion content lock:** `Unbound.ExpansionUnlocked` in `mod_unbound.conf` (0/1/2). Dungeon finder: at startup
