@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Heroic dungeon loot: 106 under-budget items raised to normal level 60 blue stats | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Heroic Sigil drops (1 per Heroic boss, 2 per final boss), Heroic Quartermaster, Sigils from Heroic weeklies | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Heroic Sigil (account-wide currency): the item, Currency tab entry and shared account balance | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
 | Focused Mind utility perk (Rogue and Druid, +8/14/20% energy regeneration, 5 ranks) | 2026-10-15 | 2026-10-15 | SaucyHobo54 |
@@ -69,6 +70,17 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | Transmog window (mod-transmog-plus), Warpweaver NPC kept | 2026-10-13 | 2026-10-13 | Kasix-K |
 | Transmogrify spell | 2026-10-13 | 2026-10-13 | Kasix-K |
 | Transmog (first version, mod-transmog) | 2026-10-12 | 2026-10-13 (replaced) | Kasix-K |
+
+## 2026-10-16
+
+### Changed
+- **Heroic dungeon loot: the weak items now have normal blue stats.** Compared with every classic level 60
+  dungeon blue in the world database (stat totals per slot), 106 of the 450 Heroic items had under three
+  quarters of a normal blue's stats; their stats are raised (same stats, bigger numbers) to a normal blue for
+  their slot. The off-hand items gained the most (Tome of Knowledge, Book of the Dead, Magmus Stone,
+  Thaurissan's Royal Scepter and others had about a third of a blue's stats), then gloves, rings, belts, wands
+  and some weapons. Weapon damage, armor and item levels are unchanged, and Kreeg's Mug keeps its joke
+  drawback. All Heroic loot stays blue: none of it comes near a Molten Core epic.
 
 ## 2026-10-15
 

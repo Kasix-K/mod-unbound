@@ -195,7 +195,17 @@ bring one other player or a playerbot for at least one boss.
 - [ ] With the Loot Goblin or Arcane Loot Scanner out, corpses within 55 yards are auto-looted and opening one
       corpse loots the ones around it. Dismissing the companion turns it off again.
 
-## 10. Report back
+## 10. Heroic loot stats (raised 2026-10-16)
+
+- [ ] Delete the client's `Cache\WDB` folder first, or tooltips keep showing the old stats.
+- [ ] `.additem 910518` (Tome of Knowledge): 7 to each of the five stats (was 2). `.additem 910312` (Enthralled
+      Sphere): 16 Intellect, 9 Stamina (was 5 and 3).
+- [ ] `.additem 910112` (Blackened Defias Belt): 16 Agility, 11 Stamina, 23 Attack Power (was 8 / 6 / 12); the
+      Blackened Defias set bonus still shows.
+- [ ] `.additem 910459` (Kreeg's Mug) is unchanged: 4 Stamina, 4 Spirit, -10 Intellect.
+- [ ] Equip one raised item: the character sheet shows the new numbers.
+
+## 11. Report back
 
 Note anything that failed or felt wrong (too hard, too easy, wrong text) and paste it into the chat with
 Claude, with the section number.
