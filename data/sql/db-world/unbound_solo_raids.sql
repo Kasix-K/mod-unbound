@@ -11,6 +11,7 @@ INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
 (23174, 'spell_unbound_solo_raid_block'),  -- Chromatic Mutation (Chromaggus)
 (22667, 'spell_unbound_solo_raid_block'),  -- Shadow Command (Lord Victor Nefarius)
 (20604, 'spell_unbound_solo_raid_block'),  -- Dominate Mind (Flamewaker Protector, Molten Core)
+(19393, 'spell_unbound_solo_raid_block'),  -- Soul Burn, which silences (Firelord, Molten Core)
 (24262, 'spell_unbound_solo_raid_block'),  -- Brain Wash Totem (Jin'do the Hexxer, Zul'Gurub)
 (24466, 'spell_unbound_solo_raid_block'),  -- Banish (Jin'do the Hexxer)
 (24327, 'spell_unbound_solo_raid_block'),  -- Cause Insanity (Hakkar)

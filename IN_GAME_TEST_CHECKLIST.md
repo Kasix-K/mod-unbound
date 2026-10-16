@@ -130,6 +130,7 @@ bring one other player or a playerbot for at least one boss.
 
 **Molten Core**
 - [ ] Lucifron: his Flamewaker Protectors' Dominate Mind fails.
+- [ ] Firelords: Soul Burn never lands (no silence, no fire damage over time); they still summon Lava Spawns.
 
 **Zul'Gurub**
 - [ ] Jin'do: the Brain Wash Totem and Banish fail.

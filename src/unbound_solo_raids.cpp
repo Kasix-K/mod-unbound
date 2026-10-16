@@ -26,6 +26,7 @@
  *
  * Molten Core:
  *   Lucifron               His Flamewaker Protectors' Dominate Mind (20604) fails.
+ *   Firelords              Soul Burn (19393: fire damage over time that also silences) fails.
  *
  * Zul'Gurub:
  *   Jin'do the Hexxer      Brain Wash Totem (24262, the totem mind controls a player) and Banish (24466,
@@ -112,6 +113,7 @@ namespace
         FIX_THADDIUS,
         FIX_GOTHIK,
         FIX_OSSIRIAN,
+        FIX_FIRELORD,
         MAX_SOLO_RAID_FIX
     };
 
@@ -120,7 +122,7 @@ namespace
     {
         "Razorgore", "Vaelastrasz", "Ebonroc", "Chromaggus", "Nefarian",
         "Lucifron", "Jindo", "Hakkar", "Ayamiss", "Skeram", "TwinEmperors", "Viscidus", "QirajiMindslayer",
-        "Thaddius", "Gothik", "Ossirian"
+        "Thaddius", "Gothik", "Ossirian", "Firelord"
     };
 
     bool sEnabled = true;
@@ -137,7 +139,7 @@ namespace
     };
 
     // Keep in sync with data/sql/db-world/unbound_solo_raids.sql
-    constexpr std::array<BlockedSpell, 18> BLOCKED_SPELLS =
+    constexpr std::array<BlockedSpell, 19> BLOCKED_SPELLS =
     {{
         { 14515, 12557, FIX_RAZORGORE         },  // Dominate Mind, Grethok the Controller
         { 18173, 13020, FIX_VAELASTRASZ       },  // Burning Adrenaline, Vaelastrasz the Corrupt
@@ -146,6 +148,7 @@ namespace
         { 23174, 14020, FIX_CHROMAGGUS        },  // Chromatic Mutation, Chromaggus
         { 22667, 10162, FIX_NEFARIAN          },  // Shadow Command, Lord Victor Nefarius
         { 20604, 12119, FIX_LUCIFRON          },  // Dominate Mind, Flamewaker Protector
+        { 19393, 11668, FIX_FIRELORD          },  // Soul Burn (silences), Firelord
         { 24262, 11380, FIX_JINDO             },  // Brain Wash Totem, Jin'do the Hexxer
         { 24466, 11380, FIX_JINDO             },  // Banish, Jin'do the Hexxer
         { 24327, 14834, FIX_HAKKAR            },  // Cause Insanity, Hakkar

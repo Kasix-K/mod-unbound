@@ -438,6 +438,10 @@ Unbound.Attunement.TributeOwnGearMultiplier = 2
 #        Description: Molten Core, Lucifron: his Flamewaker Protectors' Dominate Mind fails.
 #        Default:     1 - Enabled
 #
+#    Unbound.SoloRaid.Firelord
+#        Description: Molten Core, Firelords: Soul Burn (fire damage over time that also silences) fails.
+#        Default:     1 - Enabled
+#
 #    Unbound.SoloRaid.Jindo
 #        Description: Zul'Gurub, Jin'do the Hexxer: Brain Wash Totem (mind controls a player) and Banish
 #                     (teleports the player into the pit) fail.
@@ -507,6 +511,7 @@ Unbound.SoloRaid.Ebonroc = 1
 Unbound.SoloRaid.Chromaggus = 1
 Unbound.SoloRaid.Nefarian = 1
 Unbound.SoloRaid.Lucifron = 1
+Unbound.SoloRaid.Firelord = 1
 Unbound.SoloRaid.Jindo = 1
 Unbound.SoloRaid.Hakkar = 1
 Unbound.SoloRaid.Ayamiss = 1

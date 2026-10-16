@@ -77,6 +77,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-16
 
 ### Added
+- **Molten Core Firelords don't silence a solo player:** their Soul Burn (fire damage over time that also
+  silences) fails while the raid has one player (`Unbound.SoloRaid.Firelord`).
 - **Bounty Wayfinder** (beside both Bulletin Boards, Stormwind and Orgrimmar): teleports you close to the
   Bulletin Board's open-world quests, the 16 daily kill bounties and 12 weekly elite bounties. Your active ones
   are listed first, then "All bounty destinations". You arrive **90 yards up in the air** beside the camp, with

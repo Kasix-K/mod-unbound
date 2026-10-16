@@ -253,7 +253,8 @@ changes, raid by raid (see Next up).
   - [x] Blackwing Lair (2026-10-15): Razorgore (Grethok's Dominate Mind, eggs broken by walking over them),
         Vaelastrasz (Burning Adrenaline), Ebonroc (Shadow of Ebonroc), Chromaggus (Time Lapse, Chromatic
         Mutation), Nefarian (Shadow Command)
-  - [x] Molten Core (2026-10-15): Lucifron's Flamewaker Protectors (Dominate Mind)
+  - [x] Molten Core (2026-10-15): Lucifron's Flamewaker Protectors (Dominate Mind); Firelords' Soul Burn, which
+        silences (2026-10-16)
   - [x] Zul'Gurub (2026-10-15): Jin'do (Brain Wash Totem, Banish), Hakkar (Cause Insanity, Blood Siphon)
   - [x] Ruins of Ahn'Qiraj (2026-10-15): Ayamiss (Paralyze, larva Feed); Ossirian (no Curse of Tongues, Enveloping
         Winds at most every 40 seconds)
