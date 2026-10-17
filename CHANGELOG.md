@@ -79,6 +79,12 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 ## 2026-10-17
 
+### Changed
+- **The Warden of Rare Wonders' prices, scaled to the Swift Spectral Tiger at 250 Sigils** (was 480; every item
+  x 250/480, rounded to 5, at least 5): mounts 85-250 (were 160-480), pets 30-65 and the Scavenger Imp 85
+  (were 60-120 and 160), tabards 15 (were 25), fun items 5-10 (were 5-20). Seven new prices: regenerate
+  `patch-Z.MPQ`.
+
 ### Fixed
 - **Health and mana from infusion survive a relog:** logging in capped your saved health and mana at the
   maximum without infusion (it is applied just after), so a character with infused Stamina or Intellect came

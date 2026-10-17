@@ -538,7 +538,7 @@ INSERT INTO `itemdisplayinfo_dbc` (`ID`, `ModelName_1`, `ModelName_2`, `ModelTex
 DELETE FROM `currencytypes_dbc` WHERE `ID` IN (400);
 INSERT INTO `currencytypes_dbc` (`ID`, `ItemID`, `CategoryID`, `BitIndex`) VALUES
 (400,912000,100,30);
-DELETE FROM `itemextendedcost_dbc` WHERE `ID` IN (3000, 3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008, 3009, 3010, 3011, 3012, 3013, 3014, 3015, 3016, 3017);
+DELETE FROM `itemextendedcost_dbc` WHERE `ID` IN (3000, 3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008, 3009, 3010, 3011, 3012, 3013, 3014, 3015, 3016, 3017, 3018, 3019, 3020, 3021, 3022, 3023, 3024);
 INSERT INTO `itemextendedcost_dbc` (`ID`, `HonorPoints`, `ArenaPoints`, `ArenaBracket`, `ItemID_1`, `ItemID_2`, `ItemID_3`, `ItemID_4`, `ItemID_5`, `ItemCount_1`, `ItemCount_2`, `ItemCount_3`, `ItemCount_4`, `ItemCount_5`, `RequiredArenaRating`, `ItemPurchaseGroup`) VALUES
 (3000,0,0,0,912000,0,0,0,0,10,0,0,0,0,0,0),
 (3001,0,0,0,912000,0,0,0,0,15,0,0,0,0,0,0),
@@ -557,4 +557,11 @@ INSERT INTO `itemextendedcost_dbc` (`ID`, `HonorPoints`, `ArenaPoints`, `ArenaBr
 (3014,0,0,0,912000,0,0,0,0,300,0,0,0,0,0,0),
 (3015,0,0,0,912000,0,0,0,0,360,0,0,0,0,0,0),
 (3016,0,0,0,912000,0,0,0,0,400,0,0,0,0,0,0),
-(3017,0,0,0,912000,0,0,0,0,480,0,0,0,0,0,0);
+(3017,0,0,0,912000,0,0,0,0,480,0,0,0,0,0,0),
+(3018,0,0,0,912000,0,0,0,0,50,0,0,0,0,0,0),
+(3019,0,0,0,912000,0,0,0,0,65,0,0,0,0,0,0),
+(3020,0,0,0,912000,0,0,0,0,85,0,0,0,0,0,0),
+(3021,0,0,0,912000,0,0,0,0,155,0,0,0,0,0,0),
+(3022,0,0,0,912000,0,0,0,0,190,0,0,0,0,0,0),
+(3023,0,0,0,912000,0,0,0,0,210,0,0,0,0,0,0),
+(3024,0,0,0,912000,0,0,0,0,250,0,0,0,0,0,0);

@@ -1617,7 +1617,8 @@ SIGILS_FINAL = 2   # from a final boss
 # from SIGIL_EXTENDED_COSTS): Sigils -> ExtendedCost id.
 SIGIL_EXTENDED_COSTS = {10: 3000, 15: 3001, 20: 3002, 25: 3003, 30: 3004,
                         5: 3005, 40: 3006, 75: 3007, 90: 3008, 100: 3009, 120: 3010,  # 3005+: the Warden's prices
-                        60: 3011, 80: 3012, 160: 3013, 300: 3014, 360: 3015, 400: 3016, 480: 3017}
+                        60: 3011, 80: 3012, 160: 3013, 300: 3014, 360: 3015, 400: 3016, 480: 3017,
+                        50: 3018, 65: 3019, 85: 3020, 155: 3021, 190: 3022, 210: 3023, 250: 3024}
 # (append only: ids already in players' client patches keep their price)
 QUARTERMASTER_PAGES = [
     # vendor entry, menu text, inventory types (final-boss items all go on the last page), Sigils
@@ -1638,33 +1639,33 @@ TWO_HANDED_OR_RANGED = {15, 17, 25, 26, 28}  # 25 Sigils on the weapons page; on
 WARDEN_PAGES = [
     # vendor entry, menu text, [(item, Sigils), ...]
     (190201, 'Mounts', [
-        (23720, 160),    # Riding Turtle (level 1, no riding skill)
-        (49283, 300),    # Reins of the Spectral Tiger
-        (37719, 360),    # Swift Zhevra
-        (54811, 400),   # Celestial Steed (scales with riding)
-        (37012, 400),   # The Horseman's Reins (scales with riding)
-        (46778, 400),   # Magic Rooster Egg (level 60)
-        (49284, 480),   # Reins of the Swift Spectral Tiger
+        (23720, 85),    # Riding Turtle (level 1, no riding skill)
+        (49283, 155),    # Reins of the Spectral Tiger
+        (37719, 190),    # Swift Zhevra
+        (54811, 210),   # Celestial Steed (scales with riding)
+        (37012, 210),   # The Horseman's Reins (scales with riding)
+        (46778, 210),   # Magic Rooster Egg (level 60)
+        (49284, 250),   # Reins of the Swift Spectral Tiger
     ]),
     (190202, 'Pets', [
-        (910003, 160),   # Scavenger Imp (loot companion: loots up to 4 corpses around the one you open)
-        (49362, 60), (44819, 60), (49662, 60), (49663, 60), (25535, 60),   # Onyxian Whelpling, Baby Blizzard Bear,
+        (910003, 85),   # Scavenger Imp (loot companion: loots up to 4 corpses around the one you open)
+        (49362, 30), (44819, 30), (49662, 30), (49663, 30), (25535, 30),   # Onyxian Whelpling, Baby Blizzard Bear,
                                                                             # Gryphon Hatchling, Wind Rider Cub, Netherwhelp
-        (20371, 80), (30360, 80), (13583, 80), (13584, 80), (13582, 80),   # Murky, Lurky, Panda Cub, Mini Diablo, Zergling
-        (39286, 80), (41133, 80), (35504, 80),                             # Frosty, Mr. Chilly, Phoenix Hatchling
-        (49665, 100), (49646, 100), (54847, 100), (56806, 100), (38050, 100),   # Pandaren Monk, Core Hound Pup, Lil' XT,
+        (20371, 40), (30360, 40), (13583, 40), (13584, 40), (13582, 40),   # Murky, Lurky, Panda Cub, Mini Diablo, Zergling
+        (39286, 40), (41133, 40), (35504, 40),                             # Frosty, Mr. Chilly, Phoenix Hatchling
+        (49665, 50), (49646, 50), (54847, 50), (56806, 50), (38050, 50),   # Pandaren Monk, Core Hound Pup, Lil' XT,
                                                                             # Mini Thor, Ethereal Soul-Trader
-        (49693, 120), (49343, 120),                                          # Lil' K.T., Spectral Tiger Cub
+        (49693, 65), (49343, 65),                                          # Lil' K.T., Spectral Tiger Cub
     ]),
     (190203, 'Tabards', [
-        (23705, 25), (23709, 25), (38309, 25), (38310, 25),   # Flame, Frost, Nature, the Arcane
-        (38314, 25), (38312, 25), (38311, 25), (38313, 25),   # the Defender, Brilliance, the Void, Fury
+        (23705, 15), (23709, 15), (38309, 15), (38310, 15),   # Flame, Frost, Nature, the Arcane
+        (38314, 15), (38312, 15), (38311, 15), (38313, 15),   # the Defender, Brilliance, the Void, Fury
     ]),
     (190204, 'Fun items', [
         (8529, 5), (38577, 5), (36863, 5),   # Noggenfogger Elixir, Party G.R.E.N.A.D.E., Decahedral Dwarven Dice
-        (46780, 10), (34480, 10),            # Ogre Pinata, Romantic Picnic Basket
-        (13379, 15),                         # Piccolo of the Flaming Fire (level 53)
-        (1973, 20),                          # Orb of Deception (level 54)
+        (46780, 5), (34480, 5),            # Ogre Pinata, Romantic Picnic Basket
+        (13379, 10),                         # Piccolo of the Flaming Fire (level 53)
+        (1973, 10),                          # Orb of Deception (level 54)
     ]),
 ]
 # Each page lists its items by type, then alphabetically: by slot (head to feet, then rings, trinkets, weapons),

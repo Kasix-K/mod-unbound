@@ -35,10 +35,10 @@ namespace
 
     // keep in sync with WARDEN_PAGES in tools/heroic_loot.py
     Pages const WARDEN_PAGES = {
-        { 190201, "Mounts (160-480 Sigils)" },
-        { 190202, "Pets (60-160 Sigils)" },
-        { 190203, "Tabards (25 Sigils)" },
-        { 190204, "Fun items (5-20 Sigils)" },
+        { 190201, "Mounts (85-250 Sigils)" },
+        { 190202, "Pets (30-85 Sigils)" },
+        { 190203, "Tabards (15 Sigils)" },
+        { 190204, "Fun items (5-10 Sigils)" },
     };
 }
 

@@ -238,9 +238,10 @@ bring one other player or a playerbot for at least one boss.
 
 - [ ] The Warden of Rare Wonders with Ysera's look (`.npc add 190205`) shows Ysera's night elf model and the same
       four pages as the Tyrande one (`.npc add 190200`).
-- [ ] The Warden's Pets page sells the Scavenger Imp for 160 Heroic Sigils; it teaches the companion (the imp shows
+- [ ] The Warden's Pets page sells the Scavenger Imp for 85 Heroic Sigils; it teaches the companion (the imp shows
       in the Companions tab and summons a small imp).
-- [ ] The Warden's mounts cost 160-480 Sigils and pets 60-160; the menu shows those ranges.
+- [ ] The Warden's prices: mounts 85-250 Sigils, pets 30-85, tabards 15, fun items 5-10; the menu shows those
+      ranges.
 - [ ] The Heroic Quartermaster's pages are sorted by slot, then armor or weapon type, then name.
 
 ## 9f. Crusader's Oath (Paladin class perk)
