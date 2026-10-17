@@ -146,7 +146,24 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   its swing and hit count share the Ashbringer's code (`ApplyAshbringerHit`, `CountAshbringerHit`). Oath of
   Retaliation's block damage comes from the defense proc aura (200215, now also on with Bulwark's Oath), using
   `DamageInfo::GetBlock()`, cast as Retaliation (200228, a Holy copy of Damage Shield). Ranks: `RANKED_PERKS` key
-  `BulwarksOath`; `bulwarksOath()` in `PerkData.lua` builds the window text like `crusadersOath()`. Perk
+  `BulwarksOath`; `bulwarksOath()` in `PerkData.lua` builds the window text like `crusadersOath()`.
+  **Lightbringer's Oath** (perk 1003, Paladin Holy) uses the same machinery; the three Paladin class perks are
+  one `EXCLUSIVE_GROUPS` group. Holy Power from `OnLightSpellCast` (the Judgements, any Exorcism and any Holy
+  Shock you cast); Oath of the Dawn's crit Holy Power from `spell_unbound_lightbringer_dawn_crit` on the Holy
+  Shock damage and Exorcism chains (-25912, -879; the crit is read from the spell's `TargetInfo`). Light of Dawn
+  (200229, a copy of Exorcism Rank 1, instant) sets its damage in `OnHit` (400 at level 60 + the rank's share of
+  `SpellPower()`, times the Holy Power share) and heals in `AfterHit`. Atonement (200230) is a dummy buff; its
+  duration is set after the hit. The conversion is `ApplyLightbringerHeal`, last in `ModifyHealReceived`: it
+  adds the share of the heal (effective healing in full, overhealing times `GroupOverheal`% when
+  `InGroupWithOtherPlayers`, i.e. a group member whose session isn't headless) to `atonementPending`, which
+  `FlushAtonement` deals on the next player update as one Holy hit (`DealSpellDamage` with Atonement's spell
+  info) to `AtonementTarget()`: never inside the heal, so leech perks can't recurse. `AtonementTarget` skips
+  `HasBreakableByDamageCrowdControlAura`, Holy-immune, evading, out-of-range (40 yards) and (except your own
+  enemy target) out-of-combat enemies. Naaru's Blessing (200231, a copy of Shadowfiend summoned at the caster)
+  summons 190222 (`unbound_lightbringers_oath.sql`: A'dal's model at 0.15 scale, pacified, not attackable, not
+  selectable); `UpdateNaaru` finds it in the grid every 2 s and has it cast Smite (585) and Flash Heal (2061)
+  with server-set amounts; the heal goes to the Paladin and every group member (bots too) within 10 yards of
+  the Naaru, 2% of each one's maximum health, and counts as one spell for Holy Power. Ranks: `RANKED_PERKS` key `LightbringersOath`; `lightbringersOath()` in `PerkData.lua`. Perk
   numbers stay in normal WoW ranges (about +10% per perk); they are constants at the top of
   `unbound_perks.cpp` and must match `PerkData.lua`. The perk code assumes `MapUpdate.Threads = 1`.
 - **Gear infusion** (all 4 stages: the collection, its stats, infusing by kills, the tribute altar, tooltips and the

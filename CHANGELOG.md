@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Lightbringer's Oath: the Paladin Holy class perk (Holy Power, Light of Dawn, Atonement, two oaths, Naaru's Blessing; 3 ranks) | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Bulwark's Oath: the Paladin Protection class perk (Holy Power, Aegis Strike, Word of Glory, two oaths, Guardian of the Light; 3 ranks) | 2026-10-16 | 2026-10-16 | SaucyHobo54 |
 | Crusader's Oath: the Paladin Retribution class perk reworked (Holy Power, Templar's Verdict, Inquisition, two oaths, Ashbringer's Call; 3 ranks) | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Bounty Wayfinder: teleports to the Bulletin Board's open-world quests, outside aggro range | 2026-10-16 | 2026-10-16 | Kasix-K |
@@ -79,6 +80,23 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-16
 
 ### Added
+- **Lightbringer's Oath,** the Paladin's Holy class perk (perk 1003), built like the other two and exclusive with
+  them (one Paladin class perk at a time). Its idea: a Holy paladin heals through a solo fight while the healing
+  hurts the boss. Judgement, Exorcism and Holy Shock build **Holy Power** (the same buff and bar). The perk teaches
+  **Light of Dawn** (30 yards: a Holy blast for 30% / 65% / 100% of 400 + 130% of spell power at 1 / 2 / 3 Holy
+  Power, healing you for 30% of it) and **Atonement** (10 / 20 / 30 seconds in which 30% of all your healing,
+  overhealing included, also hits the enemy you are fighting as Holy damage). Atonement picks that enemy itself:
+  your target if it is an enemy, else what your friendly target is fighting (healing the tank hits the tank's
+  enemy), else the last enemy you hit, else the nearest enemy attacking you or your group; it never hits an enemy
+  held by crowd control that breaks on damage (Polymorph, Sap, ...), never pulls anything new, and in a group
+  with other real players overhealing counts for a quarter (`Unbound.Perks.LightbringersOath.GroupOverheal`;
+  bots don't count). Holy damage +10%. **3 ranks by level** (1, 30, 60); **Rank 2** unlocks the **oaths**:
+  **the Dawn** (Holy Shock and Exorcism crits give 1 more Holy Power; Light of Dawn deals 30% more below 35%
+  health) or **Mercy** (Atonement's damage heals you for 10% of it, Light of Dawn's self-heal doubled, your heals
+  on yourself 10% stronger). **Rank 3** teaches **Naaru's Blessing** (2 minutes): a small Naaru stays 15 seconds,
+  smites your enemy and heals you and your group within 10 yards (2% of maximum health each) every 2 seconds, gives Holy Power every third spell, and Atonement converts 50%
+  meanwhile. Tuned to the new healer target in the Power budget (about 85-90% of a Retribution paladin's
+  single-target damage, with more survival; to confirm on a training dummy). Needs the new `patch-Z.MPQ`.
 - **Bulwark's Oath,** the Paladin's Protection class perk (perk 1002), built like Crusader's Oath and swapping
   with it (turning one on turns the other off). Hammer of the Righteous, Judgement and Avenger's Shield build
   **Holy Power** (the same buff and bar). The perk teaches two abilities that spend all of it: **Aegis Strike**

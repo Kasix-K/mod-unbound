@@ -264,11 +264,33 @@ Needs the new `patch-Z.MPQ` (client closed, then `python tools/custom_dbc.py`) a
 - [ ] With `Unbound.Perks.Retribution.Classic = 1` and a restart, the perk is the old **Retribution** again
       (no spells, the old tooltip); set it back to 0 afterwards.
 
+## 9h. Lightbringer's Oath (Paladin Holy class perk)
+
+Needs the new `patch-Z.MPQ` and the UnboundPerks addon copied again. A Holy Paladin.
+
+- [ ] The class perks show all three Paladin perks; turning one on turns the other two off.
+- [ ] Turning Lightbringer's Oath on teaches Light of Dawn and Atonement (and Naaru's Blessing at level 60).
+- [ ] Judgement, Exorcism and Holy Shock each add a **Holy Power** stack.
+- [ ] Light of Dawn spends all Holy Power on a Holy hit at your target and heals you for about 30% of it.
+- [ ] Atonement at 3 Holy Power: a 30 second buff. Healing yourself (Flash of Light, Holy Light) now also deals
+      **Atonement** Holy damage to your enemy target, even at full health (overhealing counts solo).
+- [ ] Target a friend (a bot or another player) who is fighting: healing them hits *their* enemy.
+- [ ] An enemy under Polymorph or Sap is never hit by Atonement; with nothing else nearby there's no damage.
+- [ ] Atonement never pulls a pack you haven't attacked.
+- [ ] **Oath of the Dawn:** Holy Shock and Exorcism crits give 2 Holy Power. **Oath of Mercy** (perk window
+      button): Atonement damage also heals you a little; Light of Dawn heals twice as much.
+- [ ] Naaru's Blessing: a small Naaru for 15 seconds, smiting your enemy every 2 seconds and healing you and
+      group members (bots too) within 10 yards of it; someone farther away isn't healed. It can't be targeted or
+      attacked. Check its size looks right.
+- [ ] `.perk rank 1003 1`: no oaths, no Naaru, weaker numbers; `.perk rank 1003` goes back.
+- [ ] Training dummy: Holy with the perk vs Retribution with Crusader's Oath, same gear: about 85-90%.
+
 ## 9g. Bulwark's Oath (Paladin Protection class perk)
 
 Needs the new `patch-Z.MPQ` and the UnboundPerks addon copied again. A Protection Paladin with a shield.
 
-- [ ] The Paladin's class perks show **Crusader's Oath** and **Bulwark's Oath**; turning one on turns the other off.
+- [ ] The Paladin's class perks show **Crusader's Oath**, **Bulwark's Oath** and **Lightbringer's Oath**; turning
+      one on turns the others off.
 - [ ] Turning Bulwark's Oath on teaches Aegis Strike and Word of Glory (and Guardian of the Light at level 60);
       turning it off removes them.
 - [ ] Hammer of the Righteous, Judgement and Avenger's Shield each add a **Holy Power** stack (the same buff and

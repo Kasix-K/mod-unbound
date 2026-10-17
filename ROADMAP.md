@@ -60,7 +60,7 @@ content there is. Change these targets here first if testing says otherwise.
 | Gear | Normal level 60 gear: the baseline (1x) |
 | Perks | About **x1.55** with five Offensive perks (about +10% per perk) |
 | Perk ranks | **None for players:** Ranks 1-3 are part of the perks above; Ranks 4-5 (about x1.3) are **GM-only** (decided 2026-10-15) and not counted |
-| Class perk | About **x1.25-1.35**: each spec's class perk is worth about **+25-35% to that spec's single-target damage** (a lone raid boss is what a solo Mythic raid is about). Extra area damage on trash is fine on top. Every class perk is held to this target, so no spec pulls ahead. Measure with a damage meter on a training dummy, perk off vs on |
+| Class perk | About **x1.25-1.35**: each spec's class perk is worth about **+25-35% to that spec's single-target damage** (a lone raid boss is what a solo Mythic raid is about). Extra area damage on trash is fine on top. Every class perk is held to this target, so no spec pulls ahead. Measure with a damage meter on a training dummy, perk off vs on. **Healer specs** (decided 2026-10-16, first Paladin Holy): +25-35% of a healer's own small damage can't clear a solo Mythic, so a healer's class perk aims for **about 85-90% of the same class's damage spec with its class perk** (same gear and infusion), and more survival from self-healing. Slower to kill, harder to kill. Mostly through healing turned into damage (Atonement) |
 | Gear infusion / tribute | About **+200% of gear stats** when well collected (about x3), the main lever: |
 | - per item | **20%** of the item's fixed stats (tune 15-25% in testing); fixed stats only (no procs, set bonuses, weapon damage) |
 | - which items count | **Every unique item** counts once (a second copy adds nothing); **green or better** |
@@ -200,6 +200,10 @@ changes, raid by raid (see Next up).
       with it: Holy Power (Hammer of the Righteous, Judgement, Avenger's Shield), Aegis Strike, Word of Glory, the
       oaths of the Bulwark (Bastion) and Retaliation, Guardian of the Light; 3 ranks by level; about +26-31%
       single-target on paper (to confirm on a training dummy).
+- [x] Lightbringer's Oath (2026-10-16), the Paladin Holy class perk: Holy Power (Judgement, Exorcism, Holy
+      Shock), Light of Dawn, Atonement (healing turned into damage on the enemy you're fighting; less overhealing
+      counts in groups, never crowd-controlled enemies), the oaths of the Dawn and Mercy, Naaru's Blessing; 3 ranks;
+      aimed at the new healer target (about 85-90% of Retribution's damage, to confirm on a training dummy).
 
 - [x] Gear infusion (all 4 stages, 2026-10-14): the collection and its stats (20% per item, diminishing
       returns), item expansion tags, infusing by kills, the Altar of Tribute, item tooltips and the collection
@@ -290,8 +294,8 @@ changes, raid by raid (see Next up).
       single-target damage (the class perk target in the Power budget), one active at a time. The model is
       **Crusader's Oath** (Paladin Retribution, 2026-10-16): a class resource (Holy Power), spenders the perk
       teaches, a choice inside the perk (the oaths), 3 ranks by level that unlock more. Paladin Protection is
-      done (**Bulwark's Oath**, see Done); a Paladin Holy perk is planned, sharing Holy Power with its own
-      spenders (e.g. Light of Dawn).
+      done (**Bulwark's Oath**), and so is Holy (**Lightbringer's Oath**, see Done): every Paladin spec has its
+      perk. Healer specs follow the healer target in the Power budget (about 85-90% of their damage spec).
 - [ ] **Heroic Sigil: the rest** (easy to moderate; SaucyHobo54): the Heroic currency is live and tested (see Done), still to do:
   - **Loot companions by currency** (decided 2026-10-16): the small click-to-loot companion, the **Scavenger Imp**
     (up to 4 corpses within 27 yards when you open one), is bought with **Heroic Sigils** (done: 160 Sigils at the

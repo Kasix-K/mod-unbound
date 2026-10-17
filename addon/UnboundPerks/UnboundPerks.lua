@@ -1041,9 +1041,9 @@ updateHolyBar = function()
     for _, p in ipairs(P.PERKS) do
         if p.id == 1001 then perk = p end
     end
-    -- Crusader's Oath (not the classic Retribution perk) or Bulwark's Oath (1002)
+    -- Crusader's Oath (not the classic Retribution perk), Bulwark's Oath (1002) or Lightbringer's Oath (1003)
     local oath = perk and not perk.isClassic and db and db.active[1001]
-    if playerClass() ~= "PALADIN" or not (oath or (db and db.active[1002])) then
+    if playerClass() ~= "PALADIN" or not (oath or (db and (db.active[1002] or db.active[1003]))) then
         holyBar:Hide()
         return
     end

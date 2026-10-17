@@ -425,6 +425,69 @@ local function bulwarksOath(perk, values, rank)
         table.concat(oathNames, " or ") .. "\n\n" .. rest
 end
 
+-- Lightbringer's Oath at a rank, laid out like the other two (the oaths in perk.spells2). values[r] = { Holy,
+-- Dawn, Atonement, Oaths, Naaru, level } (the server's numbers per rank); perk.choice = the chosen oath (1 the
+-- Dawn, 2 Mercy).
+local function lightbringersOath(perk, values, rank)
+    local v = values[rank] or values[#values]
+    local function unlockLevel(stat)
+        for _, r in ipairs(values) do
+            if (r[stat] or 0) > 0 then return r[#r] end
+        end
+    end
+    local dawn, atone = v[2], v[3]
+    local oaths, naaru = (v[4] or 0) > 0, (v[5] or 0) > 0
+    local chosen = perk.choice == 2 and 2 or 1
+    local LEARNED = "Ability: learned while this perk is on"
+    local oathStatus = function(id)
+        if not oaths then return "Unlocks at level " .. (unlockLevel(4) or 30), false end
+        if chosen == id then return "Your oath", true end
+        return "Choose it with the button below", nil
+    end
+    local dStatus, dOn = oathStatus(1)
+    local mStatus, mOn = oathStatus(2)
+    perk.intro = "|cffff9933Holy|r paladin mastery. While active:"
+    perk.spells = {
+        { icon = "Interface\\Icons\\Spell_Holy_Power", name = "Holy Power", kind = "Resource",
+          text = "Judgement, Exorcism and Holy Shock give 1 Holy Power, up to 3. It fades 20 sec after the last " ..
+                 "one. Shown as three icons under your player frame.",
+          status = "Spent by Light of Dawn and Atonement", on = true },
+        { icon = "Interface\\Icons\\Spell_Holy_SurgeOfLight", name = "Light of Dawn", kind = LEARNED,
+          text = "Instant, 30 yards. Spends all your Holy Power on a Holy blast at your target for 30% / 65% / " ..
+                 "100% of 400 plus " .. dawn .. "% of your spell power at 1 / 2 / 3 Holy Power. Heals you for " ..
+                 "30% of the damage.", on = true },
+        { icon = "Interface\\Icons\\Spell_Holy_Penance", name = "Atonement", kind = LEARNED,
+          text = "Instant. Spends all your Holy Power: for 10 / 20 / 30 sec at 1 / 2 / 3 Holy Power, " .. atone ..
+                 "% of all your healing (overhealing included) also hits the enemy you are fighting as Holy " ..
+                 "damage: your target, your target's target, or the last enemy you hit.\n\nIn a group with other " ..
+                 "players, overhealing counts for a quarter. It never hits an enemy held by crowd control that " ..
+                 "breaks on damage, such as Polymorph or Sap.", on = true },
+        { icon = "Interface\\Icons\\Spell_Holy_SummonLightwell", name = "Naaru's Blessing", kind = LEARNED,
+          text = "2 min cooldown. A small Naaru joins you for 15 sec. Every 2 sec it smites the enemy you are " ..
+                 "fighting and heals you and your group within 10 yards of it for 2% of their maximum health. " ..
+                 "Every third spell it casts gives you 1 Holy Power. While it is with you, Atonement turns 50% " ..
+                 "of your healing into damage.",
+          status = not naaru and ("Unlocks at level " .. (unlockLevel(5) or 60)) or nil, on = naaru },
+    }
+    -- the oaths: their own icon row under "Your oath"; the chosen one is lit, the other dimmed
+    perk.spells2 = {
+        { icon = "Interface\\Icons\\Spell_Holy_SearingLight", name = "Oath of the Dawn", kind = "Oath",
+          text = "Holy Shock and Exorcism critical strikes give 1 extra Holy Power. Light of Dawn deals 30% more " ..
+                 "damage to enemies below 35% health.", status = dStatus, on = dOn },
+        { icon = "Interface\\Icons\\Spell_Holy_BlessedLife", name = "Oath of Mercy", kind = "Oath",
+          text = "Atonement's damage also heals you for 10% of it. Light of Dawn heals you for 60% of its damage " ..
+                 "instead of 30%. Your heals on yourself are 10% stronger.", status = mStatus, on = mOn },
+    }
+    perk.mid = "Hover over an icon for what it does.\n\n" .. H("Your oath")
+    local rest = H("Holy damage") .. "\n -  All Holy damage you deal is increased by " .. G(pct(v[1]))
+    perk.rest = rest
+    local names, oathNames = {}, {}
+    for _, sp in ipairs(perk.spells) do table.insert(names, S(sp.name)) end
+    for _, sp in ipairs(perk.spells2) do table.insert(oathNames, S(sp.name)) end
+    perk.desc = perk.intro .. "\n" .. table.concat(names, ", ") .. "\n\n" .. H("Your oath") .. "\n" ..
+        table.concat(oathNames, " or ") .. "\n\n" .. rest
+end
+
 UnboundPerks.PERKS = {
     -- Permanent -------------------------------------------------------------------------------------
     { id = 1, name = "No Resurrection Sickness", category = "PERMANENT", permanent = true,
@@ -716,7 +779,7 @@ UnboundPerks.PERKS = {
     -- Class: Paladin ----------------------------------------------------------------------------------
     -- Crusader's Oath (Retribution). The server sends its three ranks (Physical, Verdict, Inquisition, Oaths,
     -- Ashbringer, level each: RANKED_PERKS in src/unbound_perks.cpp) and the chosen oath.
-    { id = 1001, name = "Crusader's Oath", category = "CLASS", class = "PALADIN", works = true, excludes = 1002,
+    { id = 1001, name = "Crusader's Oath", category = "CLASS", class = "PALADIN", works = true, excludes = { 1002, 1003 },
       icon = "Interface\\Icons\\Ability_Paladin_RighteousVengeance",
       choices = { { id = 1, name = "Oath of Vengeance" }, { id = 2, name = "Oath of the Crusade" } },
       applyRank = function(perk, rank, maxRank, values)
@@ -748,7 +811,7 @@ UnboundPerks.PERKS = {
              " as well as " .. S("Judgement") .. " and " .. S("Exorcism") } },
     -- Bulwark's Oath (Protection). The server sends its three ranks (Holy, Aegis, Glory, Oaths, Guardian, level
     -- each: RANKED_PERKS in src/unbound_perks.cpp) and the chosen oath. Swaps with Crusader's Oath.
-    { id = 1002, name = "Bulwark's Oath", category = "CLASS", class = "PALADIN", works = true, excludes = 1001,
+    { id = 1002, name = "Bulwark's Oath", category = "CLASS", class = "PALADIN", works = true, excludes = { 1001, 1003 },
       icon = "Interface\\Icons\\Ability_Paladin_ShieldofVengeance",
       choices = { { id = 1, name = "Oath of the Bulwark" }, { id = 2, name = "Oath of Retaliation" } },
       applyRank = function(perk, rank, maxRank, values)
@@ -759,10 +822,25 @@ UnboundPerks.PERKS = {
               return string.format("Rank %d: %s; Holy +%g%%  (level %d)", i, unlocks[i] or "stronger", v[1], v[#v])
           end)
       end },
+    -- Lightbringer's Oath (Holy). The server sends its three ranks (Holy, Dawn, Atonement, Oaths, Naaru, level
+    -- each: RANKED_PERKS in src/unbound_perks.cpp) and the chosen oath. One Paladin class perk at a time.
+    { id = 1003, name = "Lightbringer's Oath", category = "CLASS", class = "PALADIN", works = true,
+      excludes = { 1001, 1002 },
+      icon = "Interface\\Icons\\Spell_Holy_SurgeOfLight",
+      choices = { { id = 1, name = "Oath of the Dawn" }, { id = 2, name = "Oath of Mercy" } },
+      applyRank = function(perk, rank, maxRank, values)
+          perk.rankValues, perk.rank = values, rank
+          lightbringersOath(perk, values, rank)
+          local unlocks = { "Holy Power, Light of Dawn, Atonement", "the oaths", "Naaru's Blessing" }
+          setRankInfo(perk, rank, maxRank, values, function(i, v)
+              return string.format("Rank %d: %s; Holy +%g%%  (level %d)", i, unlocks[i] or "stronger", v[1], v[#v])
+          end)
+      end },
 }
 
--- Crusader's Oath's and Bulwark's Oath's text and icons at level 60 until the server sends the character's rank
+-- The Paladin class perks' text and icons at level 60 until the server sends the character's rank
 for _, perk in ipairs(UnboundPerks.PERKS) do
     if perk.id == 1001 then crusadersOath(perk, { { 10, 200, 15, 1, 1, 60 } }, 1) end
     if perk.id == 1002 then bulwarksOath(perk, { { 10, 150, 25, 1, 1, 60 } }, 1) end
+    if perk.id == 1003 then lightbringersOath(perk, { { 10, 130, 30, 1, 1, 60 } }, 1) end
 end

@@ -133,7 +133,14 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
 - **Perks:** type `/perks` or click the **Perks** side tab on the right edge of the character sheet (C) to open the Character Perks window (needs the **UnboundPerks** addon). Always on
   for everyone: No Resurrection Sickness, No Daze, and Rapid Recovery (ranked by level: up to 8% health
   and mana per second, 4 seconds after combat). Switch on up to 5 Offensive perks (about +10% each) and one class perk (so far: Paladin
-  **Crusader's Oath**, Retribution, or **Bulwark's Oath**, Protection). Perks can't be changed in combat; save favourite sets as loadouts.
+  **Crusader's Oath**, Retribution, **Bulwark's Oath**, Protection, or **Lightbringer's Oath**, Holy). Perks can't be changed in combat; save favourite sets as loadouts.
+- **Lightbringer's Oath** (Paladin): Judgement, Exorcism and Holy Shock build **Holy Power**; the perk teaches
+  **Light of Dawn** (a Holy blast that heals you) and **Atonement** (for up to 30 seconds part of all your
+  healing also hits the enemy you're fighting, so healing yourself kills the boss). From level 30 choose an oath:
+  **the Dawn** (more Holy Power, a bigger Light of Dawn low on health) or **Mercy** (more self-healing). At 60:
+  **Naaru's Blessing** (2 min, a small Naaru smites and heals your group within 10 yards for 15 seconds). In groups only a quarter of
+  overhealing counts (`Unbound.Perks.LightbringersOath.GroupOverheal`). Perk 1003; spells 200229-200231;
+  creature 190222.
 - **Bulwark's Oath** (Paladin): Hammer of the Righteous, Judgement and Avenger's Shield build **Holy Power**; the
   perk teaches **Aegis Strike** (a shield strike) and **Word of Glory** (a self heal), which spend it all. From
   level 30 choose an oath: **the Bulwark** (Bastion: less damage taken, more block, a full Word of Glory) or
@@ -184,7 +191,7 @@ items count once those expansions are released). Settings: `Unbound.Attunement.*
 The 4 pet-only perks (Pet Encouragement, Pet's Blessing, Pets replenishment, Pets Roar) only show for
 Hunters, Warlocks, Death Knights and Mages.
 
-All 62 perks but No Daze and No Resurrection Sickness have ranks (Crusader's Oath and Bulwark's Oath have 3, at levels 1 / 30 / 60,
+All 63 perks but No Daze and No Resurrection Sickness have ranks (the three Paladin class perks have 3, at levels 1 / 30 / 60,
 each unlocking more; the original Retribution perk has none). A character's
 rank comes from its level; values in `mod_unbound.conf` (`Unbound.Perks.<Name>.*`). Test any rank with
 `.perk rank <perk id> <rank>`; `.perk rank <perk id>` goes back to the level's rank.

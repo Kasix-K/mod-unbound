@@ -170,6 +170,25 @@
  *                              Power abilities give 1 more and Holy Shield has 4 more charges.
  *                              Crusader's Oath and Bulwark's Oath are an exclusive pair (one class perk at a time).
  *                              The spells are tools/custom_dbc.py's 200224-200228, learned while the perk is on.
+ *  1003 Lightbringer's Oath (Paladin Holy). Ranked (Unbound.Perks.LightbringersOath.*, levels 1 / 30 / 60):
+ *                              Holy Power: Judgement, Exorcism and Holy Shock give 1. The perk teaches Light of Dawn
+ *                              (spends it all: 30% / 65% / 100% of 400 + 70/100/130% of spell power as Holy damage;
+ *                              heals you for 30% of it) and Atonement (spends it all: 10 s per Holy Power in which
+ *                              15/22/30% of your healing, overhealing included, also hits the enemy you are fighting;
+ *                              in a group with other real players overhealing counts for GroupOverheal%, 25). The
+ *                              damage is gathered and dealt on the next update (AtonementTarget: your enemy target,
+ *                              your friendly target's target, the last enemy you hit, the nearest enemy attacking you
+ *                              or your group; never one held by crowd control that breaks on damage, never one not
+ *                              in combat unless you target it). Holy damage +4/7/10%.
+ *                              Rank 2: an oath:
+ *                                the Dawn: Holy Shock and Exorcism critical strikes give 1 more Holy Power; Light of
+ *                                Dawn deals 30% more to enemies below 35% health.
+ *                                Mercy: Atonement's damage heals you for 10% of it; Light of Dawn's self-heal is
+ *                                doubled; your heals on yourself are 10% stronger.
+ *                              Rank 3: Naaru's Blessing (2 min): a Naaru (190222) stays 15 s; every 2 s it smites
+ *                              the enemy you are fighting and heals your group within 10 yards (2% each), every third spell gives Holy Power, and
+ *                              Atonement converts 50% meanwhile.
+ *                              The three Paladin class perks are exclusive. Spells 200229-200231.
  *       The original Retribution perk, kept behind Unbound.Perks.Retribution.Classic = 1 (no ranks, no spells):
  *       Retribution (Paladin)  Improved Divine Storm: Divine Storm hits up to 6 enemies (normally 4), and every
  *                              enemy it hits also takes a Crusader Strike.
@@ -195,6 +214,7 @@
 #include "DatabaseEnv.h"
 #include "GridNotifiers.h"
 #include "GridNotifiersImpl.h"
+#include "Group.h"
 #include "ObjectAccessor.h"
 #include "MoveSpline.h"
 #include "Pet.h"
@@ -343,6 +363,7 @@ namespace
         PERK_FOCUSED_MIND           = 316,  // Rogue and Druid only
         PERK_RETRIBUTION            = 1001,  // Paladin (Crusader's Oath)
         PERK_BULWARKS_OATH          = 1002,  // Paladin
+        PERK_LIGHTBRINGERS_OATH     = 1003,  // Paladin
     };
 
     std::set<uint32> const IMPLEMENTED = {
@@ -359,7 +380,7 @@ namespace
         PERK_REINFORCED_ARMOR, PERK_SPELLWARDED, PERK_STOICISM, PERK_DEFENSIVE_MOMENTUM, PERK_FORTRESS,
         PERK_JUGGERNAUT, PERK_COUNTERWEIGHT, PERK_TITANS_RESOLVE, PERK_SECOND_WIND, PERK_HARDENED_FLESH,
         PERK_PETS_BLESSING, PERK_SHIELD_WALL_TRAINING, PERK_SURVIVAL_INSTINCT, PERK_VITAL_RESERVE, PERK_ENDURING,
-        PERK_THORNMAIL, PERK_HEAVY_FRAME, PERK_RETRIBUTION, PERK_BULWARKS_OATH };
+        PERK_THORNMAIL, PERK_HEAVY_FRAME, PERK_RETRIBUTION, PERK_BULWARKS_OATH, PERK_LIGHTBRINGERS_OATH };
 
     // Groups of perks that can't be active together: turning one on turns the others in its group off.
     std::vector<std::vector<uint32>> const EXCLUSIVE_GROUPS = {
@@ -367,7 +388,7 @@ namespace
         { PERK_SILENT_KILLER, PERK_UNBREAKABLE_PRESENCE },
         { PERK_GREATER_BULWARK, PERK_EVASIVE_MANEUVERS, PERK_PARRY_KING },
         { PERK_DEFENSIVE_MOMENTUM, PERK_FORTRESS },
-        { PERK_RETRIBUTION, PERK_BULWARKS_OATH },  // the Paladin's class perks: turning one on swaps them
+        { PERK_RETRIBUTION, PERK_BULWARKS_OATH, PERK_LIGHTBRINGERS_OATH },  // the Paladin's class perks: one at a time
     };
 
     // Ranked perks read from mod_unbound.conf: perk, config key, and each stat with its default per rank.
@@ -458,6 +479,11 @@ namespace
         { PERK_BULWARKS_OATH,        "BulwarksOath",        { { "Holy", "4, 7, 10" }, { "Aegis", "100, 125, 150" },
                                                               { "Glory", "15, 20, 25" }, { "Oaths", "0, 1, 1" },
                                                               { "Guardian", "0, 0, 1" } }, "1, 30, 60" },
+        // Lightbringer's Oath: the same 3 ranks by level (Oaths and Naaru are 0 = locked, 1 = on). Dawn is Light of
+        // Dawn's spell power share (%) at 3 Holy Power; Atonement the share of healing turned into damage (%).
+        { PERK_LIGHTBRINGERS_OATH,   "LightbringersOath",   { { "Holy", "4, 7, 10" }, { "Dawn", "70, 100, 130" },
+                                                              { "Atonement", "15, 22, 30" }, { "Oaths", "0, 1, 1" },
+                                                              { "Naaru", "0, 0, 1" } }, "1, 30, 60" },
     };
 
     // Server-only passive spells (data/sql/db-world/unbound_perks_utility_spells.sql). Passive auras are never
@@ -478,6 +504,7 @@ namespace
     std::unordered_map<uint32, uint32> const CLASS_PERKS = {
         { PERK_RETRIBUTION, ClassBit(CLASS_PALADIN) },
         { PERK_BULWARKS_OATH, ClassBit(CLASS_PALADIN) },
+        { PERK_LIGHTBRINGERS_OATH, ClassBit(CLASS_PALADIN) },
         { PERK_ENDLESS_RAGE, ClassBit(CLASS_WARRIOR) | ClassBit(CLASS_DRUID) },  // the rage users
         { PERK_FOCUSED_MIND, ClassBit(CLASS_ROGUE) | ClassBit(CLASS_DRUID) },    // the energy users
     };
@@ -570,6 +597,46 @@ namespace
     enum BulwarkStat : size_t
     {
         BULWARK_STAT_HOLY = 0, BULWARK_STAT_AEGIS, BULWARK_STAT_GLORY, BULWARK_STAT_OATHS, BULWARK_STAT_GUARDIAN
+    };
+
+    // Lightbringer's Oath (the Holy class perk). Spells: tools/custom_dbc.py; the Naaru:
+    // data/sql/db-world/unbound_lightbringers_oath.sql. The ranked numbers are in RANKED_PERKS. Holy Power is the
+    // same SPELL_HOLY_POWER aura as the other two (only one class perk is on at a time).
+    constexpr uint32 SPELL_LIGHT_OF_DAWN = 200229;
+    constexpr uint32 SPELL_ATONEMENT = 200230;
+    constexpr uint32 SPELL_NAARUS_BLESSING = 200231;
+    constexpr uint32 NPC_NAARU = 190222;
+    constexpr uint32 SPELL_EXORCISM_CHAIN = 879;          // Exorcism, any rank
+    constexpr uint32 SPELL_HOLY_SHOCK_RANK_1 = 20473;     // the Holy Shock you cast, any rank
+    constexpr uint32 SPELL_SMITE_RANK_1 = 585;            // the Naaru's spells (their amounts set by the server)
+    constexpr uint32 SPELL_FLASH_HEAL_RANK_1 = 2061;
+    float sGroupOverheal = 25.0f;                         // Unbound.Perks.LightbringersOath.GroupOverheal (%)
+    constexpr float LIGHT_OF_DAWN_BASE = 400.0f;          // at level 60, less at lower levels
+    constexpr float LIGHT_OF_DAWN_HEAL = 0.30f;           // of the damage; Oath of Mercy doubles it
+    constexpr float ATONEMENT_RANGE = 40.0f;
+    constexpr uint32 ATONEMENT_MS_PER_POWER = 10000;
+    constexpr float DAWN_LOW_BONUS = 1.30f;               // Oath of the Dawn: Light of Dawn below this health
+    constexpr int32 DAWN_LOW_BELOW = 35;
+    constexpr float MERCY_ATONEMENT_HEAL = 0.10f;         // Oath of Mercy: of Atonement's damage
+    constexpr float MERCY_SELF_HEAL = 1.10f;              // ... your heals on yourself
+    constexpr float NAARU_ATONEMENT = 50.0f;              // Atonement (%) while the Naaru is out
+    constexpr uint32 NAARU_MS = 15000;
+    constexpr uint32 NAARU_CAST_MS = 2000;                // a Smite and a heal every 2 s
+    constexpr float NAARU_SMITE_BASE = 150.0f;            // at level 60 ...
+    constexpr float NAARU_SMITE_SP = 0.30f;               // ... plus 30% of the Paladin's spell power
+    constexpr int32 NAARU_HEAL_PCT = 2;                   // of each healed player's maximum health
+    constexpr float NAARU_HEAL_RADIUS = 10.0f;            // the Naaru heals the group around it
+    constexpr uint32 NAARU_SPELLS_PER_POWER = 3;
+    enum LightOath : uint8
+    {
+        LIGHT_OATH_NONE  = 0,  // before Rank 2
+        LIGHT_OATH_DAWN  = 1,
+        LIGHT_OATH_MERCY = 2,
+    };
+    // Lightbringer's Oath's ranked stats (their order in RANKED_PERKS)
+    enum LightStat : size_t
+    {
+        LIGHT_STAT_HOLY = 0, LIGHT_STAT_DAWN, LIGHT_STAT_ATONEMENT, LIGHT_STAT_OATHS, LIGHT_STAT_NAARU
     };
 
     constexpr char const* PREFIX = "UBPERK";
@@ -715,6 +782,12 @@ namespace
         bool guardianOut = false;
         uint32 guardianHits = 0;
         bool bastionGlory = false;        // Oath of the Bulwark: a full Word of Glory is ready during Bastion
+        // Lightbringer's Oath
+        float atonementPending = 0.0f;    // Atonement damage gathered from heals, dealt on the next update
+        uint32 naaruCastMs = 0;           // when Naaru's Blessing was cast
+        bool naaruOut = false;
+        uint32 naaruTimer = 0;            // time to the Naaru's next Smite and heal
+        uint32 naaruSpells = 0;           // its spells since the last Holy Power
     };
 
     std::unordered_map<ObjectGuid::LowType, PerkState> sStates;
@@ -772,6 +845,33 @@ namespace
         if (!Has(state, PERK_BULWARKS_OATH))
             return nullptr;
         if (oath != BULWARK_OATH_NONE && ActiveBulwarkOath(player, *state) != oath)
+            return nullptr;
+        return player;
+    }
+
+    // ------------------------------------------------------------------ Lightbringer's Oath (oath)
+    // The oath chosen for Lightbringer's Oath (the Dawn unless changed), whether or not it is unlocked yet.
+    uint8 ChosenLightOath(PerkState const& state)
+    {
+        auto itr = state.choices.find(PERK_LIGHTBRINGERS_OATH);
+        return itr == state.choices.end() ? uint8(LIGHT_OATH_DAWN) : itr->second;
+    }
+
+    // The oath in effect: none before Rank 2.
+    uint8 ActiveLightOath(Player const* player, PerkState const& state)
+    {
+        return RankValue(player, state, PERK_LIGHTBRINGERS_OATH, LIGHT_STAT_OATHS) > 0.0f ? ChosenLightOath(state)
+                                                                                         : uint8(LIGHT_OATH_NONE);
+    }
+
+    // The Paladin with Lightbringer's Oath on (and that oath, when one is given), or nullptr.
+    Player* LightPlayer(Unit const* unit, uint8 oath = LIGHT_OATH_NONE)
+    {
+        Player* player = unit ? const_cast<Unit*>(unit)->ToPlayer() : nullptr;
+        PerkState const* state = player ? StateOf(player) : nullptr;
+        if (!Has(state, PERK_LIGHTBRINGERS_OATH))
+            return nullptr;
+        if (oath != LIGHT_OATH_NONE && ActiveLightOath(player, *state) != oath)
             return nullptr;
         return player;
     }
@@ -869,6 +969,9 @@ namespace
             if (IsConsecration(spellInfo) && BulwarkPlayer(attacker, BULWARK_OATH_RETALIATION))
                 mult *= RETALIATION_CONSECRATION;
         }
+        // Lightbringer's Oath - Holy damage (the Paladin's own damage)
+        if (Has(state, PERK_LIGHTBRINGERS_OATH) && attacker->IsPlayer() && (schools & SPELL_SCHOOL_MASK_HOLY))
+            mult *= Bonus(OwnerRankValue(attacker, PERK_LIGHTBRINGERS_OATH, LIGHT_STAT_HOLY));
         return mult;
     }
 
@@ -1160,8 +1263,20 @@ namespace
         keep(SPELL_AEGIS_STRIKE, bulwark);
         keep(SPELL_WORD_OF_GLORY, bulwark);
         keep(SPELL_GUARDIAN_OF_THE_LIGHT, bulwark && RankValue(player, state, PERK_BULWARKS_OATH, BULWARK_STAT_GUARDIAN) > 0.0f);
-        if (!on && !bulwark && player->HasAura(SPELL_HOLY_POWER))
+        // and Lightbringer's Oath's
+        bool light = Has(&state, PERK_LIGHTBRINGERS_OATH);
+        keep(SPELL_LIGHT_OF_DAWN, light);
+        keep(SPELL_ATONEMENT, light);
+        keep(SPELL_NAARUS_BLESSING, light && RankValue(player, state, PERK_LIGHTBRINGERS_OATH, LIGHT_STAT_NAARU) > 0.0f);
+        if (!on && !bulwark && !light && player->HasAura(SPELL_HOLY_POWER))
             player->RemoveAurasDueToSpell(SPELL_HOLY_POWER);
+        if (!light)
+        {
+            if (player->HasAura(SPELL_ATONEMENT))
+                player->RemoveAurasDueToSpell(SPELL_ATONEMENT);
+            state.atonementPending = 0.0f;
+            state.naaruOut = false;
+        }
         if (!on)
         {
             if (player->HasAura(SPELL_INQUISITION))
@@ -1450,6 +1565,202 @@ namespace
         UpdateOathSpells(player, state);  // also follows the rank as the level changes
     }
 
+    // ------------------------------------------------------------------ Lightbringer's Oath
+    // The enemy Atonement (and the Naaru's Smite) hits: the Paladin's target if it is an enemy; else, with a friend
+    // targeted, what that friend is fighting; else the last enemy the Paladin hit; else the nearest enemy attacking
+    // the Paladin or their group. Never an enemy held by crowd control that breaks on damage (Polymorph, Sap...),
+    // an immune or evading one, one out of range, or (except the Paladin's own enemy target) one not in combat.
+    Unit* AtonementTarget(Player* player)
+    {
+        auto usable = [player](Unit* unit, bool needCombat)
+        {
+            if (!unit || !unit->IsAlive() || !unit->IsInWorld() || unit->GetMap() != player->GetMap())
+                return false;
+            if (!player->IsValidAttackTarget(unit) || !player->IsWithinDistInMap(unit, ATONEMENT_RANGE))
+                return false;
+            if (unit->HasBreakableByDamageCrowdControlAura() || unit->IsImmunedToDamage(SPELL_SCHOOL_MASK_HOLY))
+                return false;
+            if (Creature* creature = unit->ToCreature())
+                if (creature->IsInEvadeMode())
+                    return false;
+            return !needCombat || unit->IsInCombat();
+        };
+
+        if (Unit* target = player->GetSelectedUnit())
+        {
+            if (player->IsValidAttackTarget(target))
+            {
+                if (usable(target, false))
+                    return target;
+            }
+            else if (usable(target->GetVictim(), true))  // a friend: what they are fighting
+                return target->GetVictim();
+        }
+        if (Unit* last = ObjectAccessor::GetUnit(*player, player->GetLastDamagedTargetGuid()))
+            if (usable(last, true))
+                return last;
+
+        Unit* best = nullptr;
+        float bestDist = 0.0f;
+        auto consider = [&](Unit* member)
+        {
+            for (Unit* attacker : member->getAttackers())
+                if (usable(attacker, true))
+                {
+                    float dist = player->GetDistance(attacker);
+                    if (!best || dist < bestDist)
+                    {
+                        best = attacker;
+                        bestDist = dist;
+                    }
+                }
+        };
+        consider(player);
+        if (Group* group = player->GetGroup())
+            for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+                if (Player* member = ref->GetSource())
+                    if (member != player && member->IsInMap(player))
+                        consider(member);
+        return best;
+    }
+
+    // In a group with another real player (bots don't count): Atonement's overhealing counts for less.
+    bool InGroupWithOtherPlayers(Player* player)
+    {
+        if (Group* group = player->GetGroup())
+            for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+                if (Player* member = ref->GetSource())
+                    if (member != player && member->GetSession() && !member->GetSession()->IsHeadless())
+                        return true;
+        return false;
+    }
+
+    // Atonement: a share of the Paladin's healing (overhealing included, less of it in a group) is gathered and
+    // dealt as Holy damage on the next update (never inside the heal); Oath of Mercy: the Paladin's heals on
+    // themselves are stronger.
+    void ApplyLightbringerHeal(Unit* healer, Unit* target, uint32& heal)
+    {
+        Player* player = LightPlayer(healer);
+        if (!player || !target || !heal)
+            return;
+        if (target == healer && LightPlayer(player, LIGHT_OATH_MERCY))
+            heal = uint32(heal * MERCY_SELF_HEAL);
+        if (!player->HasAura(SPELL_ATONEMENT))
+            return;
+        PerkState* state = StateOf(player);
+        float percent = RankValue(player, *state, PERK_LIGHTBRINGERS_OATH, LIGHT_STAT_ATONEMENT);
+        if (state->naaruOut && getMSTimeDiff(state->naaruCastMs, getMSTime()) < NAARU_MS)
+            percent = std::max(percent, NAARU_ATONEMENT);
+        float missing = float(target->GetMaxHealth() - std::min(target->GetHealth(), target->GetMaxHealth()));
+        float effective = std::min(float(heal), missing);
+        float overheal = float(heal) - effective;
+        if (overheal > 0.0f && InGroupWithOtherPlayers(player))
+            overheal *= sGroupOverheal / 100.0f;
+        state->atonementPending += (effective + overheal) * percent / 100.0f;
+    }
+
+    // Deals the gathered Atonement damage (Oath of Mercy: and heals for a share of it).
+    void FlushAtonement(Player* player, PerkState& state)
+    {
+        if (state.atonementPending < 1.0f)
+            return;
+        uint32 damage = uint32(state.atonementPending);
+        state.atonementPending = 0.0f;
+        Unit* target = AtonementTarget(player);
+        SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(SPELL_ATONEMENT);
+        if (!target || !spellInfo)
+            return;
+        SpellNonMeleeDamage damageInfo(player, target, spellInfo, SPELL_SCHOOL_MASK_HOLY);
+        damageInfo.damage = damage;
+        player->SendSpellNonMeleeDamageLog(&damageInfo);
+        player->DealSpellDamage(&damageInfo, true);
+        if (LightPlayer(player, LIGHT_OATH_MERCY) && player->IsAlive())
+        {
+            HealInfo healInfo(player, player, uint32(damage * MERCY_ATONEMENT_HEAL), spellInfo, SPELL_SCHOOL_MASK_HOLY);
+            player->HealBySpell(healInfo);
+        }
+    }
+
+    // The Naaru: every 2 s a Smite on the enemy the Paladin is fighting and a heal on the Paladin's group within
+    // 10 yards of it, cast by the Naaru with amounts set here; every third spell gives Holy Power.
+    void UpdateNaaru(Player* player, PerkState& state, uint32 diff)
+    {
+        if (!state.naaruOut)
+            return;
+        if (getMSTimeDiff(state.naaruCastMs, getMSTime()) >= NAARU_MS)
+        {
+            state.naaruOut = false;
+            return;
+        }
+        state.naaruTimer += diff;
+        if (state.naaruTimer < NAARU_CAST_MS)
+            return;
+        state.naaruTimer = 0;
+
+        std::list<Creature*> naarus;
+        player->GetCreatureListWithEntryInGrid(naarus, NPC_NAARU, 60.0f);
+        Creature* naaru = nullptr;
+        for (Creature* creature : naarus)
+            if (creature->IsAlive() && creature->GetOwnerGUID() == player->GetGUID())
+                naaru = creature;
+        if (!naaru)
+            return;
+
+        uint32 spells = 0;
+        if (Unit* target = AtonementTarget(player))
+        {
+            int32 smite = int32(NAARU_SMITE_BASE * player->GetLevel() / 60.0f + NAARU_SMITE_SP * SpellPower(player));
+            naaru->CastCustomSpell(target, SPELL_SMITE_RANK_1, &smite, nullptr, nullptr, true);
+            ++spells;
+        }
+        // a group heal: the Paladin and every group member (bots too) within 10 yards of the Naaru, each for 2% of
+        // their own maximum health; it counts as one spell
+        std::vector<Player*> healed;
+        if (player->IsAlive() && naaru->IsWithinDistInMap(player, NAARU_HEAL_RADIUS))
+            healed.push_back(player);
+        if (Group* group = player->GetGroup())
+            for (GroupReference* ref = group->GetFirstMember(); ref; ref = ref->next())
+                if (Player* member = ref->GetSource())
+                    if (member != player && member->IsAlive() && member->IsInMap(naaru) &&
+                        naaru->IsWithinDistInMap(member, NAARU_HEAL_RADIUS))
+                        healed.push_back(member);
+        for (Player* target : healed)
+        {
+            int32 heal = int32(target->CountPctFromMaxHealth(NAARU_HEAL_PCT));
+            naaru->CastCustomSpell(target, SPELL_FLASH_HEAL_RANK_1, &heal, nullptr, nullptr, true);
+        }
+        if (!healed.empty())
+            ++spells;
+        for (uint32 i = 0; i < spells; ++i)
+            if (++state.naaruSpells >= NAARU_SPELLS_PER_POWER)
+            {
+                state.naaruSpells = 0;
+                GainHolyPower(player, 1, false);
+            }
+    }
+
+    // Lightbringer's Oath: Holy Power from a Judgement, Exorcism or Holy Shock; Naaru's Blessing starts the Naaru.
+    void OnLightSpellCast(Player* player, Spell const* spell)
+    {
+        if (spell->IsTriggered() || !LightPlayer(player))
+            return;
+        uint32 id = spell->GetSpellInfo()->Id;
+        if (id == SPELL_NAARUS_BLESSING)
+        {
+            PerkState* state = StateOf(player);
+            state->naaruCastMs = getMSTime();
+            state->naaruOut = true;
+            state->naaruTimer = 0;
+            state->naaruSpells = 0;
+            return;
+        }
+        uint32 first = sSpellMgr->GetFirstSpellInChain(id);
+        bool builder = first == SPELL_EXORCISM_CHAIN || first == SPELL_HOLY_SHOCK_RANK_1 ||
+                       std::find(std::begin(SPELL_JUDGEMENTS), std::end(SPELL_JUDGEMENTS), id) != std::end(SPELL_JUDGEMENTS);
+        if (builder)
+            GainHolyPower(player, 1, true);
+    }
+
     // ------------------------------------------------------------------ addon messages
     void SendAddon(Player* player, std::string const& text)
     {
@@ -1478,6 +1789,7 @@ namespace
                           (sRetributionClassic ? "classic" : "oath"));
         SendAddon(player, "CHOICE:" + std::to_string(PERK_RETRIBUTION) + ":" + std::to_string(ChosenOath(state)));
         SendAddon(player, "CHOICE:" + std::to_string(PERK_BULWARKS_OATH) + ":" + std::to_string(ChosenBulwarkOath(state)));
+        SendAddon(player, "CHOICE:" + std::to_string(PERK_LIGHTBRINGERS_OATH) + ":" + std::to_string(ChosenLightOath(state)));
     }
 
     // ------------------------------------------------------------------ perk ranks
@@ -1710,14 +2022,15 @@ namespace
             return;
         }
 
-        // CHOICE:<perk>:<choice> - Crusader's Oath's oath (1 Vengeance, 2 Crusade) or Bulwark's Oath's (1 the
-        // Bulwark, 2 Retaliation)
+        // CHOICE:<perk>:<choice> - Crusader's Oath's oath (1 Vengeance, 2 Crusade), Bulwark's Oath's (1 the
+        // Bulwark, 2 Retaliation) or Lightbringer's Oath's (1 the Dawn, 2 Mercy)
         if (isChoice)
         {
             std::vector<std::string_view> parts = Acore::Tokenize(text, ':', false);
             Optional<uint32> perk = parts.size() == 3 ? Acore::StringTo<uint32>(parts[1]) : Optional<uint32>();
             Optional<uint32> choice = parts.size() == 3 ? Acore::StringTo<uint32>(parts[2]) : Optional<uint32>();
-            if (perk && choice && (*perk == PERK_RETRIBUTION || *perk == PERK_BULWARKS_OATH) &&
+            if (perk && choice && (*perk == PERK_RETRIBUTION || *perk == PERK_BULWARKS_OATH ||
+                *perk == PERK_LIGHTBRINGERS_OATH) &&
                 (*choice == 1 || *choice == 2))
             {
                 state.choices[*perk] = uint8(*choice);
@@ -2227,6 +2540,10 @@ public:
         sRetributionClassic = sConfigMgr->GetOption<bool>("Unbound.Perks.Retribution.Classic", false);
         if (sRetributionClassic)
             sPerkRanks.erase(PERK_RETRIBUTION);
+
+        // Lightbringer's Oath: Atonement's overhealing in a group with other real players (%)
+        sGroupOverheal = std::clamp(sConfigMgr->GetOption<float>("Unbound.Perks.LightbringersOath.GroupOverheal", 25.0f),
+                                    0.0f, 100.0f);
     }
 };
 
@@ -2353,6 +2670,7 @@ public:
     {
         OnOathSpellCast(player, spell);
         OnBulwarkSpellCast(player, spell);
+        OnLightSpellCast(player, spell);
     }
 
     void OnPlayerUpdate(Player* player, uint32 diff) override
@@ -2365,6 +2683,8 @@ public:
         UpdateStance(player->GetPet(), state, state.petStance, diff);
         UpdateDefense(player, state, diff);
         UpdateDefense(player->GetPet(), state, diff);
+        UpdateNaaru(player, state, diff);       // Lightbringer's Oath
+        FlushAtonement(player, state);
 
         if (state.active.empty() && !state.sacrificeAP && !state.sacrificeSP && !state.critBonus &&
             std::none_of(std::begin(state.desperateResist), std::end(state.desperateResist), [](int32 r) { return r != 0; }))
@@ -2411,6 +2731,7 @@ public:
         Unit* target = isTick ? first : second;
         ApplyHealingBonus(healer, heal);
         ApplyHealingTaken(target, heal, isTick);
+        ApplyLightbringerHeal(healer, target, heal);  // last: Atonement converts the final amount
     }
 
     // Greater Bulwark / Evasive Maneuvers / Parry King convert avoidance first; then Block/Dodge/Parry Capping:
@@ -2721,6 +3042,115 @@ class spell_unbound_bulwark_word_of_glory : public SpellScript
     }
 };
 
+// Light of Dawn and Atonement need Holy Power, and spend all of it.
+static SpellCastResult CheckLightPower(Unit* caster)
+{
+    if (!LightPlayer(caster))
+        return SPELL_FAILED_SPELL_UNAVAILABLE;
+    return HolyPower(caster) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
+}
+
+// 200229 - Light of Dawn (Lightbringer's Oath): Holy damage of 400 (at level 60) + the rank's share of spell power,
+// times a share by Holy Power; heals the Paladin for 30% of it (Oath of Mercy: 60%). Oath of the Dawn: 30% more
+// on enemies below 35% health.
+class spell_unbound_lightbringer_light_of_dawn : public SpellScript
+{
+    PrepareSpellScript(spell_unbound_lightbringer_light_of_dawn);
+
+    uint32 _power = 0;
+    int32 _damage = 0;
+
+    SpellCastResult CheckCast() { return CheckLightPower(GetCaster()); }
+
+    void Spend() { _power = SpendHolyPower(GetCaster()); }
+
+    void Blast()
+    {
+        Unit* target = GetHitUnit();
+        Player* player = LightPlayer(GetCaster());
+        if (!player || !target || !_power)
+            return;
+        PerkState* state = StateOf(player);
+        float full = LIGHT_OF_DAWN_BASE * player->GetLevel() / 60.0f +
+                     SpellPower(player) * RankValue(player, *state, PERK_LIGHTBRINGERS_OATH, LIGHT_STAT_DAWN) / 100.0f;
+        float damage = full * VERDICT_SHARE[_power - 1];
+        if (ActiveLightOath(player, *state) == LIGHT_OATH_DAWN && target->HealthBelowPct(DAWN_LOW_BELOW))
+            damage *= DAWN_LOW_BONUS;
+        _damage = int32(damage);
+        SetHitDamage(_damage);
+    }
+
+    void SelfHeal()
+    {
+        Player* player = LightPlayer(GetCaster());
+        if (!player || _damage <= 0 || !player->IsAlive())
+            return;
+        float share = LIGHT_OF_DAWN_HEAL * (LightPlayer(player, LIGHT_OATH_MERCY) ? 2.0f : 1.0f);
+        HealInfo healInfo(player, player, uint32(_damage * share), GetSpellInfo(), SPELL_SCHOOL_MASK_HOLY);
+        player->HealBySpell(healInfo);
+        _damage = 0;
+    }
+
+    void Register() override
+    {
+        OnCheckCast += SpellCheckCastFn(spell_unbound_lightbringer_light_of_dawn::CheckCast);
+        OnCast += SpellCastFn(spell_unbound_lightbringer_light_of_dawn::Spend);
+        OnHit += SpellHitFn(spell_unbound_lightbringer_light_of_dawn::Blast);
+        AfterHit += SpellHitFn(spell_unbound_lightbringer_light_of_dawn::SelfHeal);
+    }
+};
+
+// 200230 - Atonement (Lightbringer's Oath): the buff lasts 10 s per Holy Power spent (the conversion itself is in
+// ApplyLightbringerHeal).
+class spell_unbound_lightbringer_atonement : public SpellScript
+{
+    PrepareSpellScript(spell_unbound_lightbringer_atonement);
+
+    uint32 _power = 0;
+
+    SpellCastResult CheckCast() { return CheckLightPower(GetCaster()); }
+
+    void Spend() { _power = SpendHolyPower(GetCaster()); }
+
+    void SetDuration()
+    {
+        Unit* caster = GetCaster();
+        Aura* aura = caster ? caster->GetAura(SPELL_ATONEMENT) : nullptr;
+        if (!aura || !_power)
+            return;
+        int32 duration = int32(_power * ATONEMENT_MS_PER_POWER);
+        aura->SetMaxDuration(duration);
+        aura->SetDuration(duration);
+    }
+
+    void Register() override
+    {
+        OnCheckCast += SpellCheckCastFn(spell_unbound_lightbringer_atonement::CheckCast);
+        OnCast += SpellCastFn(spell_unbound_lightbringer_atonement::Spend);
+        AfterHit += SpellHitFn(spell_unbound_lightbringer_atonement::SetDuration);
+    }
+};
+
+// Holy Shock's damage and Exorcism, every rank (Lightbringer's Oath, Oath of the Dawn): a critical strike gives
+// 1 more Holy Power.
+class spell_unbound_lightbringer_dawn_crit : public SpellScript
+{
+    PrepareSpellScript(spell_unbound_lightbringer_dawn_crit);
+
+    void CritPower()
+    {
+        Unit* target = GetHitUnit();
+        if (Player* player = LightPlayer(GetCaster(), LIGHT_OATH_DAWN))
+            if (target && IsHitCrit(GetSpell(), target))
+                GainHolyPower(player, 1, true);
+    }
+
+    void Register() override
+    {
+        AfterHit += SpellHitFn(spell_unbound_lightbringer_dawn_crit::CritPower);
+    }
+};
+
 // 20271, 53407, 53408 - Judgements (Retribution perk: spread to 4 more enemies within 10 yards, a free Exorcism
 // on each enemy)
 class spell_unbound_ret_judgement : public SpellScript
@@ -2846,5 +3276,8 @@ void AddSC_unbound_perks()
     RegisterSpellScript(spell_unbound_oath_inquisition);
     RegisterSpellScript(spell_unbound_bulwark_aegis_strike);
     RegisterSpellScript(spell_unbound_bulwark_word_of_glory);
+    RegisterSpellScript(spell_unbound_lightbringer_light_of_dawn);
+    RegisterSpellScript(spell_unbound_lightbringer_atonement);
+    RegisterSpellScript(spell_unbound_lightbringer_dawn_crit);
     RegisterSpellScript(spell_unbound_perk_defense_proc);
 }

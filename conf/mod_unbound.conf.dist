@@ -371,6 +371,29 @@ Unbound.Perks.BulwarksOath.Oaths = "0, 1, 1"
 Unbound.Perks.BulwarksOath.Guardian = "0, 0, 1"
 Unbound.Perks.BulwarksOath.RankLevels = "1, 30, 60"
 
+#    Lightbringer's Oath (perk 1003, the Paladin Holy class perk), one number per rank (3 ranks, levels in
+#    RankLevels):
+#    Unbound.Perks.LightbringersOath.Holy        Holy damage +%
+#    Unbound.Perks.LightbringersOath.Dawn        Light of Dawn at 3 Holy Power: 400 + this % of spell power (30% /
+#                                                65% / 100% of it at 1 / 2 / 3)
+#    Unbound.Perks.LightbringersOath.Atonement   % of your healing (overhealing included) that Atonement turns into
+#                                                damage (50 while the Naaru is out)
+#    Unbound.Perks.LightbringersOath.Oaths       1 = the oaths are unlocked at that rank
+#    Unbound.Perks.LightbringersOath.Naaru       1 = Naaru's Blessing is unlocked at that rank
+#
+#    Unbound.Perks.LightbringersOath.GroupOverheal
+#        Description: % of Atonement's overhealing that still counts in a group with other real players (bots
+#                     don't count). Solo it always counts in full. 0 = only real healing counts in groups.
+#        Default:     25
+
+Unbound.Perks.LightbringersOath.Holy = "4, 7, 10"
+Unbound.Perks.LightbringersOath.Dawn = "70, 100, 130"
+Unbound.Perks.LightbringersOath.Atonement = "15, 22, 30"
+Unbound.Perks.LightbringersOath.Oaths = "0, 1, 1"
+Unbound.Perks.LightbringersOath.Naaru = "0, 0, 1"
+Unbound.Perks.LightbringersOath.RankLevels = "1, 30, 60"
+Unbound.Perks.LightbringersOath.GroupOverheal = 25
+
 #    Unbound.Attunement.Enable
 #        Description: Gear infusion (called attunement in the code and these setting names): infused items
 #                     permanently give the character a percentage of their fixed stats

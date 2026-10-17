@@ -274,6 +274,66 @@ SPELLS = [
         'Name_Lang_enUS': 'Retaliation',
         'Description_Lang_enUS': 'Holy damage from a blocked attack.',
     },
+    # Lightbringer's Oath (the Paladin Holy class perk), keep in sync with src/unbound_perks.cpp. Holy Power is
+    # 200220 above. The numbers here are the level 60 ones (the server scales them by Holy Power, rank and oath).
+    {
+        'ID': 200229,  # Light of Dawn: a Holy blast that heals you for a share of it, damage set by the server
+        '_base': 879,               # Exorcism, Rank 1: a 30 yard Holy damage spell
+        '_script': 'spell_unbound_lightbringer_light_of_dawn',
+        'Category': 0, 'CategoryRecoveryTime': 0,   # not Exorcism's cooldown
+        'CastingTimeIndex': 1,      # instant
+        'InterruptFlags': 0,
+        'MaxLevel': 0, 'BaseLevel': 1, 'SpellLevel': 1,
+        'ManaCostPct': 0,
+        'EffectBasePoints_1': 0, 'EffectDieSides_1': 1, 'EffectRealPointsPerLevel_1': 0.0,
+        'SpellClassMask_2': 0,      # not Exorcism for talents and glyphs
+        'SpellIconID': 2176,        # Spell_Holy_SurgeOfLight
+        'Name_Lang_enUS': 'Light of Dawn',
+        'Description_Lang_enUS': 'Spends all your Holy Power on a Holy blast at your target for 30% / 65% / 100% '
+                                 'of 400 plus 130% of your spell power at 1 / 2 / 3 Holy Power. Heals you for 30% '
+                                 'of the damage.',
+    },
+    {
+        'ID': 200230,  # Atonement: a buff; while it lasts the server turns a share of your healing into damage
+        '_script': 'spell_unbound_lightbringer_atonement',
+        'CastingTimeIndex': 1,      # instant
+        'DurationIndex': 9,         # 30 s at most (10 s per Holy Power, set by the server)
+        'ProcChance': 101,
+        'RangeIndex': 1,            # self
+        'EquippedItemClass': -1,
+        'Effect_1': SPELL_EFFECT_APPLY_AURA,
+        'EffectAura_1': SPELL_AURA_DUMMY,
+        'ImplicitTargetA_1': TARGET_UNIT_CASTER,
+        'EffectChainAmplitude_1': 1.0,
+        'EffectBonusMultiplier_1': 1.0,
+        'StartRecoveryCategory': 133, 'StartRecoveryTime': 1500,   # the global cooldown
+        'SpellIconID': 2818,        # Spell_Holy_Penance
+        'Name_Lang_enUS': 'Atonement',
+        'Description_Lang_enUS': 'Spends all your Holy Power: for 10 / 20 / 30 sec at 1 / 2 / 3 Holy Power, 30% '
+                                 'of all your healing also hits the enemy you are fighting as Holy damage.',
+        'AuraDescription_Lang_enUS': 'Your healing also hits the enemy you are fighting as Holy damage.',
+        'SchoolMask': 2,
+    },
+    {
+        'ID': 200231,  # Naaru's Blessing: summons creature 190222 (data/sql/db-world/unbound_lightbringers_oath.sql)
+        '_base': 34433,             # Shadowfiend: a 15 s guardian
+        'EffectMiscValue_1': 190222,
+        'Effect_2': 0, 'EffectTriggerSpell_2': 0, 'ImplicitTargetA_2': 0, 'EffectChainAmplitude_2': 0.0,
+        'RangeIndex': 1,            # self: the Naaru comes to you, no target needed
+        'ImplicitTargetA_1': 18,    # TARGET_DEST_CASTER: summoned beside you
+        'RecoveryTime': 120000,     # 2 min
+        'BaseLevel': 60, 'SpellLevel': 60,
+        'ShapeshiftMask': 0,
+        'SpellVisualID_1': 0,
+        'SpellClassSet': 10, 'SpellClassMask_1': 0, 'SpellClassMask_2': 0, 'SpellClassMask_3': 0,  # not Shadowfiend
+        'SchoolMask': 2,
+        'SpellIconID': 1878,        # Spell_Holy_SummonLightwell
+        'Name_Lang_enUS': "Naaru's Blessing",
+        'Description_Lang_enUS': 'A small Naaru joins you for 15 sec. Every 2 sec it smites the enemy you are fighting '
+                                 'and heals you and your group within 10 yards of it for 2% of their maximum health. '
+                                 'Every third spell it casts gives you 1 Holy Power. While it is with you, Atonement '
+                                 'turns 50% of your healing into damage.',
+    },
 ]
 
 # Item.dbc rows (client) / item_dbc rows (server). item_template holds the rest of the item.
