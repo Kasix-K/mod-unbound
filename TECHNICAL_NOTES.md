@@ -120,8 +120,9 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   Shadowfiend) summons guardian 190220 (`unbound_crusaders_oath.sql`, Spirit of Mograine's look); its swing is
   set in `ModifyMeleeDamage` (75% of the Paladin's `UNIT_FIELD_MIN/MAXDAMAGE` average) and its hits counted in
   `DealDamage`. Divine Storm's script serves both perk versions. The spells come from `tools/custom_dbc.py`
-  and are learned as temporary spells (never saved) by `UpdateOathSpells` while the perk is on (also on level
-  and rank changes). Ranks: `RANKED_PERKS` key `CrusadersOath` (3 ranks; `Oaths`/`Ashbringer` are 0/1
+  and are learned by `UpdateOathSpells` while the perk is on (also on level and rank changes) and unlearned when
+  it is off. They are saved like trained spells, not temporary: action buttons load before the perks at login and
+  a button for an unknown spell is deleted; temporary spells also got the learned packet twice (Spellbook doubles). Ranks: `RANKED_PERKS` key `CrusadersOath` (3 ranks; `Oaths`/`Ashbringer` are 0/1
   unlocks). The oath is `characters.character_unbound_perk_choices` (`CHOICE:<perk>:<choice>` both ways); the
   server also sends `VARIANT:1001:<oath|classic>`. `Unbound.Perks.Retribution.Classic = 1` runs the original
   Retribution perk instead (its ranks are dropped, no spells; `HasRetribution` is only true then) and the addon

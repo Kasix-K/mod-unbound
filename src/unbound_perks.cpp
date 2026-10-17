@@ -149,8 +149,8 @@
  *                              Rank 3: Ashbringer's Call (2 min): the Spirit of the Ashbringer (190220) fights for
  *                              15 s, hits for 75% of your weapon hit as Holy, every third hit gives Holy Power;
  *                              Wings of Retribution: for those 15 s Holy Power abilities give 1 more.
- *                              The spells are tools/custom_dbc.py's 200220-200223; they are learned (not saved)
- *                              while the perk is on.
+ *                              The spells are tools/custom_dbc.py's 200220-200223; they are learned (and saved,
+ *                              so action buttons keep them) while the perk is on, unlearned when it is off.
  *  1002 Bulwark's Oath (Paladin Protection). Ranked (Unbound.Perks.BulwarksOath.*, levels 1 / 30 / 60):
  *                              Holy Power (the same buff and bar as Crusader's Oath): Hammer of the Righteous,
  *                              Judgement and Avenger's Shield give 1. The perk teaches Aegis Strike (a shield strike,
@@ -1138,17 +1138,17 @@ namespace
         }
     }
 
-    // The abilities the perk teaches while it is on (temporary: never saved with the character), and no Holy
-    // Power or Inquisition left once it is off.
+    // The abilities the perk teaches while it is on, and no Holy Power or Inquisition left once it is off.
+    // They are saved with the character like trained spells (and unlearned when the perk is off): action buttons
+    // load before the perks at login, and a button for a spell the character doesn't know yet is deleted.
+    // (Temporary spells also got the learned packet twice, from _addSpell and learnSpell: two Spellbook entries.)
     void UpdateOathSpells(Player* player, PerkState& state)
     {
         bool on = !sRetributionClassic && Has(&state, PERK_RETRIBUTION);
         auto keep = [player](uint32 spell, bool wanted)
         {
-            // addSpell, not learnSpell: for a temporary spell both _addSpell and learnSpell send the learned
-            // packet, and the client then lists the spell twice in the Spellbook
             if (wanted && !player->HasSpell(spell))
-                player->addSpell(spell, SPEC_MASK_ALL, true, true);
+                player->learnSpell(spell);
             else if (!wanted && player->HasSpell(spell))
                 player->removeSpell(spell, SPEC_MASK_ALL, false);
         };
