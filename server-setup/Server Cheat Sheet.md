@@ -151,7 +151,8 @@ equipped items' progress. **Tribute:** talk to the **Altar of Tribute** to pick 
 infused at once for 2 / 10 / 50 / 250 gold (green / blue / epic / legendary), double for gear you could infuse
 by wearing it. **Item tooltips** show each piece's infusion (infused, % and kills, tribute only, or why it
 doesn't count), and the **Infusion** side tab on the right edge of the character sheet (C), under Perks, or `/infusion` opens the collection window:
-your infused items, items in progress, the stats they give and how far along the diminishing returns you are.
+your infused items and items in progress (60 a page: the arrows or the mouse wheel turn pages), the stats they give
+and how far along the diminishing returns you are.
 Needs the **UnboundAttunement** addon. GM commands (they act on the selected
 player, else yourself; the old `.attune` still works):
 

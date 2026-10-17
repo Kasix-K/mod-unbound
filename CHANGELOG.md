@@ -132,6 +132,11 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   (display 28640, from Ulduar), to place instead of or beside the Tyrande one.
 
 ### Changed
+- **Infusion window in pages:** the Infused and In progress tabs show 60 items a page (10 x 6) with the Spellbook's
+  page arrows ("Page 1 / 43"; the mouse wheel turns pages too) instead of one long scroll. A collection of 2,559
+  items made the game lag badly, since every item had its own button; now only 60 exist. The glow around
+  infused items is 25% fainter. Copy the
+  UnboundAttunement addon and `/reload`.
 - **Perk window, ranked perks:** the list of every rank under a perk's text is now one gold line ("Rank 2 / 3  -  next
   at level 60"); hovering it lists every rank and what it gives, the current one green.
 - **Infusion progress on item tooltips is a bar** like the experience bar (purple, ten segments, the percentage

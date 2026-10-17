@@ -257,13 +257,17 @@ local C = {
 }
 local WHITE = "Interface\\Buttons\\WHITE8X8"
 local FRAME_W, FRAME_H = 780, 560
-local COLS, ICON, PITCH_X, PITCH_Y = 8, 36, 54, 56
-local GRID_W = COLS * PITCH_X + 6
+-- The item grid shows one page at a time: only PER_PAGE buttons ever exist (thousands of buttons in a scroll
+-- frame made the game lag), filled again on every page turn.
+local COLS, ROWS, ICON, PITCH_X, PITCH_Y = 10, 6, 36, 48, 50
+local PER_PAGE = COLS * ROWS
+local GRID_W = COLS * PITCH_X
 local BAR_W = FRAME_W - 36 - 28    -- the summary bar: window minus the panel and bar insets
 
 local frame
 local ui = { buttons = {} }
 local showing = "attuned"  -- or "progress"
+local pages = { attuned = 1, progress = 1 }  -- the page each tab is on
 
 local function dialogBackdrop(f)
     f:SetBackdrop({
@@ -312,6 +316,7 @@ local function makeItemButton(parent)
     b.glow:SetTexture("Interface\\Buttons\\UI-ActionButton-Border")
     b.glow:SetBlendMode("ADD")
     b.glow:SetSize(ICON * 1.8, ICON * 1.8); b.glow:SetPoint("CENTER")
+    b.glow:SetAlpha(0.75)  -- 25% softer than the action button's full glow
     b:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
     b.badgeBorder = b:CreateTexture(nil, "OVERLAY")
     b.badgeBorder:SetTexture("Interface\\TalentFrame\\TalentFrame-RankBorder")
@@ -333,25 +338,33 @@ local function makeItemButton(parent)
     return b
 end
 
+-- The current tab's items: attuned ids, or progress entries ({ id, done, needed }).
+local function currentList()
+    if not collection then return {} end
+    return showing == "attuned" and collection.attuned or collection.progress
+end
+
+local function pageCount()
+    return math.max(1, math.ceil(#currentList() / PER_PAGE))
+end
+
 local function updateGrid()
-    local list = {}
-    if collection then
-        if showing == "attuned" then
-            for _, id in ipairs(collection.attuned) do table.insert(list, { id = id }) end
-        else
-            for _, p in ipairs(collection.progress) do table.insert(list, p) end
-        end
-    end
-    local gap = (GRID_W - COLS * ICON) / (COLS + 1)
-    for i, entry in ipairs(list) do
+    local list = currentList()
+    local count = pageCount()
+    pages[showing] = math.max(1, math.min(pages[showing], count))
+    local first = (pages[showing] - 1) * PER_PAGE
+    local gap = (PITCH_X - ICON) / 2
+    local shown = math.min(PER_PAGE, #list - first)
+    for i = 1, shown do
+        local entry = list[first + i]
+        if type(entry) == "number" then entry = { id = entry } end
         local b = ui.buttons[i]
         if not b then
-            b = makeItemButton(ui.gridChild)
+            b = makeItemButton(ui.grid)
+            local col, row = (i - 1) % COLS, math.floor((i - 1) / COLS)
+            b:SetPoint("TOPLEFT", gap + col * PITCH_X, -(8 + row * PITCH_Y))
             ui.buttons[i] = b
         end
-        local col, row = (i - 1) % COLS, math.floor((i - 1) / COLS)
-        b:ClearAllPoints()
-        b:SetPoint("TOPLEFT", gap + col * PITCH_X, -(10 + row * PITCH_Y))
         b.itemId = entry.id
         b.icon:SetTexture(GetItemIcon(entry.id) or "Interface\\Icons\\INV_Misc_QuestionMark")
         if entry.needed then
@@ -367,14 +380,10 @@ local function updateGrid()
         end
         b:Show()
     end
-    for i = #list + 1, #ui.buttons do ui.buttons[i]:Hide() end
-    local rows = math.max(1, math.ceil(#list / COLS))
-    local height = 10 + rows * PITCH_Y
-    ui.gridChild:SetHeight(height)
-    ui.scroll:UpdateScrollChildRect()
-    if ui.scrollBar then
-        if height > ui.scroll:GetHeight() + 1 then ui.scrollBar:Show() else ui.scrollBar:Hide() end
-    end
+    for i = math.max(0, shown) + 1, #ui.buttons do ui.buttons[i]:Hide() end
+    ui.pageText:SetText(string.format("Page %d / %d", pages[showing], count))
+    if pages[showing] > 1 then ui.prev:Enable() else ui.prev:Disable() end
+    if pages[showing] < count then ui.next:Enable() else ui.next:Disable() end
     if #list == 0 then
         ui.empty:SetText(showing == "attuned" and "Nothing infused yet. Wear gear and slay foes, or offer it as tribute at an Altar of Tribute."
                                              or "No items in progress. Equip gear that counts and slay foes.")
@@ -502,12 +511,38 @@ local function build()
     ui.tabProgress:SetSize(140, 22); ui.tabProgress:SetPoint("LEFT", ui.tabAttuned, "RIGHT", 6, 0)
     ui.tabProgress:SetScript("OnClick", function() showing = "progress"; PlaySound("igMainMenuOptionCheckBoxOn"); refresh(false) end)
     separator(right, -38)
-    ui.scroll = CreateFrame("ScrollFrame", "UnboundAttunementGrid", right, "UIPanelScrollFrameTemplate")
-    ui.scroll:SetPoint("TOPLEFT", 8, -44); ui.scroll:SetPoint("BOTTOMRIGHT", -30, 8)
-    ui.scrollBar = _G["UnboundAttunementGridScrollBar"]
-    ui.gridChild = CreateFrame("Frame", nil, ui.scroll)
-    ui.gridChild:SetSize(GRID_W, 10)
-    ui.scroll:SetScrollChild(ui.gridChild)
+    -- the grid (one page), the mouse wheel turns pages
+    ui.grid = CreateFrame("Frame", nil, right)
+    ui.grid:SetPoint("TOP", 0, -44)
+    ui.grid:SetSize(GRID_W, 8 + ROWS * PITCH_Y)
+    local function turn(delta)
+        local page = math.max(1, math.min(pages[showing] + delta, pageCount()))
+        if page ~= pages[showing] then
+            pages[showing] = page
+            PlaySound("igAbiliityPageTurn")
+            updateGrid()
+        end
+    end
+    ui.grid:EnableMouseWheel(true)
+    ui.grid:SetScript("OnMouseWheel", function(_, delta) turn(-delta) end)
+
+    -- page bar: the Spellbook's page buttons
+    local function pageButton(kind, delta)
+        local b = CreateFrame("Button", nil, right)
+        b:SetSize(28, 28)
+        b:SetNormalTexture("Interface\\Buttons\\UI-SpellbookIcon-" .. kind .. "Page-Up")
+        b:SetPushedTexture("Interface\\Buttons\\UI-SpellbookIcon-" .. kind .. "Page-Down")
+        b:SetDisabledTexture("Interface\\Buttons\\UI-SpellbookIcon-" .. kind .. "Page-Disabled")
+        b:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
+        b:SetScript("OnClick", function() turn(delta) end)
+        return b
+    end
+    ui.pageText = text(right, "GameFontNormalSmall")
+    ui.pageText:SetPoint("BOTTOM", 0, 15)
+    ui.prev = pageButton("Prev", -1)
+    ui.prev:SetPoint("RIGHT", ui.pageText, "LEFT", -10, 0)
+    ui.next = pageButton("Next", 1)
+    ui.next:SetPoint("LEFT", ui.pageText, "RIGHT", 10, 0)
     ui.empty = text(right, "GameFontDisableSmall")
     ui.empty:SetPoint("TOP", 0, -64); ui.empty:SetWidth(380)
 

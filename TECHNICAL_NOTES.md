@@ -156,7 +156,9 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   item, position and gold again, then takes the gold, destroys the item and infuses it. Prices:
   `TributeGold` by quality (2/10/50/250), times `TributeOwnGearMultiplier` (2; the old `Sacrifice*` names are still
   read) if `Player::CanUseItem`.
-  Client: `addon/UnboundAttunement` (tooltips on GameTooltip/ItemRefTooltip/ShoppingTooltips, the collection window,
+  Client: `addon/UnboundAttunement` (tooltips on GameTooltip/ItemRefTooltip/ShoppingTooltips, the collection window
+  in pages of `PER_PAGE` = 60 items: only 60 item buttons exist, refilled per page, since one button per item
+  lagged the game at 2,500+ items; each tab remembers its page,
   the Infusion side tab on the character sheet's right edge, `/infusion`). The side tabs (Perks from UnboundPerks, Infusion below
   it) use the Spellbook's `SpellBookSkillLineTabTemplate`; opening one window closes the other, and with ElvUI's character skin
   they get ElvUI's side tab look on the first character sheet open. (It was a micro menu button until 2026-10-15; ElvUI's
