@@ -73,13 +73,15 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | Cross-faction play (everything except battlegrounds) | 2026-10-13 | 2026-10-13 | Kasix-K |
 | Loot Goblin companion with auto-loot (55 yards) | 2026-10-13 | 2026-10-13 | Kasix-K |
 | AoE looting | 2026-10-13 | 2026-10-13 | Kasix-K |
-| Transmog window (mod-transmog-plus), Warpweaver NPC kept | 2026-10-13 | 2026-10-13 | Kasix-K |
+| Transmog window (mod-transmog-plus) | 2026-10-13 | 2026-10-17 | Kasix-K |
 | Transmogrify spell | 2026-10-13 | 2026-10-13 | Kasix-K |
 | Transmog (first version, mod-transmog) | 2026-10-12 | 2026-10-13 (replaced) | Kasix-K |
 
 ## 2026-10-17
 
 ### Changed
+- **Old transmog module removed for good:** the Warpweaver (190010, from the first mod-transmog) is gone, along
+  with that module's database leftovers. Transmog is the Transmogrify spell or `/transmog`.
 - **The Warden of Rare Wonders' pages are sorted:** each lists its items from the cheapest up, then by name.
 - **The Warden of Rare Wonders' prices, scaled to the Swift Spectral Tiger at 250 Sigils** (was 480; every item
   x 250/480, rounded to 5, at least 5): mounts 85-250 (were 160-480), pets 30-65 and the Scavenger Imp 85

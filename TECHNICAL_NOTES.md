@@ -5,6 +5,12 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
 
 - **Transmogrify spell (200200):** learned on login; opens the mod-transmog-plus window (5 s cooldown,
   usable while mounted, not in combat). Needs `Transmog.OpenAnywhere = 1` and the `Transmog` addon.
+  The first mod-transmog's leftovers were removed on 2026-10-17 (NPCs 190010/190011, items 57575-57576,
+  spell_dbc 200100, npc_text 601083, its `module_string` rows and `updates` entries, the tables
+  `custom_transmogrification*`, `custom_unlocked_appearances` and auth `acore_cms_subscriptions`; every
+  collected look had already been migrated to mod-transmog-plus). Backup outside git:
+  `E:\WoW Solo Server\Backups\old-mod-transmog-db-2026-10-17.sql`. A database that still has them can run
+  the same deletes; nothing in this repository depends on them.
 - **Loot companions:** Loot Goblin (item 910001, spell 200201, creature 190100) and Arcane Loot Scanner
   (item 910002, spell 200202, creature 190102, the Arcane Protector 16504 shrunk), sold by Grizzle
   Lootsnatch (vendor 190101, `.npc add 190101`). While one is out, corpses within `AOELoot.Range` are

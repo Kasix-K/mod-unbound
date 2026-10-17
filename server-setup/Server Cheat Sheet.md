@@ -30,7 +30,6 @@
 
 | NPC | Command |
 |---|---|
-| Warpweaver (transmogrifier) | `.npc add 190010` |
 | Grizzle Lootsnatch (companion vendor) | `.npc add 190101` |
 | Altar of Tribute (infusion; one per capital city) | `.npc add 190103` |
 | Heroic Quartermaster (Heroic gear for Heroic Sigils; one per capital city) | `.npc add 190104` |
@@ -88,7 +87,8 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
 
 ## In-game features
 
-- **Transmog:** cast Transmogrify, type `/transmog`, or talk to the Warpweaver.
+- **Transmog:** cast Transmogrify or type `/transmog`; no NPC needed. (mod-transmog-plus's Warpweaver,
+  `.npc add 190012`, opens the same window but isn't placed anywhere.)
 - **Loot companions:** while the Loot Goblin or Arcane Loot Scanner is out, corpses within 55 yards are
   auto-looted, and opening a corpse also loots the corpses around it. That's the only way to AoE loot:
   `.aoeloot on/off` is disabled. The **Scavenger Imp** (85 Heroic Sigils from the Warden of Rare Wonders) is the
