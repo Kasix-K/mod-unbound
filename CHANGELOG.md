@@ -77,6 +77,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-16
 
 ### Added
+- **Client assets outside git:** icons and textures Unbound uses are listed in `data/client_assets.txt`; the
+  files stay in a local `unbound-assets` folder beside the server (never committed). `tools/fetch_assets.py`
+  fills it from a local WoW client's archives, and `tools/custom_dbc.py` packs them into `patch-Z.MPQ`.
 - **Molten Core Firelords don't silence a solo player:** their Soul Burn (fire damage over time that also
   silences) fails while the raid has one player (`Unbound.SoloRaid.Firelord`). In groups it comes every 25 seconds
   instead of every 2-4 (it lasts 16, so the silence used to be up the whole fight).

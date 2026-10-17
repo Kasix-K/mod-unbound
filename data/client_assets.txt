@@ -1,0 +1,5 @@
+# Client assets Unbound uses (icons, textures): one client path per line, packed into patch-Z.MPQ by
+# tools/custom_dbc.py from the local assets folder (E:\WoW Solo Server\unbound-assets by default; never in git).
+# Fill that folder with: python tools/fetch_assets.py --from "<a WoW client's Data folder>"
+# Only list art we have the rights to use. Example:
+#   Interface\Icons\inv_misc_scales_reptileteal01.blp

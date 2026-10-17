@@ -8,3 +8,5 @@ __pycache__/
 *.swp
 Thumbs.db
 Desktop.ini
+# client art (icons, textures) never goes in git: see tools/fetch_assets.py
+unbound-assets/

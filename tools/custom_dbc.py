@@ -26,6 +26,7 @@ from classic_heroics import HEROIC_DUNGEONS, HEROIC_LEVEL, HEROIC_MAX_PLAYERS, m
 import heroic_loot  # noqa: E402
 from bulletin_board import QUEST_SORTS  # noqa: E402
 import world_bosses  # noqa: E402
+import fetch_assets  # noqa: E402
 import shadowflame_ward  # noqa: E402
 MODULE = os.path.dirname(HERE)
 ACORE = os.path.dirname(os.path.dirname(MODULE))
@@ -509,6 +510,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dbc', default=os.path.join(ROOT, 'data', 'dbc'), help='server DBC folder')
     ap.add_argument('--client', default=r'E:\WoW 3.3.5a Unbound', help='client folder')
+    ap.add_argument('--assets', default=fetch_assets.DEFAULT_ASSETS,
+                    help='local assets folder (icons, textures; see tools/fetch_assets.py)')
     args = ap.parse_args()
 
     cols = spell_dbc_columns()
@@ -546,8 +549,15 @@ def main():
     if ITEM_EXTENDED_COSTS:
         files['DBFilesClient\\ItemExtendedCost.dbc'] = append_int_rows(os.path.join(args.dbc, 'ItemExtendedCost.dbc'),
                                                                        ITEM_EXTENDED_COSTS)
+    # icons and textures from the local assets folder (data/client_assets.txt; never in git)
+    assets, missing = fetch_assets.load(args.assets)
+    files.update(assets)
+    for name in missing:
+        print('WARNING: asset not in', args.assets, '-', name, '(run tools/fetch_assets.py)')
     mpq_path = os.path.join(args.client, 'Data', 'patch-Z.MPQ')
     write_mpq(mpq_path, files)
+    if assets or missing:
+        print(f'packed {len(assets)} of {len(assets) + len(missing)} listed assets')
     print('wrote', mpq_path, f'({len(SPELLS)} spells, {len(ITEMS)} items, {len(ITEM_SETS)} item sets, '
                              f'{len(SKILL_LINE_ABILITIES)} skill line abilities, '
                              f'{len(MAP_DIFFICULTIES)} map difficulties, {len(QUEST_SORTS)} quest sorts, '

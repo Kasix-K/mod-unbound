@@ -112,6 +112,9 @@ powershell -ExecutionPolicy Bypass -File server-setup\apply-unbound-settings.ps1
 - After pulling someone else's changes:
   - C++ changed (`src/`): rebuild the worldserver.
   - SQL changed (`data/sql/`): restart the worldserver.
+  - `data/client_assets.txt` changed (new icons or textures): run
+    `python tools/fetch_assets.py --from "<a WoW client's Data folder>"`, then custom_dbc.py. The art goes to
+    `E:\WoW Solo Server\unbound-assets` (outside the repo) and is never committed: only its list is.
   - `tools/custom_dbc.py` or `tools/classic_heroics.py` changed: run it again (custom_dbc.py with your
     `--client`), restart the worldserver and the client.
   - `server-setup/apply-unbound-settings.ps1` changed: run it on your configs, restart the worldserver.

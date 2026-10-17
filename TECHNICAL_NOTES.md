@@ -67,6 +67,14 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   start a quest; ungrouped rows only), copied by an INSERT ... SELECT in unbound_heroic_loot.sql when it is
   applied. The Deadmines items were hand-made first and rescaled on 2026-10-14 to the same reference as the
   generated ones.
+- **Client assets (icons, textures):** never in git. `data/client_assets.txt` lists client paths
+  (`Interface\Icons\name.blp`); the files live in a local folder mirroring those paths (default
+  `<server root>\unbound-assets`, outside the repo; `--assets` to change). `tools/fetch_assets.py --from <Data>`
+  fills it from a local WoW client's MPQs (`tools/mpq_read.py`: read-only, zlib/bzip2, encrypted files; the
+  archive that wins in game is used: patch-Z over patch-A over patch over base). `tools/custom_dbc.py` packs the
+  listed files it finds into `patch-Z.MPQ` and warns about missing ones. Icons must be BLP2 (DXT1/3/5, palette
+  or raw), 64x64. Addons use them by path; an item, currency or spell needs a client row naming the icon
+  (ItemDisplayInfo, SpellIcon).
 - **World bosses:** `tools/world_bosses.py` (SmartAI fights, no C++; creatures 190110-190199, spawn guids
   9190110-9190199, loot 911000-911999). Hrimthar is creature 190110, adds 190111. After a change run
   `python tools/world_bosses.py` and `python tools/custom_dbc.py`, then restart the worldserver.

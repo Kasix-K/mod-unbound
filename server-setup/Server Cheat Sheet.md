@@ -37,6 +37,16 @@
 | Warden of Rare Wonders (cosmetics for Heroic Sigils: mounts, pets, tabards, fun items; one per capital city) | `.npc add 190200` |
 | Warden of Rare Wonders with Ysera's night elf look (same vendor) | `.npc add 190205` |
 
+## Client assets (icons, textures)
+
+Never in git: the repo lists them in `data/client_assets.txt`, the files live in `E:\WoW Solo Server\unbound-assets`.
+After the list changes (game closed):
+
+```
+python tools/fetch_assets.py --from "T:\Ascension\resources\ascension-live\Data"
+python tools/custom_dbc.py --client "E:\WoW 3.3.5a Unbound"
+```
+
 ## Custom IDs
 
 | Thing | Creature | Item | Spell |
