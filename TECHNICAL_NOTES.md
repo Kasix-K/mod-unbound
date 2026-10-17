@@ -71,8 +71,12 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   (`Interface\Icons\name.blp`); the files live in a local folder mirroring those paths (default
   `<server root>\unbound-assets`, outside the repo; `--assets` to change). `tools/fetch_assets.py --from <Data>`
   fills it from a local WoW client's MPQs (`tools/mpq_read.py`: read-only, zlib/bzip2, encrypted files; the
-  archive that wins in game is used: patch-Z over patch-A over patch over base). `tools/custom_dbc.py` packs the
-  listed files it finds into `patch-Z.MPQ` and warns about missing ones. Icons must be BLP2 (DXT1/3/5, palette
+  archive that wins in game is used: patch-Z over patch-A over patch-enUS-3 over patch over base;
+  `archive_priority`). `tools/custom_dbc.py` packs the
+  listed files it finds into `patch-Z.MPQ` and warns about missing ones. Its client DBCs (Item, ItemDisplayInfo,
+  ItemSet, ...) are the server's copy plus our rows, unless another patch in the client changed that DBC: then
+  our rows go into the client's winning copy (`client_dbc`; same layout required), so an HD pack's
+  ItemDisplayInfo changes survive. The server SQL always comes from the server's DBCs. Icons must be BLP2 (DXT1/3/5, palette
   or raw), 64x64. Addons use them by path; an item, currency or spell needs a client row naming the icon
   (ItemDisplayInfo, SpellIcon).
 - **World bosses:** `tools/world_bosses.py` (SmartAI fights, no C++; creatures 190110-190199, spawn guids

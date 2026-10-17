@@ -27,6 +27,7 @@ import heroic_loot  # noqa: E402
 from bulletin_board import QUEST_SORTS  # noqa: E402
 import world_bosses  # noqa: E402
 import fetch_assets  # noqa: E402
+from mpq_read import MpqArchive  # noqa: E402
 import shadowflame_ward  # noqa: E402
 MODULE = os.path.dirname(HERE)
 ACORE = os.path.dirname(os.path.dirname(MODULE))
@@ -314,8 +315,8 @@ def quest_sort_row(sort_id, name):
 
 # ---------------------------------------------------------------- DBC helpers
 
-def read_dbc(path):
-    data = open(path, 'rb').read()
+def read_dbc(path, data=None):
+    data = data or open(path, 'rb').read()
     magic, count, nfields, recsize, strsize = struct.unpack_from('<4sIIII', data)
     assert magic == b'WDBC', f'{path} is not a WDBC file'
     records = data[20:20 + count * recsize]
@@ -331,9 +332,35 @@ def pack_int(v):
     return struct.pack('<i' if v < 0 else '<I', v)
 
 
-def append_int_rows(base_path, rows):
+def client_dbc(data_dir, skip, name, server_path):
+    """The client's own copy of DBFilesClient\\<name> when another client patch changed it (e.g. an HD item pack's
+    ItemDisplayInfo.dbc), so patch-Z adds our rows to it instead of hiding that patch's rows; None to use the
+    server's copy. Only archives the game loads (Data and its locale folder), never patch-Z itself (skip)."""
+    archives = [os.path.join(d, f) for d in [data_dir] + [os.path.join(data_dir, s) for s in os.listdir(data_dir)
+                if re.fullmatch(r'[a-z]{2}[A-Z]{2}', s) and os.path.isdir(os.path.join(data_dir, s))]
+                for f in os.listdir(d)
+                if f.lower().endswith('.mpq') and os.path.normcase(os.path.join(d, f)) != os.path.normcase(skip)]
+    server = open(server_path, 'rb').read()
+    for path in sorted(archives, key=fetch_assets.archive_priority, reverse=True):
+        try:
+            data = MpqArchive(path).read('DBFilesClient\\' + name)
+        except (OSError, ValueError):
+            continue
+        if data is None:
+            continue
+        if data == server:
+            return None
+        if data[8:16] != server[8:16]:  # field count and record size
+            print(f'WARNING: {os.path.basename(path)} has a {name} with another layout; using the server copy')
+            return None
+        print(f'{name}: adding our rows to {os.path.basename(path)}\'s copy (it differs from the stock one)')
+        return data
+    return None
+
+
+def append_int_rows(base_path, rows, data=None):
     """Append rows of plain integers to a DBC (no strings), refusing IDs that already exist."""
-    count, nfields, recsize, records, strings = read_dbc(base_path)
+    count, nfields, recsize, records, strings = read_dbc(base_path, data)
     existing = {struct.unpack_from('<I', records, i * recsize)[0] for i in range(count)}
     new = bytearray()
     for row in rows:
@@ -343,9 +370,9 @@ def append_int_rows(base_path, rows):
     return write_dbc(nfields, recsize, records + new, count + len(rows), strings)
 
 
-def append_rows_with_strings(base_path, rows):
+def append_rows_with_strings(base_path, rows, data=None):
     """Append rows whose values are ints or strs (strs go into the string block), refusing existing IDs."""
-    count, nfields, recsize, records, strings = read_dbc(base_path)
+    count, nfields, recsize, records, strings = read_dbc(base_path, data)
     existing = {struct.unpack_from('<I', records, i * recsize)[0] for i in range(count)}
     new = bytearray()
     for row in rows:
@@ -606,38 +633,46 @@ def main():
     write_sql(cols, rows, sql_path)
     print('wrote', sql_path)
 
+    mpq_path = os.path.join(args.client, 'Data', 'patch-Z.MPQ')
+    client_data = os.path.join(args.client, 'Data')
+
+    def append(append_rows, name, new_rows):
+        """Our rows added to the server's copy of DBFilesClient\\<name>, or to the client's when a client patch
+        changed it (see client_dbc)."""
+        path = os.path.join(args.dbc, name)
+        data = client_dbc(client_data, mpq_path, name, path) if os.path.isdir(client_data) else None
+        return append_rows(path, new_rows, data)
+
     files = {'DBFilesClient\\Spell.dbc': build_spell_dbc(spell_dbc, cols, rows)}
     if ITEMS:
-        files['DBFilesClient\\Item.dbc'] = append_int_rows(os.path.join(args.dbc, 'Item.dbc'), ITEMS)
+        files['DBFilesClient\\Item.dbc'] = append(append_int_rows, 'Item.dbc', ITEMS)
     if SKILL_LINE_ABILITIES:
-        files['DBFilesClient\\SkillLineAbility.dbc'] = append_int_rows(
-            os.path.join(args.dbc, 'SkillLineAbility.dbc'), SKILL_LINE_ABILITIES)
+        files['DBFilesClient\\SkillLineAbility.dbc'] = append(append_int_rows, 'SkillLineAbility.dbc',
+                                                              SKILL_LINE_ABILITIES)
     if ITEM_SETS:
-        files['DBFilesClient\\ItemSet.dbc'] = append_rows_with_strings(os.path.join(args.dbc, 'ItemSet.dbc'), ITEM_SETS)
+        files['DBFilesClient\\ItemSet.dbc'] = append(append_rows_with_strings, 'ItemSet.dbc', ITEM_SETS)
     if MAP_DIFFICULTIES:
-        files['DBFilesClient\\MapDifficulty.dbc'] = append_rows_with_strings(
-            os.path.join(args.dbc, 'MapDifficulty.dbc'), [map_difficulty_row(m) for m in MAP_DIFFICULTIES])
+        files['DBFilesClient\\MapDifficulty.dbc'] = append(
+            append_rows_with_strings, 'MapDifficulty.dbc', [map_difficulty_row(m) for m in MAP_DIFFICULTIES])
     if QUEST_SORTS:
-        files['DBFilesClient\\QuestSort.dbc'] = append_rows_with_strings(
-            os.path.join(args.dbc, 'QuestSort.dbc'), [quest_sort_row(s, n) for s, n in QUEST_SORTS])
+        files['DBFilesClient\\QuestSort.dbc'] = append(
+            append_rows_with_strings, 'QuestSort.dbc', [quest_sort_row(s, n) for s, n in QUEST_SORTS])
     if ITEM_DISPLAYS:
-        files['DBFilesClient\\ItemDisplayInfo.dbc'] = append_rows_with_strings(
-            os.path.join(args.dbc, 'ItemDisplayInfo.dbc'), ITEM_DISPLAYS)
+        files['DBFilesClient\\ItemDisplayInfo.dbc'] = append(append_rows_with_strings, 'ItemDisplayInfo.dbc',
+                                                             ITEM_DISPLAYS)
     if CURRENCY_TYPES:
-        files['DBFilesClient\\CurrencyTypes.dbc'] = append_int_rows(os.path.join(args.dbc, 'CurrencyTypes.dbc'),
-                                                                    CURRENCY_TYPES)
+        files['DBFilesClient\\CurrencyTypes.dbc'] = append(append_int_rows, 'CurrencyTypes.dbc', CURRENCY_TYPES)
     if CURRENCY_CATEGORIES:
-        files['DBFilesClient\\CurrencyCategory.dbc'] = append_rows_with_strings(
-            os.path.join(args.dbc, 'CurrencyCategory.dbc'), CURRENCY_CATEGORIES)
+        files['DBFilesClient\\CurrencyCategory.dbc'] = append(append_rows_with_strings, 'CurrencyCategory.dbc',
+                                                              CURRENCY_CATEGORIES)
     if ITEM_EXTENDED_COSTS:
-        files['DBFilesClient\\ItemExtendedCost.dbc'] = append_int_rows(os.path.join(args.dbc, 'ItemExtendedCost.dbc'),
-                                                                       ITEM_EXTENDED_COSTS)
+        files['DBFilesClient\\ItemExtendedCost.dbc'] = append(append_int_rows, 'ItemExtendedCost.dbc',
+                                                              ITEM_EXTENDED_COSTS)
     # icons and textures from the local assets folder (data/client_assets.txt; never in git)
     assets, missing = fetch_assets.load(args.assets)
     files.update(assets)
     for name in missing:
         print('WARNING: asset not in', args.assets, '-', name, '(run tools/fetch_assets.py)')
-    mpq_path = os.path.join(args.client, 'Data', 'patch-Z.MPQ')
     write_mpq(mpq_path, files)
     if assets or missing:
         print(f'packed {len(assets)} of {len(assets) + len(missing)} listed assets')

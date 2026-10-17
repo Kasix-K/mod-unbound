@@ -149,6 +149,12 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ### Fixed
 - **Startup warnings for the Blackened Defias Garb set:** its four pieces now have `item_set_names` rows
   (`tools/heroic_loot.py`), so the server no longer reports them missing.
+- **patch-Z no longer hides other client patches' item displays:** `tools/custom_dbc.py` adds Unbound's rows to the
+  client's own copy of a DBC when another patch changed it (e.g. an HD item pack's `ItemDisplayInfo.dbc`, whose
+  model and geoset changes patch-Z used to undo), instead of always starting from the stock copy. Regenerate
+  `patch-Z.MPQ` with the game closed.
+- **Locale patches in the asset load order:** `tools/fetch_assets.py` ranks `Data\enUS\patch-enUS-3.MPQ` and
+  the like right after their unlocalized patch, as the game does (they used to rank as base archives).
 
 ## 2026-10-15
 

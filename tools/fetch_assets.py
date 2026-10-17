@@ -65,13 +65,17 @@ def load(assets=DEFAULT_ASSETS):
 
 
 def archive_priority(path):
-    """Sort key: the archive whose files win in the game sorts last (base, patch, patch-2/3, patch-A..Z)."""
+    """Sort key: the archive whose files win in the game sorts last (base, patch, patch-2/3, patch-A..Z). Locale
+    patches (Data\\enUS\\patch-enUS-3.MPQ) rank as their unlocalized name, just after it."""
     base = os.path.basename(path).lower()
+    locale = re.match(r'patch-[a-z]{4}(?=[-.])', base)
+    if locale:
+        base = 'patch' + base[len(locale.group(0)):]
     m = re.match(r'patch(?:-(\w+))?\.mpq$', base)
     if not m:
         return (0, base)
     suffix = m.group(1) or ''
-    return (1, len(suffix) > 0 and not suffix.isdigit(), suffix.isdigit() and int(suffix) or 0, suffix)
+    return (1, len(suffix) > 0 and not suffix.isdigit(), suffix.isdigit() and int(suffix) or 0, suffix, bool(locale))
 
 
 def fetch(data_dir, assets=DEFAULT_ASSETS, force=False):
