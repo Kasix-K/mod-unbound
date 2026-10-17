@@ -77,6 +77,13 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | Transmogrify spell | 2026-10-13 | 2026-10-13 | Kasix-K |
 | Transmog (first version, mod-transmog) | 2026-10-12 | 2026-10-13 (replaced) | Kasix-K |
 
+## 2026-10-17
+
+### Fixed
+- **Health and mana from infusion survive a relog:** logging in capped your saved health and mana at the
+  maximum without infusion (it is applied just after), so a character with infused Stamina or Intellect came
+  back short and had to heal up. Now the saved health and mana are given back once infusion is applied.
+
 ## 2026-10-16
 
 ### Added

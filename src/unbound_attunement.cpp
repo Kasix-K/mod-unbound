@@ -729,6 +729,30 @@ public:
     {
         LoadCollection(player);
         Recalculate(player);
+        RestoreSavedHealthAndMana(player);
+    }
+
+    // Loading the character caps its saved health and mana at the maximum it has before the infusion bonus is
+    // added, so a character that logged out with more (thanks to infused Stamina or Intellect) came back short.
+    // Now that the bonus is applied, give back what it had at logout, capped at the new maximum.
+    static void RestoreSavedHealthAndMana(Player* player)
+    {
+        if (!player->IsAlive())
+            return;
+        QueryResult result = CharacterDatabase.Query("SELECT `health`, `power1` FROM `characters` WHERE `guid` = {}",
+                                                     player->GetGUID().GetCounter());
+        if (!result)
+            return;
+        Field* f = result->Fetch();
+        uint32 const health = std::min(f[0].Get<uint32>(), player->GetMaxHealth());
+        if (health > player->GetHealth())
+            player->SetHealth(health);
+        if (player->getPowerType() == POWER_MANA)
+        {
+            uint32 const mana = std::min(f[1].Get<uint32>(), player->GetMaxPower(POWER_MANA));
+            if (mana > player->GetPower(POWER_MANA))
+                player->SetPower(POWER_MANA, mana);
+        }
     }
 
     void OnPlayerSave(Player* player) override
