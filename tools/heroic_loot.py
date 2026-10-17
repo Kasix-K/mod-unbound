@@ -1637,35 +1637,58 @@ TWO_HANDED_OR_RANGED = {15, 17, 25, 26, 28}  # 25 Sigils on the weapons page; on
 # that still drop in reachable content (Deathcharger, the Zul'Gurub mounts, the Black Qiraji crystal). Items checked in
 # the world database on 2026-10-16.
 WARDEN_PAGES = [
-    # vendor entry, menu text, [(item, Sigils), ...]
+    # vendor entry, menu text, [(item, Sigils), ...]: each page from the cheapest item up, then by name (A-Z),
+    # which is the order the vendor window shows them in (check() enforces the price order)
     (190201, 'Mounts', [
-        (23720, 85),    # Riding Turtle (level 1, no riding skill)
-        (49283, 155),    # Reins of the Spectral Tiger
-        (37719, 190),    # Swift Zhevra
-        (54811, 210),   # Celestial Steed (scales with riding)
-        (37012, 210),   # The Horseman's Reins (scales with riding)
-        (46778, 210),   # Magic Rooster Egg (level 60)
-        (49284, 250),   # Reins of the Swift Spectral Tiger
+        (23720, 85),      # Riding Turtle (level 1, no riding skill)
+        (49283, 155),     # Reins of the Spectral Tiger
+        (37719, 190),     # Swift Zhevra
+        (54811, 210),     # Celestial Steed (scales with riding)
+        (46778, 210),     # Magic Rooster Egg (level 60)
+        (37012, 210),     # The Horseman's Reins (scales with riding)
+        (49284, 250),     # Reins of the Swift Spectral Tiger
     ]),
     (190202, 'Pets', [
-        (910003, 85),   # Scavenger Imp (loot companion: loots up to 4 corpses around the one you open)
-        (49362, 30), (44819, 30), (49662, 30), (49663, 30), (25535, 30),   # Onyxian Whelpling, Baby Blizzard Bear,
-                                                                            # Gryphon Hatchling, Wind Rider Cub, Netherwhelp
-        (20371, 40), (30360, 40), (13583, 40), (13584, 40), (13582, 40),   # Murky, Lurky, Panda Cub, Mini Diablo, Zergling
-        (39286, 40), (41133, 40), (35504, 40),                             # Frosty, Mr. Chilly, Phoenix Hatchling
-        (49665, 50), (49646, 50), (54847, 50), (56806, 50), (38050, 50),   # Pandaren Monk, Core Hound Pup, Lil' XT,
-                                                                            # Mini Thor, Ethereal Soul-Trader
-        (49693, 65), (49343, 65),                                          # Lil' K.T., Spectral Tiger Cub
+        (44819, 30),      # Baby Blizzard Bear
+        (49662, 30),      # Gryphon Hatchling
+        (25535, 30),      # Netherwhelp's Collar
+        (49362, 30),      # Onyxian Whelpling
+        (49663, 30),      # Wind Rider Cub
+        (20371, 40),      # Blue Murloc Egg
+        (13584, 40),      # Diablo Stone
+        (39286, 40),      # Frosty's Collar
+        (30360, 40),      # Lurky's Egg
+        (13583, 40),      # Panda Collar
+        (35504, 40),      # Phoenix Hatchling
+        (41133, 40),      # Unhatched Mr. Chilly
+        (13582, 40),      # Zergling Leash
+        (49646, 50),      # Core Hound Pup
+        (54847, 50),      # Lil' XT
+        (56806, 50),      # Mini Thor
+        (49665, 50),      # Pandaren Monk
+        (38050, 50),      # Soul-Trader Beacon
+        (49693, 65),      # Lil' Phylactery
+        (49343, 65),      # Spectral Tiger Cub
+        (910003, 85),     # Scavenger Imp (loot companion: loots up to 4 corpses around the one you open)
     ]),
     (190203, 'Tabards', [
-        (23705, 15), (23709, 15), (38309, 15), (38310, 15),   # Flame, Frost, Nature, the Arcane
-        (38314, 15), (38312, 15), (38311, 15), (38313, 15),   # the Defender, Brilliance, the Void, Fury
+        (38312, 15),      # Tabard of Brilliance
+        (23705, 15),      # Tabard of Flame
+        (23709, 15),      # Tabard of Frost
+        (38313, 15),      # Tabard of Fury
+        (38309, 15),      # Tabard of Nature
+        (38310, 15),      # Tabard of the Arcane
+        (38314, 15),      # Tabard of the Defender
+        (38311, 15),      # Tabard of the Void
     ]),
     (190204, 'Fun items', [
-        (8529, 5), (38577, 5), (36863, 5),   # Noggenfogger Elixir, Party G.R.E.N.A.D.E., Decahedral Dwarven Dice
-        (46780, 5), (34480, 5),            # Ogre Pinata, Romantic Picnic Basket
-        (13379, 10),                         # Piccolo of the Flaming Fire (level 53)
-        (1973, 10),                          # Orb of Deception (level 54)
+        (36863, 5),       # Decahedral Dwarven Dice
+        (8529, 5),        # Noggenfogger Elixir
+        (46780, 5),       # Ogre Pinata
+        (38577, 5),       # Party G.R.E.N.A.D.E.
+        (34480, 5),       # Romantic Picnic Basket
+        (1973, 10),       # Orb of Deception (level 54)
+        (13379, 10),      # Piccolo of the Flaming Fire (level 53)
     ]),
 ]
 # Each page lists its items by type, then alphabetically: by slot (head to feet, then rings, trinkets, weapons),
@@ -2103,6 +2126,8 @@ def check():
         assert len(items) <= 150, f'Quartermaster page {entry} has {len(items)} items (at most 150)'
     for entry, _, items in WARDEN_PAGES:
         assert len(items) <= 150, f'Warden page {entry} has {len(items)} items (at most 150)'
+        prices = [sigils for _, sigils in items]
+        assert prices == sorted(prices), f'Warden page {entry}: list its items from the cheapest up'
         for item, sigils in items:
             assert sigils in SIGIL_EXTENDED_COSTS, f'no ItemExtendedCost row for {sigils} Sigils (item {item})'
 
