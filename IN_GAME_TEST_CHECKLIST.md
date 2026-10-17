@@ -191,8 +191,8 @@ bring one other player or a playerbot for at least one boss.
 
 ## 8. Perk ranks
 
-- [ ] The perk window shows **"x/5"** badges, and the tooltips list every rank (Ranks 4-5 say "endgame, coming
-      later").
+- [ ] The perk window shows **"x/5"** badges and one gold "Rank x / y" line under the text; hovering it lists every
+      rank (Ranks 4-5 say "endgame, coming later").
 - [ ] At level 1, 30 and 60 the perk is at Rank 1, 2 and 3. A level 60 character has the same values as
       before ranks existed.
 - [ ] As a GM, `.perk rank` can set Rank 4 or 5 and the stronger value applies (for example Reinforced Armor
@@ -242,6 +242,27 @@ bring one other player or a playerbot for at least one boss.
       in the Companions tab and summons a small imp).
 - [ ] The Warden's mounts cost 160-480 Sigils and pets 60-160; the menu shows those ranges.
 - [ ] The Heroic Quartermaster's pages are sorted by slot, then armor or weapon type, then name.
+
+## 9f. Crusader's Oath (Paladin class perk)
+
+Needs the new `patch-Z.MPQ` (client closed, then `python tools/custom_dbc.py`) and the addons copied again.
+
+- [ ] A level 60 Paladin's class perk is **Crusader's Oath** (3/3). Turning it on teaches Templar's Verdict,
+      Inquisition and Ashbringer's Call (General tab of the Spellbook); turning it off removes them.
+- [ ] Crusader Strike, Judgement and Hammer of Wrath each add a **Holy Power** stack (buff and the three icons
+      under the player frame, up to 3); they fade 20 seconds after the last one.
+- [ ] Templar's Verdict without Holy Power fails ("You can't do that yet"); with it, it spends all of them. The
+      hit is Holy and grows with 1 / 2 / 3 Holy Power.
+- [ ] Inquisition at 3 Holy Power shows a 30 second buff; Holy damage (Judgement, Exorcism, Consecration) is
+      about 15% higher meanwhile.
+- [ ] The perk window's **Choose Oath of the Crusade** button switches the oath (the text shows it green); not
+      in combat. With the Crusade, Divine Storm gives Holy Power, and at 3 it spends them for a bigger hit.
+- [ ] Ashbringer's Call summons the Spirit of the Ashbringer (ghostly Mograine with the Ashbringer) for 15
+      seconds; it attacks your target, and Holy Power comes faster meanwhile.
+- [ ] `.perk rank 1001 1`: no oaths, no Ashbringer's Call, weaker numbers; `.perk rank 1001` goes back.
+- [ ] Training dummy, perk off vs on (Vengeance, Inquisition kept up): about +28-32% damage.
+- [ ] With `Unbound.Perks.Retribution.Classic = 1` and a restart, the perk is the old **Retribution** again
+      (no spells, the old tooltip); set it back to 0 afterwards.
 
 ## 9e. Expansion lock on a normal account
 

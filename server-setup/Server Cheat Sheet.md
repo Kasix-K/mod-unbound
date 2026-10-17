@@ -132,8 +132,14 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
   `mod_unbound.conf` (`Unbound.SoloRaid.*`).
 - **Perks:** type `/perks` or click the **Perks** side tab on the right edge of the character sheet (C) to open the Character Perks window (needs the **UnboundPerks** addon). Always on
   for everyone: No Resurrection Sickness, No Daze, and Rapid Recovery (ranked by level: up to 8% health
-  and mana per second, 4 seconds after combat). Switch on up to 5 Offensive perks (about +10% each) and your class perk (so far: Paladin
-  Retribution). Perks can't be changed in combat; save favourite sets as loadouts.
+  and mana per second, 4 seconds after combat). Switch on up to 5 Offensive perks (about +10% each) and one class perk (so far: Paladin
+  **Crusader's Oath**, Retribution). Perks can't be changed in combat; save favourite sets as loadouts.
+- **Crusader's Oath** (Paladin): Crusader Strike, Judgement and Hammer of Wrath build **Holy Power** (up to 3,
+  icons under the player frame); the perk teaches **Templar's Verdict** (a Holy strike) and **Inquisition** (more
+  Holy damage), which spend it all. From level 30 choose an oath in the perk window: **Vengeance** (bigger
+  Verdicts, on crits and below 35% health) or **the Crusade** (Divine Storm builds and spends Holy Power). At 60:
+  **Ashbringer's Call** (2 min, a spirit fights for 15 seconds). To switch back to the original Retribution perk:
+  `Unbound.Perks.Retribution.Classic = 1` in `mod_unbound.conf`, then restart.
 
 ## Gear infusion (GM commands for testing)
 
@@ -172,7 +178,8 @@ items count once those expansions are released). Settings: `Unbound.Attunement.*
 The 4 pet-only perks (Pet Encouragement, Pet's Blessing, Pets replenishment, Pets Roar) only show for
 Hunters, Warlocks, Death Knights and Mages.
 
-58 of the 61 perks have ranks (all but No Daze, No Resurrection Sickness and Retribution). A character's
+All 61 perks but No Daze and No Resurrection Sickness have ranks (Crusader's Oath has 3, at levels 1 / 30 / 60,
+each unlocking more; the original Retribution perk has none). A character's
 rank comes from its level; values in `mod_unbound.conf` (`Unbound.Perks.<Name>.*`). Test any rank with
 `.perk rank <perk id> <rank>`; `.perk rank <perk id>` goes back to the level's rank.
 

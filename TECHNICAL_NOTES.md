@@ -101,11 +101,32 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   that file rebuilds Onyxia's loot. After a change run the tool and `python tools/custom_dbc.py --client ...`.
 - **Perks:** window in `addon/UnboundPerks` (`PerkData.lua` = perk list and descriptions); server side in
   `src/unbound_perks.cpp`. The addon whispers its own character (prefix `UBPERK`: `SYNC`, `SET:<id>:<0|1>`,
-  `LOAD:<ids>`; the server answers `STATE:<ids>` or `ERR:<text>`); active perks are saved in
+  `LOAD:<ids>`, `CHOICE:<id>:<n>`; the server answers `STATE:<ids>`, `RANK:`, `CHOICE:`, `VARIANT:` or
+  `ERR:<text>`); active perks are saved in
   `characters.character_unbound_perks`. No changes in combat, at most 5 Offensive perks, class perks only
   for their class (`CLASS_PERKS`). No Resurrection Sickness and No Daze are `Death.SicknessLevel = 255` and
   `Daze.Enabled = 0` (set by `apply-unbound-settings.ps1`); Rapid Recovery is `Unbound.Perks.RapidRecovery*`
-  in `mod_unbound.conf`. Retribution's spell scripts: `data/sql/db-world/unbound_perks_spells.sql`. Perk
+  in `mod_unbound.conf`. Retribution's spell scripts: `data/sql/db-world/unbound_perks_spells.sql`.
+  **Crusader's Oath** (perk 1001, the Paladin class perk; at most 1 class perk active, `CATEGORY_LIMITS`): Holy
+  Power is the stacks of a visible buff (spell 200220, 3 stacks, 20 s), gained in `OnPlayerSpellCast` (Crusader
+  Strike, the three Judgements, any Hammer of Wrath rank; not triggered casts) and spent by Templar's Verdict
+  (200221, a copy of Crusader Strike: Holy, 200% weapon damage scaled in `OnHit` by Holy Power, rank and oath;
+  a crit is read from the spell's `TargetInfo`, rolled before the damage) and Inquisition (200222, Avenging
+  Wrath's damage aura on Holy; amount and duration set after the hit). Ashbringer's Call (200223, a copy of
+  Shadowfiend) summons guardian 190220 (`unbound_crusaders_oath.sql`, Spirit of Mograine's look); its swing is
+  set in `ModifyMeleeDamage` (75% of the Paladin's `UNIT_FIELD_MIN/MAXDAMAGE` average) and its hits counted in
+  `DealDamage`. Divine Storm's script serves both perk versions. The spells come from `tools/custom_dbc.py`
+  and are learned as temporary spells (never saved) by `UpdateOathSpells` while the perk is on (also on level
+  and rank changes). Ranks: `RANKED_PERKS` key `CrusadersOath` (3 ranks; `Oaths`/`Ashbringer` are 0/1
+  unlocks). The oath is `characters.character_unbound_perk_choices` (`CHOICE:<perk>:<choice>` both ways); the
+  server also sends `VARIANT:1001:<oath|classic>`. `Unbound.Perks.Retribution.Classic = 1` runs the original
+  Retribution perk instead (its ranks are dropped, no spells; `HasRetribution` is only true then) and the addon
+  shows that perk's `classic` text. Its long text is split for the window: `crusadersOath()` in `PerkData.lua`
+  sets `perk.intro`, `perk.spells` (icon, name, kind, text, status, on) and `perk.rest`; `UnboundPerks.lua`
+  shows the intro, then the icons (`updateSpellRow`, hover tooltips), then the rest. Any perk can use
+  `spells` the same way. Ranked perks set `perk.rankText` and `perk.rankLines` (`setRankInfo` in `PerkData.lua`):
+  one gold line in the window, every rank in its hover tooltip; `perk.note` keeps only the extra grey note. Holy Power can't make Hammer of Wrath usable above 20% health: the client
+  checks that aura state itself. Perk
   numbers stay in normal WoW ranges (about +10% per perk); they are constants at the top of
   `unbound_perks.cpp` and must match `PerkData.lua`. The perk code assumes `MapUpdate.Threads = 1`.
 - **Gear infusion** (all 4 stages: the collection, its stats, infusing by kills, the tribute altar, tooltips and the

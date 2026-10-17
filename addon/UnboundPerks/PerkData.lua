@@ -17,6 +17,9 @@
 --   excludes   id (or list of ids) of perks that can't be active together with this one (turning this on
 --              turns them off)
 --   applyRank  ranked perks: rewrites desc/note from the rank numbers the server sends
+--   choices    a choice inside the perk ({ id, name } each; the server keeps it, CHOICE: messages), e.g. an oath
+--   classic    the perk's original version ({ name, icon, desc }), shown when the server runs that one instead
+--              (VARIANT:<id>:classic)
 
 UnboundPerks = UnboundPerks or {}
 
@@ -25,7 +28,7 @@ UnboundPerks.CATEGORIES = {
     { key = "OFFENSIVE", name = "Offensive", color = { 0.92, 0.38, 0.32 }, limit = 5 },  -- same limit as the server
     { key = "DEFENSIVE", name = "Defensive", color = { 0.38, 0.62, 0.98 }, limit = 3 },  -- same limit as the server
     { key = "UTILITY",   name = "Utility",   color = { 0.72, 0.52, 0.98 }, limit = 3 },  -- same limit as the server
-    { key = "CLASS",     name = nil,         color = nil },  -- name and colour come from the player's class
+    { key = "CLASS",     name = nil,         color = nil, limit = 1 },  -- name and colour come from the player's class
 }
 
 local function G(s) return "|cff33ff33" .. s .. "|r" end  -- good (green)
@@ -83,6 +86,23 @@ local ALWAYS = "Always active - cannot be turned off."
 
 local function pct(n) return string.format("%g%%", n) end
 
+-- A ranked perk's rank info: perk.rankText (one dim line in the perk window, "Rank 2 / 3 - next at level 60") and
+-- perk.rankLines (every rank, the current one green; shown when hovering that line). lineFor(i, v) is rank i's
+-- line; extra stays as the perk's grey note.
+local function setRankInfo(perk, rank, maxRank, values, lineFor, extra)
+    local lines = {}
+    for i, v in ipairs(values) do
+        local line = lineFor(i, v)
+        table.insert(lines, i == rank and G(line) or line)
+    end
+    perk.rankLines = lines
+    local nextRank = values[rank + 1]
+    local nextLevel = nextRank and nextRank[#nextRank]
+    perk.rankText = "Rank " .. rank .. " / " .. maxRank ..
+        ((nextLevel and nextLevel < 255) and ("  -  next at level " .. nextLevel) or "")
+    perk.note = extra
+end
+
 -- Ranked perks: the server sends each rank's numbers (the stats of RANKED_PERKS in src/unbound_perks.cpp, in
 -- that order, then the level). describe(v) gives the EFFECT text for one rank, summary(v) a short rank line.
 local function ranked(describe, summary, extra)
@@ -90,15 +110,11 @@ local function ranked(describe, summary, extra)
         local cur = values[rank] or values[#values]
         if not cur then return end
         perk.desc = describe(cur)
-        local lines = { "Rank " .. rank .. " / " .. maxRank }
-        for i, v in ipairs(values) do
+        setRankInfo(perk, rank, maxRank, values, function(i, v)
             -- level 255 can't be reached: an endgame rank that can't be earned yet
             local when = v[#v] >= 255 and "endgame, coming later" or ("level " .. v[#v])
-            local line = string.format("Rank %d: %s  (%s)", i, summary(v), when)
-            table.insert(lines, i == rank and G(line) or line)
-        end
-        if extra then table.insert(lines, extra) end
-        perk.note = table.concat(lines, "\n")
+            return string.format("Rank %d: %s  (%s)", i, summary(v), when)
+        end, extra)
     end
 end
 
@@ -284,6 +300,66 @@ end
 local MANA_ONLY = "Requires a mana bar. It does nothing while you use Rage, Energy, Runic Power or Focus, " ..
                   "including a druid in Cat, Bear or Dire Bear Form."
 
+-- Crusader's Oath at a rank: sets perk.intro (the first line), perk.spells (the icon row under it, each with a
+-- hover tooltip: UnboundPerks.lua) and perk.rest (the text under the icons); perk.desc is all of it in text, for
+-- the grid's tooltip. values[r] = { Physical, Verdict, Inquisition, Oaths, Ashbringer, level } (the server's
+-- numbers per rank); perk.choice = the chosen oath (1 Vengeance, 2 Crusade).
+local function round(n) return math.floor(n + 0.5) end
+local function crusadersOath(perk, values, rank)
+    local v = values[rank] or values[#values]
+    local function unlockLevel(stat)
+        for _, r in ipairs(values) do
+            if (r[stat] or 0) > 0 then return r[#r] end
+        end
+    end
+    local verdict, inq = v[2], v[3]
+    local oaths, ashbringer = (v[4] or 0) > 0, (v[5] or 0) > 0
+    local chosen = perk.choice == 2 and 2 or 1
+    local LEARNED = "Ability: learned while this perk is on"
+    local oathStatus = function(id)
+        if not oaths then return "Unlocks at level " .. (unlockLevel(4) or 30), false end
+        if chosen == id then return "Your oath", true end
+        return "Choose it with the button below", nil
+    end
+    local vStatus, vOn = oathStatus(1)
+    local cStatus, cOn = oathStatus(2)
+    perk.intro = "|cffff9933Retribution|r paladin mastery. While active:"
+    perk.spells = {
+        { icon = "Interface\\Icons\\Spell_Holy_Power", name = "Holy Power", kind = "Resource",
+          text = "Crusader Strike, Judgement and Hammer of Wrath give 1 Holy Power, up to 3. It fades 20 sec " ..
+                 "after the last one. Shown as three icons under your player frame.",
+          status = "Spent by Templar's Verdict and Inquisition", on = true },
+        { icon = "Interface\\Icons\\Ability_Paladin_RighteousVengeance", name = "Templar's Verdict", kind = LEARNED,
+          text = "Instant, melee range. Spends all your Holy Power on a Holy strike for " ..
+                 round(verdict * 0.3) .. "% / " .. round(verdict * 0.65) .. "% / " .. verdict ..
+                 "% weapon damage at 1 / 2 / 3 Holy Power.", on = true },
+        { icon = "Interface\\Icons\\Ability_Paladin_SanctifiedWrath", name = "Inquisition", kind = LEARNED,
+          text = "Instant. Spends all your Holy Power: your Holy damage is increased by " ..
+                 round(inq / 3) .. "% / " .. round(inq * 2 / 3) .. "% / " .. inq ..
+                 "% for 10 / 20 / 30 sec at 1 / 2 / 3 Holy Power.", on = true },
+        { icon = "Interface\\Icons\\INV_Sword_48", name = "Ashbringer's Call", kind = LEARNED,
+          text = "2 min cooldown. The Spirit of the Ashbringer fights your target for 15 sec; every third hit " ..
+                 "it lands gives you 1 Holy Power.\n\nWings of Retribution: while it fights, your Holy Power " ..
+                 "abilities give 1 extra Holy Power.",
+          status = not ashbringer and ("Unlocks at level " .. (unlockLevel(5) or 60)) or nil, on = ashbringer },
+        { icon = "Interface\\Icons\\Spell_Holy_SealOfVengeance", name = "Oath of Vengeance", kind = "Oath",
+          text = "Templar's Verdict critical strikes deal 30% more damage, and Templar's Verdict deals 30% " ..
+                 "more damage to enemies below 35% health.", status = vStatus, on = vOn },
+        { icon = "Interface\\Icons\\Ability_Paladin_DivineStorm", name = "Oath of the Crusade", kind = "Oath",
+          text = "Divine Storm gives 1 Holy Power and hits up to 6 enemies. At 3 Holy Power it spends them and " ..
+                 "deals 60% more damage. Each enemy it hits makes your next Templar's Verdict deal 5% more " ..
+                 "(up to 30%).", status = cStatus, on = cOn },
+    }
+    local rest = H("Physical damage") .. "\n -  All Physical damage you deal is increased by " .. G(pct(v[1])) ..
+        "\n\n" .. H("Your oath") .. "\n -  " ..
+        (oaths and G(chosen == 1 and "Oath of Vengeance" or "Oath of the Crusade")
+            or ("|cff808080Choose one from level " .. (unlockLevel(4) or 30) .. "|r"))
+    perk.rest = "Hover over an icon for what it does.\n\n" .. rest
+    local names = {}
+    for _, sp in ipairs(perk.spells) do table.insert(names, S(sp.name)) end
+    perk.desc = perk.intro .. "\n" .. table.concat(names, ", ") .. "\n\n" .. rest
+end
+
 UnboundPerks.PERKS = {
     -- Permanent -------------------------------------------------------------------------------------
     { id = 1, name = "No Resurrection Sickness", category = "PERMANENT", permanent = true,
@@ -306,13 +382,9 @@ UnboundPerks.PERKS = {
           if not cur then return end
           perk.desc = "After leaving combat for " .. G(string.format("%g seconds", cur[1] / 1000)) .. ", you rapidly regenerate " ..
                       G(cur[2] .. "% of your maximum health and mana every second") .. " until full."
-          local lines = { "Rank " .. rank .. " / " .. maxRank }
-          for i, v in ipairs(values) do
-              local line = string.format("Rank %d: %g sec, %d%%  (level %d)", i, v[1] / 1000, v[2], v[3])
-              table.insert(lines, i == rank and G(line) or line)
-          end
-          table.insert(lines, ALWAYS)
-          perk.note = table.concat(lines, "\n")
+          setRankInfo(perk, rank, maxRank, values, function(i, v)
+              return string.format("Rank %d: %g sec, %d%%  (level %d)", i, v[1] / 1000, v[2], v[3])
+          end, ALWAYS)
       end },
 
     -- Offensive (5 ranks each: Ranks 1-3 by level, Ranks 4-5 for the endgame) -------------------------
@@ -499,14 +571,10 @@ UnboundPerks.PERKS = {
           if not cur then return end
           perk.desc = "Crowd-control effects on you (and your pets) have their duration reduced by " ..
                       G(cur[1] .. "%") .. "."
-          local lines = { "Rank " .. rank .. " / " .. maxRank }
-          for i, v in ipairs(values) do
+          setRankInfo(perk, rank, maxRank, values, function(i, v)
               local when = v[2] >= 255 and "endgame, coming later" or ("level " .. v[2])
-              local line = string.format("Rank %d: -%g%% duration  (%s)", i, v[1], when)
-              table.insert(lines, i == rank and G(line) or line)
-          end
-          table.insert(lines, "Stuns, fears, roots, silences, sleeps, polymorphs, charms, disorients and saps.")
-          perk.note = table.concat(lines, "\n")
+              return string.format("Rank %d: -%g%% duration  (%s)", i, v[1], when)
+          end, "Stuns, fears, roots, silences, sleeps, polymorphs, charms, disorients and saps.")
       end },
     { id = 304, name = "Longer Legs", category = "UTILITY", works = true,
       icon = "Interface\\Icons\\Spell_Nature_Swiftness",
@@ -581,9 +649,22 @@ UnboundPerks.PERKS = {
       applyRank = ranked(focusedMind, function(v) return string.format("+%g%% energy regeneration", v[1]) end, ENERGY_ONLY) },
 
     -- Class: Paladin ----------------------------------------------------------------------------------
-    { id = 1001, name = "Retribution", category = "CLASS", class = "PALADIN", works = true,
-      icon = "Interface\\Icons\\Spell_Holy_AuraOfLight",
-      desc = "|cffff9933Retribution|r paladin mastery. While active:\n\n" ..
+    -- Crusader's Oath (Retribution). The server sends its three ranks (Physical, Verdict, Inquisition, Oaths,
+    -- Ashbringer, level each: RANKED_PERKS in src/unbound_perks.cpp) and the chosen oath.
+    { id = 1001, name = "Crusader's Oath", category = "CLASS", class = "PALADIN", works = true,
+      icon = "Interface\\Icons\\Ability_Paladin_RighteousVengeance",
+      choices = { { id = 1, name = "Oath of Vengeance" }, { id = 2, name = "Oath of the Crusade" } },
+      applyRank = function(perk, rank, maxRank, values)
+          perk.rankValues, perk.rank = values, rank
+          crusadersOath(perk, values, rank)
+          local unlocks = { "Holy Power, Templar's Verdict, Inquisition", "the oaths", "Ashbringer's Call" }
+          setRankInfo(perk, rank, maxRank, values, function(i, v)
+              return string.format("Rank %d: %s; Physical +%g%%  (level %d)", i, unlocks[i] or "stronger", v[1], v[#v])
+          end)
+      end,
+      -- the original version (Unbound.Perks.Retribution.Classic = 1 on the server)
+      classic = { name = "Retribution", icon = "Interface\\Icons\\Spell_Holy_AuraOfLight", desc =
+             "|cffff9933Retribution|r paladin mastery. While active:\n\n" ..
              H("Improved Divine Storm") .. "\n" ..
              " -  " .. S("Divine Storm") .. " hits up to 6 enemies (normally 4)\n" ..
              " -  Every enemy it hits also takes a " .. S("Crusader Strike") .. "\n\n" ..
@@ -599,5 +680,10 @@ UnboundPerks.PERKS = {
              " -  All Holy damage you deal is increased by 15%\n" ..
              " -  All Physical damage you deal is increased by 10%\n" ..
              " -  Covers your weapon swings, " .. S("Divine Storm") .. " and " .. S("Crusader Strike") ..
-             " as well as " .. S("Judgement") .. " and " .. S("Exorcism") },
+             " as well as " .. S("Judgement") .. " and " .. S("Exorcism") } },
 }
+
+-- Crusader's Oath's text and icons at level 60 until the server sends the character's rank
+for _, perk in ipairs(UnboundPerks.PERKS) do
+    if perk.id == 1001 then crusadersOath(perk, { { 10, 200, 15, 1, 1, 60 } }, 1) end
+end

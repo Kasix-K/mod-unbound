@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Crusader's Oath: the Paladin Retribution class perk reworked (Holy Power, Templar's Verdict, Inquisition, two oaths, Ashbringer's Call; 3 ranks) | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Bounty Wayfinder: teleports to the Bulletin Board's open-world quests, outside aggro range | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Scavenger Imp loot companion (loots up to 4 corpses within 27 yards when you open one; Heroic Sigils) | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Shadowflame Ward: a 12-quest chain across the five dragonflights for a cloak that replaces the Onyxia Scale Cloak | 2026-10-16 | 2026-10-16 | Kasix-K |
@@ -48,7 +49,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 | Perks tab on the character sheet (ElvUI skinned) | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Perk window: talent-tree style | 2026-10-14 | 2026-10-14 | Kasix-K |
 | Chat window load-error guard (Unbound addon) | 2026-10-14 | 2026-10-14 | Kasix-K |
-| Paladin Retribution class perk | 2026-10-14 | 2026-10-14 | SaucyHobo54, Kasix-K |
+| Paladin Retribution class perk (kept as `Unbound.Perks.Retribution.Classic`) | 2026-10-14 | 2026-10-16 (replaced) | SaucyHobo54, Kasix-K |
 | Offensive perks (25, at most 5 active) | 2026-10-14 | 2026-10-14 | SaucyHobo54, Kasix-K |
 | Permanent perks: No Resurrection Sickness, No Daze, Rapid Recovery | 2026-10-14 | 2026-10-14 | SaucyHobo54, Kasix-K |
 | Unbound Perks window (`/perks`) and loadouts | 2026-10-14 | 2026-10-14 | SaucyHobo54 |
@@ -77,6 +78,24 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-16
 
 ### Added
+- **Crusader's Oath** replaces the Paladin's Retribution class perk (same perk slot, id 1001, so it stays on for
+  anyone who had Retribution on). Crusader Strike, Judgement and Hammer of Wrath build **Holy Power** (up to 3,
+  a buff and a bar under the player frame; it fades 20 seconds after the last gain). The perk teaches two
+  abilities that spend all of it: **Templar's Verdict** (a Holy strike for 60% / 130% / 200% weapon damage at
+  1 / 2 / 3 Holy Power) and **Inquisition** (Holy damage +5% / 10% / 15% for 10 / 20 / 30 seconds). Physical
+  damage +10%. It has **3 ranks by level** (1, 30, 60): Rank 1 is weaker (Verdict up to 120%, Inquisition up
+  to 6%, Physical +4%); **Rank 2** (level 30) unlocks the **oaths**, chosen with a button in the perk window:
+  **Vengeance** (Verdict crits deal 30% more, and 30% more on enemies below 35% health) or **the Crusade**
+  (Divine Storm gives Holy Power and hits 6 enemies; at 3 Holy Power it spends them for 60% more damage, and
+  each enemy it hits adds 5% to the next Verdict, up to 30%). **Rank 3** (level 60) teaches **Ashbringer's
+  Call** (2 minutes): the Spirit of the Ashbringer fights your target for 15 seconds, and while it does
+  (**Wings of Retribution**) Holy Power abilities give 1 more; every third hit it lands gives 1 Holy Power.
+  Tuned to the class perk budget, about +28-32% single-target damage at level 60 (to confirm on a training
+  dummy). Only one class perk can be active at a time. **The original Retribution perk is kept**: set
+  `Unbound.Perks.Retribution.Classic = 1` and restart to switch back (the addon then shows the old perk).
+  Needs the new `patch-Z.MPQ`. In the perk window its text is short: under the first line a row of icons
+  (Holy Power, Templar's Verdict, Inquisition, Ashbringer's Call and the two oaths) explains each one on
+  hover, with the numbers of your rank; the chosen oath is lit, the other dimmed, locked ones grey.
 - **Client assets outside git:** icons and textures Unbound uses are listed in `data/client_assets.txt`; the
   files stay in a local `unbound-assets` folder beside the server (never committed). `tools/fetch_assets.py`
   fills it from a local WoW client's archives, and `tools/custom_dbc.py` packs them into `patch-Z.MPQ`.
@@ -113,6 +132,8 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   (display 28640, from Ulduar), to place instead of or beside the Tyrande one.
 
 ### Changed
+- **Perk window, ranked perks:** the list of every rank under a perk's text is now one gold line ("Rank 2 / 3  -  next
+  at level 60"); hovering it lists every rank and what it gives, the current one green.
 - **Infusion progress on item tooltips is a bar** like the experience bar (purple, ten segments, the percentage
   on it) instead of the "Infusion: % (x/x kills)" line. Copy the UnboundAttunement addon and `/reload`.
 - **The Warden of Rare Wonders' mounts and pets cost four times as many Heroic Sigils:** mounts 160-480 (were

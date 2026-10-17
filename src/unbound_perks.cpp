@@ -133,8 +133,26 @@
  *   and Steady Hands are server-only passive auras (SPELL_PERK_*); the leech perks and fall damage use the
  *   DealDamage hook (leech from damage actually dealt to another unit, capped at the victim's health).
  *
- * Class perks (ids 1001+):
- *  1001 Retribution (Paladin)  Improved Divine Storm: Divine Storm hits up to 6 enemies (normally 4), and every
+ * Class perks (ids 1001+, at most 1 active):
+ *  1001 Crusader's Oath (Paladin Retribution). Ranked (Unbound.Perks.CrusadersOath.*, levels 1 / 30 / 60):
+ *                              Holy Power: Crusader Strike, Judgement and Hammer of Wrath give 1 (up to 3; a visible
+ *                              stacking buff, SPELL_HOLY_POWER, 20 s after the last gain). The perk teaches
+ *                              Templar's Verdict (spends it all: 30% / 65% / 100% of a 120/160/200% weapon damage
+ *                              Holy strike at 1/2/3) and Inquisition (spends it all: Holy damage +1/3 of 6/10/15%
+ *                              per Holy Power for 10 s per Holy Power). Physical damage +4/7/10%.
+ *                              Rank 2: an oath (character_unbound_perk_choices, CHOICE: messages):
+ *                                Vengeance: Templar's Verdict crits deal 30% more, and 30% more on enemies below
+ *                                35% health.
+ *                                Crusade: Divine Storm gives 1 Holy Power and hits 6 enemies; at 3 Holy Power it
+ *                                spends them and deals 60% more. Each enemy it hits adds 5% to the next Templar's
+ *                                Verdict (up to 30%).
+ *                              Rank 3: Ashbringer's Call (2 min): the Spirit of the Ashbringer (190220) fights for
+ *                              15 s, hits for 75% of your weapon hit as Holy, every third hit gives Holy Power;
+ *                              Wings of Retribution: for those 15 s Holy Power abilities give 1 more.
+ *                              The spells are tools/custom_dbc.py's 200220-200223; they are learned (not saved)
+ *                              while the perk is on.
+ *       The original Retribution perk, kept behind Unbound.Perks.Retribution.Classic = 1 (no ranks, no spells):
+ *       Retribution (Paladin)  Improved Divine Storm: Divine Storm hits up to 6 enemies (normally 4), and every
  *                              enemy it hits also takes a Crusader Strike.
  *                              All Will Be Judged!: a Judgement spreads to up to 4 more enemies within 10 yards
  *                              of the target, and every enemy a Judgement hits takes a free Exorcism (no cooldown).
@@ -410,6 +428,11 @@ namespace
         { PERK_ENDURING,             "Enduring",            { { "Percent", "4, 7, 10, 13, 15" } } },
         { PERK_THORNMAIL,            "Thornmail",           { { "Percent", "10, 20, 30, 40, 45" } } },
         { PERK_HEAVY_FRAME,          "HeavyFrame",          { { "Percent", "5, 10, 15, 19, 22" } } },
+        // Crusader's Oath: 3 ranks by level, each unlocking more (Oaths and Ashbringer are 0 = locked, 1 = on).
+        // Not used by the original Retribution perk (Unbound.Perks.Retribution.Classic).
+        { PERK_RETRIBUTION,          "CrusadersOath",       { { "Physical", "4, 7, 10" }, { "Verdict", "120, 160, 200" },
+                                                              { "Inquisition", "6, 10, 15" }, { "Oaths", "0, 1, 1" },
+                                                              { "Ashbringer", "0, 0, 1" } }, "1, 30, 60" },
     };
 
     // Server-only passive spells (data/sql/db-world/unbound_perks_utility_spells.sql). Passive auras are never
@@ -441,7 +464,8 @@ namespace
     constexpr uint32 PET_CLASS_MASK = (1 << (CLASS_HUNTER - 1)) | (1 << (CLASS_WARLOCK - 1)) |
                                       (1 << (CLASS_DEATH_KNIGHT - 1)) | (1 << (CLASS_MAGE - 1));
 
-    // Retribution
+    // Retribution (the original class perk, Unbound.Perks.Retribution.Classic = 1)
+    bool sRetributionClassic = false;
     constexpr uint32 SPELL_CRUSADER_STRIKE = 35395;
     constexpr uint32 SPELL_EXORCISM_RANK_1 = 879;
     constexpr uint32 SPELL_RIGHTEOUS_VENGEANCE_DOT = 61840;
@@ -453,6 +477,41 @@ namespace
     constexpr float EXORCIST_EXTRA_SCALING = 0.15f;   // 30% wanted, Exorcism already has 15% (spell_bonus_data)
     constexpr float SWORD_LIGHT_HOLY = 1.15f;         // +15%
     constexpr float SWORD_LIGHT_PHYSICAL = 1.10f;     // +10%
+
+    // Crusader's Oath (the class perk's current version). Spells: tools/custom_dbc.py; the Spirit of the
+    // Ashbringer: data/sql/db-world/unbound_crusaders_oath.sql. The ranked numbers are in RANKED_PERKS.
+    constexpr uint32 SPELL_HOLY_POWER = 200220;
+    constexpr uint32 SPELL_TEMPLARS_VERDICT = 200221;
+    constexpr uint32 SPELL_INQUISITION = 200222;
+    constexpr uint32 SPELL_ASHBRINGERS_CALL = 200223;
+    constexpr uint32 NPC_SPIRIT_OF_THE_ASHBRINGER = 190220;
+    constexpr uint32 SPELL_HAMMER_OF_WRATH_RANK_1 = 24275;
+    constexpr uint32 SPELL_JUDGEMENTS[] = { 20271, 53407, 53408 };  // of Light, Justice, Wisdom
+    constexpr uint32 MAX_HOLY_POWER = 3;
+    constexpr float VERDICT_SHARE[MAX_HOLY_POWER] = { 0.30f, 0.65f, 1.0f };  // of the full hit, at 1 / 2 / 3
+    constexpr float VERDICT_SPELL_PERCENT = 200.0f;      // the weapon damage in Spell.dbc (the rank's full hit)
+    constexpr uint32 INQUISITION_MS_PER_POWER = 10000;
+    constexpr float VENGEANCE_CRIT_BONUS = 1.30f;        // Oath of Vengeance: Verdict crits deal 30% more
+    constexpr float VENGEANCE_EXECUTE_BONUS = 1.30f;     // ... and 30% more on enemies below this health
+    constexpr int32 VENGEANCE_EXECUTE_BELOW = 35;
+    constexpr int32 CRUSADE_STORM_TARGETS = 6;           // Oath of the Crusade: Divine Storm targets
+    constexpr float CRUSADE_STORM_BONUS = 1.60f;         // ... at 3 Holy Power
+    constexpr int32 CRUSADE_VERDICT_STEP = 5;            // ... next Verdict +5% per enemy hit
+    constexpr int32 CRUSADE_VERDICT_MAX = 30;
+    constexpr float ASHBRINGER_HIT_SHARE = 0.75f;        // the Spirit's hit: 75% of the Paladin's weapon hit
+    constexpr uint32 ASHBRINGER_HITS_PER_POWER = 3;
+    constexpr uint32 ASHBRINGER_MS = 15000;              // Wings of Retribution: 1 more Holy Power meanwhile
+    enum Oath : uint8
+    {
+        OATH_NONE      = 0,  // before Rank 2
+        OATH_VENGEANCE = 1,
+        OATH_CRUSADE   = 2,
+    };
+    // Crusader's Oath's ranked stats (their order in RANKED_PERKS)
+    enum OathStat : size_t
+    {
+        OATH_STAT_PHYSICAL = 0, OATH_STAT_VERDICT, OATH_STAT_INQUISITION, OATH_STAT_OATHS, OATH_STAT_ASHBRINGER
+    };
 
     constexpr char const* PREFIX = "UBPERK";
     // Categories with a limit on active perks (the addon uses the same limits, CATEGORIES in PerkData.lua).
@@ -467,6 +526,7 @@ namespace
         { 101, 199, 5, "Offensive" },
         { 201, 299, 3, "Defensive" },
         { 301, 399, 3, "Utility" },
+        { 1001, 1999, 1, "Class" },  // one perk per spec: only one at a time
     };
 
     CategoryLimit const* LimitOf(uint32 perk)
@@ -584,6 +644,13 @@ namespace
         StanceTrack petStance;
         DefenseTrack selfDefense;   // Juggernaut, Second Wind, Counterweight, Shield Wall Training
         DefenseTrack petDefense;
+
+        std::map<uint32, uint8> choices;  // choices inside perks (Crusader's Oath: the oath)
+        // Crusader's Oath (Holy Power itself is the SPELL_HOLY_POWER aura's stacks)
+        int32 verdictBonus = 0;           // Oath of the Crusade: the next Templar's Verdict's bonus (%)
+        uint32 ashbringerCastMs = 0;      // when Ashbringer's Call was cast (Wings of Retribution)
+        bool ashbringerOut = false;
+        uint32 ashbringerHits = 0;
     };
 
     std::unordered_map<ObjectGuid::LowType, PerkState> sStates;
@@ -684,21 +751,27 @@ namespace
             if ((schools & mask) && Has(state, perk))
                 mult *= Bonus(OwnerRankValue(attacker, perk, 0));
 
-        // Retribution - By Sword & Light (the Paladin's own damage)
+        // Retribution - By Sword & Light / Crusader's Oath - Physical damage (the Paladin's own damage)
         if (Has(state, PERK_RETRIBUTION) && attacker->IsPlayer())
         {
-            if (schools & SPELL_SCHOOL_MASK_HOLY)
-                mult *= SWORD_LIGHT_HOLY;
-            else if (schools & SPELL_SCHOOL_MASK_NORMAL)
-                mult *= SWORD_LIGHT_PHYSICAL;
+            if (sRetributionClassic)
+            {
+                if (schools & SPELL_SCHOOL_MASK_HOLY)
+                    mult *= SWORD_LIGHT_HOLY;
+                else if (schools & SPELL_SCHOOL_MASK_NORMAL)
+                    mult *= SWORD_LIGHT_PHYSICAL;
+            }
+            else if ((schools & SPELL_SCHOOL_MASK_NORMAL) && !(schools & SPELL_SCHOOL_MASK_HOLY))
+                mult *= Bonus(OwnerRankValue(attacker, PERK_RETRIBUTION, OATH_STAT_PHYSICAL));
         }
         return mult;
     }
 
     // ------------------------------------------------------------------ Retribution helpers
+    // The original Retribution perk (only with Unbound.Perks.Retribution.Classic).
     bool HasRetribution(Unit const* unit)
     {
-        return unit && unit->IsPlayer() && Has(StateOf(unit->ToPlayer()), PERK_RETRIBUTION);
+        return sRetributionClassic && unit && unit->IsPlayer() && Has(StateOf(unit->ToPlayer()), PERK_RETRIBUTION);
     }
 
     bool IsExorcism(SpellInfo const* spellInfo)
@@ -762,6 +835,151 @@ namespace
                     caster->DealSpellDamage(&damageInfo, true);
                 }
             }, 1ms);
+        }
+    }
+
+    // ------------------------------------------------------------------ Crusader's Oath
+    // The oath chosen for Crusader's Oath (Vengeance unless changed), whether or not it is unlocked yet.
+    uint8 ChosenOath(PerkState const& state)
+    {
+        auto itr = state.choices.find(PERK_RETRIBUTION);
+        return itr == state.choices.end() ? uint8(OATH_VENGEANCE) : itr->second;
+    }
+
+    // The oath in effect: none before Rank 2.
+    uint8 ActiveOath(Player const* player, PerkState const& state)
+    {
+        return RankValue(player, state, PERK_RETRIBUTION, OATH_STAT_OATHS) > 0.0f ? ChosenOath(state) : uint8(OATH_NONE);
+    }
+
+    // The Paladin with Crusader's Oath on (and that oath, when one is given), or nullptr.
+    Player* OathPlayer(Unit* unit, uint8 oath = OATH_NONE)
+    {
+        Player* player = unit ? unit->ToPlayer() : nullptr;
+        PerkState const* state = player ? StateOf(player) : nullptr;
+        if (sRetributionClassic || !Has(state, PERK_RETRIBUTION))
+            return nullptr;
+        if (oath != OATH_NONE && ActiveOath(player, *state) != oath)
+            return nullptr;
+        return player;
+    }
+
+    uint32 HolyPower(Unit const* unit)
+    {
+        Aura const* aura = unit ? unit->GetAura(SPELL_HOLY_POWER) : nullptr;
+        return aura ? aura->GetStackAmount() : 0;
+    }
+
+    // Holy Power from an ability (Wings of Retribution adds 1 while the Ashbringer fights) or from the Spirit.
+    void GainHolyPower(Player* player, uint32 amount, bool fromAbility)
+    {
+        PerkState* state = StateOf(player);
+        if (!state)
+            return;
+        if (fromAbility && state->ashbringerOut)
+        {
+            if (getMSTimeDiff(state->ashbringerCastMs, getMSTime()) < ASHBRINGER_MS)
+                ++amount;
+            else
+                state->ashbringerOut = false;
+        }
+        for (uint32 i = 0; i < amount; ++i)
+            player->CastSpell(player, SPELL_HOLY_POWER, TRIGGERED_FULL_MASK);  // one stack each, up to 3
+    }
+
+    // All the Holy Power, removed: the amount spent.
+    uint32 SpendHolyPower(Unit* unit)
+    {
+        uint32 power = HolyPower(unit);
+        if (power)
+            unit->RemoveAurasDueToSpell(SPELL_HOLY_POWER);
+        return std::min(power, MAX_HOLY_POWER);
+    }
+
+    // Holy Power from casting Crusader Strike, a Judgement or Hammer of Wrath (Divine Storm is in its script);
+    // Ashbringer's Call starts Wings of Retribution.
+    void OnOathSpellCast(Player* player, Spell const* spell)
+    {
+        if (spell->IsTriggered() || !OathPlayer(player))
+            return;
+        uint32 id = spell->GetSpellInfo()->Id;
+        if (id == SPELL_ASHBRINGERS_CALL)
+        {
+            PerkState* state = StateOf(player);
+            state->ashbringerCastMs = getMSTime();
+            state->ashbringerOut = true;
+            state->ashbringerHits = 0;
+            return;
+        }
+        bool builder = id == SPELL_CRUSADER_STRIKE ||
+                       sSpellMgr->GetFirstSpellInChain(id) == SPELL_HAMMER_OF_WRATH_RANK_1 ||
+                       std::find(std::begin(SPELL_JUDGEMENTS), std::end(SPELL_JUDGEMENTS), id) != std::end(SPELL_JUDGEMENTS);
+        if (builder)
+            GainHolyPower(player, 1, true);
+    }
+
+    // The Spirit of the Ashbringer's Paladin (with Crusader's Oath on), or nullptr for any other unit.
+    Player* AshbringerOwner(Unit* unit)
+    {
+        if (!unit || unit->IsPlayer() || unit->GetEntry() != NPC_SPIRIT_OF_THE_ASHBRINGER)
+            return nullptr;
+        return OathPlayer(unit->GetOwner());
+    }
+
+    // The Spirit of the Ashbringer's swing: 75% of its Paladin's weapon hit (with attack power).
+    void ApplyAshbringerHit(Unit* attacker, uint32& damage)
+    {
+        if (Player* owner = AshbringerOwner(attacker))
+        {
+            float weaponHit = (owner->GetFloatValue(UNIT_FIELD_MINDAMAGE) + owner->GetFloatValue(UNIT_FIELD_MAXDAMAGE)) / 2.0f;
+            damage = uint32(std::max(1.0f, weaponHit * ASHBRINGER_HIT_SHARE));
+        }
+    }
+
+    // Every third hit the Spirit lands gives its Paladin 1 Holy Power.
+    void CountAshbringerHit(Unit* attacker, uint32 damage, DamageEffectType damageType)
+    {
+        Player* owner = damage && damageType == DIRECT_DAMAGE ? AshbringerOwner(attacker) : nullptr;
+        if (!owner)
+            return;
+        PerkState* state = StateOf(owner);
+        if (++state->ashbringerHits >= ASHBRINGER_HITS_PER_POWER)
+        {
+            state->ashbringerHits = 0;
+            ObjectGuid guid = owner->GetGUID();
+            // after the swing, never inside the damage calculation
+            owner->m_Events.AddEventAtOffset([guid]()
+            {
+                if (Player* player = ObjectAccessor::FindPlayer(guid))
+                    if (OathPlayer(player))
+                        GainHolyPower(player, 1, false);
+            }, 1ms);
+        }
+    }
+
+    // The abilities the perk teaches while it is on (temporary: never saved with the character), and no Holy
+    // Power or Inquisition left once it is off.
+    void UpdateOathSpells(Player* player, PerkState& state)
+    {
+        bool on = !sRetributionClassic && Has(&state, PERK_RETRIBUTION);
+        auto keep = [player](uint32 spell, bool wanted)
+        {
+            if (wanted && !player->HasSpell(spell))
+                player->learnSpell(spell, true);
+            else if (!wanted && player->HasSpell(spell))
+                player->removeSpell(spell, SPEC_MASK_ALL, false);
+        };
+        keep(SPELL_TEMPLARS_VERDICT, on);
+        keep(SPELL_INQUISITION, on);
+        keep(SPELL_ASHBRINGERS_CALL, on && RankValue(player, state, PERK_RETRIBUTION, OATH_STAT_ASHBRINGER) > 0.0f);
+        if (!on)
+        {
+            if (player->HasAura(SPELL_HOLY_POWER))
+                player->RemoveAurasDueToSpell(SPELL_HOLY_POWER);
+            if (player->HasAura(SPELL_INQUISITION))
+                player->RemoveAurasDueToSpell(SPELL_INQUISITION);
+            state.verdictBonus = 0;
+            state.ashbringerOut = false;
         }
     }
 
@@ -1034,6 +1252,7 @@ namespace
         SetSacrificeBonus(player, state, ap, sp);
 
         RefreshUtilityAuras(player, state);
+        UpdateOathSpells(player, state);  // also follows the rank as the level changes
     }
 
     // ------------------------------------------------------------------ addon messages
@@ -1054,6 +1273,14 @@ namespace
             ids += std::to_string(id);
         }
         SendAddon(player, "STATE:" + ids);
+    }
+
+    // VARIANT:1001:<classic|oath> (which Retribution perk the server runs) and CHOICE:1001:<oath>
+    void SendChoices(Player* player, PerkState const& state)
+    {
+        SendAddon(player, std::string("VARIANT:") + std::to_string(PERK_RETRIBUTION) + ":" +
+                          (sRetributionClassic ? "classic" : "oath"));
+        SendAddon(player, "CHOICE:" + std::to_string(PERK_RETRIBUTION) + ":" + std::to_string(ChosenOath(state)));
     }
 
     // ------------------------------------------------------------------ perk ranks
@@ -1267,18 +1494,38 @@ namespace
         {
             SendState(player, state);
             SendRanks(player, state);
+            SendChoices(player, state);
             return;
         }
 
         bool isSet = text.rfind("SET:", 0) == 0;
         bool isLoad = text.rfind("LOAD:", 0) == 0;
-        if (!isSet && !isLoad)
+        bool isChoice = text.rfind("CHOICE:", 0) == 0;
+        if (!isSet && !isLoad && !isChoice)
             return;
 
         if (player->IsInCombat())
         {
             SendAddon(player, "ERR:You can't change perks in combat.");
             SendState(player, state);
+            SendChoices(player, state);
+            return;
+        }
+
+        // CHOICE:<perk>:<choice> - Crusader's Oath's oath (1 Vengeance, 2 Crusade)
+        if (isChoice)
+        {
+            std::vector<std::string_view> parts = Acore::Tokenize(text, ':', false);
+            Optional<uint32> perk = parts.size() == 3 ? Acore::StringTo<uint32>(parts[1]) : Optional<uint32>();
+            Optional<uint32> choice = parts.size() == 3 ? Acore::StringTo<uint32>(parts[2]) : Optional<uint32>();
+            if (perk && choice && *perk == PERK_RETRIBUTION && (*choice == OATH_VENGEANCE || *choice == OATH_CRUSADE))
+            {
+                state.choices[*perk] = uint8(*choice);
+                state.verdictBonus = 0;
+                CharacterDatabase.Execute("REPLACE INTO `character_unbound_perk_choices` (`guid`, `perk`, `choice`) VALUES ({}, {}, {})",
+                    player->GetGUID().GetCounter(), *perk, *choice);
+            }
+            SendChoices(player, state);
             return;
         }
 
@@ -1296,7 +1543,7 @@ namespace
                     else if (on && limit && !state.active.count(*perk) && !ActivePartner(state.active, *perk) &&
                         CountIn(state.active, *limit) >= limit->max)
                         SendAddon(player, "ERR:You can only have " + std::to_string(limit->max) + " " + limit->name +
-                            " perks active. Turn one off first.");
+                            (limit->max == 1 ? " perk" : " perks") + " active. Turn one off first.");
                     else
                         SetPerk(player, state, *perk, on);
                 }
@@ -1323,7 +1570,7 @@ namespace
             for (uint32 perk : IMPLEMENTED)
                 SetPerk(player, state, perk, wanted.count(perk) > 0);
             if (trimmed)
-                SendAddon(player, "ERR:Not every perk of that loadout fit (Offensive at most 5, Defensive and Utility at most 3).");
+                SendAddon(player, "ERR:Not every perk of that loadout fit (Offensive at most 5, Defensive and Utility at most 3, Class 1).");
         }
 
         RefreshStatPerks(player, state);
@@ -1769,6 +2016,11 @@ public:
                 ranks.levels.push_back(rank < rankLevels.size() ? rankLevels[rank] : (rank == 0 ? 1 : 255));
             }
         }
+
+        // The original Retribution perk instead of Crusader's Oath: it has no ranks
+        sRetributionClassic = sConfigMgr->GetOption<bool>("Unbound.Perks.Retribution.Classic", false);
+        if (sRetributionClassic)
+            sPerkRanks.erase(PERK_RETRIBUTION);
     }
 };
 
@@ -1790,6 +2042,7 @@ class unbound_perks_player : public PlayerScript
 public:
     unbound_perks_player() : PlayerScript("unbound_perks_player", {
         PLAYERHOOK_ON_LEVEL_CHANGED,
+        PLAYERHOOK_ON_SPELL_CAST,
         PLAYERHOOK_ON_LOGIN,
         PLAYERHOOK_ON_LOGOUT,
         PLAYERHOOK_ON_UPDATE,
@@ -1832,6 +2085,13 @@ public:
                 state.rankOverride[(*result)[0].Get<uint32>()] = (*result)[1].Get<uint8>();
             while (result->NextRow());
         }
+        if (QueryResult result = CharacterDatabase.Query("SELECT `perk`, `choice` FROM `character_unbound_perk_choices` WHERE `guid` = {}",
+            player->GetGUID().GetCounter()))
+        {
+            do
+                state.choices[(*result)[0].Get<uint32>()] = (*result)[1].Get<uint8>();
+            while (result->NextRow());
+        }
         // saved before a category limit (or an exclusive pair) existed: keep the lowest ids, switch the rest off
         for (CategoryLimit const& limit : CATEGORY_LIMITS)
             while (CountIn(state.active, limit) > limit.max)
@@ -1868,13 +2128,23 @@ public:
     {
         CharacterDatabase.Execute("DELETE FROM `character_unbound_perks` WHERE `guid` = {}", guid.GetCounter());
         CharacterDatabase.Execute("DELETE FROM `character_unbound_perk_ranks` WHERE `guid` = {}", guid.GetCounter());
+        CharacterDatabase.Execute("DELETE FROM `character_unbound_perk_choices` WHERE `guid` = {}", guid.GetCounter());
     }
 
-    // ranks that come from the level change with it
+    // ranks that come from the level change with it (and the abilities Crusader's Oath's rank teaches)
     void OnPlayerLevelChanged(Player* player, uint8 /*oldLevel*/) override
     {
         if (PerkState* state = StateOf(player))
+        {
             SendRanks(player, *state);
+            UpdateOathSpells(player, *state);
+        }
+    }
+
+    // Crusader's Oath: Holy Power from Crusader Strike, Judgement and Hammer of Wrath
+    void OnPlayerSpellCast(Player* player, Spell* spell, bool /*skipCheck*/) override
+    {
+        OnOathSpellCast(player, spell);
     }
 
     void OnPlayerUpdate(Player* player, uint32 diff) override
@@ -1959,6 +2229,7 @@ public:
 
     void ModifyMeleeDamage(Unit* target, Unit* attacker, uint32& damage) override
     {
+        ApplyAshbringerHit(attacker, damage);  // Crusader's Oath's Spirit of the Ashbringer
         ApplyMultipliers(target, attacker, damage, nullptr, HitKind::Melee);
     }
 
@@ -1981,6 +2252,7 @@ public:
         damage = ApplyBigHitPerks(attacker, victim, damage);
         ApplyRageTaken(attacker, victim, damage);
         ApplyLeech(attacker, victim, damage);
+        CountAshbringerHit(attacker, damage, damagetype);
         if (damage && victim->IsAlive() && damage >= victim->GetHealth() &&
             victim->HasAura(SPELL_RIGHTEOUS_VENGEANCE_DOT))
             ScheduleRighteousExplosion(victim);
@@ -1997,15 +2269,42 @@ public:
     }
 };
 
-// 53385 - Divine Storm (Retribution perk: up to 6 targets, a Crusader Strike on every enemy hit)
+// 53385 - Divine Storm. Retribution perk: up to 6 targets, a Crusader Strike on every enemy hit. Crusader's
+// Oath, Oath of the Crusade: up to 6 targets, 1 Holy Power, or at 3 Holy Power spends them for 60% more damage;
+// every enemy hit adds 5% to the next Templar's Verdict.
 class spell_unbound_ret_divine_storm : public SpellScript
 {
     PrepareSpellScript(spell_unbound_ret_divine_storm);
 
+    bool _finisher = false;
+
     void RaiseTargetCap()
     {
-        if (HasRetribution(GetCaster()))
+        Unit* caster = GetCaster();
+        if (HasRetribution(caster))
             GetSpell()->SetSpellValue(SPELLVALUE_MAX_TARGETS, DIVINE_STORM_MAX_TARGETS);
+        else if (Player* player = OathPlayer(caster, OATH_CRUSADE))
+        {
+            GetSpell()->SetSpellValue(SPELLVALUE_MAX_TARGETS, CRUSADE_STORM_TARGETS);
+            if (HolyPower(player) >= MAX_HOLY_POWER)
+            {
+                SpendHolyPower(player);
+                _finisher = true;
+            }
+        }
+    }
+
+    void CrusadeHit()
+    {
+        Unit* caster = GetCaster();
+        Unit* target = GetHitUnit();
+        Player* player = OathPlayer(caster, OATH_CRUSADE);
+        if (!player || !target || target == caster)
+            return;
+        if (_finisher)
+            SetHitDamage(int32(GetHitDamage() * CRUSADE_STORM_BONUS));
+        PerkState* state = StateOf(player);
+        state->verdictBonus = std::min(CRUSADE_VERDICT_MAX, state->verdictBonus + CRUSADE_VERDICT_STEP);
     }
 
     void CrusaderStrike()
@@ -2016,10 +2315,116 @@ class spell_unbound_ret_divine_storm : public SpellScript
             caster->CastSpell(target, SPELL_CRUSADER_STRIKE, TRIGGERED_FULL_MASK);
     }
 
+    void CrusadePower()
+    {
+        if (!_finisher)
+            if (Player* player = OathPlayer(GetCaster(), OATH_CRUSADE))
+                GainHolyPower(player, 1, true);
+    }
+
     void Register() override
     {
         BeforeCast += SpellCastFn(spell_unbound_ret_divine_storm::RaiseTargetCap);
+        OnHit += SpellHitFn(spell_unbound_ret_divine_storm::CrusadeHit);
         AfterHit += SpellHitFn(spell_unbound_ret_divine_storm::CrusaderStrike);
+        AfterCast += SpellCastFn(spell_unbound_ret_divine_storm::CrusadePower);
+    }
+};
+
+// Whether the spell's hit on this target is a critical strike (rolled before the damage is dealt).
+static bool IsHitCrit(Spell* spell, Unit const* target)
+{
+    for (TargetInfo const& info : *spell->GetUniqueTargetInfo())
+        if (info.targetGUID == target->GetGUID())
+            return info.crit;
+    return false;
+}
+
+// Templar's Verdict and Inquisition need Holy Power, and spend all of it.
+static SpellCastResult CheckHolyPower(Unit* caster)
+{
+    if (!OathPlayer(caster))
+        return SPELL_FAILED_SPELL_UNAVAILABLE;
+    return HolyPower(caster) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
+}
+
+// 200221 - Templar's Verdict (Crusader's Oath): a Holy strike, bigger with more Holy Power; the oaths add to it.
+class spell_unbound_oath_templars_verdict : public SpellScript
+{
+    PrepareSpellScript(spell_unbound_oath_templars_verdict);
+
+    uint32 _power = 0;
+
+    SpellCastResult CheckCast() { return CheckHolyPower(GetCaster()); }
+
+    void Spend() { _power = SpendHolyPower(GetCaster()); }
+
+    void Strike()
+    {
+        Unit* target = GetHitUnit();
+        Player* player = OathPlayer(GetCaster());
+        if (!player || !target || !_power)
+            return;
+        PerkState* state = StateOf(player);
+        float mult = VERDICT_SHARE[_power - 1] *
+                     RankValue(player, *state, PERK_RETRIBUTION, OATH_STAT_VERDICT) / VERDICT_SPELL_PERCENT;
+        switch (ActiveOath(player, *state))
+        {
+            case OATH_VENGEANCE:
+                if (IsHitCrit(GetSpell(), target))
+                    mult *= VENGEANCE_CRIT_BONUS;
+                if (target->HealthBelowPct(VENGEANCE_EXECUTE_BELOW))
+                    mult *= VENGEANCE_EXECUTE_BONUS;
+                break;
+            case OATH_CRUSADE:
+                mult *= Bonus(float(state->verdictBonus));
+                state->verdictBonus = 0;
+                break;
+            default:
+                break;
+        }
+        SetHitDamage(int32(GetHitDamage() * mult));
+    }
+
+    void Register() override
+    {
+        OnCheckCast += SpellCheckCastFn(spell_unbound_oath_templars_verdict::CheckCast);
+        OnCast += SpellCastFn(spell_unbound_oath_templars_verdict::Spend);
+        OnHit += SpellHitFn(spell_unbound_oath_templars_verdict::Strike);
+    }
+};
+
+// 200222 - Inquisition (Crusader's Oath): Holy damage done, a third of the rank's amount and 10 seconds per
+// Holy Power spent.
+class spell_unbound_oath_inquisition : public SpellScript
+{
+    PrepareSpellScript(spell_unbound_oath_inquisition);
+
+    uint32 _power = 0;
+
+    SpellCastResult CheckCast() { return CheckHolyPower(GetCaster()); }
+
+    void Spend() { _power = SpendHolyPower(GetCaster()); }
+
+    void SetAmount()
+    {
+        Player* player = OathPlayer(GetCaster());
+        Aura* aura = player ? player->GetAura(SPELL_INQUISITION) : nullptr;
+        if (!aura || !_power)
+            return;
+        float full = RankValue(player, *StateOf(player), PERK_RETRIBUTION, OATH_STAT_INQUISITION);
+        if (AuraEffect* effect = aura->GetEffect(EFFECT_0))
+            effect->ChangeAmount(std::max(1, int32(std::lround(full * _power / MAX_HOLY_POWER))));
+        int32 duration = int32(_power * INQUISITION_MS_PER_POWER);
+        aura->SetMaxDuration(duration);
+        aura->SetDuration(duration);
+    }
+
+    void Register() override
+    {
+        OnCheckCast += SpellCheckCastFn(spell_unbound_oath_inquisition::CheckCast);
+        OnCast += SpellCastFn(spell_unbound_oath_inquisition::Spend);
+        AfterHit += SpellHitFn(spell_unbound_oath_inquisition::SetAmount);
     }
 };
 
@@ -2129,6 +2534,7 @@ public:
         handler->PSendSysMessage("{}: perk {} is now Rank {} / {}{}.", target->GetName(), perk, now, maxRank,
             rank ? "" : " (from level)");
         SendRanks(target, *state);
+        UpdateOathSpells(target, *state);
         return true;
     }
 };
@@ -2142,5 +2548,7 @@ void AddSC_unbound_perks()
     new unbound_perks_spell();
     RegisterSpellScript(spell_unbound_ret_divine_storm);
     RegisterSpellScript(spell_unbound_ret_judgement);
+    RegisterSpellScript(spell_unbound_oath_templars_verdict);
+    RegisterSpellScript(spell_unbound_oath_inquisition);
     RegisterSpellScript(spell_unbound_perk_defense_proc);
 }

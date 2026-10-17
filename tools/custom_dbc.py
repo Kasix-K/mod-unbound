@@ -42,6 +42,8 @@ SPELL_ATTR0_NOT_IN_COMBAT_ONLY_PEACEFUL = 0x10000000
 SPELL_ATTR0_NO_AURA_CANCEL = 0x80000000
 
 SPELL_EFFECT_DUMMY = 3
+SPELL_EFFECT_APPLY_AURA = 6
+SPELL_AURA_DUMMY = 4
 TARGET_UNIT_CASTER = 1
 SKILL_COMPANIONS = 778
 
@@ -103,6 +105,87 @@ SPELLS = [
         'Name_Lang_enUS': "Wayfinder's Descent",
         'Description_Lang_enUS': 'Falls slowly and safely to the ground.',
         'AuraDescription_Lang_enUS': 'Falling slowly. No falling damage.',
+    },
+    # Crusader's Oath (the Paladin Retribution class perk), keep in sync with src/unbound_perks.cpp. The
+    # perk teaches the three abilities while it is on; the numbers here are the level 60 ones (the server
+    # scales them by Holy Power, rank and oath).
+    {
+        'ID': 200220,  # Holy Power: a visible buff, one stack per Holy Power (the addon draws it as a bar)
+        'Attributes': SPELL_ATTR0_NO_AURA_CANCEL,
+        'CastingTimeIndex': 1,      # instant
+        'DurationIndex': 18,        # 20 s, refreshed by every Holy Power gained
+        'ProcChance': 101,
+        'RangeIndex': 1,            # self
+        'EquippedItemClass': -1,
+        'CumulativeAura': 3,        # up to 3 stacks
+        'Effect_1': SPELL_EFFECT_APPLY_AURA,
+        'EffectAura_1': SPELL_AURA_DUMMY,
+        'ImplicitTargetA_1': TARGET_UNIT_CASTER,
+        'EffectChainAmplitude_1': 1.0,
+        'EffectBonusMultiplier_1': 1.0,
+        'SpellIconID': 1795,        # Spell_Holy_Power
+        'Name_Lang_enUS': 'Holy Power',
+        'Description_Lang_enUS': 'Spent by Templar\'s Verdict and Inquisition.',
+        'AuraDescription_Lang_enUS': 'Holy Power, spent by Templar\'s Verdict and Inquisition.',
+        'SchoolMask': 2,
+    },
+    {
+        'ID': 200221,  # Templar's Verdict: Crusader Strike's strike, Holy, a bigger hit with more Holy Power
+        '_base': 35395,             # Crusader Strike
+        '_script': 'spell_unbound_oath_templars_verdict',
+        'RecoveryTime': 0,
+        'ManaCostPct': 0,
+        'BaseLevel': 1, 'SpellLevel': 1,
+        'DurationIndex': 0,
+        'EffectBasePoints_2': 199,  # 200% weapon damage at 3 Holy Power
+        'Effect_3': 0, 'EffectAura_3': 0, 'ImplicitTargetA_3': 0, 'EffectChainAmplitude_3': 0.0,
+        'SpellClassMask_2': 0,      # not Crusader Strike for talents and glyphs
+        'StanceBarOrder': 0,        # Crusader Strike's -1 doesn't fit the server's unsigned column
+        'SchoolMask': 2,            # Holy
+        'SpellIconID': 3025,        # Ability_Paladin_RighteousVengeance
+        'Name_Lang_enUS': "Templar's Verdict",
+        'Description_Lang_enUS': 'Spends all your Holy Power on a Holy strike for 60% / 130% / 200% weapon '
+                                 'damage at 1 / 2 / 3 Holy Power.',
+    },
+    {
+        'ID': 200222,  # Inquisition: Holy damage done, amount and duration set by the server
+        '_base': 31884,             # Avenging Wrath: its damage done aura
+        '_script': 'spell_unbound_oath_inquisition',
+        'DispelType': 0,
+        'ExcludeCasterAuraSpell': 0,
+        'RecoveryTime': 0,
+        'ManaCostPct': 0,
+        'BaseLevel': 1, 'SpellLevel': 1,
+        'DurationIndex': 9,         # 30 s at most
+        'EffectBasePoints_1': 14,   # +15% at 3 Holy Power
+        'EffectMiscValue_1': 2,     # Holy
+        'Effect_2': 0, 'EffectAura_2': 0, 'EffectBasePoints_2': 0, 'EffectMiscValue_2': 0,
+        'EffectSpellClassMaskC_2': 0, 'ImplicitTargetA_2': 0, 'EffectDieSides_2': 0,
+        'Effect_3': 0, 'EffectAura_3': 0, 'EffectBasePoints_3': 0, 'EffectMiscValue_3': 0,
+        'ImplicitTargetA_3': 0, 'EffectDieSides_3': 0,
+        'SpellVisualID_1': 0,       # no Avenging Wrath wings
+        'SpellClassMask_2': 0,
+        'SpellIconID': 3029,        # Ability_Paladin_SanctifiedWrath
+        'Name_Lang_enUS': 'Inquisition',
+        'Description_Lang_enUS': 'Spends all your Holy Power: your Holy damage is increased by 5% / 10% / 15% '
+                                 'for 10 / 20 / 30 sec at 1 / 2 / 3 Holy Power.',
+        'AuraDescription_Lang_enUS': 'Holy damage increased.',
+    },
+    {
+        'ID': 200223,  # Ashbringer's Call: summons creature 190220 (data/sql/db-world/unbound_crusaders_oath.sql)
+        '_base': 34433,             # Shadowfiend: a 15 s guardian that attacks the target
+        'EffectMiscValue_1': 190220,
+        'Effect_2': 0, 'EffectTriggerSpell_2': 0, 'ImplicitTargetA_2': 0, 'EffectChainAmplitude_2': 0.0,
+        'RecoveryTime': 120000,     # 2 min
+        'BaseLevel': 60, 'SpellLevel': 60,
+        'ShapeshiftMask': 0,
+        'SpellVisualID_1': 0,
+        'SpellClassSet': 10, 'SpellClassMask_1': 0, 'SpellClassMask_2': 0, 'SpellClassMask_3': 0,  # not Shadowfiend
+        'SchoolMask': 2,
+        'SpellIconID': 1648,        # INV_Sword_48 (the Ashbringer)
+        'Name_Lang_enUS': "Ashbringer's Call",
+        'Description_Lang_enUS': 'Summons the Spirit of the Ashbringer to fight your target for 15 sec. Every '
+                                 'third hit it lands gives you 1 Holy Power.',
     },
 ]
 

@@ -140,6 +140,9 @@ local function savedCount(loadout)
 end
 
 local refresh -- forward
+local updateHolyBar -- forward (Holy Power bar, below)
+local updateSpellRow -- forward (a perk's spell icons, below)
+local SPELL_ICON = 30      -- the spell icons in the details panel
 local sendServer, serverIds -- forward (server sync, below)
 
 local function setStatus(msg)
@@ -286,6 +289,47 @@ local function onServerRank(rest)
         if perk.id == id and perk.applyRank then perk.applyRank(perk, rank, maxRank, parsed) end
     end
     if refresh then refresh() end
+end
+
+-- VARIANT:<perk>:classic - the server runs the perk's original version: show that one (no ranks, no choice).
+local function onServerVariant(rest)
+    local id, variant = string.match(rest, "^(%d+):(%a+)$")
+    id = tonumber(id)
+    for _, perk in ipairs(P.PERKS) do
+        if perk.id == id and perk.classic and variant == "classic" and not perk.isClassic then
+            perk.isClassic = true
+            perk.name, perk.icon, perk.desc = perk.classic.name, perk.classic.icon, perk.classic.desc
+            perk.note, perk.choices, perk.applyRank = nil, nil, nil
+            perk.intro, perk.spells, perk.rest = nil, nil, nil
+            perk.rankText, perk.rankLines = nil, nil
+            ranks[id] = nil
+        end
+    end
+    if refresh then refresh() end
+end
+
+-- CHOICE:<perk>:<choice> - the choice inside a perk (Crusader's Oath's oath)
+local function onServerChoice(rest)
+    local id, choice = string.match(rest, "^(%d+):(%d+)$")
+    id, choice = tonumber(id), tonumber(choice)
+    for _, perk in ipairs(P.PERKS) do
+        if perk.id == id and perk.choices then
+            perk.choice = choice
+            if perk.applyRank and perk.rankValues and ranks[id] then
+                perk.applyRank(perk, ranks[id].rank, ranks[id].max, perk.rankValues)
+            end
+        end
+    end
+    if refresh then refresh() end
+end
+
+-- The next choice of a perk with choices (two oaths: the other one).
+local function nextChoice(perk)
+    local current = perk.choice or perk.choices[1].id
+    for i, c in ipairs(perk.choices) do
+        if c.id == current then return perk.choices[i % #perk.choices + 1] end
+    end
+    return perk.choices[1]
 end
 
 local function onServerState(list)
@@ -489,6 +533,52 @@ local function updateGrid()
     end
 end
 
+-- The spell icons of a perk (perk.spells: icon, name, kind, text, status, on), each with a hover tooltip.
+-- on = true lit, nil dimmed (e.g. the oath not chosen), false greyed (not unlocked yet).
+local function showSpellTooltip(b)
+    local sp = b.spell
+    if not sp then return end
+    GameTooltip:SetOwner(b, "ANCHOR_RIGHT")
+    GameTooltip:AddLine(sp.name, 1, 1, 1)
+    if sp.kind then GameTooltip:AddLine(sp.kind, unpack(C.muted)) end
+    GameTooltip:AddLine(sp.text or "", 1, 0.82, 0, true)
+    if sp.status then
+        if sp.on == true then
+            GameTooltip:AddLine(sp.status, unpack(C.active))
+        elseif sp.on == false then
+            GameTooltip:AddLine(sp.status, 1, 0.3, 0.3)
+        else
+            GameTooltip:AddLine(sp.status, unpack(C.muted))
+        end
+    end
+    GameTooltip:Show()
+end
+
+updateSpellRow = function(spells)
+    local row = ui.details.spellRow
+    for i, sp in ipairs(spells) do
+        local b = row.buttons[i]
+        if not b then
+            b = CreateFrame("Button", nil, row)
+            b:SetSize(SPELL_ICON, SPELL_ICON)
+            b:SetPoint("LEFT", (i - 1) * (SPELL_ICON + 6), 0)
+            b.icon = b:CreateTexture(nil, "ARTWORK")
+            b.icon:SetAllPoints()
+            b.icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+            b:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
+            b:SetScript("OnEnter", showSpellTooltip)
+            b:SetScript("OnLeave", function() GameTooltip:Hide() end)
+            row.buttons[i] = b
+        end
+        b.spell = sp
+        b.icon:SetTexture(sp.icon)
+        b.icon:SetDesaturated(sp.on == false)
+        if sp.on == nil then b.icon:SetVertexColor(0.55, 0.55, 0.55) else b.icon:SetVertexColor(1, 1, 1) end
+        b:Show()
+    end
+    for i = #spells + 1, #row.buttons do row.buttons[i]:Hide() end
+end
+
 local function updateDetails()
     local d = ui.details
     local perk = selectedPerk
@@ -524,8 +614,39 @@ local function updateDetails()
     if not perk.works and not perk.permanent then
         body = body .. "\n\n|cffff9933Not active on the server yet.|r"
     end
-    d.desc:SetText(body)
+    -- a perk with spell icons (Crusader's Oath): its first line, the icons, then the rest of the text
+    d.note:ClearAllPoints()
+    if perk.spells then
+        d.desc:SetText(perk.intro or "")
+        updateSpellRow(perk.spells)
+        d.spellRow:Show()
+        d.rest:SetText(perk.rest or "")
+        d.rest:Show()
+        d.note:SetPoint("TOPLEFT", d.rest, "BOTTOMLEFT", 0, -6)
+    else
+        d.desc:SetText(body)
+        d.spellRow:Hide()
+        d.rest:Hide()
+        d.note:SetPoint("TOPLEFT", d.desc, "BOTTOMLEFT", 0, -6)
+    end
     d.note:SetText(perk.note or "")
+    -- ranked perks: one dim line; hovering it lists every rank
+    if perk.rankText then
+        d.rankRow.text:SetText(perk.rankText)
+        d.rankRow.lines = perk.rankLines
+        d.rankRow:SetSize(d.rankRow.text:GetStringWidth() + 4, 14)
+        d.rankRow:ClearAllPoints()
+        d.rankRow:SetPoint("TOPLEFT", d.note, "BOTTOMLEFT", 0, (perk.note and perk.note ~= "") and -8 or 0)
+        d.rankRow:Show()
+    else
+        d.rankRow:Hide()
+    end
+    if perk.choices then
+        d.choice:SetText("Choose " .. nextChoice(perk).name)
+        d.choice:Show()
+    else
+        d.choice:Hide()
+    end
 end
 
 local function updateLoadoutBar()
@@ -535,6 +656,7 @@ local function updateLoadoutBar()
 end
 
 refresh = function()
+    if updateHolyBar then updateHolyBar() end
     if not frame then return end
     updateFilter()
     updateCategories()
@@ -723,13 +845,60 @@ local function build()
     d.desc:SetPoint("TOPLEFT", eh, "BOTTOMLEFT", 0, -6); d.desc:SetWidth(DETAIL_W - 28)
     d.desc:SetJustifyH("LEFT"); d.desc:SetJustifyV("TOP")
     d.desc:SetTextColor(unpack(C.text))
+    -- spell icons with hover tooltips, under the first line of the effect (updateSpellRow)
+    d.spellRow = CreateFrame("Frame", nil, cnt)
+    d.spellRow:SetPoint("TOPLEFT", d.desc, "BOTTOMLEFT", 0, -8)
+    d.spellRow:SetSize(DETAIL_W - 28, SPELL_ICON)
+    d.spellRow.buttons = {}
+    d.spellRow:Hide()
+    d.rest = text(cnt, "GameFontHighlightSmall")
+    d.rest:SetPoint("TOPLEFT", d.spellRow, "BOTTOMLEFT", 0, -8); d.rest:SetWidth(DETAIL_W - 28)
+    d.rest:SetJustifyH("LEFT"); d.rest:SetJustifyV("TOP")
+    d.rest:SetTextColor(unpack(C.text))
+    d.rest:Hide()
     d.note = text(cnt, "GameFontHighlightSmall")
     d.note:SetPoint("TOPLEFT", d.desc, "BOTTOMLEFT", 0, -6); d.note:SetWidth(DETAIL_W - 28)
     d.note:SetJustifyH("LEFT")
     d.note:SetTextColor(unpack(C.muted))
+    -- a ranked perk's rank: one gold line, every rank in a tooltip on hover (white while hovered)
+    d.rankRow = CreateFrame("Button", nil, cnt)
+    d.rankRow.text = d.rankRow:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
+    d.rankRow.text:SetPoint("LEFT", 0, 0)
+    d.rankRow:SetScript("OnEnter", function(self)
+        self.text:SetTextColor(unpack(C.text))
+        -- opens downwards, under the line
+        GameTooltip:SetOwner(self, "ANCHOR_NONE")
+        GameTooltip:ClearAllPoints()
+        GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT", 0, -2)
+        GameTooltip:AddLine("Ranks", 1, 1, 1)
+        for _, line in ipairs(self.lines or {}) do GameTooltip:AddLine(line, unpack(C.muted)) end
+        GameTooltip:AddLine("Your rank goes up as you level.", 1, 0.82, 0, true)
+        GameTooltip:Show()
+    end)
+    d.rankRow:SetScript("OnLeave", function(self)
+        self.text:SetTextColor(unpack(C.gold))
+        GameTooltip:Hide()
+    end)
+    d.rankRow.text:SetTextColor(unpack(C.gold))  -- the gold of the headings ("Your oath")
+    d.rankRow:Hide()
     d.toggle = makeButton(cnt, "Turn On", 130, function() if selectedPerk then togglePerk(selectedPerk) end end)
     d.toggle:SetHeight(24)
     d.toggle:SetPoint("BOTTOM", 0, 14)
+    -- a perk's choice (Crusader's Oath: the other oath); the server answers with CHOICE:
+    d.choice = makeButton(cnt, "Choose", 220, function()
+        local perk = selectedPerk
+        if not perk or not perk.choices then return end
+        if InCombatLockdown() then
+            UIErrorsFrame:AddMessage("You can't change perks in combat.", 1, 0.3, 0.3)
+            return
+        end
+        local c = nextChoice(perk)
+        sendServer("CHOICE:" .. perk.id .. ":" .. c.id)
+        setStatus(c.name)
+    end)
+    d.choice:SetHeight(24)
+    d.choice:SetPoint("BOTTOM", d.toggle, "TOP", 0, 6)
+    d.choice:Hide()
 
     -- footer
     local foot = text(frame, "GameFontDisableSmall")
@@ -813,6 +982,86 @@ local function addCharacterTab()
     tab:SetScript("OnLeave", function() GameTooltip:Hide() end)
 end
 
+-- ------------------------------------------------------------------ Holy Power bar
+-- Crusader's Oath's Holy Power: three icons under the player frame, lit by the stacks of the Holy Power buff
+-- (spell 200220, server-side in src/unbound_perks.cpp). Shown while the perk is on. Shift-drag to move it.
+local HOLY_POWER_SPELL = 200220
+local HOLY_POWER_ICON = "Interface\\Icons\\Spell_Holy_Power"
+local holyBar
+
+local function holyPower()
+    local name = GetSpellInfo(HOLY_POWER_SPELL) or "Holy Power"
+    local found, _, _, count = UnitBuff("player", name)
+    if not found then return 0 end
+    return math.max(1, count or 1)
+end
+
+local function placeHolyBar()
+    holyBar:ClearAllPoints()
+    local pos = db and db.holyPowerPos
+    if pos then
+        holyBar:SetPoint(pos[1], UIParent, pos[2], pos[3], pos[4])
+    elseif PlayerFrame and PlayerFrame:IsVisible() then
+        holyBar:SetPoint("TOP", PlayerFrame, "BOTTOM", 50, 28)
+    else
+        holyBar:SetPoint("BOTTOM", UIParent, "BOTTOM", 0, 220)
+    end
+end
+
+updateHolyBar = function()
+    if not holyBar then return end
+    local perk
+    for _, p in ipairs(P.PERKS) do
+        if p.id == 1001 then perk = p end
+    end
+    if not perk or perk.isClassic or playerClass() ~= "PALADIN" or not (db and db.active[1001]) then
+        holyBar:Hide()
+        return
+    end
+    local power = holyPower()
+    for i, orb in ipairs(holyBar.orbs) do
+        orb:SetDesaturated(i > power)
+        orb:SetAlpha(i > power and 0.35 or 1)
+    end
+    holyBar:Show()
+end
+
+local function buildHolyBar()
+    holyBar = CreateFrame("Frame", "UnboundPerksHolyPowerBar", UIParent)
+    holyBar:SetSize(3 * 26 + 2 * 4, 26)
+    holyBar:SetMovable(true)
+    holyBar:EnableMouse(true)
+    holyBar:RegisterForDrag("LeftButton")
+    holyBar:SetClampedToScreen(true)
+    holyBar:SetScript("OnDragStart", function(self) if IsShiftKeyDown() then self:StartMoving() end end)
+    holyBar:SetScript("OnDragStop", function(self)
+        self:StopMovingOrSizing()
+        local point, _, relPoint, x, y = self:GetPoint()
+        db.holyPowerPos = { point, relPoint, x, y }
+    end)
+    holyBar:SetScript("OnEnter", function(self)
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+        GameTooltip:SetText("Holy Power: " .. holyPower() .. " / 3", 1, 1, 1)
+        GameTooltip:AddLine("Spent by Templar's Verdict and Inquisition. Shift-drag to move.", 1, 0.82, 0, true)
+        GameTooltip:Show()
+    end)
+    holyBar:SetScript("OnLeave", function() GameTooltip:Hide() end)
+    holyBar.orbs = {}
+    for i = 1, 3 do
+        local orb = holyBar:CreateTexture(nil, "ARTWORK")
+        orb:SetTexture(HOLY_POWER_ICON)
+        orb:SetTexCoord(0.07, 0.93, 0.07, 0.93)
+        orb:SetSize(26, 26)
+        orb:SetPoint("LEFT", (i - 1) * 30, 0)
+        holyBar.orbs[i] = orb
+    end
+    placeHolyBar()
+    holyBar:Hide()
+    local watch = CreateFrame("Frame")
+    watch:RegisterEvent("UNIT_AURA")
+    watch:SetScript("OnEvent", function(_, _, unit) if unit == "player" then updateHolyBar() end end)
+end
+
 -- ------------------------------------------------------------------ startup
 -- Keep the live stat lines current while the window is open.
 local statWatch = CreateFrame("Frame")
@@ -839,6 +1088,7 @@ loader:SetScript("OnEvent", function()
     build()
     selectCategory(categories[1] and categories[1].key)
     addCharacterTab()
+    buildHolyBar()
     sendServer("SYNC")
 end)
 
@@ -851,6 +1101,10 @@ comm:SetScript("OnEvent", function(_, _, prefix, message, channel, sender)
         onServerState(rest)
     elseif kind == "RANK" then
         onServerRank(rest)
+    elseif kind == "VARIANT" then
+        onServerVariant(rest)
+    elseif kind == "CHOICE" then
+        onServerChoice(rest)
     elseif kind == "ERR" then
         UIErrorsFrame:AddMessage(rest, 1, 0.3, 0.3)
         if frame then setStatus(rest) end

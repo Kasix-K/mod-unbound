@@ -328,6 +328,32 @@ Unbound.Perks.Thornmail.RankLevels = "1, 30, 60, 255, 255"
 Unbound.Perks.HeavyFrame.Percent = "5, 10, 15, 19, 22"
 Unbound.Perks.HeavyFrame.RankLevels = "1, 30, 60, 255, 255"
 
+#    Paladin class perk (perk 1001, src/unbound_perks.cpp).
+#
+#    Unbound.Perks.Retribution.Classic
+#        Description: Which Paladin class perk runs. 0 = Crusader's Oath (Holy Power, Templar's Verdict,
+#                     Inquisition, the two oaths, Ashbringer's Call). 1 = the original Retribution perk
+#                     (Improved Divine Storm, All Will Be Judged!, Exorcist, Righteous Explosion, By Sword &
+#                     Light), kept to switch back to. Characters keep the perk on either way. Needs a restart.
+#        Default:     0
+#
+#    Crusader's Oath, one number per rank (3 ranks, levels in RankLevels):
+#    Unbound.Perks.CrusadersOath.Physical      Physical damage +%
+#    Unbound.Perks.CrusadersOath.Verdict       Templar's Verdict at 3 Holy Power, % weapon damage (30% / 65% /
+#                                              100% of it at 1 / 2 / 3)
+#    Unbound.Perks.CrusadersOath.Inquisition   Inquisition at 3 Holy Power, Holy damage +% (a third per
+#                                              Holy Power)
+#    Unbound.Perks.CrusadersOath.Oaths         1 = the oaths are unlocked at that rank
+#    Unbound.Perks.CrusadersOath.Ashbringer    1 = Ashbringer's Call is unlocked at that rank
+
+Unbound.Perks.Retribution.Classic = 0
+Unbound.Perks.CrusadersOath.Physical = "4, 7, 10"
+Unbound.Perks.CrusadersOath.Verdict = "120, 160, 200"
+Unbound.Perks.CrusadersOath.Inquisition = "6, 10, 15"
+Unbound.Perks.CrusadersOath.Oaths = "0, 1, 1"
+Unbound.Perks.CrusadersOath.Ashbringer = "0, 0, 1"
+Unbound.Perks.CrusadersOath.RankLevels = "1, 30, 60"
+
 #    Unbound.Attunement.Enable
 #        Description: Gear infusion (called attunement in the code and these setting names): infused items
 #                     permanently give the character a percentage of their fixed stats
