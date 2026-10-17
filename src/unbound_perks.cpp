@@ -1145,8 +1145,10 @@ namespace
         bool on = !sRetributionClassic && Has(&state, PERK_RETRIBUTION);
         auto keep = [player](uint32 spell, bool wanted)
         {
+            // addSpell, not learnSpell: for a temporary spell both _addSpell and learnSpell send the learned
+            // packet, and the client then lists the spell twice in the Spellbook
             if (wanted && !player->HasSpell(spell))
-                player->learnSpell(spell, true);
+                player->addSpell(spell, SPEC_MASK_ALL, true, true);
             else if (!wanted && player->HasSpell(spell))
                 player->removeSpell(spell, SPEC_MASK_ALL, false);
         };

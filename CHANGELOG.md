@@ -167,6 +167,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 
 ### Fixed
+- **Class perk abilities listed twice in the Spellbook** (Templar's Verdict, Inquisition, Ashbringer's Call, and
+  Bulwark's Oath's the same way): the core sends the "learned" packet twice for a temporary spell taught with
+  `learnSpell`, so the perk now teaches them with `addSpell`. A relog clears copies already shown.
 - **Startup warnings for the Blackened Defias Garb set:** its four pieces now have `item_set_names` rows
   (`tools/heroic_loot.py`), so the server no longer reports them missing.
 - **patch-Z no longer hides other client patches' item displays:** `tools/custom_dbc.py` adds Unbound's rows to the
