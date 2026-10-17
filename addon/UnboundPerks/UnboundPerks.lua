@@ -300,7 +300,7 @@ local function onServerVariant(rest)
             perk.isClassic = true
             perk.name, perk.icon, perk.desc = perk.classic.name, perk.classic.icon, perk.classic.desc
             perk.note, perk.choices, perk.applyRank = nil, nil, nil
-            perk.intro, perk.spells, perk.rest = nil, nil, nil
+            perk.intro, perk.spells, perk.mid, perk.spells2, perk.rest = nil, nil, nil, nil, nil
             perk.rankText, perk.rankLines = nil, nil
             ranks[id] = nil
         end
@@ -554,8 +554,7 @@ local function showSpellTooltip(b)
     GameTooltip:Show()
 end
 
-updateSpellRow = function(spells)
-    local row = ui.details.spellRow
+updateSpellRow = function(row, spells)
     for i, sp in ipairs(spells) do
         local b = row.buttons[i]
         if not b then
@@ -614,18 +613,34 @@ local function updateDetails()
     if not perk.works and not perk.permanent then
         body = body .. "\n\n|cffff9933Not active on the server yet.|r"
     end
-    -- a perk with spell icons (Crusader's Oath): its first line, the icons, then the rest of the text
+    -- a perk with spell icons (Crusader's Oath): its first line, the icons, optionally a heading and a second
+    -- icon row (perk.mid, perk.spells2), then the rest of the text
     d.note:ClearAllPoints()
+    d.rest:ClearAllPoints()
     if perk.spells then
         d.desc:SetText(perk.intro or "")
-        updateSpellRow(perk.spells)
+        updateSpellRow(d.spellRow, perk.spells)
         d.spellRow:Show()
+        if perk.spells2 then
+            d.mid:SetText(perk.mid or "")
+            d.mid:Show()
+            updateSpellRow(d.spellRow2, perk.spells2)
+            d.spellRow2:Show()
+            d.rest:SetPoint("TOPLEFT", d.spellRow2, "BOTTOMLEFT", 0, -16)
+        else
+            d.mid:Hide()
+            d.spellRow2:Hide()
+            d.rest:SetPoint("TOPLEFT", d.spellRow, "BOTTOMLEFT", 0, -8)
+        end
+        d.rest:SetSpacing(perk.spells2 and 6 or 0)  -- Crusader's Oath: a little room under "Physical damage"
         d.rest:SetText(perk.rest or "")
         d.rest:Show()
         d.note:SetPoint("TOPLEFT", d.rest, "BOTTOMLEFT", 0, -6)
     else
         d.desc:SetText(body)
         d.spellRow:Hide()
+        d.mid:Hide()
+        d.spellRow2:Hide()
         d.rest:Hide()
         d.note:SetPoint("TOPLEFT", d.desc, "BOTTOMLEFT", 0, -6)
     end
@@ -851,6 +866,17 @@ local function build()
     d.spellRow:SetSize(DETAIL_W - 28, SPELL_ICON)
     d.spellRow.buttons = {}
     d.spellRow:Hide()
+    -- a second icon row with its heading above it (Crusader's Oath: "Your oath", then the two oaths)
+    d.mid = text(cnt, "GameFontHighlightSmall")
+    d.mid:SetPoint("TOPLEFT", d.spellRow, "BOTTOMLEFT", 0, -8); d.mid:SetWidth(DETAIL_W - 28)
+    d.mid:SetJustifyH("LEFT"); d.mid:SetJustifyV("TOP")
+    d.mid:SetTextColor(unpack(C.text))
+    d.mid:Hide()
+    d.spellRow2 = CreateFrame("Frame", nil, cnt)
+    d.spellRow2:SetPoint("TOPLEFT", d.mid, "BOTTOMLEFT", 0, -6)
+    d.spellRow2:SetSize(DETAIL_W - 28, SPELL_ICON)
+    d.spellRow2.buttons = {}
+    d.spellRow2:Hide()
     d.rest = text(cnt, "GameFontHighlightSmall")
     d.rest:SetPoint("TOPLEFT", d.spellRow, "BOTTOMLEFT", 0, -8); d.rest:SetWidth(DETAIL_W - 28)
     d.rest:SetJustifyH("LEFT"); d.rest:SetJustifyV("TOP")

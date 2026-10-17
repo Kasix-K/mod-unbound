@@ -255,7 +255,7 @@ Needs the new `patch-Z.MPQ` (client closed, then `python tools/custom_dbc.py`) a
       hit is Holy and grows with 1 / 2 / 3 Holy Power.
 - [ ] Inquisition at 3 Holy Power shows a 30 second buff; Holy damage (Judgement, Exorcism, Consecration) is
       about 15% higher meanwhile.
-- [ ] The perk window's **Choose Oath of the Crusade** button switches the oath (the text shows it green); not
+- [ ] The perk window's **Choose Oath of the Crusade** button switches the oath (its icon under "Your oath" lights up, the other dims); not
       in combat. With the Crusade, Divine Storm gives Holy Power, and at 3 it spends them for a bigger hit.
 - [ ] Ashbringer's Call summons the Spirit of the Ashbringer (ghostly Mograine with the Ashbringer) for 15
       seconds; it attacks your target, and Holy Power comes faster meanwhile.

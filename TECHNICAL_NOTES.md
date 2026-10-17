@@ -126,9 +126,10 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   server also sends `VARIANT:1001:<oath|classic>`. `Unbound.Perks.Retribution.Classic = 1` runs the original
   Retribution perk instead (its ranks are dropped, no spells; `HasRetribution` is only true then) and the addon
   shows that perk's `classic` text. Its long text is split for the window: `crusadersOath()` in `PerkData.lua`
-  sets `perk.intro`, `perk.spells` (icon, name, kind, text, status, on) and `perk.rest`; `UnboundPerks.lua`
-  shows the intro, then the icons (`updateSpellRow`, hover tooltips), then the rest. Any perk can use
-  `spells` the same way. Ranked perks set `perk.rankText` and `perk.rankLines` (`setRankInfo` in `PerkData.lua`):
+  sets `perk.intro`, `perk.spells` (icon, name, kind, text, status, on), `perk.mid` and `perk.spells2` (the
+  "Your oath" heading and the two oath icons; the chosen one lit, the other dimmed) and `perk.rest` (Physical
+  damage); `UnboundPerks.lua` shows the intro, the icons (`updateSpellRow(row, spells)`, hover tooltips), the
+  heading and second row when set, then the rest. Any perk can use `spells` (and `spells2`) the same way. Ranked perks set `perk.rankText` and `perk.rankLines` (`setRankInfo` in `PerkData.lua`):
   one gold line in the window, every rank in its hover tooltip; `perk.note` keeps only the extra grey note. Holy Power can't make Hammer of Wrath usable above 20% health: the client
   checks that aura state itself. Perk
   numbers stay in normal WoW ranges (about +10% per perk); they are constants at the top of

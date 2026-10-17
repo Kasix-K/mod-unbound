@@ -132,6 +132,9 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
   (display 28640, from Ulduar), to place instead of or beside the Tyrande one.
 
 ### Changed
+- **Crusader's Oath in the perk window:** the Oath of Vengeance and Oath of the Crusade icons have their own row
+  under the "Your oath" heading (the chosen one lit, the other dimmed) instead of a line naming the chosen oath;
+  the Physical damage text is under them. Copy the UnboundPerks addon and `/reload`.
 - **Infusion window in pages:** the Infused and In progress tabs show 60 items a page (10 x 6) with the Spellbook's
   page arrows ("Page 1 / 43"; the mouse wheel turns pages too) instead of one long scroll. A collection of 2,559
   items made the game lag badly, since every item had its own button; now only 60 exist. The glow around

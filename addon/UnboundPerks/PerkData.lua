@@ -301,7 +301,8 @@ local MANA_ONLY = "Requires a mana bar. It does nothing while you use Rage, Ener
                   "including a druid in Cat, Bear or Dire Bear Form."
 
 -- Crusader's Oath at a rank: sets perk.intro (the first line), perk.spells (the icon row under it, each with a
--- hover tooltip: UnboundPerks.lua) and perk.rest (the text under the icons); perk.desc is all of it in text, for
+-- hover tooltip: UnboundPerks.lua), perk.mid and perk.spells2 (the "Your oath" heading and the two oath icons
+-- under it; the chosen oath is lit) and perk.rest (the text under them); perk.desc is all of it in text, for
 -- the grid's tooltip. values[r] = { Physical, Verdict, Inquisition, Oaths, Ashbringer, level } (the server's
 -- numbers per rank); perk.choice = the chosen oath (1 Vengeance, 2 Crusade).
 local function round(n) return math.floor(n + 0.5) end
@@ -342,6 +343,9 @@ local function crusadersOath(perk, values, rank)
                  "it lands gives you 1 Holy Power.\n\nWings of Retribution: while it fights, your Holy Power " ..
                  "abilities give 1 extra Holy Power.",
           status = not ashbringer and ("Unlocks at level " .. (unlockLevel(5) or 60)) or nil, on = ashbringer },
+    }
+    -- the oaths: their own icon row under "Your oath"; the chosen one is lit, the other dimmed
+    perk.spells2 = {
         { icon = "Interface\\Icons\\Spell_Holy_SealOfVengeance", name = "Oath of Vengeance", kind = "Oath",
           text = "Templar's Verdict critical strikes deal 30% more damage, and Templar's Verdict deals 30% " ..
                  "more damage to enemies below 35% health.", status = vStatus, on = vOn },
@@ -350,14 +354,14 @@ local function crusadersOath(perk, values, rank)
                  "deals 60% more damage. Each enemy it hits makes your next Templar's Verdict deal 5% more " ..
                  "(up to 30%).", status = cStatus, on = cOn },
     }
-    local rest = H("Physical damage") .. "\n -  All Physical damage you deal is increased by " .. G(pct(v[1])) ..
-        "\n\n" .. H("Your oath") .. "\n -  " ..
-        (oaths and G(chosen == 1 and "Oath of Vengeance" or "Oath of the Crusade")
-            or ("|cff808080Choose one from level " .. (unlockLevel(4) or 30) .. "|r"))
-    perk.rest = "Hover over an icon for what it does.\n\n" .. rest
-    local names = {}
+    perk.mid = "Hover over an icon for what it does.\n\n" .. H("Your oath")
+    local rest = H("Physical damage") .. "\n -  All Physical damage you deal is increased by " .. G(pct(v[1]))
+    perk.rest = rest
+    local names, oathNames = {}, {}
     for _, sp in ipairs(perk.spells) do table.insert(names, S(sp.name)) end
-    perk.desc = perk.intro .. "\n" .. table.concat(names, ", ") .. "\n\n" .. rest
+    for _, sp in ipairs(perk.spells2) do table.insert(oathNames, S(sp.name)) end
+    perk.desc = perk.intro .. "\n" .. table.concat(names, ", ") .. "\n\n" .. H("Your oath") .. "\n" ..
+        table.concat(oathNames, " or ") .. "\n\n" .. rest
 end
 
 UnboundPerks.PERKS = {
