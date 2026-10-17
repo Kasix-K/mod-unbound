@@ -364,6 +364,67 @@ local function crusadersOath(perk, values, rank)
         table.concat(oathNames, " or ") .. "\n\n" .. rest
 end
 
+-- Bulwark's Oath at a rank, laid out like Crusader's Oath (the oaths in perk.spells2). values[r] = { Holy,
+-- Aegis, Glory, Oaths, Guardian, level } (the server's numbers per rank); perk.choice = the chosen oath (1 the Bulwark, 2 Retaliation).
+local function bulwarksOath(perk, values, rank)
+    local v = values[rank] or values[#values]
+    local function unlockLevel(stat)
+        for _, r in ipairs(values) do
+            if (r[stat] or 0) > 0 then return r[#r] end
+        end
+    end
+    local aegis, glory = v[2], v[3]
+    local oaths, guardian = (v[4] or 0) > 0, (v[5] or 0) > 0
+    local chosen = perk.choice == 2 and 2 or 1
+    local LEARNED = "Ability: learned while this perk is on"
+    local oathStatus = function(id)
+        if not oaths then return "Unlocks at level " .. (unlockLevel(4) or 30), false end
+        if chosen == id then return "Your oath", true end
+        return "Choose it with the button below", nil
+    end
+    local bStatus, bOn = oathStatus(1)
+    local rStatus, rOn = oathStatus(2)
+    perk.intro = "|cffff9933Protection|r paladin mastery. While active:"
+    perk.spells = {
+        { icon = "Interface\\Icons\\Spell_Holy_Power", name = "Holy Power", kind = "Resource",
+          text = "Hammer of the Righteous, Judgement and Avenger's Shield give 1 Holy Power, up to 3. It fades " ..
+                 "20 sec after the last one. Shown as three icons under your player frame.",
+          status = "Spent by Aegis Strike and Word of Glory", on = true },
+        { icon = "Interface\\Icons\\Ability_Paladin_ShieldofVengeance", name = "Aegis Strike", kind = LEARNED,
+          text = "Instant, melee range, 6 sec cooldown, needs a shield. Spends all your Holy Power on a Holy " ..
+                 "strike for your block value plus 50% of your attack power, times " .. round(aegis * 0.3) ..
+                 "% / " .. round(aegis * 0.65) .. "% / " .. aegis .. "% at 1 / 2 / 3 Holy Power.", on = true },
+        { icon = "Interface\\Icons\\Spell_Holy_HolyGuidance", name = "Word of Glory", kind = LEARNED,
+          text = "Instant. Spends all your Holy Power to heal yourself for " .. round(glory * 0.3) .. "% / " ..
+                 round(glory * 0.65) .. "% / " .. glory .. "% of your maximum health at 1 / 2 / 3 Holy Power.",
+          on = true },
+        { icon = "Interface\\Icons\\Spell_Holy_GuardianSpirit", name = "Guardian of the Light", kind = LEARNED,
+          text = "3 min cooldown. A Guardian of the Light fights your target for 15 sec. You take 30% less " ..
+                 "damage meanwhile, and every third hit it lands gives you 1 Holy Power.\n\nArdent Light: while " ..
+                 "it fights, your Holy Power abilities give 1 extra Holy Power and Holy Shield has 4 more charges.",
+          status = not guardian and ("Unlocks at level " .. (unlockLevel(5) or 60)) or nil, on = guardian },
+    }
+    -- the oaths: their own icon row under "Your oath"; the chosen one is lit, the other dimmed
+    perk.spells2 = {
+        { icon = "Interface\\Icons\\Ability_Paladin_ShieldoftheTemplar", name = "Oath of the Bulwark", kind = "Oath",
+          text = "Aegis Strike at 3 Holy Power gives Bastion for 6 sec: 10% less damage taken and 10% more block " ..
+                 "chance. Your first Word of Glory during Bastion heals as if at 3 Holy Power. Word of Glory " ..
+                 "heals 30% more while you are below 35% health.", status = bStatus, on = bOn },
+        { icon = "Interface\\Icons\\Spell_Holy_ArdentDefender", name = "Oath of Retaliation", kind = "Oath",
+          text = "Blocking an attack deals Holy damage equal to 30% of the damage blocked. Consecration deals " ..
+                 "20% more damage. Hammer of the Righteous has a 20% chance to reset Avenger's Shield.",
+          status = rStatus, on = rOn },
+    }
+    perk.mid = "Hover over an icon for what it does.\n\n" .. H("Your oath")
+    local rest = H("Holy damage") .. "\n -  All Holy damage you deal is increased by " .. G(pct(v[1]))
+    perk.rest = rest
+    local names, oathNames = {}, {}
+    for _, sp in ipairs(perk.spells) do table.insert(names, S(sp.name)) end
+    for _, sp in ipairs(perk.spells2) do table.insert(oathNames, S(sp.name)) end
+    perk.desc = perk.intro .. "\n" .. table.concat(names, ", ") .. "\n\n" .. H("Your oath") .. "\n" ..
+        table.concat(oathNames, " or ") .. "\n\n" .. rest
+end
+
 UnboundPerks.PERKS = {
     -- Permanent -------------------------------------------------------------------------------------
     { id = 1, name = "No Resurrection Sickness", category = "PERMANENT", permanent = true,
@@ -655,7 +716,7 @@ UnboundPerks.PERKS = {
     -- Class: Paladin ----------------------------------------------------------------------------------
     -- Crusader's Oath (Retribution). The server sends its three ranks (Physical, Verdict, Inquisition, Oaths,
     -- Ashbringer, level each: RANKED_PERKS in src/unbound_perks.cpp) and the chosen oath.
-    { id = 1001, name = "Crusader's Oath", category = "CLASS", class = "PALADIN", works = true,
+    { id = 1001, name = "Crusader's Oath", category = "CLASS", class = "PALADIN", works = true, excludes = 1002,
       icon = "Interface\\Icons\\Ability_Paladin_RighteousVengeance",
       choices = { { id = 1, name = "Oath of Vengeance" }, { id = 2, name = "Oath of the Crusade" } },
       applyRank = function(perk, rank, maxRank, values)
@@ -685,9 +746,23 @@ UnboundPerks.PERKS = {
              " -  All Physical damage you deal is increased by 10%\n" ..
              " -  Covers your weapon swings, " .. S("Divine Storm") .. " and " .. S("Crusader Strike") ..
              " as well as " .. S("Judgement") .. " and " .. S("Exorcism") } },
+    -- Bulwark's Oath (Protection). The server sends its three ranks (Holy, Aegis, Glory, Oaths, Guardian, level
+    -- each: RANKED_PERKS in src/unbound_perks.cpp) and the chosen oath. Swaps with Crusader's Oath.
+    { id = 1002, name = "Bulwark's Oath", category = "CLASS", class = "PALADIN", works = true, excludes = 1001,
+      icon = "Interface\\Icons\\Ability_Paladin_ShieldofVengeance",
+      choices = { { id = 1, name = "Oath of the Bulwark" }, { id = 2, name = "Oath of Retaliation" } },
+      applyRank = function(perk, rank, maxRank, values)
+          perk.rankValues, perk.rank = values, rank
+          bulwarksOath(perk, values, rank)
+          local unlocks = { "Holy Power, Aegis Strike, Word of Glory", "the oaths", "Guardian of the Light" }
+          setRankInfo(perk, rank, maxRank, values, function(i, v)
+              return string.format("Rank %d: %s; Holy +%g%%  (level %d)", i, unlocks[i] or "stronger", v[1], v[#v])
+          end)
+      end },
 }
 
--- Crusader's Oath's text and icons at level 60 until the server sends the character's rank
+-- Crusader's Oath's and Bulwark's Oath's text and icons at level 60 until the server sends the character's rank
 for _, perk in ipairs(UnboundPerks.PERKS) do
     if perk.id == 1001 then crusadersOath(perk, { { 10, 200, 15, 1, 1, 60 } }, 1) end
+    if perk.id == 1002 then bulwarksOath(perk, { { 10, 150, 25, 1, 1, 60 } }, 1) end
 end

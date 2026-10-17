@@ -131,7 +131,21 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   damage); `UnboundPerks.lua` shows the intro, the icons (`updateSpellRow(row, spells)`, hover tooltips), the
   heading and second row when set, then the rest. Any perk can use `spells` (and `spells2`) the same way. Ranked perks set `perk.rankText` and `perk.rankLines` (`setRankInfo` in `PerkData.lua`):
   one gold line in the window, every rank in its hover tooltip; `perk.note` keeps only the extra grey note. Holy Power can't make Hammer of Wrath usable above 20% health: the client
-  checks that aura state itself. Perk
+  checks that aura state itself.
+  **Bulwark's Oath** (perk 1002, the Paladin Protection class perk) reuses Crusader's Oath's machinery: the same
+  Holy Power aura (200220, gained in `OnBulwarkSpellCast` from Hammer of the Righteous, the Judgements and any
+  Avenger's Shield rank), the same 30/65/100% spend shares (`VERDICT_SHARE`), the same choices table and bar.
+  The two class perks are an `EXCLUSIVE_GROUPS` pair (and `excludes` in `PerkData.lua`), so turning one on swaps
+  them. Aegis Strike (200224) is a copy of Shield of Righteousness Rank 1 (level 75, so no Paladin here has it)
+  with its family flags cleared (the core's block value formula is skipped); its damage is set in `OnHit` from
+  `GetShieldBlockValue()` + 50% attack power. Word of Glory (200225, a copy of Flash of Light, instant on self) sets
+  its heal in `OnHit`. Bastion (200227) is a plain buff (damage taken -10%, block +10%, 6 s); `bastionGlory`
+  marks the full-strength Word of Glory. Guardian of the Light (200226, a copy of Shadowfiend) summons guardian
+  190221 (`unbound_bulwarks_oath.sql`, the Ghost of Uther's look) and carries the -30% damage taken aura itself;
+  its swing and hit count share the Ashbringer's code (`ApplyAshbringerHit`, `CountAshbringerHit`). Oath of
+  Retaliation's block damage comes from the defense proc aura (200215, now also on with Bulwark's Oath), using
+  `DamageInfo::GetBlock()`, cast as Retaliation (200228, a Holy copy of Damage Shield). Ranks: `RANKED_PERKS` key
+  `BulwarksOath`; `bulwarksOath()` in `PerkData.lua` builds the window text like `crusadersOath()`. Perk
   numbers stay in normal WoW ranges (about +10% per perk); they are constants at the top of
   `unbound_perks.cpp` and must match `PerkData.lua`. The perk code assumes `MapUpdate.Threads = 1`.
 - **Gear infusion** (all 4 stages: the collection, its stats, infusing by kills, the tribute altar, tooltips and the

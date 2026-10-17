@@ -151,6 +151,25 @@
  *                              Wings of Retribution: for those 15 s Holy Power abilities give 1 more.
  *                              The spells are tools/custom_dbc.py's 200220-200223; they are learned (not saved)
  *                              while the perk is on.
+ *  1002 Bulwark's Oath (Paladin Protection). Ranked (Unbound.Perks.BulwarksOath.*, levels 1 / 30 / 60):
+ *                              Holy Power (the same buff and bar as Crusader's Oath): Hammer of the Righteous,
+ *                              Judgement and Avenger's Shield give 1. The perk teaches Aegis Strike (a shield strike,
+ *                              spends it all: 30% / 65% / 100% of (block value + 50% of attack power) x 100/125/150%
+ *                              at 1/2/3) and Word of Glory (spends it all: heals 30% / 65% / 100% of 15/20/25% of
+ *                              maximum health). Holy damage +4/7/10%.
+ *                              Rank 2: an oath (character_unbound_perk_choices, CHOICE: messages):
+ *                                the Bulwark: Aegis Strike at 3 Holy Power gives Bastion (6 s: 10% less damage
+ *                                taken, 10% more block chance); the first Word of Glory during Bastion heals as if
+ *                                at 3 Holy Power; Word of Glory heals 30% more below 35% health.
+ *                                Retaliation: blocking deals 30% of the blocked damage as Holy damage (spell
+ *                                200228); Consecration deals 20% more; Hammer of the Righteous has a 20% chance to
+ *                                reset Avenger's Shield.
+ *                              Rank 3: Guardian of the Light (3 min): a spectral guardian (190221) fights for 15 s,
+ *                              you take 30% less damage meanwhile (the spell's own aura), its hits deal 50% of your
+ *                              weapon hit and every third one gives Holy Power; Ardent Light: for those 15 s Holy
+ *                              Power abilities give 1 more and Holy Shield has 4 more charges.
+ *                              Crusader's Oath and Bulwark's Oath are an exclusive pair (one class perk at a time).
+ *                              The spells are tools/custom_dbc.py's 200224-200228, learned while the perk is on.
  *       The original Retribution perk, kept behind Unbound.Perks.Retribution.Classic = 1 (no ranks, no spells):
  *       Retribution (Paladin)  Improved Divine Storm: Divine Storm hits up to 6 enemies (normally 4), and every
  *                              enemy it hits also takes a Crusader Strike.
@@ -322,7 +341,8 @@ namespace
         PERK_MANA_LEECH             = 314,
         PERK_ENDLESS_RAGE           = 315,  // Warrior and Druid only
         PERK_FOCUSED_MIND           = 316,  // Rogue and Druid only
-        PERK_RETRIBUTION            = 1001,  // Paladin
+        PERK_RETRIBUTION            = 1001,  // Paladin (Crusader's Oath)
+        PERK_BULWARKS_OATH          = 1002,  // Paladin
     };
 
     std::set<uint32> const IMPLEMENTED = {
@@ -339,7 +359,7 @@ namespace
         PERK_REINFORCED_ARMOR, PERK_SPELLWARDED, PERK_STOICISM, PERK_DEFENSIVE_MOMENTUM, PERK_FORTRESS,
         PERK_JUGGERNAUT, PERK_COUNTERWEIGHT, PERK_TITANS_RESOLVE, PERK_SECOND_WIND, PERK_HARDENED_FLESH,
         PERK_PETS_BLESSING, PERK_SHIELD_WALL_TRAINING, PERK_SURVIVAL_INSTINCT, PERK_VITAL_RESERVE, PERK_ENDURING,
-        PERK_THORNMAIL, PERK_HEAVY_FRAME, PERK_RETRIBUTION };
+        PERK_THORNMAIL, PERK_HEAVY_FRAME, PERK_RETRIBUTION, PERK_BULWARKS_OATH };
 
     // Groups of perks that can't be active together: turning one on turns the others in its group off.
     std::vector<std::vector<uint32>> const EXCLUSIVE_GROUPS = {
@@ -347,6 +367,7 @@ namespace
         { PERK_SILENT_KILLER, PERK_UNBREAKABLE_PRESENCE },
         { PERK_GREATER_BULWARK, PERK_EVASIVE_MANEUVERS, PERK_PARRY_KING },
         { PERK_DEFENSIVE_MOMENTUM, PERK_FORTRESS },
+        { PERK_RETRIBUTION, PERK_BULWARKS_OATH },  // the Paladin's class perks: turning one on swaps them
     };
 
     // Ranked perks read from mod_unbound.conf: perk, config key, and each stat with its default per rank.
@@ -433,6 +454,10 @@ namespace
         { PERK_RETRIBUTION,          "CrusadersOath",       { { "Physical", "4, 7, 10" }, { "Verdict", "120, 160, 200" },
                                                               { "Inquisition", "6, 10, 15" }, { "Oaths", "0, 1, 1" },
                                                               { "Ashbringer", "0, 0, 1" } }, "1, 30, 60" },
+        // Bulwark's Oath: the same 3 ranks by level (Oaths and Guardian are 0 = locked, 1 = on).
+        { PERK_BULWARKS_OATH,        "BulwarksOath",        { { "Holy", "4, 7, 10" }, { "Aegis", "100, 125, 150" },
+                                                              { "Glory", "15, 20, 25" }, { "Oaths", "0, 1, 1" },
+                                                              { "Guardian", "0, 0, 1" } }, "1, 30, 60" },
     };
 
     // Server-only passive spells (data/sql/db-world/unbound_perks_utility_spells.sql). Passive auras are never
@@ -452,6 +477,7 @@ namespace
     constexpr uint32 ClassBit(uint8 cls) { return 1 << (cls - 1); }
     std::unordered_map<uint32, uint32> const CLASS_PERKS = {
         { PERK_RETRIBUTION, ClassBit(CLASS_PALADIN) },
+        { PERK_BULWARKS_OATH, ClassBit(CLASS_PALADIN) },
         { PERK_ENDLESS_RAGE, ClassBit(CLASS_WARRIOR) | ClassBit(CLASS_DRUID) },  // the rage users
         { PERK_FOCUSED_MIND, ClassBit(CLASS_ROGUE) | ClassBit(CLASS_DRUID) },    // the energy users
     };
@@ -511,6 +537,39 @@ namespace
     enum OathStat : size_t
     {
         OATH_STAT_PHYSICAL = 0, OATH_STAT_VERDICT, OATH_STAT_INQUISITION, OATH_STAT_OATHS, OATH_STAT_ASHBRINGER
+    };
+
+    // Bulwark's Oath (the Protection class perk). Spells: tools/custom_dbc.py; the Guardian of the Light:
+    // data/sql/db-world/unbound_bulwarks_oath.sql. The ranked numbers are in RANKED_PERKS. Holy Power is the
+    // same SPELL_HOLY_POWER aura as Crusader's Oath (only one class perk is on at a time).
+    constexpr uint32 SPELL_AEGIS_STRIKE = 200224;
+    constexpr uint32 SPELL_WORD_OF_GLORY = 200225;
+    constexpr uint32 SPELL_GUARDIAN_OF_THE_LIGHT = 200226;
+    constexpr uint32 SPELL_BASTION = 200227;
+    constexpr uint32 SPELL_RETALIATION = 200228;
+    constexpr uint32 NPC_GUARDIAN_OF_THE_LIGHT = 190221;
+    constexpr uint32 SPELL_HAMMER_OF_THE_RIGHTEOUS = 53595;
+    constexpr uint32 SPELL_AVENGERS_SHIELD_RANK_1 = 31935;
+    constexpr uint32 SPELL_HOLY_SHIELD_RANK_1 = 20925;
+    constexpr float AEGIS_AP_SHARE = 0.50f;              // Aegis Strike: block value + 50% of attack power
+    constexpr float BULWARK_GLORY_LOW_BONUS = 1.30f;     // Oath of the Bulwark: Word of Glory below this health
+    constexpr float BULWARK_GLORY_LOW_BELOW = 35.0f;
+    constexpr float RETALIATION_BLOCK_SHARE = 0.30f;     // Oath of Retaliation: of the damage blocked
+    constexpr float RETALIATION_CONSECRATION = 1.20f;
+    constexpr uint32 RETALIATION_RESET_CHANCE = 20;      // Hammer of the Righteous resets Avenger's Shield (%)
+    constexpr float GUARDIAN_HIT_SHARE = 0.50f;          // the Guardian's hit: 50% of the Paladin's weapon hit
+    constexpr uint32 GUARDIAN_MS = 15000;                // Ardent Light: 1 more Holy Power meanwhile
+    constexpr int32 ARDENT_HOLY_SHIELD_CHARGES = 4;
+    enum BulwarkOath : uint8
+    {
+        BULWARK_OATH_NONE        = 0,  // before Rank 2
+        BULWARK_OATH_BULWARK     = 1,
+        BULWARK_OATH_RETALIATION = 2,
+    };
+    // Bulwark's Oath's ranked stats (their order in RANKED_PERKS)
+    enum BulwarkStat : size_t
+    {
+        BULWARK_STAT_HOLY = 0, BULWARK_STAT_AEGIS, BULWARK_STAT_GLORY, BULWARK_STAT_OATHS, BULWARK_STAT_GUARDIAN
     };
 
     constexpr char const* PREFIX = "UBPERK";
@@ -651,6 +710,11 @@ namespace
         uint32 ashbringerCastMs = 0;      // when Ashbringer's Call was cast (Wings of Retribution)
         bool ashbringerOut = false;
         uint32 ashbringerHits = 0;
+        // Bulwark's Oath
+        uint32 guardianCastMs = 0;        // when Guardian of the Light was cast (Ardent Light)
+        bool guardianOut = false;
+        uint32 guardianHits = 0;
+        bool bastionGlory = false;        // Oath of the Bulwark: a full Word of Glory is ready during Bastion
     };
 
     std::unordered_map<ObjectGuid::LowType, PerkState> sStates;
@@ -683,6 +747,39 @@ namespace
     float Bonus(float percent)
     {
         return 1.0f + percent / 100.0f;
+    }
+
+    // ------------------------------------------------------------------ Bulwark's Oath (oath)
+    // The oath chosen for Bulwark's Oath (the Bulwark unless changed), whether or not it is unlocked yet.
+    uint8 ChosenBulwarkOath(PerkState const& state)
+    {
+        auto itr = state.choices.find(PERK_BULWARKS_OATH);
+        return itr == state.choices.end() ? uint8(BULWARK_OATH_BULWARK) : itr->second;
+    }
+
+    // The oath in effect: none before Rank 2.
+    uint8 ActiveBulwarkOath(Player const* player, PerkState const& state)
+    {
+        return RankValue(player, state, PERK_BULWARKS_OATH, BULWARK_STAT_OATHS) > 0.0f ? ChosenBulwarkOath(state)
+                                                                                     : uint8(BULWARK_OATH_NONE);
+    }
+
+    // The Paladin with Bulwark's Oath on (and that oath, when one is given), or nullptr.
+    Player* BulwarkPlayer(Unit const* unit, uint8 oath = BULWARK_OATH_NONE)
+    {
+        Player* player = unit ? const_cast<Unit*>(unit)->ToPlayer() : nullptr;
+        PerkState const* state = player ? StateOf(player) : nullptr;
+        if (!Has(state, PERK_BULWARKS_OATH))
+            return nullptr;
+        if (oath != BULWARK_OATH_NONE && ActiveBulwarkOath(player, *state) != oath)
+            return nullptr;
+        return player;
+    }
+
+    // Consecration's damage ticks (the Paladin's Consecration, any rank)
+    bool IsConsecration(SpellInfo const* spellInfo)
+    {
+        return spellInfo && spellInfo->SpellFamilyName == SPELLFAMILY_PALADIN && (spellInfo->SpellFamilyFlags[0] & 0x20);
     }
 
     // ------------------------------------------------------------------ damage multipliers
@@ -763,6 +860,14 @@ namespace
             }
             else if ((schools & SPELL_SCHOOL_MASK_NORMAL) && !(schools & SPELL_SCHOOL_MASK_HOLY))
                 mult *= Bonus(OwnerRankValue(attacker, PERK_RETRIBUTION, OATH_STAT_PHYSICAL));
+        }
+        // Bulwark's Oath - Holy damage; Oath of Retaliation - Consecration (the Paladin's own damage)
+        if (Has(state, PERK_BULWARKS_OATH) && attacker->IsPlayer())
+        {
+            if (schools & SPELL_SCHOOL_MASK_HOLY)
+                mult *= Bonus(OwnerRankValue(attacker, PERK_BULWARKS_OATH, BULWARK_STAT_HOLY));
+            if (IsConsecration(spellInfo) && BulwarkPlayer(attacker, BULWARK_OATH_RETALIATION))
+                mult *= RETALIATION_CONSECRATION;
         }
         return mult;
     }
@@ -870,7 +975,8 @@ namespace
         return aura ? aura->GetStackAmount() : 0;
     }
 
-    // Holy Power from an ability (Wings of Retribution adds 1 while the Ashbringer fights) or from the Spirit.
+    // Holy Power from an ability (Wings of Retribution / Ardent Light add 1 while the Ashbringer / the Guardian
+    // fights) or from the Spirit / the Guardian.
     void GainHolyPower(Player* player, uint32 amount, bool fromAbility)
     {
         PerkState* state = StateOf(player);
@@ -882,6 +988,13 @@ namespace
                 ++amount;
             else
                 state->ashbringerOut = false;
+        }
+        if (fromAbility && state->guardianOut)
+        {
+            if (getMSTimeDiff(state->guardianCastMs, getMSTime()) < GUARDIAN_MS)
+                ++amount;
+            else
+                state->guardianOut = false;
         }
         for (uint32 i = 0; i < amount; ++i)
             player->CastSpell(player, SPELL_HOLY_POWER, TRIGGERED_FULL_MASK);  // one stack each, up to 3
@@ -918,6 +1031,49 @@ namespace
             GainHolyPower(player, 1, true);
     }
 
+    // Bulwark's Oath: Holy Power from Hammer of the Righteous, a Judgement or Avenger's Shield; Oath of
+    // Retaliation's Avenger's Shield reset; Guardian of the Light starts Ardent Light, which adds Holy Shield
+    // charges.
+    void OnBulwarkSpellCast(Player* player, Spell const* spell)
+    {
+        if (spell->IsTriggered() || !BulwarkPlayer(player))
+            return;
+        PerkState* state = StateOf(player);
+        uint32 id = spell->GetSpellInfo()->Id;
+        uint32 first = sSpellMgr->GetFirstSpellInChain(id);
+        if (id == SPELL_GUARDIAN_OF_THE_LIGHT)
+        {
+            state->guardianCastMs = getMSTime();
+            state->guardianOut = true;
+            state->guardianHits = 0;
+            return;
+        }
+        if (first == SPELL_HOLY_SHIELD_RANK_1)
+        {
+            if (state->guardianOut && getMSTimeDiff(state->guardianCastMs, getMSTime()) < GUARDIAN_MS)
+            {
+                ObjectGuid guid = player->GetGUID();
+                // after the cast has applied the aura
+                player->m_Events.AddEventAtOffset([guid, id]()
+                {
+                    if (Player* p = ObjectAccessor::FindPlayer(guid))
+                        if (Aura* aura = p->GetAura(id))
+                            aura->ModCharges(ARDENT_HOLY_SHIELD_CHARGES);
+                }, 1ms);
+            }
+            return;
+        }
+        bool builder = id == SPELL_HAMMER_OF_THE_RIGHTEOUS || first == SPELL_AVENGERS_SHIELD_RANK_1 ||
+                       std::find(std::begin(SPELL_JUDGEMENTS), std::end(SPELL_JUDGEMENTS), id) != std::end(SPELL_JUDGEMENTS);
+        if (builder)
+            GainHolyPower(player, 1, true);
+        if (id == SPELL_HAMMER_OF_THE_RIGHTEOUS && BulwarkPlayer(player, BULWARK_OATH_RETALIATION) &&
+            roll_chance_i(RETALIATION_RESET_CHANCE))
+            for (uint32 shield = SPELL_AVENGERS_SHIELD_RANK_1; shield; shield = sSpellMgr->GetNextSpellInChain(shield))
+                if (player->HasSpellCooldown(shield))
+                    player->RemoveSpellCooldown(shield, true);
+    }
+
     // The Spirit of the Ashbringer's Paladin (with Crusader's Oath on), or nullptr for any other unit.
     Player* AshbringerOwner(Unit* unit)
     {
@@ -926,32 +1082,57 @@ namespace
         return OathPlayer(unit->GetOwner());
     }
 
-    // The Spirit of the Ashbringer's swing: 75% of its Paladin's weapon hit (with attack power).
+    // Bulwark's Oath's Guardian of the Light's Paladin (with Bulwark's Oath on), or nullptr for any other unit.
+    Player* GuardianOwner(Unit* unit)
+    {
+        if (!unit || unit->IsPlayer() || unit->GetEntry() != NPC_GUARDIAN_OF_THE_LIGHT)
+            return nullptr;
+        return BulwarkPlayer(unit->GetOwner());
+    }
+
+    // The Spirit of the Ashbringer's swing: 75% of its Paladin's weapon hit (with attack power); the Guardian of
+    // the Light's: 50%.
     void ApplyAshbringerHit(Unit* attacker, uint32& damage)
     {
-        if (Player* owner = AshbringerOwner(attacker))
+        Player* owner = AshbringerOwner(attacker);
+        float share = ASHBRINGER_HIT_SHARE;
+        if (!owner)
+        {
+            owner = GuardianOwner(attacker);
+            share = GUARDIAN_HIT_SHARE;
+        }
+        if (owner)
         {
             float weaponHit = (owner->GetFloatValue(UNIT_FIELD_MINDAMAGE) + owner->GetFloatValue(UNIT_FIELD_MAXDAMAGE)) / 2.0f;
-            damage = uint32(std::max(1.0f, weaponHit * ASHBRINGER_HIT_SHARE));
+            damage = uint32(std::max(1.0f, weaponHit * share));
         }
     }
 
-    // Every third hit the Spirit lands gives its Paladin 1 Holy Power.
+    // Every third hit the Spirit (or the Guardian) lands gives its Paladin 1 Holy Power.
     void CountAshbringerHit(Unit* attacker, uint32 damage, DamageEffectType damageType)
     {
-        Player* owner = damage && damageType == DIRECT_DAMAGE ? AshbringerOwner(attacker) : nullptr;
+        if (!damage || damageType != DIRECT_DAMAGE)
+            return;
+        Player* owner = AshbringerOwner(attacker);
+        bool guardian = false;
+        if (!owner)
+        {
+            owner = GuardianOwner(attacker);
+            guardian = true;
+        }
         if (!owner)
             return;
         PerkState* state = StateOf(owner);
-        if (++state->ashbringerHits >= ASHBRINGER_HITS_PER_POWER)
+        uint32& hits = guardian ? state->guardianHits : state->ashbringerHits;
+        if (++hits >= ASHBRINGER_HITS_PER_POWER)
         {
-            state->ashbringerHits = 0;
+            hits = 0;
             ObjectGuid guid = owner->GetGUID();
             // after the swing, never inside the damage calculation
             owner->m_Events.AddEventAtOffset([guid]()
             {
                 if (Player* player = ObjectAccessor::FindPlayer(guid))
-                    if (OathPlayer(player))
+                    if (OathPlayer(player) || BulwarkPlayer(player))
                         GainHolyPower(player, 1, false);
             }, 1ms);
         }
@@ -972,14 +1153,26 @@ namespace
         keep(SPELL_TEMPLARS_VERDICT, on);
         keep(SPELL_INQUISITION, on);
         keep(SPELL_ASHBRINGERS_CALL, on && RankValue(player, state, PERK_RETRIBUTION, OATH_STAT_ASHBRINGER) > 0.0f);
+        // Bulwark's Oath's abilities the same way
+        bool bulwark = Has(&state, PERK_BULWARKS_OATH);
+        keep(SPELL_AEGIS_STRIKE, bulwark);
+        keep(SPELL_WORD_OF_GLORY, bulwark);
+        keep(SPELL_GUARDIAN_OF_THE_LIGHT, bulwark && RankValue(player, state, PERK_BULWARKS_OATH, BULWARK_STAT_GUARDIAN) > 0.0f);
+        if (!on && !bulwark && player->HasAura(SPELL_HOLY_POWER))
+            player->RemoveAurasDueToSpell(SPELL_HOLY_POWER);
         if (!on)
         {
-            if (player->HasAura(SPELL_HOLY_POWER))
-                player->RemoveAurasDueToSpell(SPELL_HOLY_POWER);
             if (player->HasAura(SPELL_INQUISITION))
                 player->RemoveAurasDueToSpell(SPELL_INQUISITION);
             state.verdictBonus = 0;
             state.ashbringerOut = false;
+        }
+        if (!bulwark)
+        {
+            if (player->HasAura(SPELL_BASTION))
+                player->RemoveAurasDueToSpell(SPELL_BASTION);
+            state.bastionGlory = false;
+            state.guardianOut = false;
         }
     }
 
@@ -1275,12 +1468,14 @@ namespace
         SendAddon(player, "STATE:" + ids);
     }
 
-    // VARIANT:1001:<classic|oath> (which Retribution perk the server runs) and CHOICE:1001:<oath>
+    // VARIANT:1001:<classic|oath> (which Retribution perk the server runs), CHOICE:1001:<oath> and
+    // CHOICE:1002:<oath> (Bulwark's Oath)
     void SendChoices(Player* player, PerkState const& state)
     {
         SendAddon(player, std::string("VARIANT:") + std::to_string(PERK_RETRIBUTION) + ":" +
                           (sRetributionClassic ? "classic" : "oath"));
         SendAddon(player, "CHOICE:" + std::to_string(PERK_RETRIBUTION) + ":" + std::to_string(ChosenOath(state)));
+        SendAddon(player, "CHOICE:" + std::to_string(PERK_BULWARKS_OATH) + ":" + std::to_string(ChosenBulwarkOath(state)));
     }
 
     // ------------------------------------------------------------------ perk ranks
@@ -1422,9 +1617,10 @@ namespace
         // Vital Reserve (maximum health) and Heavy Frame (armor), you and your pet
         std::array<int32, MAX_SPELL_EFFECTS> vitality = { value(PERK_VITAL_RESERVE, 0), value(PERK_HEAVY_FRAME, 0), 0 };
         SetPerkAura(player, SPELL_PERK_VITALITY, vitality);
-        // the proc aura that tells Counterweight, Shield Wall Training and Thornmail about melee attacks taken
+        // the proc aura that tells Counterweight, Shield Wall Training, Thornmail and Bulwark's Oath (Oath of
+        // Retaliation) about melee attacks taken
         int32 defenseProc = Has(&state, PERK_COUNTERWEIGHT) || Has(&state, PERK_SHIELD_WALL_TRAINING) ||
-                            Has(&state, PERK_THORNMAIL) ? 1 : 0;
+                            Has(&state, PERK_THORNMAIL) || Has(&state, PERK_BULWARKS_OATH) ? 1 : 0;
         SetPerkAura(player, SPELL_PERK_DEFENSE_PROC, { defenseProc, 0, 0 });
         // Endless Rage: rage from damage dealt (rage from damage taken is in ApplyRageTaken)
         SetPerkAura(player, SPELL_PERK_RAGE, { value(PERK_ENDLESS_RAGE, 0), 0, 0 });
@@ -1512,16 +1708,19 @@ namespace
             return;
         }
 
-        // CHOICE:<perk>:<choice> - Crusader's Oath's oath (1 Vengeance, 2 Crusade)
+        // CHOICE:<perk>:<choice> - Crusader's Oath's oath (1 Vengeance, 2 Crusade) or Bulwark's Oath's (1 the
+        // Bulwark, 2 Retaliation)
         if (isChoice)
         {
             std::vector<std::string_view> parts = Acore::Tokenize(text, ':', false);
             Optional<uint32> perk = parts.size() == 3 ? Acore::StringTo<uint32>(parts[1]) : Optional<uint32>();
             Optional<uint32> choice = parts.size() == 3 ? Acore::StringTo<uint32>(parts[2]) : Optional<uint32>();
-            if (perk && choice && *perk == PERK_RETRIBUTION && (*choice == OATH_VENGEANCE || *choice == OATH_CRUSADE))
+            if (perk && choice && (*perk == PERK_RETRIBUTION || *perk == PERK_BULWARKS_OATH) &&
+                (*choice == 1 || *choice == 2))
             {
                 state.choices[*perk] = uint8(*choice);
                 state.verdictBonus = 0;
+                state.bastionGlory = false;
                 CharacterDatabase.Execute("REPLACE INTO `character_unbound_perk_choices` (`guid`, `perk`, `choice`) VALUES ({}, {}, {})",
                     player->GetGUID().GetCounter(), *perk, *choice);
             }
@@ -1901,8 +2100,13 @@ namespace
     }
 
     // Counterweight, Shield Wall Training and Thornmail, from the defense proc aura (a melee attack taken).
-    void HandleDefenseProc(Unit* victim, Unit* attacker, uint32 hitMask, uint32 damage)
+    void HandleDefenseProc(Unit* victim, Unit* attacker, uint32 hitMask, uint32 damage, uint32 blocked)
     {
+        // Bulwark's Oath, Oath of Retaliation: a share of the damage blocked back as Holy damage
+        if ((hitMask & PROC_HIT_BLOCK) && blocked && attacker && attacker != victim && attacker->IsAlive() &&
+            victim->IsAlive() && BulwarkPlayer(victim, BULWARK_OATH_RETALIATION))
+            if (int32 holy = int32(blocked * RETALIATION_BLOCK_SHARE))
+                victim->CastCustomSpell(SPELL_RETALIATION, SPELLVALUE_BASE_POINT0, holy, attacker, true);
         PerkState* state = PerkOwnerState(victim);
         if (!state || !victim->IsAlive())
             return;
@@ -2141,10 +2345,12 @@ public:
         }
     }
 
-    // Crusader's Oath: Holy Power from Crusader Strike, Judgement and Hammer of Wrath
+    // Crusader's Oath: Holy Power from Crusader Strike, Judgement and Hammer of Wrath; Bulwark's Oath: from
+    // Hammer of the Righteous, Judgement and Avenger's Shield
     void OnPlayerSpellCast(Player* player, Spell* spell, bool /*skipCheck*/) override
     {
         OnOathSpellCast(player, spell);
+        OnBulwarkSpellCast(player, spell);
     }
 
     void OnPlayerUpdate(Player* player, uint32 diff) override
@@ -2428,6 +2634,91 @@ class spell_unbound_oath_inquisition : public SpellScript
     }
 };
 
+// Aegis Strike and Word of Glory need Holy Power, and spend all of it.
+static SpellCastResult CheckBulwarkPower(Unit* caster)
+{
+    if (!BulwarkPlayer(caster))
+        return SPELL_FAILED_SPELL_UNAVAILABLE;
+    return HolyPower(caster) ? SPELL_CAST_OK : SPELL_FAILED_CASTER_AURASTATE;
+}
+
+// 200224 - Aegis Strike (Bulwark's Oath): a Holy shield strike for block value + 50% of attack power, times the
+// rank's percent and a share by Holy Power; at 3 Holy Power, Oath of the Bulwark gives Bastion.
+class spell_unbound_bulwark_aegis_strike : public SpellScript
+{
+    PrepareSpellScript(spell_unbound_bulwark_aegis_strike);
+
+    uint32 _power = 0;
+
+    SpellCastResult CheckCast() { return CheckBulwarkPower(GetCaster()); }
+
+    void Spend() { _power = SpendHolyPower(GetCaster()); }
+
+    void Strike()
+    {
+        Unit* target = GetHitUnit();
+        Player* player = BulwarkPlayer(GetCaster());
+        if (!player || !target || !_power)
+            return;
+        PerkState* state = StateOf(player);
+        float base = float(player->GetShieldBlockValue()) + AEGIS_AP_SHARE * player->GetTotalAttackPowerValue(BASE_ATTACK);
+        float full = base * RankValue(player, *state, PERK_BULWARKS_OATH, BULWARK_STAT_AEGIS) / 100.0f;
+        SetHitDamage(std::max(1, int32(full * VERDICT_SHARE[_power - 1])));
+        if (_power >= MAX_HOLY_POWER && ActiveBulwarkOath(player, *state) == BULWARK_OATH_BULWARK)
+        {
+            player->CastSpell(player, SPELL_BASTION, TRIGGERED_FULL_MASK);
+            state->bastionGlory = true;
+        }
+    }
+
+    void Register() override
+    {
+        OnCheckCast += SpellCheckCastFn(spell_unbound_bulwark_aegis_strike::CheckCast);
+        OnCast += SpellCastFn(spell_unbound_bulwark_aegis_strike::Spend);
+        OnHit += SpellHitFn(spell_unbound_bulwark_aegis_strike::Strike);
+    }
+};
+
+// 200225 - Word of Glory (Bulwark's Oath): heals a share of the rank's percent of maximum health by Holy Power;
+// Oath of the Bulwark: the first one during Bastion heals as if at 3 Holy Power, and 30% more below 35% health.
+class spell_unbound_bulwark_word_of_glory : public SpellScript
+{
+    PrepareSpellScript(spell_unbound_bulwark_word_of_glory);
+
+    uint32 _power = 0;
+
+    SpellCastResult CheckCast() { return CheckBulwarkPower(GetCaster()); }
+
+    void Spend() { _power = SpendHolyPower(GetCaster()); }
+
+    void Heal()
+    {
+        Player* player = BulwarkPlayer(GetCaster());
+        if (!player || !_power)
+            return;
+        PerkState* state = StateOf(player);
+        float share = VERDICT_SHARE[_power - 1];
+        float mult = 1.0f;
+        if (ActiveBulwarkOath(player, *state) == BULWARK_OATH_BULWARK)
+        {
+            if (state->bastionGlory && player->HasAura(SPELL_BASTION))
+                share = 1.0f;
+            state->bastionGlory = false;
+            if (player->HealthBelowPct(int32(BULWARK_GLORY_LOW_BELOW)))
+                mult = BULWARK_GLORY_LOW_BONUS;
+        }
+        float percent = RankValue(player, *state, PERK_BULWARKS_OATH, BULWARK_STAT_GLORY);
+        SetHitHeal(std::max(1, int32(player->GetMaxHealth() * percent / 100.0f * share * mult)));
+    }
+
+    void Register() override
+    {
+        OnCheckCast += SpellCheckCastFn(spell_unbound_bulwark_word_of_glory::CheckCast);
+        OnCast += SpellCastFn(spell_unbound_bulwark_word_of_glory::Spend);
+        OnHit += SpellHitFn(spell_unbound_bulwark_word_of_glory::Heal);
+    }
+};
+
 // 20271, 53407, 53408 - Judgements (Retribution perk: spread to 4 more enemies within 10 yards, a free Exorcism
 // on each enemy)
 class spell_unbound_ret_judgement : public SpellScript
@@ -2475,7 +2766,8 @@ class spell_unbound_perk_defense_proc : public AuraScript
         PreventDefaultAction();
         DamageInfo* damageInfo = eventInfo.GetDamageInfo();
         uint32 damage = damageInfo ? damageInfo->GetDamage() + damageInfo->GetAbsorb() : 0;
-        HandleDefenseProc(GetTarget(), eventInfo.GetProcTarget(), eventInfo.GetHitMask(), damage);
+        uint32 blocked = damageInfo ? damageInfo->GetBlock() : 0;
+        HandleDefenseProc(GetTarget(), eventInfo.GetProcTarget(), eventInfo.GetHitMask(), damage, blocked);
     }
 
     void Register() override
@@ -2550,5 +2842,7 @@ void AddSC_unbound_perks()
     RegisterSpellScript(spell_unbound_ret_judgement);
     RegisterSpellScript(spell_unbound_oath_templars_verdict);
     RegisterSpellScript(spell_unbound_oath_inquisition);
+    RegisterSpellScript(spell_unbound_bulwark_aegis_strike);
+    RegisterSpellScript(spell_unbound_bulwark_word_of_glory);
     RegisterSpellScript(spell_unbound_perk_defense_proc);
 }

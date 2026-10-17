@@ -264,6 +264,27 @@ Needs the new `patch-Z.MPQ` (client closed, then `python tools/custom_dbc.py`) a
 - [ ] With `Unbound.Perks.Retribution.Classic = 1` and a restart, the perk is the old **Retribution** again
       (no spells, the old tooltip); set it back to 0 afterwards.
 
+## 9g. Bulwark's Oath (Paladin Protection class perk)
+
+Needs the new `patch-Z.MPQ` and the UnboundPerks addon copied again. A Protection Paladin with a shield.
+
+- [ ] The Paladin's class perks show **Crusader's Oath** and **Bulwark's Oath**; turning one on turns the other off.
+- [ ] Turning Bulwark's Oath on teaches Aegis Strike and Word of Glory (and Guardian of the Light at level 60);
+      turning it off removes them.
+- [ ] Hammer of the Righteous, Judgement and Avenger's Shield each add a **Holy Power** stack (the same buff and
+      bar as Crusader's Oath).
+- [ ] Aegis Strike without Holy Power fails; with it, it spends all of them for a Holy hit that grows with 1 / 2 /
+      3 Holy Power (and with block value). Without a shield it can't be cast.
+- [ ] Word of Glory spends all Holy Power and heals about 8% / 16% / 25% of maximum health.
+- [ ] **Oath of the Bulwark:** Aegis Strike at 3 Holy Power gives the **Bastion** buff (6 seconds); a Word of Glory
+      with just 1 Holy Power during it heals the full 25%. Below 35% health Word of Glory heals more.
+- [ ] **Oath of Retaliation** (button in the perk window): blocked attacks deal **Retaliation** Holy damage back;
+      Hammer of the Righteous sometimes resets Avenger's Shield.
+- [ ] Guardian of the Light summons a ghostly Uther for 15 seconds with a "damage taken reduced" buff; Holy Power
+      comes faster meanwhile, and Holy Shield cast then has 12 charges instead of 8.
+- [ ] `.perk rank 1002 1`: no oaths, no Guardian, weaker numbers; `.perk rank 1002` goes back.
+- [ ] Training dummy, perk off vs on: about +26% damage (more with Retaliation against a boss that hits you).
+
 ## 9e. Expansion lock on a normal account
 
 - [ ] On a non-GM account: TBC and Wrath zones send you home, the Dungeon Finder shows only classic dungeons and

@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Bulwark's Oath: the Paladin Protection class perk (Holy Power, Aegis Strike, Word of Glory, two oaths, Guardian of the Light; 3 ranks) | 2026-10-16 | 2026-10-16 | SaucyHobo54 |
 | Crusader's Oath: the Paladin Retribution class perk reworked (Holy Power, Templar's Verdict, Inquisition, two oaths, Ashbringer's Call; 3 ranks) | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Bounty Wayfinder: teleports to the Bulletin Board's open-world quests, outside aggro range | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Scavenger Imp loot companion (loots up to 4 corpses within 27 yards when you open one; Heroic Sigils) | 2026-10-16 | 2026-10-16 | Kasix-K |
@@ -78,6 +79,22 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-16
 
 ### Added
+- **Bulwark's Oath,** the Paladin's Protection class perk (perk 1002), built like Crusader's Oath and swapping
+  with it (turning one on turns the other off). Hammer of the Righteous, Judgement and Avenger's Shield build
+  **Holy Power** (the same buff and bar). The perk teaches two abilities that spend all of it: **Aegis Strike**
+  (needs a shield, 6 seconds: a Holy strike for your block value + 50% of your attack power, times 45% / 98% /
+  150% at 1 / 2 / 3 Holy Power) and **Word of Glory** (heals you for 8% / 16% / 25% of your maximum health). Holy
+  damage +10%. **3 ranks by level** (1, 30, 60): Rank 1 is weaker (Aegis up to 100%, Word of Glory up to 15%,
+  Holy +4%); **Rank 2** unlocks the **oaths** (button in the perk window): **the Bulwark** (Aegis Strike at 3
+  Holy Power gives **Bastion**, 6 seconds of 10% less damage taken and 10% more block chance; the first Word of
+  Glory during Bastion heals as if at 3 Holy Power; Word of Glory heals 30% more below 35% health) or
+  **Retaliation** (blocks deal 30% of the blocked damage back as Holy damage, Consecration deals 20% more,
+  Hammer of the Righteous has a 20% chance to reset Avenger's Shield). **Rank 3** teaches **Guardian of the
+  Light** (3 minutes): a spectral paladin (the Ghost of Uther's look) fights your target for 15 seconds, you take
+  30% less damage meanwhile, every third hit it lands gives Holy Power, and (**Ardent Light**) Holy Power
+  abilities give 1 more and Holy Shield has 4 more charges. Tuned to the class perk budget, about +26-31%
+  single-target damage at level 60 (to confirm on a training dummy). Settings `Unbound.Perks.BulwarksOath.*`.
+  Needs the new `patch-Z.MPQ` (spells 200224-200228) and the UnboundPerks addon copied again.
 - **Crusader's Oath** replaces the Paladin's Retribution class perk (same perk slot, id 1001, so it stays on for
   anyone who had Retribution on). Crusader Strike, Judgement and Hammer of Wrath build **Holy Power** (up to 3,
   a buff and a bar under the player frame; it fades 20 seconds after the last gain). The perk teaches two

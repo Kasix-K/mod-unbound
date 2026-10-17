@@ -126,8 +126,8 @@ SPELLS = [
         'EffectBonusMultiplier_1': 1.0,
         'SpellIconID': 1795,        # Spell_Holy_Power
         'Name_Lang_enUS': 'Holy Power',
-        'Description_Lang_enUS': 'Spent by Templar\'s Verdict and Inquisition.',
-        'AuraDescription_Lang_enUS': 'Holy Power, spent by Templar\'s Verdict and Inquisition.',
+        'Description_Lang_enUS': 'Spent by your class perk\'s abilities.',
+        'AuraDescription_Lang_enUS': 'Holy Power, spent by your class perk\'s abilities.',
         'SchoolMask': 2,
     },
     {
@@ -187,6 +187,92 @@ SPELLS = [
         'Name_Lang_enUS': "Ashbringer's Call",
         'Description_Lang_enUS': 'Summons the Spirit of the Ashbringer to fight your target for 15 sec. Every '
                                  'third hit it lands gives you 1 Holy Power.',
+    },
+    # Bulwark's Oath (the Paladin Protection class perk), keep in sync with src/unbound_perks.cpp. Holy Power is
+    # 200220 above. The numbers here are the level 60 ones (the server scales them by Holy Power, rank and oath).
+    {
+        'ID': 200224,  # Aegis Strike: Shield of Righteousness's shield strike (a level 75 spell, not on this server)
+        '_base': 53600,             # Shield of Righteousness, Rank 1: needs a shield
+        '_script': 'spell_unbound_bulwark_aegis_strike',
+        'Category': 0, 'CategoryRecoveryTime': 0,   # not Shield Slam's cooldown category
+        'RecoveryTime': 6000,       # 6 s
+        'ManaCostPct': 0,
+        'BaseLevel': 1, 'SpellLevel': 1,
+        'EffectBasePoints_1': 0,    # the damage is set by the server
+        'Effect_2': 0, 'EffectBasePoints_2': 0, 'EffectDieSides_2': 0,
+        'SpellClassMask_2': 0,      # not Shield of Righteousness for the core's block value formula and talents
+        'Name_Lang_enUS': 'Aegis Strike',
+        'Description_Lang_enUS': 'Spends all your Holy Power on a Holy shield strike for your block value plus '
+                                 '50% of your attack power, times 45% / 98% / 150% at 1 / 2 / 3 Holy Power.',
+    },
+    {
+        'ID': 200225,  # Word of Glory: an instant self heal, amount set by the server
+        '_base': 19750,             # Flash of Light, Rank 1
+        '_script': 'spell_unbound_bulwark_word_of_glory',
+        'CastingTimeIndex': 1,      # instant
+        'InterruptFlags': 0,
+        'MaxLevel': 0, 'BaseLevel': 1, 'SpellLevel': 1,
+        'RangeIndex': 1,            # self
+        'ImplicitTargetA_1': TARGET_UNIT_CASTER,
+        'EffectBasePoints_1': 0, 'EffectDieSides_1': 1, 'EffectRealPointsPerLevel_1': 0.0,
+        'ManaCostPct': 0,
+        'SpellClassMask_1': 0,      # not Flash of Light for talents and glyphs
+        'SpellIconID': 2139,        # Spell_Holy_HolyGuidance
+        'Name_Lang_enUS': 'Word of Glory',
+        'Description_Lang_enUS': 'Spends all your Holy Power to heal yourself for 8% / 16% / 25% of your maximum '
+                                 'health at 1 / 2 / 3 Holy Power.',
+    },
+    {
+        'ID': 200226,  # Guardian of the Light: summons creature 190221 (data/sql/db-world/unbound_bulwarks_oath.sql)
+        '_base': 34433,             # Shadowfiend: a 15 s guardian that attacks the target
+        'EffectMiscValue_1': 190221,
+        'Effect_2': SPELL_EFFECT_APPLY_AURA, 'EffectAura_2': 87,   # damage taken -30% for the 15 s
+        'EffectMiscValue_2': 127, 'EffectBasePoints_2': -31, 'EffectDieSides_2': 1,
+        'EffectTriggerSpell_2': 0, 'ImplicitTargetA_2': TARGET_UNIT_CASTER, 'EffectChainAmplitude_2': 1.0,
+        'RecoveryTime': 180000,     # 3 min
+        'BaseLevel': 60, 'SpellLevel': 60,
+        'ShapeshiftMask': 0,
+        'SpellVisualID_1': 0,
+        'SpellClassSet': 10, 'SpellClassMask_1': 0, 'SpellClassMask_2': 0, 'SpellClassMask_3': 0,  # not Shadowfiend
+        'SchoolMask': 2,
+        'SpellIconID': 2873,        # Spell_Holy_GuardianSpirit
+        'Name_Lang_enUS': 'Guardian of the Light',
+        'Description_Lang_enUS': 'Summons a Guardian of the Light to fight your target for 15 sec. You take 30% '
+                                 'less damage meanwhile, and every third hit it lands gives you 1 Holy Power.',
+        'AuraDescription_Lang_enUS': 'Damage taken reduced by 30%.',
+    },
+    {
+        'ID': 200227,  # Bastion: Oath of the Bulwark's buff after a 3 Holy Power Aegis Strike
+        'CastingTimeIndex': 1,      # instant
+        'DurationIndex': 32,        # 6 s
+        'ProcChance': 101,
+        'RangeIndex': 1,            # self
+        'EquippedItemClass': -1,
+        'Effect_1': SPELL_EFFECT_APPLY_AURA, 'EffectAura_1': 87,   # damage taken -10%
+        'EffectMiscValue_1': 127, 'EffectBasePoints_1': -11, 'EffectDieSides_1': 1,
+        'ImplicitTargetA_1': TARGET_UNIT_CASTER,
+        'Effect_2': SPELL_EFFECT_APPLY_AURA, 'EffectAura_2': 51,   # block chance +10%
+        'EffectBasePoints_2': 9, 'EffectDieSides_2': 1,
+        'ImplicitTargetA_2': TARGET_UNIT_CASTER,
+        'EffectChainAmplitude_1': 1.0, 'EffectChainAmplitude_2': 1.0,
+        'EffectBonusMultiplier_1': 1.0, 'EffectBonusMultiplier_2': 1.0,
+        'SpellIconID': 3016,        # Ability_Paladin_ShieldoftheTemplar
+        'Name_Lang_enUS': 'Bastion',
+        'Description_Lang_enUS': 'Damage taken reduced by 10% and block chance increased by 10% for 6 sec. Your '
+                                 'next Word of Glory heals as if at 3 Holy Power.',
+        'AuraDescription_Lang_enUS': 'Damage taken reduced by 10%, block chance increased by 10%. Your next Word '
+                                     'of Glory heals as if at 3 Holy Power.',
+        'SchoolMask': 2,
+    },
+    {
+        'ID': 200228,  # Retaliation: Oath of Retaliation's Holy damage back on blocks, amount set by the server
+        '_base': 59653,             # Damage Shield's damage (the warrior's)
+        'PowerType': 0,
+        'SpellClassSet': 0,         # not a warrior spell
+        'SchoolMask': 2,            # Holy
+        'SpellIconID': 2135,        # Spell_Holy_ArdentDefender
+        'Name_Lang_enUS': 'Retaliation',
+        'Description_Lang_enUS': 'Holy damage from a blocked attack.',
     },
 ]
 

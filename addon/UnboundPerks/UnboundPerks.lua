@@ -1009,8 +1009,9 @@ local function addCharacterTab()
 end
 
 -- ------------------------------------------------------------------ Holy Power bar
--- Crusader's Oath's Holy Power: three icons under the player frame, lit by the stacks of the Holy Power buff
--- (spell 200220, server-side in src/unbound_perks.cpp). Shown while the perk is on. Shift-drag to move it.
+-- Crusader's Oath's and Bulwark's Oath's Holy Power: three icons under the player frame, lit by the stacks of the
+-- Holy Power buff (spell 200220, server-side in src/unbound_perks.cpp). Shown while either perk is on. Shift-drag
+-- to move it.
 local HOLY_POWER_SPELL = 200220
 local HOLY_POWER_ICON = "Interface\\Icons\\Spell_Holy_Power"
 local holyBar
@@ -1040,7 +1041,9 @@ updateHolyBar = function()
     for _, p in ipairs(P.PERKS) do
         if p.id == 1001 then perk = p end
     end
-    if not perk or perk.isClassic or playerClass() ~= "PALADIN" or not (db and db.active[1001]) then
+    -- Crusader's Oath (not the classic Retribution perk) or Bulwark's Oath (1002)
+    local oath = perk and not perk.isClassic and db and db.active[1001]
+    if playerClass() ~= "PALADIN" or not (oath or (db and db.active[1002])) then
         holyBar:Hide()
         return
     end

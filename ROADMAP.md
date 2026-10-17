@@ -196,6 +196,10 @@ changes, raid by raid (see Next up).
       Inquisition, the oaths of Vengeance and the Crusade, Ashbringer's Call; 3 ranks by level; tuned to the class
       perk budget (about +28-32% single-target on paper, to confirm on a training dummy). The original perk is kept
       behind `Unbound.Perks.Retribution.Classic`.
+- [x] Bulwark's Oath (2026-10-16), the Paladin Protection class perk, built like Crusader's Oath and swapping
+      with it: Holy Power (Hammer of the Righteous, Judgement, Avenger's Shield), Aegis Strike, Word of Glory, the
+      oaths of the Bulwark (Bastion) and Retaliation, Guardian of the Light; 3 ranks by level; about +26-31%
+      single-target on paper (to confirm on a training dummy).
 
 - [x] Gear infusion (all 4 stages, 2026-10-14): the collection and its stats (20% per item, diminishing
       returns), item expansion tags, infusing by kills, the Altar of Tribute, item tooltips and the collection
@@ -285,9 +289,9 @@ changes, raid by raid (see Next up).
 - [ ] **More class perks** (large, 1-3 hours each): one per spec, each worth about +25-35% to its spec's
       single-target damage (the class perk target in the Power budget), one active at a time. The model is
       **Crusader's Oath** (Paladin Retribution, 2026-10-16): a class resource (Holy Power), spenders the perk
-      teaches, a choice inside the perk (the oaths), 3 ranks by level that unlock more. Paladin Protection and
-      Holy perks are planned, sharing Holy Power with their own spenders (e.g. Shield of the Righteous; Word of
-      Glory and Light of Dawn).
+      teaches, a choice inside the perk (the oaths), 3 ranks by level that unlock more. Paladin Protection is
+      done (**Bulwark's Oath**, see Done); a Paladin Holy perk is planned, sharing Holy Power with its own
+      spenders (e.g. Light of Dawn).
 - [ ] **Heroic Sigil: the rest** (easy to moderate; SaucyHobo54): the Heroic currency is live and tested (see Done), still to do:
   - **Loot companions by currency** (decided 2026-10-16): the small click-to-loot companion, the **Scavenger Imp**
     (up to 4 corpses within 27 yards when you open one), is bought with **Heroic Sigils** (done: 160 Sigils at the

@@ -133,7 +133,12 @@ spawns (with the location), when it dies (with who killed it), and when nobody k
 - **Perks:** type `/perks` or click the **Perks** side tab on the right edge of the character sheet (C) to open the Character Perks window (needs the **UnboundPerks** addon). Always on
   for everyone: No Resurrection Sickness, No Daze, and Rapid Recovery (ranked by level: up to 8% health
   and mana per second, 4 seconds after combat). Switch on up to 5 Offensive perks (about +10% each) and one class perk (so far: Paladin
-  **Crusader's Oath**, Retribution). Perks can't be changed in combat; save favourite sets as loadouts.
+  **Crusader's Oath**, Retribution, or **Bulwark's Oath**, Protection). Perks can't be changed in combat; save favourite sets as loadouts.
+- **Bulwark's Oath** (Paladin): Hammer of the Righteous, Judgement and Avenger's Shield build **Holy Power**; the
+  perk teaches **Aegis Strike** (a shield strike) and **Word of Glory** (a self heal), which spend it all. From
+  level 30 choose an oath: **the Bulwark** (Bastion: less damage taken, more block, a full Word of Glory) or
+  **Retaliation** (blocks hit back, stronger Consecration). At 60: **Guardian of the Light** (3 min, 30% less
+  damage taken for 15 seconds). Perk 1002; spells 200224-200228; guardian creature 190221.
 - **Crusader's Oath** (Paladin): Crusader Strike, Judgement and Hammer of Wrath build **Holy Power** (up to 3,
   icons under the player frame); the perk teaches **Templar's Verdict** (a Holy strike) and **Inquisition** (more
   Holy damage), which spend it all. From level 30 choose an oath in the perk window: **Vengeance** (bigger
@@ -179,7 +184,7 @@ items count once those expansions are released). Settings: `Unbound.Attunement.*
 The 4 pet-only perks (Pet Encouragement, Pet's Blessing, Pets replenishment, Pets Roar) only show for
 Hunters, Warlocks, Death Knights and Mages.
 
-All 61 perks but No Daze and No Resurrection Sickness have ranks (Crusader's Oath has 3, at levels 1 / 30 / 60,
+All 62 perks but No Daze and No Resurrection Sickness have ranks (Crusader's Oath and Bulwark's Oath have 3, at levels 1 / 30 / 60,
 each unlocking more; the original Retribution perk has none). A character's
 rank comes from its level; values in `mod_unbound.conf` (`Unbound.Perks.<Name>.*`). Test any rank with
 `.perk rank <perk id> <rank>`; `.perk rank <perk id>` goes back to the level's rank.
