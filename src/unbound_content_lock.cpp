@@ -16,6 +16,8 @@
  *    and Draenei starting zones share map 530 with Outland and stay open, so those races remain
  *    playable; Ebon Hold stays open for Death Knights (only GM accounts can create them while Wrath is
  *    locked, see CharacterCreating.Disabled.ClassMask).
+ * The Unbound addon asks which expansions are released (addon whisper to itself, prefix UBLOCK, "EXPANSION";
+ * answer "EXPANSION:<Unbound.ExpansionUnlocked>"), to hide a locked expansion's sets in the Transmog window.
  * Battlegrounds and arenas are left alone. GMs (with GM mode on) are exempt. Classic Naxxramas (the
  * 40-player difficulty of the Wrath map, src/naxx40) counts as classic content.
  * The level cap and Death Knight creation are worldserver.conf settings (MaxPlayerLevel,
@@ -35,6 +37,9 @@
 #include <unordered_set>
 
 static uint32 sExpansionUnlocked = 0;
+
+// Addon messages: the Unbound addon whispers its own character (see the file comment).
+static constexpr char const* ADDON_PREFIX = "UBLOCK";
 
 // Classic Naxxramas is map 533 (MAP_NAXXRAMAS) on the 10-player heroic difficulty slot, made a 40-player raid (src/naxx40).
 static constexpr Difficulty NAXX40_DIFFICULTY = RAID_DIFFICULTY_10MAN_HEROIC;
@@ -146,8 +151,28 @@ public:
     unbound_content_lock_player() : PlayerScript("unbound_content_lock_player", {
         PLAYERHOOK_ON_UPDATE_ZONE,
         PLAYERHOOK_CAN_ENTER_MAP,
-        PLAYERHOOK_CAN_JOIN_LFG
+        PLAYERHOOK_CAN_JOIN_LFG,
+        PLAYERHOOK_CAN_PLAYER_USE_PRIVATE_CHAT
     }) { }
+
+    // The addon asks which expansions are released: answer it and don't deliver the whisper.
+    bool OnPlayerCanUseChat(Player* player, uint32 type, uint32 language, std::string& msg, Player* receiver) override
+    {
+        if (type != CHAT_MSG_WHISPER || language != LANG_ADDON || receiver != player)
+            return true;
+        std::string const prefix = std::string(ADDON_PREFIX) + "\t";
+        if (msg.rfind(prefix, 0) != 0)
+            return true;
+
+        if (msg.substr(prefix.size()) == "EXPANSION")
+        {
+            WorldPacket data;
+            ChatHandler::BuildChatPacket(data, CHAT_MSG_WHISPER, LANG_ADDON, player, player,
+                prefix + "EXPANSION:" + std::to_string(sExpansionUnlocked));
+            player->SendDirectMessage(&data);
+        }
+        return false;
+    }
 
     // Covers continents (Northrend, the Outland zones of map 530), which the map entry check skips.
     void OnPlayerUpdateZone(Player* player, uint32 newZone, uint32 /*newArea*/) override

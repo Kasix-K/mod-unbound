@@ -3,4 +3,6 @@
 ## Notes: Client tweaks for the Unbound server.
 ## Author: mod-unbound
 ## Version: 1.0
+## OptionalDeps: Transmog
+TransmogSetExpansions.lua
 Unbound.lua

@@ -8,6 +8,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 
 | Feature | Added | Last changed | By |
 |---|---|---|---|
+| Transmog Sets tab hides the sets of locked expansions | 2026-10-17 | 2026-10-17 | Kasix-K |
 | Lightbringer's Oath: the Paladin Holy class perk (Holy Power, Light of Dawn, Atonement, two oaths, Naaru's Blessing; 3 ranks) | 2026-10-16 | 2026-10-16 | Kasix-K |
 | Bulwark's Oath: the Paladin Protection class perk (Holy Power, Aegis Strike, Word of Glory, two oaths, Guardian of the Light; 3 ranks) | 2026-10-16 | 2026-10-16 | SaucyHobo54 |
 | Crusader's Oath: the Paladin Retribution class perk reworked (Holy Power, Templar's Verdict, Inquisition, two oaths, Ashbringer's Call; 3 ranks) | 2026-10-16 | 2026-10-16 | Kasix-K |
@@ -80,6 +81,10 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ## 2026-10-17
 
 ### Changed
+- **Transmog Sets tab shows only released expansions' sets:** while The Burning Crusade and Wrath are locked,
+  the Sets tab lists only classic sets (127 of 668), and its Category menu has no Burning Crusade or Wrath
+  choice. A PvP set counts by its pieces' level (Gladiator's sets are TBC or Wrath). They come back by themselves
+  when `Unbound.ExpansionUnlocked` is raised. Needs a server rebuild and a client restart (new addon file).
 - **Old transmog module removed for good:** the Warpweaver (190010, from the first mod-transmog) is gone, along
   with that module's database leftovers. Transmog is the Transmogrify spell or `/transmog`.
 - **The Warden of Rare Wonders' pages are sorted:** each lists its items from the cheapest up, then by name.

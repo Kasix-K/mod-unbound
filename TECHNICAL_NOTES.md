@@ -350,3 +350,14 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   mode on, battlegrounds and arenas are exempt. Death Knights are GM-only through
   `CharacterCreating.Disabled.ClassMask = 32`. Releasing an expansion: raise `Unbound.ExpansionUnlocked`
   and `MaxPlayerLevel` (70/80) and, for Wrath, clear the class mask (see the cheat sheet for playerbots).
+  **Transmog Sets tab:** the Unbound addon (`## OptionalDeps: Transmog`, so it loads after mod-transmog-plus's
+  addon) hides the sets of locked expansions and their Category choices. On `PLAYER_ENTERING_WORLD` it whispers
+  itself `UBLOCK` / `EXPANSION`; the content lock answers `EXPANSION:<Unbound.ExpansionUnlocked>` (until then only
+  classic sets show). It wraps `Transmog:UpdateSetList` so `Transmog.SetData` holds only released sets while the
+  list is built, and hooks `InitSetsView` to wrap the category dropdown's `initialize`, swapping
+  `UIDropDownMenu_AddButton` for one that skips TBC/WOTLK while they are locked. Each set's expansion is in
+  `addon/Unbound/TransmogSetExpansions.lua`, written by `tools/transmog_set_expansions.py` from mod-transmog-plus's
+  `set_data.lua` and `item_template.RequiredLevel` (the latest expansion any piece needs: 60 or less classic,
+  61-70 TBC, above 70 Wrath; never earlier than the set's own label). Not `unbound_item_expansion`: level 70/80
+  PvP pieces sold by vendors in classic cities count as classic there. Run the tool again after updating
+  mod-transmog-plus. mod-transmog-plus itself is unchanged.
