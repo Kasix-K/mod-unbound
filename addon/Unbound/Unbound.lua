@@ -134,15 +134,14 @@ if transmog and transmog.UpdateSetList and transmog.InitSetsView then
         if not ok then error(err, 0) end
     end
 
-    -- The Category dropdown: leave out a locked expansion's choice while the menu is built.
-    hooksecurefunc(transmog, "InitSetsView", function(self)
-        local dropDown = self.categoryDropDown
+    -- Leaves out the choices hide(info) picks while a dropdown's menu is built.
+    local function FilterDropDown(dropDown, hide)
         if not dropDown or dropDown.unboundFiltered or not dropDown.initialize then return end
         local initialize = dropDown.initialize
         dropDown.initialize = function(...)
             local addButton = UIDropDownMenu_AddButton
             UIDropDownMenu_AddButton = function(info, ...)
-                if info and not IsReleased(categoryExpansion[info.value]) then return end
+                if info and hide(info) then return end
                 return addButton(info, ...)
             end
             local ok, err = pcall(initialize, ...)
@@ -150,6 +149,17 @@ if transmog and transmog.UpdateSetList and transmog.InitSetsView then
             if not ok then error(err, 0) end
         end
         dropDown.unboundFiltered = true
+    end
+
+    -- The Category dropdown: a locked expansion's choice. The Class dropdown: Death Knight while Wrath is locked
+    -- (only that choice; "My Class" stays for a GM's Death Knight).
+    hooksecurefunc(transmog, "InitSetsView", function(self)
+        FilterDropDown(self.categoryDropDown, function(info)
+            return not IsReleased(categoryExpansion[info.value])
+        end)
+        FilterDropDown(self.classDropDown, function(info)
+            return info.value == "DEATHKNIGHT" and info.text == "Death Knight" and not IsReleased(2)
+        end)
     end)
 
     local events = CreateFrame("Frame")

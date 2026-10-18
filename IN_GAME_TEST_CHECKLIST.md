@@ -313,8 +313,8 @@ Needs the new `patch-Z.MPQ` and the UnboundPerks addon copied again. A Protectio
 - [ ] On a non-GM account: TBC and Wrath zones send you home, the Dungeon Finder shows only classic dungeons and
       raids, and a Death Knight can't be created.
 - [ ] Transmog window, Sets tab: All Categories lists only classic sets (Tier 0-3, AQ, ZG, classic PvP; no
-      Gladiator's or Tier 4-10 sets), and the Category menu has no Burning Crusade or Wrath of the Lich King
-      choice.
+      Gladiator's or Tier 4-10 sets), the Category menu has no Burning Crusade or Wrath of the Lich King
+      choice, and the Class menu has no Death Knight.
 
 ## 10. Report back
 

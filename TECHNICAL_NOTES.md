@@ -355,7 +355,8 @@ added is in [CHANGELOG.md](CHANGELOG.md)).
   itself `UBLOCK` / `EXPANSION`; the content lock answers `EXPANSION:<Unbound.ExpansionUnlocked>` (until then only
   classic sets show). It wraps `Transmog:UpdateSetList` so `Transmog.SetData` holds only released sets while the
   list is built, and hooks `InitSetsView` to wrap the category dropdown's `initialize`, swapping
-  `UIDropDownMenu_AddButton` for one that skips TBC/WOTLK while they are locked. Each set's expansion is in
+  `UIDropDownMenu_AddButton` for one that skips TBC/WOTLK while they are locked; the class dropdown gets the same
+  wrap and skips the "Death Knight" choice while Wrath is locked ("My Class" stays, for a GM's Death Knight). Each set's expansion is in
   `addon/Unbound/TransmogSetExpansions.lua`, written by `tools/transmog_set_expansions.py` from mod-transmog-plus's
   `set_data.lua` and `item_template.RequiredLevel` (the latest expansion any piece needs: 60 or less classic,
   61-70 TBC, above 70 Wrath; never earlier than the set's own label). Not `unbound_item_expansion`: level 70/80

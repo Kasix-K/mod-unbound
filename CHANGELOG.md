@@ -83,7 +83,7 @@ the work log. Newest first. Add a line here (and a row in the index) with every 
 ### Changed
 - **Transmog Sets tab shows only released expansions' sets:** while The Burning Crusade and Wrath are locked,
   the Sets tab lists only classic sets (127 of 668), and its Category menu has no Burning Crusade or Wrath
-  choice. A PvP set counts by its pieces' level (Gladiator's sets are TBC or Wrath). They come back by themselves
+  choice; its Class menu has no Death Knight while Wrath is locked. A PvP set counts by its pieces' level (Gladiator's sets are TBC or Wrath). They come back by themselves
   when `Unbound.ExpansionUnlocked` is raised. Needs a server rebuild and a client restart (new addon file).
 - **Old transmog module removed for good:** the Warpweaver (190010, from the first mod-transmog) is gone, along
   with that module's database leftovers. Transmog is the Transmogrify spell or `/transmog`.
